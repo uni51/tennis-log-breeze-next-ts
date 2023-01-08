@@ -115,6 +115,20 @@ const Login = () => {
                         </label>
                     </div>
 
+                    <div className="flex items-center justify-end mt-4 gap-3">
+                        <Link
+                            href={`${process.env.NEXT_PUBLIC_BACKEND_URL}/login/github`}
+                            className="underline text-sm >text-gray-600 hover:text-gray-900">
+                            Github
+                        </Link>
+
+                        <Link
+                            href={`${process.env.NEXT_PUBLIC_BACKEND_URL}/login/google`}
+                            className="underline text-sm text-gray-600 hover:text-gray-900">
+                            Google
+                        </Link>
+                    </div>
+
                     <div className="flex items-center justify-end mt-4">
                         <Link
                             href="/forgot-password"
