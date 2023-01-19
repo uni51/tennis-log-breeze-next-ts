@@ -3,6 +3,7 @@ import Head from 'next/head'
 import axios from '../lib/axios'
 import { AxiosError, AxiosResponse } from 'axios'
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 
 type Memo = {
   title: string
@@ -37,24 +38,14 @@ const Dashboard = () => {
       <div className="py-12">
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
           <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-            <div className="p-6 bg-white border-b border-gray-200">
+            <div className="p-6 bg-gray-100 border-b border-gray-200">
               You're logged in!
             </div>
           </div>
+          <div className="mt-10">
+            <Link href="/memos">メモ一覧ページへ</Link>
+          </div>
         </div>
-      </div>
-
-      {/* DBから取得したメモデータの一覧表示 */}
-      <div className="grid w-2/3 mx-auto gap-4 grid-cols-2">
-        {/* tempMemosをmemosに変更する */}
-        {memos.map((memo: Memo, index) => {
-          return (
-            <div className="bg-gray-100 shadow-lg mb-5 p-4" key={index}>
-              <p className="text-lg font-bold mb-1">{memo.title}</p>
-              <p className="">{memo.body}</p>
-            </div>
-          )
-        })}
       </div>
     </AppLayout>
   )
