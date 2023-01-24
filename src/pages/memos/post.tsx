@@ -13,6 +13,12 @@ type MemoForm = {
   body: string
 }
 
+// バリデーションメッセージの型
+type Validation = {
+  title?: string
+  body?: string
+}
+
 const Post: NextPage = () => {
   // ルーター定義
   const router = useRouter()
@@ -21,10 +27,7 @@ const Post: NextPage = () => {
     title: '',
     body: '',
   })
-  const [validation, setValidation] = useState<MemoForm>({
-    title: '',
-    body: '',
-  })
+  const [validation, setValidation] = useState<Validation>({})
 
   // POSTデータの更新
   const updateMemoForm = (
@@ -35,6 +38,9 @@ const Post: NextPage = () => {
 
   // メモの登録
   const createMemo = () => {
+    // バリデーションメッセージの初期化
+    setValidation({})
+
     // axios
     //   // CSRF保護の初期化
     //   .get('/sanctum/csrf-cookie')
@@ -47,7 +53,22 @@ const Post: NextPage = () => {
         router.push('/memos')
       })
       .catch((err: AxiosError) => {
-        console.log(err.response)
+        // バリデーションエラー
+        if (err.response?.status === 422) {
+          const errors = err.response?.data.errors
+          // state更新用のオブジェクトを別で定義
+          const validationMessages: {
+            [index: string]: string
+          } = {} as Validation
+          Object.keys(errors).map((key: string) => {
+            validationMessages[key] = errors[key][0]
+          })
+          // state更新用オブジェクトに更新
+          setValidation(validationMessages)
+        }
+        if (err.response?.status === 500) {
+          alert('システムエラーです！！')
+        }
       })
     // })
   }
@@ -77,6 +98,9 @@ const Post: NextPage = () => {
               value={memoForm.title}
               onChange={updateMemoForm}
             />
+            {validation.title && (
+              <p className="py-3 text-red-500">{validation.title}</p>
+            )}
           </div>
           <div className="mb-5">
             <div className="flex justify-start my-2">
@@ -91,6 +115,9 @@ const Post: NextPage = () => {
               value={memoForm.body}
               onChange={updateMemoForm}
             />
+            {validation.body && (
+              <p className="py-3 text-red-500">{validation.body}</p>
+            )}
           </div>
           <div className="text-center">
             <button
