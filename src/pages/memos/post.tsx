@@ -1,8 +1,9 @@
 import { AxiosError, AxiosResponse } from 'axios'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import { RequiredMark } from '../../components/RequiredMark'
+import { useAuth } from '../../hooks/useAuth'
 import axios from '../../lib/axios'
 
 // POSTデータの型
@@ -26,6 +27,18 @@ const Post: NextPage = () => {
     body: '',
   })
   const [validation, setValidation] = useState<Validation>({})
+  const { checkLoggedIn } = useAuth()
+
+  useEffect(() => {
+    const init = async () => {
+      // ログイン中か判定
+      const res: boolean = await checkLoggedIn()
+      if (!res) {
+        router.push('/')
+      }
+    }
+    init()
+  }, [])
 
   // POSTデータの更新
   const updateMemoForm = (
