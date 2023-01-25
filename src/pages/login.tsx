@@ -1,151 +1,106 @@
-import ApplicationLogo from '../components/ApplicationLogo'
-import AuthCard from '../components/AuthCard'
-import AuthSessionStatus from '../components/AuthSessionStatus'
-import Button from '../components/Button'
-import GuestLayout from '../components/Layouts/GuestLayout'
-import Input from '../components/Input'
-import InputError from '../components/InputError'
-import Label from '../components/Label'
-import Link from 'next/link'
-import { useAuth } from '../hooks/auth'
-import { useEffect, useState } from 'react'
+import type { NextPage } from 'next'
+import { AxiosError, AxiosResponse } from 'axios'
+import { ChangeEvent, useState } from 'react'
+import { RequiredMark } from '../components/RequiredMark'
+import axios from '../lib/axios'
 import { useRouter } from 'next/router'
 
-const Login = () => {
-    const router = useRouter()
-
-    const { login } = useAuth({
-        middleware: 'guest',
-        redirectIfAuthenticated: '/dashboard',
-    })
-
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [shouldRemember, setShouldRemember] = useState(false)
-    const [errors, setErrors] = useState([])
-    const [status, setStatus] = useState(null)
-
-    useEffect(() => {
-        if (router.query.reset?.length > 0 && errors.length === 0) {
-            setStatus(atob(router.query.reset))
-        } else {
-            setStatus(null)
-        }
-    })
-
-    const submitForm = async event => {
-        event.preventDefault()
-
-        login({
-            email,
-            password,
-            remember: shouldRemember,
-            setErrors,
-            setStatus,
-        })
-    }
-
-    return (
-        <GuestLayout>
-            <AuthCard
-                logo={
-                    <Link href="/">
-                        <ApplicationLogo className="w-20 h-20 fill-current text-gray-500" />
-                    </Link>
-                }>
-                {/* Session Status */}
-                <AuthSessionStatus className="mb-4" status={status} />
-
-                <form onSubmit={submitForm}>
-                    {/* Email Address */}
-                    <div>
-                        <Label htmlFor="email" className={undefined}>
-                            Email
-                        </Label>
-
-                        <Input
-                            id="email"
-                            type="email"
-                            value={email}
-                            className="block mt-1 w-full"
-                            onChange={event => setEmail(event.target.value)}
-                            required
-                            autoFocus
-                        />
-
-                        <InputError messages={errors.email} className="mt-2" />
-                    </div>
-
-                    {/* Password */}
-                    <div className="mt-4">
-                        <Label htmlFor="password" className={undefined}>
-                            Password
-                        </Label>
-
-                        <Input
-                            id="password"
-                            type="password"
-                            value={password}
-                            className="block mt-1 w-full"
-                            onChange={event => setPassword(event.target.value)}
-                            required
-                            autoComplete="current-password"
-                        />
-
-                        <InputError
-                            messages={errors.password}
-                            className="mt-2"
-                        />
-                    </div>
-
-                    {/* Remember Me */}
-                    <div className="block mt-4">
-                        <label
-                            htmlFor="remember_me"
-                            className="inline-flex items-center">
-                            <input
-                                id="remember_me"
-                                type="checkbox"
-                                name="remember"
-                                className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                onChange={event =>
-                                    setShouldRemember(event.target.checked)
-                                }
-                            />
-
-                            <span className="ml-2 text-sm text-gray-600">
-                                Remember me
-                            </span>
-                        </label>
-                    </div>
-
-                    <div className="flex items-center justify-end mt-4 gap-3">
-                        <Link
-                            href={`${process.env.NEXT_PUBLIC_BACKEND_URL}/login/github`}
-                            className="underline text-sm >text-gray-600 hover:text-gray-900">
-                            Github
-                        </Link>
-
-                        <Link
-                            href={`${process.env.NEXT_PUBLIC_BACKEND_URL}/login/google`}
-                            className="underline text-sm text-gray-600 hover:text-gray-900">
-                            Google
-                        </Link>
-                    </div>
-
-                    <div className="flex items-center justify-end mt-4">
-                        <Link
-                            href="/forgot-password"
-                            className="underline text-sm text-gray-600 hover:text-gray-900">
-                            Forgot your password?
-                        </Link>
-
-                        <Button className="ml-3">Login</Button>
-                    </div>
-                </form>
-            </AuthCard>
-        </GuestLayout>
-    )
+// POSTデータの型
+type LoginForm = {
+  email: string
+  password: string
 }
 
-export default Login
+// バリデーションメッセージの型
+type Validation = LoginForm & { loginFailed: string }
+
+const Home: NextPage = () => {
+  // ルーター定義
+  const router = useRouter()
+  // state定義
+  const [loginForm, setLoginForm] = useState<LoginForm>({
+    email: '',
+    password: '',
+  })
+  const [validation, setValidation] = useState<Validation>({
+    email: '',
+    password: '',
+    loginFailed: '',
+  })
+
+  // POSTデータの更新
+  const updateLoginForm = (e: ChangeEvent<HTMLInputElement>) => {
+    setLoginForm({ ...loginForm, [e.target.name]: e.target.value })
+  }
+
+  // ログイン
+  const login = () => {
+    axios
+      // CSRF保護の初期化
+      .get('/sanctum/csrf-cookie')
+      .then(res => {
+        // ログイン処理
+        axios
+          .post('/login', loginForm)
+          .then((response: AxiosResponse) => {
+            console.log(response.data)
+            router.push('/memos')
+          })
+          .catch((err: AxiosError) => {
+            console.log(err.response)
+          })
+      })
+  }
+
+  return (
+    <div className="w-2/3 mx-auto py-24">
+      <div className="w-1/2 mx-auto border-2 px-12 py-16 rounded-2xl">
+        <h3 className="mb-10 text-2xl text-center">ログイン</h3>
+        <div className="mb-5">
+          <div className="flex justify-start my-2">
+            <p>メールアドレス</p>
+            <RequiredMark />
+          </div>
+          <input
+            className="p-2 border rounded-md w-full outline-none"
+            name="email"
+            value={loginForm.email}
+            onChange={updateLoginForm}
+          />
+          {/* <p className='py-3 text-red-500'>必須入力です。</p> */}
+        </div>
+        <div className="mb-5">
+          <div className="flex justify-start my-2">
+            <p>パスワード</p>
+            <RequiredMark />
+          </div>
+          <small className="mb-2 text-gray-500 block">
+            8文字以上の半角英数字で入力してください
+          </small>
+          <input
+            className="p-2 border rounded-md w-full outline-none"
+            name="password"
+            type="password"
+            value={loginForm.password}
+            onChange={updateLoginForm}
+          />
+          {/* <p className='py-3 text-red-500'>
+            8文字以上の半角英数字で入力してください。
+          </p> */}
+        </div>
+        <div className="text-center mt-12">
+          {/* <p className='py-3 text-red-500'>
+            IDまたはパスワードが間違っています。
+          </p> */}
+          <button
+            className="bg-gray-700 text-gray-50 py-3 sm:px-20 px-10 rounded-xl cursor-pointer drop-shadow-md hover:bg-gray-600"
+            onClick={login}>
+            ログイン
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default Home
