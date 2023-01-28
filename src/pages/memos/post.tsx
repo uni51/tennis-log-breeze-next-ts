@@ -1,43 +1,52 @@
-import type { NextPage } from 'next'
 import { AxiosError, AxiosResponse } from 'axios'
-import { useState } from 'react'
-import { RequiredMark } from '../components/RequiredMark'
-import axios from '../lib/axios'
+import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { useUserState } from '../atoms/userAtom'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
+import { RequiredMark } from '../../components/RequiredMark'
+import { useAuth } from '../../hooks/useAuth'
+import axios from '../../lib/axios'
 
 // POSTデータの型
-type LoginForm = {
-  email: string
-  password: string
+type MemoForm = {
+  title: string
+  body: string
 }
 
 // バリデーションメッセージの型
 type Validation = {
-  email?: string
-  password?: string
-  loginFailed?: string
+  title?: string
+  body?: string
 }
 
-const Home: NextPage = () => {
+const Post: NextPage = () => {
   // ルーター定義
   const router = useRouter()
   // state定義
   const [validation, setValidation] = useState<Validation>({})
-  // recoil stateの呼び出し
-  const { setUser } = useUserState()
+  const { checkLoggedIn } = useAuth()
 
   // React-Hook-Form
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginForm>()
+  } = useForm<MemoForm>()
 
-  // ログイン
-  const login = (data: LoginForm) => {
+  useEffect(() => {
+    const init = async () => {
+      // ログイン中か判定
+      const res: boolean = await checkLoggedIn()
+      if (!res) {
+        router.push('/')
+      }
+    }
+    init()
+  }, [])
+
+  // メモの登録
+  const createMemo = (data: MemoForm) => {
     // バリデーションメッセージの初期化
     setValidation({})
 
@@ -45,15 +54,14 @@ const Home: NextPage = () => {
       // CSRF保護の初期化
       .get('/sanctum/csrf-cookie')
       .then(res => {
-        // ログイン処理
+        // APIへのリクエスト
         axios
-          .post('/login', data)
+          .post('/api/memos', data)
           .then((response: AxiosResponse) => {
-            setUser(response.data.data)
+            console.log(response.data)
             router.push('/memos')
           })
           .catch((err: AxiosError) => {
-            console.log(err.response)
             // バリデーションエラー
             if (err.response?.status === 422) {
               const errors = err.response?.data.errors
@@ -75,73 +83,56 @@ const Home: NextPage = () => {
   }
 
   return (
-    <div className="w-2/3 mx-auto py-24">
-      <div className="w-1/2 mx-auto border-2 px-12 py-16 rounded-2xl">
-        <h3 className="mb-10 text-2xl text-center">ログイン</h3>
+    <div className="w-2/3 mx-auto">
+      <div className="w-1/2 mx-auto mt-32 border-2 px-12 py-16 rounded-2xl">
+        <h3 className="mb-10 text-2xl text-center">メモの登録</h3>
         <div className="mb-5">
           <div className="flex justify-start my-2">
-            <p>メールアドレス</p>
+            <p>タイトル</p>
             <RequiredMark />
           </div>
           <input
             className="p-2 border rounded-md w-full outline-none"
-            {...register('email', {
-              required: '必須入力です。',
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: '有効なメールアドレスを入力してください。',
-              },
-            })}
+            {...register('title', { required: '必須入力です。' })}
           />
           <ErrorMessage
             errors={errors}
-            name={'email'}
+            name={'title'}
             render={({ message }) => (
               <p className="py-3 text-red-500">{message}</p>
             )}
           />
-          {validation.email && (
-            <p className="py-3 text-red-500">{validation.email}</p>
+          {validation.title && (
+            <p className="py-3 text-red-500">{validation.title}</p>
           )}
         </div>
         <div className="mb-5">
           <div className="flex justify-start my-2">
-            <p>パスワード</p>
+            <p>メモの内容</p>
             <RequiredMark />
           </div>
-          <small className="mb-2 text-gray-500 block">
-            8文字以上の半角英数字で入力してください
-          </small>
-          <input
+          <textarea
             className="p-2 border rounded-md w-full outline-none"
-            type="password"
-            {...register('password', {
-              required: '必須入力です。',
-              pattern: {
-                value: /^([a-zA-Z0-9]{8,})$/,
-                message: '8文字以上の半角英数字で入力してください',
-              },
-            })}
+            cols={30}
+            rows={4}
+            {...register('body', { required: '必須入力です。' })}
           />
           <ErrorMessage
             errors={errors}
-            name={'password'}
+            name={'body'}
             render={({ message }) => (
               <p className="py-3 text-red-500">{message}</p>
             )}
           />
-          {validation.password && (
-            <p className="py-3 text-red-500">{validation.password}</p>
+          {validation.body && (
+            <p className="py-3 text-red-500">{validation.body}</p>
           )}
         </div>
-        <div className="text-center mt-12">
-          {validation.loginFailed && (
-            <p className="py-3 text-red-500">{validation.loginFailed}</p>
-          )}
+        <div className="text-center">
           <button
-            className="bg-gray-700 text-gray-50 py-3 sm:px-20 px-10 rounded-xl cursor-pointer drop-shadow-md hover:bg-gray-600"
-            onClick={handleSubmit(login)}>
-            ログイン
+            className="bg-gray-700 text-gray-50 py-3 sm:px-20 px-10 mt-8 rounded-xl cursor-pointer drop-shadow-md hover:bg-gray-600"
+            onClick={handleSubmit(createMemo)}>
+            登録する
           </button>
         </div>
       </div>
@@ -149,4 +140,4 @@ const Home: NextPage = () => {
   )
 }
 
-export default Home
+export default Post
