@@ -21,5 +21,5 @@ export const useAuth = () => {
     }
   }
 
-  return { checkLoggedIn }
+  return { checkLoggedIn, user }
 }

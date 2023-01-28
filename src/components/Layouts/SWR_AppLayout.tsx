@@ -1,8 +1,8 @@
 import Navigation from './Navigation'
-import { useAuth } from '../../hooks/useAuth'
+import { useAuth } from '../../hooks/auth'
 
 const AppLayout = ({ header, children }) => {
-  const { user } = useAuth()
+  const { user } = useAuth({ middleware: 'auth' })
 
   return (
     <div className="min-h-screen">
