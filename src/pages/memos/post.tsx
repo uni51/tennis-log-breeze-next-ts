@@ -1,3 +1,5 @@
+import AppLayout from '../../components/Layouts/AppLayout'
+import Head from 'next/head'
 import { AxiosError, AxiosResponse } from 'axios'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
@@ -83,60 +85,70 @@ const Post: NextPage = () => {
   }
 
   return (
-    <div className="w-2/3 mx-auto">
-      <div className="w-1/2 mx-auto mt-32 border-2 px-12 py-16 rounded-2xl">
-        <h3 className="mb-10 text-2xl text-center">メモの登録</h3>
-        <div className="mb-5">
-          <div className="flex justify-start my-2">
-            <p>タイトル</p>
-            <RequiredMark />
-          </div>
-          <input
-            className="p-2 border rounded-md w-full outline-none"
-            {...register('title', { required: '必須入力です。' })}
-          />
-          <ErrorMessage
-            errors={errors}
-            name={'title'}
-            render={({ message }) => (
-              <p className="py-3 text-red-500">{message}</p>
+    <AppLayout
+      header={
+        <h2 className="font-semibold text-xl text-gray-800 leading-tight">
+          Dashboard - メモの登録
+        </h2>
+      }>
+      <Head>
+        <title>Dashboard - メモの登録</title>
+      </Head>
+      <div className="w-2/3 mx-auto">
+        <div className="w-1/2 mx-auto mt-32 border-2 px-12 py-16 rounded-2xl">
+          <h3 className="mb-10 text-2xl text-center">メモの登録</h3>
+          <div className="mb-5">
+            <div className="flex justify-start my-2">
+              <p>タイトル</p>
+              <RequiredMark />
+            </div>
+            <input
+              className="p-2 border rounded-md w-full outline-none"
+              {...register('title', { required: '必須入力です。' })}
+            />
+            <ErrorMessage
+              errors={errors}
+              name={'title'}
+              render={({ message }) => (
+                <p className="py-3 text-red-500">{message}</p>
+              )}
+            />
+            {validation.title && (
+              <p className="py-3 text-red-500">{validation.title}</p>
             )}
-          />
-          {validation.title && (
-            <p className="py-3 text-red-500">{validation.title}</p>
-          )}
-        </div>
-        <div className="mb-5">
-          <div className="flex justify-start my-2">
-            <p>メモの内容</p>
-            <RequiredMark />
           </div>
-          <textarea
-            className="p-2 border rounded-md w-full outline-none"
-            cols={30}
-            rows={4}
-            {...register('body', { required: '必須入力です。' })}
-          />
-          <ErrorMessage
-            errors={errors}
-            name={'body'}
-            render={({ message }) => (
-              <p className="py-3 text-red-500">{message}</p>
+          <div className="mb-5">
+            <div className="flex justify-start my-2">
+              <p>メモの内容</p>
+              <RequiredMark />
+            </div>
+            <textarea
+              className="p-2 border rounded-md w-full outline-none"
+              cols={30}
+              rows={4}
+              {...register('body', { required: '必須入力です。' })}
+            />
+            <ErrorMessage
+              errors={errors}
+              name={'body'}
+              render={({ message }) => (
+                <p className="py-3 text-red-500">{message}</p>
+              )}
+            />
+            {validation.body && (
+              <p className="py-3 text-red-500">{validation.body}</p>
             )}
-          />
-          {validation.body && (
-            <p className="py-3 text-red-500">{validation.body}</p>
-          )}
-        </div>
-        <div className="text-center">
-          <button
-            className="bg-gray-700 text-gray-50 py-3 sm:px-20 px-10 mt-8 rounded-xl cursor-pointer drop-shadow-md hover:bg-gray-600"
-            onClick={handleSubmit(createMemo)}>
-            登録する
-          </button>
+          </div>
+          <div className="text-center">
+            <button
+              className="bg-gray-700 text-gray-50 py-3 sm:px-20 px-10 mt-8 rounded-xl cursor-pointer drop-shadow-md hover:bg-gray-600"
+              onClick={handleSubmit(createMemo)}>
+              登録する
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </AppLayout>
   )
 }
 
