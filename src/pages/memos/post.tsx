@@ -3,9 +3,7 @@ import Head from 'next/head'
 import { AxiosError, AxiosResponse } from 'axios'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { ErrorMessage } from '@hookform/error-message'
+import { ChangeEvent, useEffect, useState } from 'react'
 import { RequiredMark } from '../../components/RequiredMark'
 import { useAuth } from '../../hooks/useAuth'
 import axios from '../../lib/axios'
@@ -14,27 +12,46 @@ import axios from '../../lib/axios'
 type MemoForm = {
   title: string
   body: string
+  category_id: any
 }
 
 // バリデーションメッセージの型
 type Validation = {
   title?: string
   body?: string
+  category_id?: string
 }
 
 const Post: NextPage = () => {
   // ルーター定義
   const router = useRouter()
   // state定義
+  const [memoForm, setMemoForm] = useState<MemoForm>({
+    title: '',
+    body: '',
+    category_id: '1', // 初期値は
+  })
   const [validation, setValidation] = useState<Validation>({})
   const { checkLoggedIn } = useAuth()
+  const [category, setCategory] = useState([])
 
-  // React-Hook-Form
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<MemoForm>()
+  // // React-Hook-Form
+  // const {
+  //   register,
+  //   handleSubmit,
+  //   formState: { errors },
+  // } = useForm<MemoForm>()
+
+  // const category = [
+  //   { category_id: '1', category_name: 'フォアハンド' },
+  //   { category_id: '2', category_name: 'バックハンド' },
+  //   { category_id: '3', category_name: 'サーブ' },
+  //   { category_id: '4', category_name: 'リターン' },
+  //   { category_id: '5', category_name: 'ボレー' },
+  //   { category_id: '6', category_name: 'スマッシュ' },
+  //   { category_id: '7', category_name: 'ゲーム' },
+  //   { category_id: '8', category_name: 'その他' },
+  // ]
 
   useEffect(() => {
     const init = async () => {
@@ -43,12 +60,27 @@ const Post: NextPage = () => {
       if (!res) {
         router.push('/')
       }
+      const responseCategories = await axios.get('api/categories')
+      let obj = responseCategories.data.data
+      var array = Object.keys(obj).map(function (key) {
+        return obj[key]
+      })
+      setCategory(array)
     }
     init()
   }, [])
 
+  console.log(category)
+
+  // POSTデータの更新
+  const updateMemoForm = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+  ) => {
+    setMemoForm({ ...memoForm, [e.target.name]: e.target.value })
+  }
+
   // メモの登録
-  const createMemo = (data: MemoForm) => {
+  const createMemo = () => {
     // バリデーションメッセージの初期化
     setValidation({})
 
@@ -58,7 +90,7 @@ const Post: NextPage = () => {
       .then(res => {
         // APIへのリクエスト
         axios
-          .post('/api/memos', data)
+          .post('/api/memos', memoForm)
           .then((response: AxiosResponse) => {
             console.log(response.data)
             router.push('/memos')
@@ -104,14 +136,9 @@ const Post: NextPage = () => {
             </div>
             <input
               className="p-2 border rounded-md w-full outline-none"
-              {...register('title', { required: '必須入力です。' })}
-            />
-            <ErrorMessage
-              errors={errors}
-              name={'title'}
-              render={({ message }) => (
-                <p className="py-3 text-red-500">{message}</p>
-              )}
+              name="title"
+              value={memoForm.title}
+              onChange={updateMemoForm}
             />
             {validation.title && (
               <p className="py-3 text-red-500">{validation.title}</p>
@@ -124,25 +151,27 @@ const Post: NextPage = () => {
             </div>
             <textarea
               className="p-2 border rounded-md w-full outline-none"
+              name="body"
               cols={30}
               rows={4}
-              {...register('body', { required: '必須入力です。' })}
-            />
-            <ErrorMessage
-              errors={errors}
-              name={'body'}
-              render={({ message }) => (
-                <p className="py-3 text-red-500">{message}</p>
-              )}
+              value={memoForm.body}
+              onChange={updateMemoForm}
             />
             {validation.body && (
               <p className="py-3 text-red-500">{validation.body}</p>
             )}
           </div>
+          <select name="category_id" onChange={updateMemoForm}>
+            {category.map((item, i) => (
+              <option value={item.id} key={item.id}>
+                {item.name}
+              </option>
+            ))}
+          </select>
           <div className="text-center">
             <button
               className="bg-gray-700 text-gray-50 py-3 sm:px-20 px-10 mt-8 rounded-xl cursor-pointer drop-shadow-md hover:bg-gray-600"
-              onClick={handleSubmit(createMemo)}>
+              onClick={createMemo}>
               登録する
             </button>
           </div>
