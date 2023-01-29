@@ -11,6 +11,7 @@ import axios from '../../lib/axios'
 type Memo = {
   title: string
   body: string
+  category_name: string
 }
 
 const Memo: NextPage = () => {
@@ -47,13 +48,13 @@ const Memo: NextPage = () => {
     <AppLayout
       header={
         <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-          Dashboard - メモ一覧
+          メモ一覧
         </h2>
       }>
       <Head>
-        <title>Dashboard - メモ一覧</title>
+        <title>メモ一覧</title>
       </Head>
-      <div className="w-2/3 mx-auto mt-32">
+      <div className="mx-auto mt-32">
         <div className="w-1/2 mx-auto text-center">
           <button
             className="text-xl mb-12 py-3 px-10 bg-blue-500 text-white rounded-3xl drop-shadow-md hover:bg-blue-400"
@@ -63,12 +64,13 @@ const Memo: NextPage = () => {
         </div>
         <div className="mt-3">
           {/* DBから取得したメモデータの一覧表示 */}
-          <div className="grid w-2/3 mx-auto gap-4 grid-cols-2">
+          <div className="grid w-4/5 mx-auto gap-4 grid-cols-2">
             {memos.map((memo: Memo, index) => {
               return (
                 <div className="bg-gray-100 shadow-lg mb-5 p-4" key={index}>
                   <p className="text-lg font-bold mb-1">{memo.title}</p>
                   <p className="">{memo.body}</p>
+                  <p className="text-lg font-bold mb-1">{memo.category_name}</p>
                 </div>
               )
             })}
