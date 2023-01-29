@@ -29,7 +29,7 @@ const Post: NextPage = () => {
   const [memoForm, setMemoForm] = useState<MemoForm>({
     title: '',
     body: '',
-    category_id: '1', // 初期値は
+    category_id: '1', // 初期値はフォアハンド
   })
   const [validation, setValidation] = useState<Validation>({})
   const { checkLoggedIn } = useAuth()
@@ -61,16 +61,16 @@ const Post: NextPage = () => {
         router.push('/')
       }
       const responseCategories = await axios.get('api/categories')
-      let obj = responseCategories.data.data
-      var array = Object.keys(obj).map(function (key) {
-        return obj[key]
-      })
-      setCategory(array)
+      const objectResponseCategories = responseCategories.data.data
+      const arrayResponseCategories = Object.keys(objectResponseCategories).map(
+        function (key) {
+          return objectResponseCategories[key]
+        },
+      )
+      setCategory(arrayResponseCategories)
     }
     init()
   }, [])
-
-  console.log(category)
 
   // POSTデータの更新
   const updateMemoForm = (
