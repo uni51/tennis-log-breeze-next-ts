@@ -8,7 +8,8 @@
     "start": "next start"
   },
   "dependencies": {
-    "@headlessui/react": "^1.4.2",
+    "@headlessui/react": "^1.7.8",
+    "@heroicons/react": "^2.0.14",
     "@hookform/error-message": "^2.0.1",
     "axios": "^0.21.1",
     "next": "^13.0.3",
