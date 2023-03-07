@@ -14,7 +14,7 @@ type Memo = {
   category_name: string
 }
 
-const Memo: NextPage = () => {
+const MemoList: NextPage = () => {
   const router = useRouter()
   // state定義
   const [memos, setMemos] = useState<Memo[]>([])
@@ -81,4 +81,4 @@ const Memo: NextPage = () => {
   )
 }
 
-export default Memo
+export default MemoList
