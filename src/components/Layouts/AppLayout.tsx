@@ -20,14 +20,18 @@ import { Disclosure } from '@headlessui/react'
 const navigation = [
   { name: 'Dashboard', icon: HomeIcon, current: true, href: '#' },
   {
-    name: 'Team',
+    name: 'Memos',
     icon: UsersIcon,
     current: false,
     children: [
-      { name: 'Overview', href: '#' },
-      { name: 'Members', href: '#' },
-      { name: 'Calendar', href: '#' },
-      { name: 'Settings', href: '#' },
+      { name: 'フォアハンド', href: '#' },
+      { name: 'バックハンド', href: '#' },
+      { name: 'サーブ', href: '#' },
+      { name: 'リターン', href: '#' },
+      { name: 'ボレー', href: '#' },
+      { name: 'スマッシュ', href: '#' },
+      { name: 'ゲーム', href: '#' },
+      { name: 'その他', href: '#' },
     ],
   },
   {
