@@ -119,9 +119,8 @@ const Post: NextPage = () => {
       <Head>
         <title>Dashboard - メモの登録</title>
       </Head>
-      <div className="w-2/3 mx-auto">
-        <div className="w-1/2 mx-auto mt-32 border-2 px-12 py-16 rounded-2xl">
-          <h3 className="mb-10 text-2xl text-center">メモの登録</h3>
+      <div className="w-4/5 mx-auto">
+        <div className="mx-auto mt-16 border-2 px-12 py-16 rounded-2xl">
           <div className="mb-5">
             <div className="flex justify-start my-2">
               <p>タイトル</p>
