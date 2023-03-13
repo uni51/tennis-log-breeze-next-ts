@@ -1,4 +1,4 @@
-import axios from 'axios'
+import { apiServer } from 'lib/utils/apiServer'
 
 export default function Users({ category }) {
   console.log(category)
@@ -14,7 +14,9 @@ export default function Users({ category }) {
 }
 
 export const getStaticPaths = async () => {
-  const res = await axios.get('http://laravel-laravel.test-1:80/api/categories')
+  // Laravel側でSanctumを利用していない場合（Cookieを使ったAPI認証をしていない場合）は、
+  // SSGは利用できる
+  const res = await apiServer.get('/api/categories')
   const categories = res.data.data
   const paths = categories.map(category => ({
     params: { id: category.id.toString() },
@@ -27,9 +29,7 @@ export const getStaticPaths = async () => {
 }
 
 export const getStaticProps = async ({ params }) => {
-  const res = await axios.get(
-    `http://laravel-laravel.test-1:80/api/categories/${params.id}`,
-  )
+  const res = await apiServer.get(`/api/categories/${params.id}`)
   const category = res.data.data
   return {
     props: { category },

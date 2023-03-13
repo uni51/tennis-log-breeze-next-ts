@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export const apiServer = axios.create({
-  baseURL: process.env.API_SERVER,
+  baseURL: process.env.API_SERVER_HOST,
   headers: {
     'X-Requested-With': 'XMLHttpRequest',
   },

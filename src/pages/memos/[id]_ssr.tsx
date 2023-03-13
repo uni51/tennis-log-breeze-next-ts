@@ -17,12 +17,15 @@ export default function MemoDetail({ memo }) {
 export async function getServerSideProps(context) {
   const { query, req } = context
 
-  const res = await apiServer.get(`/api/memos/${query.id}`, {
-    headers: {
-      origin: 'localhost:3000',
-      Cookie: req.headers.cookie,
+  const res = await apiServer.get(
+    `http://laravel-laravel.test-1:80/api/memos/${query.id}`,
+    {
+      headers: {
+        origin: 'localhost:3000',
+        Cookie: req.headers.cookie,
+      },
     },
-  })
+  )
   const memo = res.data.data
 
   return {
