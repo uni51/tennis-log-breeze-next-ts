@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
 import { RequiredMark } from '../../components/RequiredMark'
 import { useAuth } from '../../hooks/useAuth'
-import axios from '../../lib/axios'
+import { apiClient } from '../../lib/apiClient'
 
 // POSTデータの型
 type MemoForm = {
@@ -51,7 +51,7 @@ const Post: NextPage = () => {
       if (!res) {
         router.push('/')
       }
-      const responseCategories = await axios.get('api/categories')
+      const responseCategories = await apiClient.get('api/categories')
       const objectResponseCategories = responseCategories.data.data
       const arrayResponseCategories = Object.keys(objectResponseCategories).map(
         function (key) {
@@ -77,12 +77,12 @@ const Post: NextPage = () => {
     // バリデーションメッセージの初期化
     setValidation({})
 
-    axios
+    apiClient
       // CSRF保護の初期化
       .get('/sanctum/csrf-cookie')
       .then(res => {
         // APIへのリクエスト
-        axios
+        apiClient
           .post('/api/memos', postData)
           .then((response: AxiosResponse) => {
             console.log(response.data)

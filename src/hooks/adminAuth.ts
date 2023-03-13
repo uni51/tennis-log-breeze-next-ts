@@ -1,5 +1,5 @@
 import useSWR from 'swr'
-import axios from '../lib/axios'
+import { apiClient } from './../lib/apiClient'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 
@@ -7,7 +7,7 @@ export const useAdminAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
   const router = useRouter()
 
   const { data: admin, error, mutate } = useSWR('/api/admin', () =>
-    axios
+    apiClient
       .get('/api/admin')
       .then(res => res.data)
       .catch(error => {
@@ -17,14 +17,14 @@ export const useAdminAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
       }),
   )
 
-  const csrf = () => axios.get('/sanctum/csrf-cookie')
+  const csrf = () => apiClient.get('/sanctum/csrf-cookie')
 
   const register = async ({ setErrors, ...props }) => {
     await csrf()
 
     setErrors([])
 
-    axios
+    apiClient
       .post('/admin/register', props)
       .then(() => mutate()) // データを更新
       .catch(error => {
@@ -40,7 +40,7 @@ export const useAdminAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     setErrors([])
     setStatus(null)
 
-    axios
+    apiClient
       .post('/admin/login', props)
       .then(() => mutate()) // データを更新
       .catch(error => {
@@ -55,7 +55,7 @@ export const useAdminAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     setErrors([])
     setStatus(null)
 
-    axios
+    apiClient
       .post('/admin/forgot-password', { email })
       .then(response => setStatus(response.data.status))
       .catch(error => {
@@ -71,7 +71,7 @@ export const useAdminAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     setErrors([])
     setStatus(null)
 
-    axios
+    apiClient
       .post('/admin/reset-password', { token: router.query.token, ...props })
       .then(response =>
         router.push('/admin/login?reset=' + btoa(response.data.status)),
@@ -83,14 +83,14 @@ export const useAdminAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
   }
 
   const resendEmailVerification = ({ setStatus }) => {
-    axios
+    apiClient
       .post('/admin/email/verification-notification')
       .then(response => setStatus(response.data.status))
   }
 
   const logout = async () => {
     if (!error) {
-      await axios
+      await apiClient
         .post('/admin/logout')
         .then(() => mutate()) // データを更新
         .catch(error => {

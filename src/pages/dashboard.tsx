@@ -1,6 +1,6 @@
 import AppLayout from '../components/Layouts/AppLayout'
 import Head from 'next/head'
-import axios from '../lib/axios'
+import { apiClient } from '../lib/apiClient'
 import { AxiosError, AxiosResponse } from 'axios'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
@@ -15,7 +15,7 @@ const Dashboard = () => {
 
   // 初回レンダリング時にAPIリクエスト
   useEffect(() => {
-    axios
+    apiClient
       .get('/api/memos')
       .then((response: AxiosResponse) => {
         console.log(response.data)

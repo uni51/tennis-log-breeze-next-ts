@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 import { AxiosError, AxiosResponse } from 'axios'
 import { useState } from 'react'
 import { RequiredMark } from '../components/RequiredMark'
-import axios from '../lib/axios'
+import { apiClient } from '../lib/apiClient'
 import { useRouter } from 'next/router'
 import { useUserState } from '../atoms/userAtom'
 import { useForm } from 'react-hook-form'
@@ -41,12 +41,12 @@ const Home: NextPage = () => {
     // バリデーションメッセージの初期化
     setValidation({})
 
-    axios
+    apiClient
       // CSRF保護の初期化
       .get('/sanctum/csrf-cookie')
       .then(res => {
         // ログイン処理
-        axios
+        apiClient
           .post('/login', data)
           .then((response: AxiosResponse) => {
             setUser(response.data.data)

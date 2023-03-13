@@ -6,9 +6,11 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { Loading } from '../../components/Loading'
 import { useAuth } from '../../hooks/useAuth'
-import axios from '../../lib/axios'
+import { apiClient } from '../../lib/apiClient'
+import Link from 'next/link'
 
 type Memo = {
+  id: number
   title: string
   body: string
   category_name: string
@@ -30,7 +32,7 @@ const MemoList: NextPage = () => {
         router.push('/')
         return
       }
-      axios
+      apiClient
         .get('/api/memos')
         .then((response: AxiosResponse) => {
           console.log(response.data)
@@ -67,11 +69,15 @@ const MemoList: NextPage = () => {
           <div className="grid w-4/5 mx-auto gap-4 grid-cols-2">
             {memos.map((memo: Memo, index) => {
               return (
-                <div className="bg-gray-100 shadow-lg mb-5 p-4" key={index}>
-                  <p className="text-lg font-bold mb-1">{memo.title}</p>
-                  <p className="">{memo.body}</p>
-                  <p className="text-lg font-bold mb-1">{memo.category_name}</p>
-                </div>
+                <Link href={`/memos/${memo.id}`}>
+                  <div className="bg-gray-100 shadow-lg mb-5 p-4" key={index}>
+                    <p className="text-lg font-bold mb-1">{memo.title}</p>
+                    <p className="">{memo.body}</p>
+                    <p className="text-lg font-bold mb-1">
+                      {memo.category_name}
+                    </p>
+                  </div>
+                </Link>
               )
             })}
           </div>

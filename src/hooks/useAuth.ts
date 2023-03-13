@@ -1,5 +1,5 @@
 import { useUserState } from '../atoms/userAtom'
-import axios from '../lib/axios'
+import { apiClient } from '../lib/apiClient'
 
 export const useAuth = () => {
   const { user, setUser } = useUserState()
@@ -10,7 +10,7 @@ export const useAuth = () => {
     }
 
     try {
-      const res = await axios.get('/api/user')
+      const res = await apiClient.get('/api/user')
       if (!res.data.data) {
         return false
       }

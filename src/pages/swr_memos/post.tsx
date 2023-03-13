@@ -5,7 +5,7 @@ import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { ChangeEvent, useState } from 'react'
 import { RequiredMark } from '../../components/RequiredMark'
-import axios from '../../lib/axios'
+import { apiClient } from '../../lib/apiClient'
 
 // POSTデータの型
 type MemoForm = {
@@ -41,12 +41,12 @@ const Post: NextPage = () => {
     // バリデーションメッセージの初期化
     setValidation({})
 
-    // axios
+    // apiClient
     //   // CSRF保護の初期化
     //   .get('/sanctum/csrf-cookie')
     //   .then(res => {
     // APIへのリクエスト
-    axios
+    apiClient
       .post('/api/memos', memoForm)
       .then((response: AxiosResponse) => {
         console.log(response.data)
