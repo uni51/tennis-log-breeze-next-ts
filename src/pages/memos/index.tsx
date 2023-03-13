@@ -69,8 +69,8 @@ const MemoList: NextPage = () => {
           <div className="grid w-4/5 mx-auto gap-4 grid-cols-2">
             {memos.map((memo: Memo, index) => {
               return (
-                <Link href={`/memos/${memo.id}`}>
-                  <div className="bg-gray-100 shadow-lg mb-5 p-4" key={index}>
+                <Link href={`/memos/${memo.id}`} key={index}>
+                  <div className="bg-gray-100 shadow-lg mb-5 p-4">
                     <p className="text-lg font-bold mb-1">{memo.title}</p>
                     <p className="">{memo.body}</p>
                     <p className="text-lg font-bold mb-1">
