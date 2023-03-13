@@ -5,7 +5,7 @@ import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { ChangeEvent, useState } from 'react'
 import { RequiredMark } from '../../components/RequiredMark'
-import { apiClient } from '../../lib/apiClient'
+import { apiClient } from '../../lib/utils/apiClient'
 
 // POSTデータの型
 type MemoForm = {

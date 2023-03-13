@@ -3,7 +3,7 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { AxiosError, AxiosResponse } from 'axios'
-import { apiClient } from '../../lib/apiClient'
+import { apiClient } from '../../lib/utils/apiClient'
 import { Loading } from '../../components/Loading'
 
 type Memo = {

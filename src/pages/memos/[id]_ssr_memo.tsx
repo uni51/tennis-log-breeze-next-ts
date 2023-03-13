@@ -1,4 +1,4 @@
-import { apiServer } from 'lib/apiClient'
+import { apiServer } from 'lib/utils/apiClient'
 
 export default function MemoDetail({ memo }) {
   return (

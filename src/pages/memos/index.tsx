@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { Loading } from '../../components/Loading'
 import { useAuth } from '../../hooks/useAuth'
-import { apiClient } from '../../lib/apiClient'
+import { apiClient } from '../../lib/utils/apiClient'
 import Link from 'next/link'
 
 type Memo = {

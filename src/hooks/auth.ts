@@ -1,5 +1,5 @@
 import useSWR from 'swr'
-import { apiClient } from './../lib/apiClient'
+import { apiClient } from '../lib/utils/apiClient'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 

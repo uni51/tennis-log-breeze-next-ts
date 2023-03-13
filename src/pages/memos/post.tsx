@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
 import { RequiredMark } from '../../components/RequiredMark'
 import { useAuth } from '../../hooks/useAuth'
-import { apiClient } from '../../lib/apiClient'
+import { apiClient } from '../../lib/utils/apiClient'
 
 // POSTデータの型
 type MemoForm = {

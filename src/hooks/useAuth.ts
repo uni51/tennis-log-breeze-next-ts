@@ -1,5 +1,5 @@
 import { useUserState } from '../atoms/userAtom'
-import { apiClient } from '../lib/apiClient'
+import { apiClient } from '../lib/utils/apiClient'
 
 export const useAuth = () => {
   const { user, setUser } = useUserState()
