@@ -1,5 +1,3 @@
-import axios from 'axios'
-import useSWR, { SWRResponse } from 'swr'
 import { Memo } from '../../../types/Memo'
 import { apiClient } from '../../../lib/utils/apiClient'
 
