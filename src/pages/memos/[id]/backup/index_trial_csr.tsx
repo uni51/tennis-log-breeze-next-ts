@@ -1,10 +1,10 @@
-import AppLayout from '../../components/Layouts/AppLayout'
+import AppLayout from '../../../../components/Layouts/AppLayout'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { AxiosError, AxiosResponse } from 'axios'
-import { apiClient } from '../../lib/utils/apiClient'
-import { Loading } from '../../components/Loading'
+import { apiClient } from '../../../../lib/utils/apiClient'
+import { Loading } from '../../../../components/Loading'
 
 type Memo = {
   id: number
