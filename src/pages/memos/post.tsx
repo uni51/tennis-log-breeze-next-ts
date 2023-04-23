@@ -174,8 +174,11 @@ const Post: NextPage = () => {
           <select
             {...register('category_id', {
               validate: value => {
-                return category.findIndex(item => item.id === Number(value)) !=
-                  -1
+                // return category.findIndex(item => item.id === Number(value)) !=
+                //   -1
+                //   ? true
+                //   : '不正な値です'
+                return !!category.find(item => item.id === Number(value))
                   ? true
                   : '不正な値です'
               },
