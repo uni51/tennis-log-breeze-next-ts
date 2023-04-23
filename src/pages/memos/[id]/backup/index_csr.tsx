@@ -4,19 +4,12 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { AxiosError, AxiosResponse } from 'axios'
-import { apiClient } from '../../../../lib/utils/apiClient'
 import { Loading } from '../../../../components/Loading'
 import { Memo } from '../../../../types/Memo'
+import { getMemoDetail } from 'pages/api/memo/getDetail'
 
 type Props = Memo['data']['memo']
-// type Memo = {
-//   id: number
-//   title: string
-//   body: string
-//   category_name: string
-// }
 
-// const MemoDetail = () => {
 const MemoDetail: NextPage<Props> = () => {
   const [memo, setMemo] = useState<Props>()
   const [isLoading, setIsLoading] = useState(true)
@@ -25,16 +18,24 @@ const MemoDetail: NextPage<Props> = () => {
 
   useEffect(() => {
     if (router.isReady) {
-      apiClient
-        .get(`api/memos/${router.query.id}`)
-        .then((response: AxiosResponse) => {
-          console.log(response.data)
-          setMemo(response.data.data)
-        })
-        .catch((err: AxiosError) => console.log(err.response))
-        .finally(() => setIsLoading(false))
+      const result = getMemoDetail(router)
+      setMemo(result['memo'])
+      setIsLoading(false)
     }
   }, [router])
+
+  // useEffect(() => {
+  //   if (router.isReady) {
+  //     apiClient
+  //       .get(`api/memos/${router.query.id}`)
+  //       .then((response: AxiosResponse) => {
+  //         console.log(response.data)
+  //         setMemo(response.data.data)
+  //       })
+  //       .catch((err: AxiosError) => console.log(err.response))
+  //       .finally(() => setIsLoading(false))
+  //   }
+  // }, [router])
 
   if (isLoading) return <Loading />
 
