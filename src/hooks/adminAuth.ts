@@ -3,7 +3,10 @@ import { apiClient } from '../lib/utils/apiClient'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 
-export const useAdminAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
+export const useAdminAuth = ({
+  middleware,
+  redirectIfAuthenticated,
+}: { middleware?: string; redirectIfAuthenticated?: string } = {}) => {
   const router = useRouter()
 
   const { data: admin, error, mutate } = useSWR('/api/admin', () =>
