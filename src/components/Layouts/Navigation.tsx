@@ -7,8 +7,9 @@ import { DropdownButton } from '../DropdownLink'
 import { useAuth } from '../../hooks/auth'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
+import { UserState } from 'atoms/userAtom'
 
-const Navigation = ({ user }) => {
+const Navigation = ({ user }: { user: UserState }) => {
   const router = useRouter()
 
   const { logout } = useAuth()

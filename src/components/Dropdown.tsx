@@ -10,7 +10,7 @@ const Dropdown = ({
 }: {
   align: string
   width: string
-  contentClasses: string
+  contentClasses?: string
   trigger: ReactNode
   children: ReactNode
 }) => {

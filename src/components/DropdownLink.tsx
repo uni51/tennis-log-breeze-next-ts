@@ -21,7 +21,8 @@ export const DropdownButton = ({
   children,
   ...props
 }: {
-  children: ReactNode
+  children: string
+  onClick: () => Promise<void>
 }) => (
   <Menu.Item>
     {({ active }) => (

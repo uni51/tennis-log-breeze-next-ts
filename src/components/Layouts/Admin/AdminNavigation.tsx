@@ -7,8 +7,9 @@ import { DropdownButton } from '../../DropdownLink'
 import { useAdminAuth } from 'hooks/adminAuth'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
+import { UserState } from 'atoms/userAtom'
 
-const AdminNavigation = ({ user }) => {
+const AdminNavigation = ({ user }: { user: UserState }) => {
   const router = useRouter()
 
   const { logout } = useAdminAuth()

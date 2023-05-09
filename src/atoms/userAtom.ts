@@ -2,7 +2,7 @@
 
 import { atom, useRecoilState } from 'recoil'
 
-type UserState = { id: number; name: string } | null
+export type UserState = { id: number; name: string; email: string } | null
 
 const userState = atom<UserState>({
   key: 'user',

@@ -1,7 +1,14 @@
 import Navigation from './Navigation'
 import { useAuth } from '../../hooks/auth'
+import { ReactNode } from 'react'
 
-const AppLayout = ({ header, children }) => {
+const AppLayout = ({
+  header,
+  children,
+}: {
+  header: ReactNode
+  children: ReactNode
+}) => {
   const { user } = useAuth({ middleware: 'auth' })
 
   return (

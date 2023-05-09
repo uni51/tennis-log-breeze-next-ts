@@ -1,6 +1,6 @@
 import Navigation from './Navigation'
 import { useAuth } from '../../hooks/useAuth'
-import { Fragment, useState } from 'react'
+import { Fragment, ReactNode, useState } from 'react'
 import { Dialog, Menu, Transition } from '@headlessui/react'
 import {
   Bars3BottomLeftIcon,
@@ -86,11 +86,17 @@ const userNavigation = [
   { name: 'Sign out', href: '#' },
 ]
 
-function classNames(...classes) {
+function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-const AppLayout = ({ header, children }) => {
+const AppLayout = ({
+  header,
+  children,
+}: {
+  header: ReactNode
+  children: ReactNode
+}) => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const { user } = useAuth()
 
