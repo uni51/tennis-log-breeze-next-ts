@@ -4,15 +4,15 @@ import Link from 'next/link'
 import NavLink from '../NavLink'
 import ResponsiveNavLink, { ResponsiveNavButton } from '../ResponsiveNavLink'
 import { DropdownButton } from '../DropdownLink'
-import { useAuth } from '../../hooks/auth'
+import { useAuth, User } from '../../hooks/auth'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { UserState } from 'atoms/userAtom'
 
-const Navigation = ({ user }: { user: UserState }) => {
+const Navigation = (user?: User) => {
   const router = useRouter()
 
-  const { logout } = useAuth()
+  const { logout } = useAuth({ middleware: 'auth' })
 
   const [open, setOpen] = useState(false)
 

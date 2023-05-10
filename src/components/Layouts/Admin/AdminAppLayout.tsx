@@ -11,7 +11,7 @@ const AdminAppLayout = ({ header, children }: PropsWithChildren<Props>) => {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <AdminNavigation user={admin} />
+      <AdminNavigation {...admin} />
 
       {/* Page Heading */}
       <header className="bg-white shadow">

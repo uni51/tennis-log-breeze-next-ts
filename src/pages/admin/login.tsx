@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 
 const Login = () => {
-  const router = useRouter()
+  const { query } = useRouter()
 
   const { login } = useAdminAuth({
     middleware: 'guest',
@@ -23,17 +23,18 @@ const Login = () => {
   const [password, setPassword] = useState('')
   const [shouldRemember, setShouldRemember] = useState(false)
   const [errors, setErrors] = useState([])
-  const [status, setStatus] = useState(null)
+  const [status, setStatus] = useState<string | null>(null)
 
   useEffect(() => {
-    if (router.query.reset?.length > 0 && errors.length === 0) {
-      setStatus(atob(router.query.reset))
+    const reset = query && query.reset ? (query.reset as string) : ''
+    if (reset.length > 0 && errors.length === 0) {
+      setStatus(atob(reset))
     } else {
       setStatus(null)
     }
   })
 
-  const submitForm = async event => {
+  const submitForm = async (event: { preventDefault: () => void }) => {
     event.preventDefault()
 
     login({

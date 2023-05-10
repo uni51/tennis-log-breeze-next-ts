@@ -1,6 +1,6 @@
+import { PropsWithChildren, ReactNode } from 'react'
 import Navigation from './Navigation'
 import { useAuth } from '../../hooks/auth'
-import { PropsWithChildren, ReactNode } from 'react'
 
 interface Props {
   header: ReactNode
@@ -11,7 +11,7 @@ const AppLayout = ({ header, children }: PropsWithChildren<Props>) => {
 
   return (
     <div className="min-h-screen">
-      <Navigation user={user} />
+      <Navigation {...user} />
 
       {/* Page Heading */}
       <header className="bg-white shadow">

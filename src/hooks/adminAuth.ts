@@ -1,15 +1,38 @@
 import useSWR from 'swr'
 import { apiClient } from '../lib/utils/apiClient'
-import { useEffect } from 'react'
+import { Dispatch, SetStateAction, useEffect } from 'react'
 import { useRouter } from 'next/router'
+
+declare type AdminAuthMiddleware = 'adminAuth' | 'guest'
+
+interface IUseAuth {
+  middleware: AdminAuthMiddleware
+  redirectIfAuthenticated?: string
+}
+
+interface IApiRequest {
+  setErrors: React.Dispatch<React.SetStateAction<never[]>>
+  setStatus: React.Dispatch<React.SetStateAction<any | null>>
+  [key: string]: any
+}
+
+export interface Admin {
+  id?: number
+  name?: string
+  email?: string
+  email_verified_at?: string
+  must_verify_email?: boolean // this is custom attribute
+  created_at?: string
+  updated_at?: string
+}
 
 export const useAdminAuth = ({
   middleware,
   redirectIfAuthenticated,
-}: { middleware?: string; redirectIfAuthenticated?: string } = {}) => {
+}: IUseAuth) => {
   const router = useRouter()
 
-  const { data: admin, error, mutate } = useSWR('/api/admin', () =>
+  const { data: admin, error, mutate } = useSWR<Admin>('/api/admin', () =>
     apiClient
       .get('/api/admin')
       .then(res => res.data)
@@ -22,7 +45,9 @@ export const useAdminAuth = ({
 
   const csrf = () => apiClient.get('/sanctum/csrf-cookie')
 
-  const register = async ({ setErrors, ...props }) => {
+  const register = async (args: IApiRequest) => {
+    const { setErrors, ...props } = args
+
     await csrf()
 
     setErrors([])
@@ -37,7 +62,9 @@ export const useAdminAuth = ({
       })
   }
 
-  const login = async ({ setErrors, setStatus, ...props }) => {
+  const login = async (args: IApiRequest) => {
+    const { setErrors, setStatus, ...props } = args
+
     await csrf()
 
     setErrors([])
@@ -52,7 +79,9 @@ export const useAdminAuth = ({
       })
   }
 
-  const forgotPassword = async ({ setErrors, setStatus, email }) => {
+  const forgotPassword = async (args: IApiRequest) => {
+    const { setErrors, setStatus, email } = args
+
     await csrf()
 
     setErrors([])
@@ -68,7 +97,8 @@ export const useAdminAuth = ({
       })
   }
 
-  const resetPassword = async ({ setErrors, setStatus, ...props }) => {
+  const resetPassword = async (args: IApiRequest) => {
+    const { setErrors, setStatus, ...props } = args
     await csrf()
 
     setErrors([])
@@ -85,7 +115,9 @@ export const useAdminAuth = ({
       })
   }
 
-  const resendEmailVerification = ({ setStatus }) => {
+  const resendEmailVerification = (args: IApiRequest) => {
+    const { setStatus } = args
+
     apiClient
       .post('/admin/email/verification-notification')
       .then(response => setStatus(response.data.status))
@@ -109,6 +141,7 @@ export const useAdminAuth = ({
       router.push(redirectIfAuthenticated)
     if (
       window.location.pathname === '/admin/verify-email' &&
+      redirectIfAuthenticated &&
       admin?.email_verified_at
     )
       router.push(redirectIfAuthenticated)

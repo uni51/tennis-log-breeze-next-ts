@@ -1,6 +1,6 @@
 import { PropsWithChildren, Fragment, ReactNode, useState } from 'react'
 import Navigation from './Navigation'
-import { useAuth } from '../../hooks/useAuth'
+import { useAuth } from '../../hooks/auth'
 import { Dialog, Menu, Transition } from '@headlessui/react'
 import {
   Bars3BottomLeftIcon,
@@ -95,7 +95,7 @@ function classNames(...classes: string[]) {
 
 const AppLayout = ({ header, children }: PropsWithChildren<Props>) => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const { user } = useAuth()
+  const { user } = useAuth({ middleware: 'auth' })
 
   return (
     <>
@@ -327,7 +327,7 @@ const AppLayout = ({ header, children }: PropsWithChildren<Props>) => {
                 </button>
 
                 {/* Profile dropdown */}
-                <Navigation user={user} />
+                <Navigation {...user} />
               </div>
             </div>
           </div>

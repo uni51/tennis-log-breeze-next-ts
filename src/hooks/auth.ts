@@ -1,15 +1,35 @@
 import useSWR from 'swr'
 import { apiClient } from '../lib/utils/apiClient'
-import { useEffect } from 'react'
+import { Dispatch, SetStateAction, useEffect } from 'react'
 import { useRouter } from 'next/router'
 
-export const useAuth = ({
-  middleware,
-  redirectIfAuthenticated,
-}: { middleware?: string; redirectIfAuthenticated?: string } = {}) => {
+declare type AuthMiddleware = 'auth' | 'guest'
+
+interface IUseAuth {
+  middleware: AuthMiddleware
+  redirectIfAuthenticated?: string
+}
+
+interface IApiRequest {
+  setErrors: React.Dispatch<React.SetStateAction<never[]>>
+  setStatus: React.Dispatch<React.SetStateAction<any | null>>
+  [key: string]: any
+}
+
+export interface User {
+  id?: number
+  name?: string
+  email?: string
+  email_verified_at?: string
+  must_verify_email?: boolean // this is custom attribute
+  created_at?: string
+  updated_at?: string
+}
+
+export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
   const router = useRouter()
 
-  const { data: user, error, mutate } = useSWR('/api/user', () =>
+  const { data: user, error, mutate } = useSWR<User>('/api/user', () =>
     apiClient
       .get('/api/user')
       .then(res => res.data)
@@ -22,7 +42,9 @@ export const useAuth = ({
 
   const csrf = () => apiClient.get('/sanctum/csrf-cookie')
 
-  const register = async ({ setErrors, ...props }) => {
+  const register = async (args: IApiRequest) => {
+    const { setErrors, ...props } = args
+
     await csrf()
 
     setErrors([])
@@ -37,7 +59,9 @@ export const useAuth = ({
       })
   }
 
-  const login = async ({ setErrors, setStatus, ...props }) => {
+  const login = async (args: IApiRequest) => {
+    const { setErrors, setStatus, ...props } = args
+
     await csrf()
 
     setErrors([])
@@ -52,7 +76,8 @@ export const useAuth = ({
       })
   }
 
-  const forgotPassword = async ({ setErrors, setStatus, email }) => {
+  const forgotPassword = async (args: IApiRequest) => {
+    const { setErrors, setStatus, email } = args
     await csrf()
 
     setErrors([])
@@ -68,7 +93,8 @@ export const useAuth = ({
       })
   }
 
-  const resetPassword = async ({ setErrors, setStatus, ...props }) => {
+  const resetPassword = async (args: IApiRequest) => {
+    const { setErrors, setStatus, ...props } = args
     await csrf()
 
     setErrors([])
@@ -85,7 +111,8 @@ export const useAuth = ({
       })
   }
 
-  const resendEmailVerification = ({ setStatus }) => {
+  const resendEmailVerification = (args: IApiRequest) => {
+    const { setStatus } = args
     apiClient
       .post('/email/verification-notification')
       .then(response => setStatus(response.data.status))
@@ -102,7 +129,11 @@ export const useAuth = ({
   useEffect(() => {
     if (middleware === 'guest' && redirectIfAuthenticated && user)
       router.push(redirectIfAuthenticated)
-    if (window.location.pathname === '/verify-email' && user?.email_verified_at)
+    if (
+      window.location.pathname === '/verify-email' &&
+      redirectIfAuthenticated &&
+      user?.email_verified_at
+    )
       router.push(redirectIfAuthenticated)
     if (middleware === 'auth' && error) logout()
   }, [user, error])

@@ -4,15 +4,14 @@ import Link from 'next/link'
 import NavLink from '../../NavLink'
 import ResponsiveNavLink, { ResponsiveNavButton } from '../../ResponsiveNavLink'
 import { DropdownButton } from '../../DropdownLink'
-import { useAdminAuth } from 'hooks/adminAuth'
+import { useAdminAuth, Admin } from 'hooks/adminAuth'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
-import { UserState } from 'atoms/userAtom'
 
-const AdminNavigation = ({ user }: { user: UserState }) => {
+const AdminNavigation = (admin?: Admin) => {
   const router = useRouter()
 
-  const { logout } = useAdminAuth()
+  const { logout } = useAdminAuth({ middleware: 'adminAuth' })
 
   const [open, setOpen] = useState(false)
 
@@ -46,7 +45,7 @@ const AdminNavigation = ({ user }: { user: UserState }) => {
               width="48"
               trigger={
                 <button className="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 focus:outline-none transition duration-150 ease-in-out">
-                  <div>{user?.name}</div>
+                  <div>{admin?.name}</div>
 
                   <div className="ml-1">
                     <svg
@@ -132,10 +131,10 @@ const AdminNavigation = ({ user }: { user: UserState }) => {
 
               <div className="ml-3">
                 <div className="font-medium text-base text-gray-800">
-                  {user?.name}
+                  {admin?.name}
                 </div>
                 <div className="font-medium text-sm text-gray-500">
-                  {user?.email}
+                  {admin?.email}
                 </div>
               </div>
             </div>
