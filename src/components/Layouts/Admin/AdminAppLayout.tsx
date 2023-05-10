@@ -1,14 +1,12 @@
-import { ReactNode } from 'react'
+import { PropsWithChildren, ReactNode } from 'react'
 import AdminNavigation from './AdminNavigation'
 import { useAdminAuth } from 'hooks/adminAuth'
 
-const AdminAppLayout = ({
-  header,
-  children,
-}: {
+interface Props {
   header: ReactNode
-  children: ReactNode
-}) => {
+}
+
+const AdminAppLayout = ({ header, children }: PropsWithChildren<Props>) => {
   const { admin } = useAdminAuth({ middleware: 'adminAuth' })
 
   return (

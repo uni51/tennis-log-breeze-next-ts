@@ -1,14 +1,12 @@
 import Navigation from './Navigation'
 import { useAuth } from '../../hooks/auth'
-import { ReactNode } from 'react'
+import { PropsWithChildren, ReactNode } from 'react'
 
-const AppLayout = ({
-  header,
-  children,
-}: {
+interface Props {
   header: ReactNode
-  children: ReactNode
-}) => {
+}
+
+const AppLayout = ({ header, children }: PropsWithChildren<Props>) => {
   const { user } = useAuth({ middleware: 'auth' })
 
   return (

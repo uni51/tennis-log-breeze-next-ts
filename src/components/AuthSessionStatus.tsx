@@ -1,13 +1,10 @@
-import { ReactNode } from 'react'
+import { HTMLAttributes } from 'react'
+interface Props extends HTMLAttributes<HTMLDivElement> {
+  className?: string
+  status?: string | null
+}
 
-const AuthSessionStatus = ({
-  status,
-  className,
-  ...props
-}: {
-  status: ReactNode
-  className: string
-}) => (
+const AuthSessionStatus = ({ status, className, ...props }: Props) => (
   <>
     {status && (
       <div

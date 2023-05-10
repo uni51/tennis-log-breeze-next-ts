@@ -1,16 +1,15 @@
-import { ReactNode } from 'react'
+import { PropsWithChildren, LabelHTMLAttributes } from 'react'
 
 const Label = ({
   className,
   children,
   ...props
-}: {
-  className: string
-  children: ReactNode
-}) => (
+}: PropsWithChildren<LabelHTMLAttributes<HTMLLabelElement>>) => (
   <label
-    className={`${className} block font-medium text-sm text-gray-700`}
-    {...props}>
+    {...props}
+    className={
+      `block font-medium text-sm text-gray-700 dark:text-gray-300 ` + className
+    }>
     {children}
   </label>
 )

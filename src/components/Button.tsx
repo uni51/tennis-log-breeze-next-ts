@@ -1,15 +1,22 @@
-import React, { ButtonHTMLAttributes, FC } from 'react'
+import { ButtonHTMLAttributes } from 'react'
 
-export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-    specialProp?: string
-}
-
-const Button: FC<ButtonProps> = ({ type = 'submit', className, ...props }) => (
-    <button
-        type={type}
-        className={`${className} inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150`}
-        {...props}
-    />
+const Button = ({
+  type = 'submit',
+  className,
+  disabled,
+  children,
+  ...props
+}: ButtonHTMLAttributes<HTMLButtonElement>) => (
+  <button
+    {...props}
+    type={type}
+    className={
+      `inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded-md font-semibold text-xs text-gray-700 dark:text-gray-300 uppercase tracking-widest shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-25 transition ease-in-out duration-150 ${
+        disabled && 'opacity-25'
+      } ` + className
+    }>
+    {children}
+  </button>
 )
 
 export default Button

@@ -1,6 +1,6 @@
+import { PropsWithChildren, Fragment, ReactNode, useState } from 'react'
 import Navigation from './Navigation'
 import { useAuth } from '../../hooks/useAuth'
-import { Fragment, ReactNode, useState } from 'react'
 import { Dialog, Menu, Transition } from '@headlessui/react'
 import {
   Bars3BottomLeftIcon,
@@ -14,8 +14,11 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
-
 import { Disclosure } from '@headlessui/react'
+
+interface Props {
+  header: ReactNode
+}
 
 const navigation = [
   { name: 'Dashboard', icon: HomeIcon, current: true, href: '#' },
@@ -90,13 +93,7 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-const AppLayout = ({
-  header,
-  children,
-}: {
-  header: ReactNode
-  children: ReactNode
-}) => {
+const AppLayout = ({ header, children }: PropsWithChildren<Props>) => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const { user } = useAuth()
 
