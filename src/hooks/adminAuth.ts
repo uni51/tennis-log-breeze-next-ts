@@ -1,6 +1,6 @@
 import useSWR from 'swr'
 import { apiClient } from '../lib/utils/apiClient'
-import { Dispatch, SetStateAction, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 
 declare type AdminAuthMiddleware = 'adminAuth' | 'guest'

@@ -8,7 +8,7 @@ import InputError from '../../components/InputError'
 import Label from '../../components/Label'
 import Link from 'next/link'
 import { useAdminAuth } from 'hooks/adminAuth'
-import { useEffect, useState } from 'react'
+import { FormEventHandler, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 
 const Login = () => {
@@ -22,7 +22,10 @@ const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [shouldRemember, setShouldRemember] = useState(false)
-  const [errors, setErrors] = useState([])
+  const [errors, setErrors]: [
+    any,
+    React.Dispatch<React.SetStateAction<never[]>>,
+  ] = useState([])
   const [status, setStatus] = useState<string | null>(null)
 
   useEffect(() => {
@@ -34,7 +37,7 @@ const Login = () => {
     }
   })
 
-  const submitForm = async (event: { preventDefault: () => void }) => {
+  const submitForm: FormEventHandler = async event => {
     event.preventDefault()
 
     login({
