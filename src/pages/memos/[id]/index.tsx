@@ -6,7 +6,7 @@ import { Memo } from '../../../types/Memo'
 
 type Props = Memo['data']
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps(context: { query: any; req: any }) {
   const { query, req } = context
 
   const res = await apiServer.get(`/api/memos/${query.id}`, {

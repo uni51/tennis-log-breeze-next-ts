@@ -3,11 +3,11 @@ import Head from 'next/head'
 import { AxiosError, AxiosResponse } from 'axios'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { ChangeEvent, useEffect, useState } from 'react'
+import { ChangeEvent, SetStateAction, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
 import { RequiredMark } from '../../components/RequiredMark'
-import { useAuth } from '../../hooks/useAuth'
+import { useAuth } from '../../hooks/auth'
 import { apiClient } from '../../lib/utils/apiClient'
 
 // POSTデータの型
@@ -34,8 +34,8 @@ const Post: NextPage = () => {
   //   category_id: '1', // 初期値はフォアハンド
   // })
   const [validation, setValidation] = useState<Validation>({})
-  const { checkLoggedIn } = useAuth()
-  const [category, setCategory] = useState([])
+  const { user } = useAuth({ middleware: 'auth' })
+  const [category, setCategory] = useState<any[]>([])
 
   // React-Hook-Form
   const {
@@ -47,8 +47,7 @@ const Post: NextPage = () => {
   useEffect(() => {
     const init = async () => {
       // ログイン中か判定
-      const res: boolean = await checkLoggedIn()
-      if (!res) {
+      if (!user) {
         router.push('/')
       }
       const responseCategories = await apiClient.get('api/categories')
@@ -148,7 +147,6 @@ const Post: NextPage = () => {
             </div>
             <textarea
               className="p-2 border rounded-md w-full outline-none"
-              name="body"
               cols={30}
               rows={4}
               {...register('body', { required: '必須入力です。' })}

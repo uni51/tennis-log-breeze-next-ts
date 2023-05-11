@@ -17,13 +17,15 @@ interface IApiRequest {
 }
 
 export interface User {
-  id?: number
-  name?: string
-  email?: string
-  email_verified_at?: string
-  must_verify_email?: boolean // this is custom attribute
-  created_at?: string
-  updated_at?: string
+  data?: {
+    id?: number
+    name?: string
+    email?: string
+    email_verified_at?: string
+    must_verify_email?: boolean // this is custom attribute
+    created_at?: string
+    updated_at?: string
+  }
 }
 
 export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
@@ -132,7 +134,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
     if (
       window.location.pathname === '/verify-email' &&
       redirectIfAuthenticated &&
-      user?.email_verified_at
+      user?.data?.email_verified_at
     )
       router.push(redirectIfAuthenticated)
     if (middleware === 'auth' && error) logout()
