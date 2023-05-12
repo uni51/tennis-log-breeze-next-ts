@@ -1,152 +1,127 @@
-import type { NextPage } from 'next'
-import { AxiosError, AxiosResponse } from 'axios'
-import { useState } from 'react'
-import { RequiredMark } from '../components/RequiredMark'
-import { apiClient } from '../lib/utils/apiClient'
+import AuthCard from '../components/AuthCard'
+import AuthSessionStatus from '../components/AuthSessionStatus'
+import GuestLayout from '../components/Layouts/GuestLayout'
+import Input from '../components/Input'
+import InputError from '../components/InputError'
+import Label from '../components/Label'
+import Link from 'next/link'
+import { useAuth } from '../hooks/auth'
+import { useEffect, useState, FormEventHandler } from 'react'
 import { useRouter } from 'next/router'
-import { useUserState } from '../atoms/userAtom'
-import { useForm } from 'react-hook-form'
-import { ErrorMessage } from '@hookform/error-message'
+import Head from 'next/head'
+import Checkbox from '../components/CheckBox'
+import PrimaryButton from '../components/PrimaryButton'
 
-// POSTデータの型
-type LoginForm = {
-  email: string
-  password: string
-}
+const Login = () => {
+  const { query } = useRouter()
 
-// バリデーションメッセージの型
-type Validation = {
-  email?: string
-  password?: string
-  loginFailed?: string
-}
+  const { login } = useAuth({
+    middleware: 'guest',
+    redirectIfAuthenticated: '/dashboard',
+  })
 
-const Home: NextPage = () => {
-  // ルーター定義
-  const router = useRouter()
-  // state定義
-  const [validation, setValidation] = useState<Validation>({})
-  // recoil stateの呼び出し
-  const { setUser } = useUserState()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [shouldRemember, setShouldRemember] = useState(false)
+  const [errors, setErrors]: [
+    any,
+    React.Dispatch<React.SetStateAction<never[]>>,
+  ] = useState([])
+  const [status, setStatus] = useState<string | null>(null)
 
-  // React-Hook-Form
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginForm>()
+  useEffect(() => {
+    const reset = query && query.reset ? (query.reset as string) : ''
+    if (reset.length > 0 && errors.length === 0) {
+      setStatus(atob(reset))
+    } else {
+      setStatus(null)
+    }
+  })
 
-  // ログイン
-  const login = (data: LoginForm) => {
-    // バリデーションメッセージの初期化
-    setValidation({})
+  const submitForm: FormEventHandler = async event => {
+    event.preventDefault()
 
-    apiClient
-      // CSRF保護の初期化
-      .get('/sanctum/csrf-cookie')
-      .then(res => {
-        // ログイン処理
-        apiClient
-          .post('/login', data)
-          .then((response: AxiosResponse) => {
-            setUser(response.data.data)
-            router.push('/memos')
-          })
-          .catch((err: AxiosError) => {
-            console.log(err.response)
-            // バリデーションエラー
-            if (err.response?.status === 422) {
-              const errors = err.response?.data.errors
-              // state更新用のオブジェクトを別で定義
-              const validationMessages: {
-                [index: string]: string
-              } = {} as Validation
-              Object.keys(errors).map((key: string) => {
-                validationMessages[key] = errors[key][0]
-              })
-              // state更新用オブジェクトに更新
-              setValidation(validationMessages)
-            }
-            if (err.response?.status === 500) {
-              alert('システムエラーです！！')
-            }
-          })
-      })
+    login({
+      email,
+      password,
+      remember: shouldRemember,
+      setErrors,
+      setStatus,
+    })
   }
 
   return (
-    <div className="w-2/3 mx-auto py-24">
-      <div className="w-1/2 mx-auto border-2 px-12 py-16 rounded-2xl">
-        <h3 className="mb-10 text-2xl text-center">ログイン</h3>
-        <div className="mb-5">
-          <div className="flex justify-start my-2">
-            <p>メールアドレス</p>
-            <RequiredMark />
+    <GuestLayout>
+      <Head>
+        <title>Laravel - Login</title>
+      </Head>
+      <AuthCard>
+        {/* Session Status */}
+        <AuthSessionStatus className="mb-4" status={status} />
+
+        <form onSubmit={submitForm}>
+          {/* Email Address */}
+          <div>
+            <Label htmlFor="email">Email</Label>
+
+            <Input
+              id="email"
+              type="email"
+              value={email}
+              className="block mt-1 w-full"
+              onChange={event => setEmail(event.target.value)}
+              required
+              isFocused={true}
+            />
+
+            <InputError messages={errors.email} className="mt-2" />
           </div>
-          <input
-            className="p-2 border rounded-md w-full outline-none"
-            {...register('email', {
-              required: '必須入力です。',
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: '有効なメールアドレスを入力してください。',
-              },
-            })}
-          />
-          <ErrorMessage
-            errors={errors}
-            name={'email'}
-            render={({ message }) => (
-              <p className="py-3 text-red-500">{message}</p>
-            )}
-          />
-          {validation.email && (
-            <p className="py-3 text-red-500">{validation.email}</p>
-          )}
-        </div>
-        <div className="mb-5">
-          <div className="flex justify-start my-2">
-            <p>パスワード</p>
-            <RequiredMark />
+
+          {/* Password */}
+          <div className="mt-4">
+            <Label htmlFor="password">Password</Label>
+
+            <Input
+              id="password"
+              type="password"
+              value={password}
+              className="block mt-1 w-full"
+              onChange={event => setPassword(event.target.value)}
+              required
+              autoComplete="current-password"
+            />
+
+            <InputError messages={errors.password} className="mt-2" />
           </div>
-          <small className="mb-2 text-gray-500 block">
-            8文字以上の半角英数字で入力してください
-          </small>
-          <input
-            className="p-2 border rounded-md w-full outline-none"
-            type="password"
-            {...register('password', {
-              required: '必須入力です。',
-              pattern: {
-                value: /^([a-zA-Z0-9]{8,})$/,
-                message: '8文字以上の半角英数字で入力してください',
-              },
-            })}
-          />
-          <ErrorMessage
-            errors={errors}
-            name={'password'}
-            render={({ message }) => (
-              <p className="py-3 text-red-500">{message}</p>
-            )}
-          />
-          {validation.password && (
-            <p className="py-3 text-red-500">{validation.password}</p>
-          )}
-        </div>
-        <div className="text-center mt-12">
-          {validation.loginFailed && (
-            <p className="py-3 text-red-500">{validation.loginFailed}</p>
-          )}
-          <button
-            className="bg-gray-700 text-gray-50 py-3 sm:px-20 px-10 rounded-xl cursor-pointer drop-shadow-md hover:bg-gray-600"
-            onClick={handleSubmit(login)}>
-            ログイン
-          </button>
-        </div>
-      </div>
-    </div>
+
+          {/* Remember Me */}
+          <div className="block mt-4">
+            <label htmlFor="remember_me" className="inline-flex items-center">
+              <Checkbox
+                id="remember_me"
+                name="remember"
+                checked={shouldRemember}
+                onChange={event => setShouldRemember(event.target.checked)}
+              />
+              <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">
+                Remember me
+              </span>
+            </label>
+          </div>
+
+          <div className="flex items-center justify-end mt-4">
+            <Link
+              href="/forgot-password"
+              className="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
+              Forgot your password?
+            </Link>
+
+            <PrimaryButton className="ml-4">Login</PrimaryButton>
+          </div>
+        </form>
+      </AuthCard>
+    </GuestLayout>
   )
 }
 
-export default Home
+export default Login
