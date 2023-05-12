@@ -55,7 +55,7 @@ const Login = () => {
       <Head>
         <title>Laravel - Login</title>
       </Head>
-      <AuthCard>
+      <AuthCard logo={undefined}>
         {/* Session Status */}
         <AuthSessionStatus className="mb-4" status={status} />
 
