@@ -47,7 +47,7 @@ const Post: NextPage = () => {
     //   .then(res => {
     // APIへのリクエスト
     apiClient
-      .post('/api/memos', memoForm)
+      .post('/memos', memoForm)
       .then((response: AxiosResponse) => {
         console.log(response.data)
         router.push('/memos')

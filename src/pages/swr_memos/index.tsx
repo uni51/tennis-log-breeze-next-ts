@@ -17,7 +17,7 @@ const Dashboard = () => {
   // 初回レンダリング時にAPIリクエスト
   useEffect(() => {
     apiClient
-      .get('/api/memos')
+      .get('/memos')
       .then((response: AxiosResponse) => {
         console.log(response.data)
         setMemos(response.data.data)

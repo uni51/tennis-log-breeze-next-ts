@@ -2,7 +2,7 @@ import { Memo } from './../types/Memo.d'
 import { apiClient } from './utils/apiClient'
 
 export async function getAllMemoIds() {
-  const res = await apiClient.get('/api/memos')
+  const res = await apiClient.get('/memos')
   const memos = res.data.data
 
   return memos.map((memo: Memo['data']['memo']) => {
@@ -16,7 +16,7 @@ export async function getAllMemoIds() {
 }
 
 export async function getMemoData(id: string) {
-  const res = await apiClient.get('/api/memos/${id}')
+  const res = await apiClient.get('/memos/${id}')
   const memo = res.data.data
   return memo
 }

@@ -9,7 +9,7 @@ type Props = Memo['data']
 export async function getServerSideProps(context: { query: any; req: any }) {
   const { query, req } = context
 
-  const res = await apiServer.get(`/api/memos/${query.id}`, {
+  const res = await apiServer.get(`/memos/${query.id}`, {
     headers: {
       origin: 'localhost:3000',
       Cookie: req.headers.cookie,
