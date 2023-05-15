@@ -33,7 +33,7 @@ const MemoList: NextPage = () => {
         return
       }
       apiClient
-        .get('/memos')
+        .get('/api/memos')
         .then((response: AxiosResponse) => {
           console.log(response.data)
           setMemos(response.data.data)

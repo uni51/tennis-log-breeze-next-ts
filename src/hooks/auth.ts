@@ -31,9 +31,9 @@ export interface User {
 export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
   const router = useRouter()
 
-  const { data: user, error, mutate } = useSWR<User>('/user', () =>
+  const { data: user, error, mutate } = useSWR<User>('/api/user', () =>
     apiClient
-      .get('/user')
+      .get('/api/user')
       .then(res => res.data)
       .catch(error => {
         if (error.response.status !== 409) throw error

@@ -43,7 +43,7 @@ const Home: NextPage = () => {
 
     apiClient
       // CSRF保護の初期化
-      .get('/sanctum/csrf-cookie')
+      .get('/auth/sanctum/csrf-cookie')
       .then(res => {
         // ログイン処理
         apiClient
