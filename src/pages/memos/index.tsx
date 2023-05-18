@@ -1,13 +1,13 @@
-import AppLayout from '../../components/Layouts/AppLayout'
-import Head from 'next/head'
 import { AxiosError, AxiosResponse } from 'axios'
 import type { NextPage } from 'next'
+import Head from 'next/head'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { Loading } from '../../components/Loading'
-import { useAuth } from '../../hooks/useAuth'
-import { apiClient } from '../../lib/utils/apiClient'
-import Link from 'next/link'
+import AppLayout from '@/components/Layouts/AppLayout'
+import { Loading } from '@/components/Loading'
+import { useAuth } from '@/hooks/useAuth'
+import { apiClient } from '@/lib/utils/apiClient'
 
 type Memo = {
   id: number
@@ -48,34 +48,30 @@ const MemoList: NextPage = () => {
 
   return (
     <AppLayout
-      header={
-        <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-          メモ一覧
-        </h2>
-      }>
+      header={<h2 className='font-semibold text-xl text-gray-800 leading-tight'>メモ一覧</h2>}
+    >
       <Head>
         <title>メモ一覧</title>
       </Head>
-      <div className="mx-auto mt-32">
-        <div className="w-1/2 mx-auto text-center">
+      <div className='mx-auto mt-32'>
+        <div className='w-1/2 mx-auto text-center'>
           <button
-            className="text-xl mb-12 py-3 px-10 bg-blue-500 text-white rounded-3xl drop-shadow-md hover:bg-blue-400"
-            onClick={() => router.push('/memos/post')}>
+            className='text-xl mb-12 py-3 px-10 bg-blue-500 text-white rounded-3xl drop-shadow-md hover:bg-blue-400'
+            onClick={() => router.push('/memos/post')}
+          >
             メモを追加する
           </button>
         </div>
-        <div className="mt-3">
+        <div className='mt-3'>
           {/* DBから取得したメモデータの一覧表示 */}
-          <div className="grid w-4/5 mx-auto gap-4 grid-cols-2">
+          <div className='grid w-4/5 mx-auto gap-4 grid-cols-2'>
             {memos.map((memo: Memo, index) => {
               return (
                 <a href={`/memos/${memo.id}`} key={index}>
-                  <div className="bg-gray-100 shadow-lg mb-5 p-4">
-                    <p className="text-lg font-bold mb-1">{memo.title}</p>
-                    <p className="">{memo.body}</p>
-                    <p className="text-lg font-bold mb-1">
-                      {memo.category_name}
-                    </p>
+                  <div className='bg-gray-100 shadow-lg mb-5 p-4'>
+                    <p className='text-lg font-bold mb-1'>{memo.title}</p>
+                    <p className=''>{memo.body}</p>
+                    <p className='text-lg font-bold mb-1'>{memo.category_name}</p>
                   </div>
                 </a>
               )

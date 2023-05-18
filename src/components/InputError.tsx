@@ -8,10 +8,7 @@ const InputError = ({ messages = [], className = '', ...props }: Props) => (
     {messages?.length > 0 && (
       <>
         {messages.map((message, index) => (
-          <p
-            {...props}
-            className={`text-sm text-red-600 ${className}`}
-            key={index}>
+          <p {...props} className={`text-sm text-red-600 ${className}`} key={index}>
             {message}
           </p>
         ))}

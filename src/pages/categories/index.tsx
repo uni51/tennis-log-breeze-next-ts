@@ -1,9 +1,9 @@
-import AppLayout from '../../components/Layouts/AppLayout'
-import Head from 'next/head'
 import { AxiosError, AxiosResponse } from 'axios'
 import type { NextPage } from 'next'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
+import AppLayout from '../../components/Layouts/AppLayout'
 import { Loading } from '../../components/Loading'
 import { apiClient } from '../../lib/utils/apiClient'
 
@@ -35,15 +35,15 @@ const CatgeoryList: NextPage = () => {
   if (isLoading) return <Loading />
 
   return (
-    <div className="mx-auto mt-32">
-      <div className="w-1/2 mx-auto text-center"></div>
-      <div className="mt-3">
+    <div className='mx-auto mt-32'>
+      <div className='w-1/2 mx-auto text-center'></div>
+      <div className='mt-3'>
         {/* DBから取得したメモデータの一覧表示 */}
-        <div className="grid w-4/5 mx-auto gap-4 grid-cols-2">
+        <div className='grid w-4/5 mx-auto gap-4 grid-cols-2'>
           {categories.map((category: Category, index) => {
             return (
-              <div className="bg-gray-100 shadow-lg mb-5 p-4">
-                <p className="text-lg font-bold mb-1">{category.name}</p>
+              <div className='bg-gray-100 shadow-lg mb-5 p-4' key={index}>
+                <p className='text-lg font-bold mb-1'>{category.name}</p>
               </div>
             )
           })}

@@ -1,12 +1,12 @@
-import type { NextPage } from 'next'
+import { ErrorMessage } from '@hookform/error-message'
 import { AxiosError, AxiosResponse } from 'axios'
+import type { NextPage } from 'next'
+import { useRouter } from 'next/router'
 import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { useUserState } from '../atoms/userAtom'
 import { RequiredMark } from '../components/RequiredMark'
 import { apiClient } from '../lib/utils/apiClient'
-import { useRouter } from 'next/router'
-import { useUserState } from '../atoms/userAtom'
-import { useForm } from 'react-hook-form'
-import { ErrorMessage } from '@hookform/error-message'
 
 // POSTデータの型
 type LoginForm = {
@@ -44,7 +44,7 @@ const Home: NextPage = () => {
     apiClient
       // CSRF保護の初期化
       .get('/auth/sanctum/csrf-cookie')
-      .then(res => {
+      .then((res) => {
         // ログイン処理
         apiClient
           .post('/login', data)
@@ -75,16 +75,16 @@ const Home: NextPage = () => {
   }
 
   return (
-    <div className="w-2/3 mx-auto py-24">
-      <div className="w-1/2 mx-auto border-2 px-12 py-16 rounded-2xl">
-        <h3 className="mb-10 text-2xl text-center">ログイン</h3>
-        <div className="mb-5">
-          <div className="flex justify-start my-2">
+    <div className='w-2/3 mx-auto py-24'>
+      <div className='w-1/2 mx-auto border-2 px-12 py-16 rounded-2xl'>
+        <h3 className='mb-10 text-2xl text-center'>ログイン</h3>
+        <div className='mb-5'>
+          <div className='flex justify-start my-2'>
             <p>メールアドレス</p>
             <RequiredMark />
           </div>
           <input
-            className="p-2 border rounded-md w-full outline-none"
+            className='p-2 border rounded-md w-full outline-none'
             {...register('email', {
               required: '必須入力です。',
               pattern: {
@@ -96,25 +96,21 @@ const Home: NextPage = () => {
           <ErrorMessage
             errors={errors}
             name={'email'}
-            render={({ message }) => (
-              <p className="py-3 text-red-500">{message}</p>
-            )}
+            render={({ message }) => <p className='py-3 text-red-500'>{message}</p>}
           />
-          {validation.email && (
-            <p className="py-3 text-red-500">{validation.email}</p>
-          )}
+          {validation.email && <p className='py-3 text-red-500'>{validation.email}</p>}
         </div>
-        <div className="mb-5">
-          <div className="flex justify-start my-2">
+        <div className='mb-5'>
+          <div className='flex justify-start my-2'>
             <p>パスワード</p>
             <RequiredMark />
           </div>
-          <small className="mb-2 text-gray-500 block">
+          <small className='mb-2 text-gray-500 block'>
             8文字以上の半角英数字で入力してください
           </small>
           <input
-            className="p-2 border rounded-md w-full outline-none"
-            type="password"
+            className='p-2 border rounded-md w-full outline-none'
+            type='password'
             {...register('password', {
               required: '必須入力です。',
               pattern: {
@@ -126,21 +122,16 @@ const Home: NextPage = () => {
           <ErrorMessage
             errors={errors}
             name={'password'}
-            render={({ message }) => (
-              <p className="py-3 text-red-500">{message}</p>
-            )}
+            render={({ message }) => <p className='py-3 text-red-500'>{message}</p>}
           />
-          {validation.password && (
-            <p className="py-3 text-red-500">{validation.password}</p>
-          )}
+          {validation.password && <p className='py-3 text-red-500'>{validation.password}</p>}
         </div>
-        <div className="text-center mt-12">
-          {validation.loginFailed && (
-            <p className="py-3 text-red-500">{validation.loginFailed}</p>
-          )}
+        <div className='text-center mt-12'>
+          {validation.loginFailed && <p className='py-3 text-red-500'>{validation.loginFailed}</p>}
           <button
-            className="bg-gray-700 text-gray-50 py-3 sm:px-20 px-10 rounded-xl cursor-pointer drop-shadow-md hover:bg-gray-600"
-            onClick={handleSubmit(login)}>
+            className='bg-gray-700 text-gray-50 py-3 sm:px-20 px-10 rounded-xl cursor-pointer drop-shadow-md hover:bg-gray-600'
+            onClick={handleSubmit(login)}
+          >
             ログイン
           </button>
         </div>

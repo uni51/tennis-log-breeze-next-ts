@@ -1,11 +1,11 @@
-import AppLayout from '../../components/Layouts/AppLayout'
-import Head from 'next/head'
+import { ErrorMessage } from '@hookform/error-message'
 import { AxiosError, AxiosResponse } from 'axios'
 import type { NextPage } from 'next'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { ChangeEvent, SetStateAction, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { ErrorMessage } from '@hookform/error-message'
+import AppLayout from '../../components/Layouts/AppLayout'
 import { RequiredMark } from '../../components/RequiredMark'
 import { useAuth } from '../../hooks/auth'
 import { apiClient } from '../../lib/utils/apiClient'
@@ -52,11 +52,9 @@ const Post: NextPage = () => {
       }
       const responseCategories = await apiClient.get('api/categories')
       const objectResponseCategories = responseCategories.data.data
-      const arrayResponseCategories = Object.keys(objectResponseCategories).map(
-        function (key) {
-          return objectResponseCategories[key]
-        },
-      )
+      const arrayResponseCategories = Object.keys(objectResponseCategories).map(function (key) {
+        return objectResponseCategories[key]
+      })
       setCategory(arrayResponseCategories)
     }
     init()
@@ -79,7 +77,7 @@ const Post: NextPage = () => {
     apiClient
       // CSRF保護の初期化
       .get('/auth/sanctum/csrf-cookie')
-      .then(res => {
+      .then((res) => {
         // APIへのリクエスト
         apiClient
           .post('/memos', postData)
@@ -111,42 +109,39 @@ const Post: NextPage = () => {
   return (
     <AppLayout
       header={
-        <h2 className="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 className='font-semibold text-xl text-gray-800 leading-tight'>
           Dashboard - メモの登録
         </h2>
-      }>
+      }
+    >
       <Head>
         <title>Dashboard - メモの登録</title>
       </Head>
-      <div className="w-4/5 mx-auto">
-        <div className="mx-auto mt-16 border-2 px-12 py-16 rounded-2xl">
-          <div className="mb-5">
-            <div className="flex justify-start my-2">
+      <div className='w-4/5 mx-auto'>
+        <div className='mx-auto mt-16 border-2 px-12 py-16 rounded-2xl'>
+          <div className='mb-5'>
+            <div className='flex justify-start my-2'>
               <p>タイトル</p>
               <RequiredMark />
             </div>
             <input
-              className="p-2 border rounded-md w-full outline-none"
+              className='p-2 border rounded-md w-full outline-none'
               {...register('title', { required: '必須入力です。' })}
             />
             <ErrorMessage
               errors={errors}
               name={'title'}
-              render={({ message }) => (
-                <p className="py-3 text-red-500">{message}</p>
-              )}
+              render={({ message }) => <p className='py-3 text-red-500'>{message}</p>}
             />
-            {validation.title && (
-              <p className="py-3 text-red-500">{validation.title}</p>
-            )}
+            {validation.title && <p className='py-3 text-red-500'>{validation.title}</p>}
           </div>
-          <div className="mb-5">
-            <div className="flex justify-start my-2">
+          <div className='mb-5'>
+            <div className='flex justify-start my-2'>
               <p>メモの内容</p>
               <RequiredMark />
             </div>
             <textarea
-              className="p-2 border rounded-md w-full outline-none"
+              className='p-2 border rounded-md w-full outline-none'
               cols={30}
               rows={4}
               {...register('body', { required: '必須入力です。' })}
@@ -154,13 +149,9 @@ const Post: NextPage = () => {
             <ErrorMessage
               errors={errors}
               name={'body'}
-              render={({ message }) => (
-                <p className="py-3 text-red-500">{message}</p>
-              )}
+              render={({ message }) => <p className='py-3 text-red-500'>{message}</p>}
             />
-            {validation.body && (
-              <p className="py-3 text-red-500">{validation.body}</p>
-            )}
+            {validation.body && <p className='py-3 text-red-500'>{validation.body}</p>}
           </div>
           {/* <select name="category_id" onChange={updateMemoForm}>
             {category.map((item, i) => (
@@ -171,16 +162,15 @@ const Post: NextPage = () => {
           </select> */}
           <select
             {...register('category_id', {
-              validate: value => {
+              validate: (value) => {
                 // return category.findIndex(item => item.id === Number(value)) !=
                 //   -1
                 //   ? true
                 //   : '不正な値です'
-                return !!category.find(item => item.id === Number(value))
-                  ? true
-                  : '不正な値です'
+                return !!category.find((item) => item.id === Number(value)) ? true : '不正な値です'
               },
-            })}>
+            })}
+          >
             {category.map((item, i) => (
               <option value={item.id} key={item.id}>
                 {item.name}
@@ -190,14 +180,13 @@ const Post: NextPage = () => {
           <ErrorMessage
             errors={errors}
             name={'category_id'}
-            render={({ message }) => (
-              <p className="py-3 text-red-500">{message}</p>
-            )}
+            render={({ message }) => <p className='py-3 text-red-500'>{message}</p>}
           />
-          <div className="text-center">
+          <div className='text-center'>
             <button
-              className="bg-gray-700 text-gray-50 py-3 sm:px-20 px-10 mt-8 rounded-xl cursor-pointer drop-shadow-md hover:bg-gray-600"
-              onClick={handleSubmit(createMemo)}>
+              className='bg-gray-700 text-gray-50 py-3 sm:px-20 px-10 mt-8 rounded-xl cursor-pointer drop-shadow-md hover:bg-gray-600'
+              onClick={handleSubmit(createMemo)}
+            >
               登録する
             </button>
           </div>

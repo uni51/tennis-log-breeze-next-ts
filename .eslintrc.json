@@ -1,29 +1,19 @@
 {
   "extends": [
-    "next",
     "next/core-web-vitals",
-    "eslint:recommended",
-    "plugin:prettier/recommended",
-    "plugin:react/recommended",
-    "plugin:react-hooks/recommended",
-    "plugin:@typescript-eslint/recommended",
     "plugin:import/recommended",
-    "plugin:import/typescript"
+    "plugin:import/warnings",
+    "prettier"
   ],
   "rules": {
-    "react/react-in-jsx-scope": "off",
-    // "react-hooks/exhaustive-deps": "off",
-    "import/order": [2, { "alphabetize": { "order": "asc" } }],
-    "prettier/prettier": [
+    "import/order": [
       "error",
       {
-        "trailingComma": "es5",
-        "endOfLine": "lf",
-        "semi": true,
-        "singleQuote": false,
-        "printWidth": 80,
-        "tabWidth": 2
+        "alphabetize": {
+          "order": "asc"
+        }
       }
-    ]
+    ],
+    "react-hooks/exhaustive-deps": "off"
   }
 }

@@ -1,6 +1,5 @@
-import { PropsWithChildren } from 'react'
 import Head from 'next/head'
-import { ReactNode } from 'react'
+import { PropsWithChildren, ReactNode } from 'react'
 
 const GuestLayout = ({ children }: PropsWithChildren) => {
   return (
@@ -9,7 +8,7 @@ const GuestLayout = ({ children }: PropsWithChildren) => {
         <title>Laravel</title>
       </Head>
 
-      <div className="font-sans text-gray-900 antialiased">{children}</div>
+      <div className='font-sans text-gray-900 antialiased'>{children}</div>
     </div>
   )
 }

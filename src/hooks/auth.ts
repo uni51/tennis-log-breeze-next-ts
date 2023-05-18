@@ -1,7 +1,7 @@
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 import useSWR from 'swr'
 import { apiClient } from '../lib/utils/apiClient'
-import { useEffect } from 'react'
-import { useRouter } from 'next/router'
 
 declare type AuthMiddleware = 'auth' | 'guest'
 
@@ -34,8 +34,8 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
   const { data: user, error, mutate } = useSWR<User>('/api/user', () =>
     apiClient
       .get('/api/user')
-      .then(res => res.data)
-      .catch(error => {
+      .then((res) => res.data)
+      .catch((error) => {
         if (error.response.status !== 409) throw error
 
         router.push('/verify-email')
@@ -54,7 +54,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
     apiClient
       .post('/register', props)
       .then(() => mutate())
-      .catch(error => {
+      .catch((error) => {
         if (error.response.status !== 422) throw error
 
         setErrors(error.response.data.errors)
@@ -72,7 +72,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
     apiClient
       .post('/login', props)
       .then(() => mutate())
-      .catch(error => {
+      .catch((error) => {
         if (error.response.status !== 422) throw error
         setErrors(error.response.data.errors)
       })
@@ -87,8 +87,8 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
 
     apiClient
       .post('/forgot-password', { email })
-      .then(response => setStatus(response.data.status))
-      .catch(error => {
+      .then((response) => setStatus(response.data.status))
+      .catch((error) => {
         if (error.response.status !== 422) throw error
 
         setErrors(error.response.data.errors)
@@ -104,10 +104,8 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
 
     apiClient
       .post('/reset-password', { token: router.query.token, ...props })
-      .then(response =>
-        router.push('/login?reset=' + btoa(response.data.status)),
-      )
-      .catch(error => {
+      .then((response) => router.push('/login?reset=' + btoa(response.data.status)))
+      .catch((error) => {
         if (error.response.status !== 422) throw error
         setErrors(error.response.data.errors)
       })
@@ -117,7 +115,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
     const { setStatus } = args
     apiClient
       .post('/email/verification-notification')
-      .then(response => setStatus(response.data.status))
+      .then((response) => setStatus(response.data.status))
   }
 
   const logout = async () => {

@@ -1,7 +1,7 @@
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 import useSWR from 'swr'
 import { apiClient } from '../lib/utils/apiClient'
-import { useEffect } from 'react'
-import { useRouter } from 'next/router'
 
 declare type AdminAuthMiddleware = 'adminAuth' | 'guest'
 
@@ -26,17 +26,14 @@ export interface Admin {
   updated_at?: string
 }
 
-export const useAdminAuth = ({
-  middleware,
-  redirectIfAuthenticated,
-}: IUseAuth) => {
+export const useAdminAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
   const router = useRouter()
 
   const { data: admin, error, mutate } = useSWR<Admin>('/api/admin', () =>
     apiClient
       .get('/api/admin')
-      .then(res => res.data)
-      .catch(error => {
+      .then((res) => res.data)
+      .catch((error) => {
         if (error.response.status !== 409) throw error
 
         router.push('/admin/verify-email')
@@ -55,7 +52,7 @@ export const useAdminAuth = ({
     apiClient
       .post('/admin/register', props)
       .then(() => mutate()) // データを更新
-      .catch(error => {
+      .catch((error) => {
         if (error.response.status !== 422) throw error
 
         setErrors(error.response.data.errors)
@@ -73,7 +70,7 @@ export const useAdminAuth = ({
     apiClient
       .post('/admin/login', props)
       .then(() => mutate()) // データを更新
-      .catch(error => {
+      .catch((error) => {
         if (error.response.status !== 422) throw error
         setErrors(error.response.data.errors)
       })
@@ -89,8 +86,8 @@ export const useAdminAuth = ({
 
     apiClient
       .post('/admin/forgot-password', { email })
-      .then(response => setStatus(response.data.status))
-      .catch(error => {
+      .then((response) => setStatus(response.data.status))
+      .catch((error) => {
         if (error.response.status !== 422) throw error
 
         setErrors(error.response.data.errors)
@@ -106,10 +103,8 @@ export const useAdminAuth = ({
 
     apiClient
       .post('/admin/reset-password', { token: router.query.token, ...props })
-      .then(response =>
-        router.push('/admin/login?reset=' + btoa(response.data.status)),
-      )
-      .catch(error => {
+      .then((response) => router.push('/admin/login?reset=' + btoa(response.data.status)))
+      .catch((error) => {
         if (error.response.status !== 422) throw error
         setErrors(error.response.data.errors)
       })
@@ -120,7 +115,7 @@ export const useAdminAuth = ({
 
     apiClient
       .post('/admin/email/verification-notification')
-      .then(response => setStatus(response.data.status))
+      .then((response) => setStatus(response.data.status))
   }
 
   const logout = async () => {
@@ -128,7 +123,7 @@ export const useAdminAuth = ({
       await apiClient
         .post('/admin/logout')
         .then(() => mutate()) // データを更新
-        .catch(error => {
+        .catch((error) => {
           console.log(error)
         })
     }
