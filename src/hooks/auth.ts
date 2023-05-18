@@ -122,7 +122,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
 
   const logout = async () => {
     if (!error) {
-      await apiClient.post('/logout').then(() => mutate())
+      await apiClient.post('/auth/logout').then(() => mutate())
     }
 
     window.location.pathname = '/login'
