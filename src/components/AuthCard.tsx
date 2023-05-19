@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { PropsWithChildren, ReactNode } from 'react'
-import ApplicationLogo from './ApplicationLogo'
+import ApplicationLogo from '@/components/ApplicationLogo'
 
 interface Props {
   logo: ReactNode

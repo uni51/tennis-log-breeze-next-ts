@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import useSWR from 'swr'
-import { apiClient } from '../lib/utils/apiClient'
+import { apiClient } from '@/lib/utils/apiClient'
 
 declare type AuthMiddleware = 'auth' | 'guest'
 

@@ -1,5 +1,5 @@
-import { Memo } from './../types/Memo.d'
-import { apiClient } from './utils/apiClient'
+import { apiClient } from '@/lib/utils/apiClient'
+import { Memo } from '@/types/Memo.d'
 
 export async function getAllMemoIds() {
   const res = await apiClient.get('/memos')

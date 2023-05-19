@@ -1,11 +1,9 @@
 import { AxiosError, AxiosResponse } from 'axios'
 import type { NextPage } from 'next'
-import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import AppLayout from '../../components/Layouts/AppLayout'
-import { Loading } from '../../components/Loading'
-import { apiClient } from '../../lib/utils/apiClient'
+import { Loading } from '@/components/Loading'
+import { apiClient } from '@/lib/utils/apiClient'
 
 type Category = {
   name: string

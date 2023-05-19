@@ -3,12 +3,12 @@ import { AxiosError, AxiosResponse } from 'axios'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { ChangeEvent, SetStateAction, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import AppLayout from '../../components/Layouts/AppLayout'
-import { RequiredMark } from '../../components/RequiredMark'
-import { useAuth } from '../../hooks/auth'
-import { apiClient } from '../../lib/utils/apiClient'
+import AppLayout from '@/components/Layouts/AppLayout'
+import { RequiredMark } from '@/components/RequiredMark'
+import { useAuth } from '@/hooks/auth'
+import { apiClient } from '@/lib/utils/apiClient'
 
 // POSTデータの型
 type MemoForm = {

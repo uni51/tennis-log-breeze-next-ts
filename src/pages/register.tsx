@@ -1,13 +1,13 @@
 import Link from 'next/link'
 import { FormEventHandler, useState } from 'react'
-import ApplicationLogo from '../components/ApplicationLogo'
-import AuthCard from '../components/AuthCard'
-import Button from '../components/Button'
-import Input from '../components/Input'
-import InputError from '../components/InputError'
-import Label from '../components/Label'
-import GuestLayout from '../components/Layouts/GuestLayout'
-import { useAuth } from '../hooks/auth'
+import ApplicationLogo from '@/components/ApplicationLogo'
+import AuthCard from '@/components/AuthCard'
+import Button from '@/components/Button'
+import Input from '@/components/Input'
+import InputError from '@/components/InputError'
+import Label from '@/components/Label'
+import GuestLayout from '@/components/Layouts/GuestLayout'
+import { useAuth } from '@/hooks/auth'
 
 const Register = () => {
   const { register } = useAuth({

@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import AdminAppLayout from '../../components/Layouts/Admin/AdminAppLayout'
+import AdminAppLayout from '@/components/Layouts/Admin/AdminAppLayout'
 
 const Dashboard = () => {
   return (

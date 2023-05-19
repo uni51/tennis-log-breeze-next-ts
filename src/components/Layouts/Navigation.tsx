@@ -1,9 +1,9 @@
 import { useRouter } from 'next/router'
 import { useState } from 'react'
-import { User, useAuth } from '../../hooks/auth'
-import Dropdown from '../Dropdown'
-import { DropdownButton } from '../DropdownLink'
-import { ResponsiveNavButton } from '../ResponsiveNavLink'
+import Dropdown from '@/components/Dropdown'
+import { DropdownButton } from '@/components/DropdownLink'
+import { ResponsiveNavButton } from '@/components/ResponsiveNavLink'
+import { User, useAuth } from '@/hooks/auth'
 
 const Navigation = (user?: User) => {
   const router = useRouter()

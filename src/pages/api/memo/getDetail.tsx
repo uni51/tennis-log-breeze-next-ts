@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios'
 import { NextRouter } from 'next/router'
-import { apiClient } from '../../../lib/utils/apiClient'
-import { Memo } from '../../../types/Memo'
+import { apiClient } from '@/lib/utils/apiClient'
+import { Memo } from '@/types/Memo'
 
 export async function getMemoDetail(router: NextRouter) {
   try {

@@ -2,8 +2,8 @@ import { AxiosError, AxiosResponse } from 'axios'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import AppLayout from '../components/Layouts/AppLayout'
-import { apiClient } from '../lib/utils/apiClient'
+import AppLayout from '@/components/Layouts/AppLayout'
+import { apiClient } from '@/lib/utils/apiClient'
 
 type Memo = {
   title: string

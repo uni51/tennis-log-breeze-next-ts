@@ -4,9 +4,9 @@ import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useUserState } from '../atoms/userAtom'
-import { RequiredMark } from '../components/RequiredMark'
-import { apiClient } from '../lib/utils/apiClient'
+import { useUserState } from '@/atoms/userAtom'
+import { RequiredMark } from '@/components/RequiredMark'
+import { apiClient } from '@/lib/utils/apiClient'
 
 // POSTデータの型
 type LoginForm = {
