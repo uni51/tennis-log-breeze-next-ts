@@ -1,4 +1,5 @@
 {
+  // See. https://zenn.dev/hungry_goat/articles/b7ea123eeaaa44
   "extends": [
     "next/core-web-vitals",
     "plugin:import/recommended",
@@ -6,6 +7,7 @@
     "prettier"
   ],
   "rules": {
+    "react-hooks/exhaustive-deps": "off",
     "import/order": [
       "error",
       {
@@ -13,7 +15,6 @@
           "order": "asc"
         }
       }
-    ],
-    "react-hooks/exhaustive-deps": "off"
+    ]
   }
 }
