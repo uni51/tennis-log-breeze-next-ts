@@ -1,28 +1,20 @@
 {
-    "extends": [
-        "next",
-        "next/core-web-vitals",
-        "eslint:recommended",
-        "plugin:prettier/recommended",
-        "plugin:react/recommended",
-        "plugin:react-hooks/recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:import/recommended",
-        "plugin:import/typescript"
-    ],
-    "rules": {
-        "react/react-in-jsx-scope": "off",
-        "import/order": [2, { "alphabetize": { "order": "asc" } }],
-        "prettier/prettier": [
-            "error",
-            {
-                "trailingComma": "es5",
-                "endOfLine": "lf",
-                "semi": true,
-                "singleQuote": false,
-                "printWidth": 80,
-                "tabWidth": 2
-            }
-        ]
-    }
+  // See. https://zenn.dev/hungry_goat/articles/b7ea123eeaaa44
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:import/recommended",
+    "plugin:import/warnings",
+    "prettier"
+  ],
+  "rules": {
+    "react-hooks/exhaustive-deps": "off",
+    "import/order": [
+      "error",
+      {
+        "alphabetize": {
+          "order": "asc"
+        }
+      }
+    ]
+  }
 }
