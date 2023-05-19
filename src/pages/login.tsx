@@ -1,151 +1,143 @@
-import ApplicationLogo from '../components/ApplicationLogo'
-import AuthCard from '../components/AuthCard'
-import AuthSessionStatus from '../components/AuthSessionStatus'
-import Button from '../components/Button'
-import GuestLayout from '../components/Layouts/GuestLayout'
-import Input from '../components/Input'
-import InputError from '../components/InputError'
-import Label from '../components/Label'
-import Link from 'next/link'
-import { useAuth } from '../hooks/auth'
-import { useEffect, useState } from 'react'
+import { ErrorMessage } from '@hookform/error-message'
+import { AxiosError, AxiosResponse } from 'axios'
+import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { useUserState } from '@/atoms/userAtom'
+import { RequiredMark } from '@/components/RequiredMark'
+import { apiClient } from '@/lib/utils/apiClient'
 
-const Login = () => {
-    const router = useRouter()
-
-    const { login } = useAuth({
-        middleware: 'guest',
-        redirectIfAuthenticated: '/dashboard',
-    })
-
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [shouldRemember, setShouldRemember] = useState(false)
-    const [errors, setErrors] = useState([])
-    const [status, setStatus] = useState(null)
-
-    useEffect(() => {
-        if (router.query.reset?.length > 0 && errors.length === 0) {
-            setStatus(atob(router.query.reset))
-        } else {
-            setStatus(null)
-        }
-    })
-
-    const submitForm = async event => {
-        event.preventDefault()
-
-        login({
-            email,
-            password,
-            remember: shouldRemember,
-            setErrors,
-            setStatus,
-        })
-    }
-
-    return (
-        <GuestLayout>
-            <AuthCard
-                logo={
-                    <Link href="/">
-                        <ApplicationLogo className="w-20 h-20 fill-current text-gray-500" />
-                    </Link>
-                }>
-                {/* Session Status */}
-                <AuthSessionStatus className="mb-4" status={status} />
-
-                <form onSubmit={submitForm}>
-                    {/* Email Address */}
-                    <div>
-                        <Label htmlFor="email" className={undefined}>
-                            Email
-                        </Label>
-
-                        <Input
-                            id="email"
-                            type="email"
-                            value={email}
-                            className="block mt-1 w-full"
-                            onChange={event => setEmail(event.target.value)}
-                            required
-                            autoFocus
-                        />
-
-                        <InputError messages={errors.email} className="mt-2" />
-                    </div>
-
-                    {/* Password */}
-                    <div className="mt-4">
-                        <Label htmlFor="password" className={undefined}>
-                            Password
-                        </Label>
-
-                        <Input
-                            id="password"
-                            type="password"
-                            value={password}
-                            className="block mt-1 w-full"
-                            onChange={event => setPassword(event.target.value)}
-                            required
-                            autoComplete="current-password"
-                        />
-
-                        <InputError
-                            messages={errors.password}
-                            className="mt-2"
-                        />
-                    </div>
-
-                    {/* Remember Me */}
-                    <div className="block mt-4">
-                        <label
-                            htmlFor="remember_me"
-                            className="inline-flex items-center">
-                            <input
-                                id="remember_me"
-                                type="checkbox"
-                                name="remember"
-                                className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                onChange={event =>
-                                    setShouldRemember(event.target.checked)
-                                }
-                            />
-
-                            <span className="ml-2 text-sm text-gray-600">
-                                Remember me
-                            </span>
-                        </label>
-                    </div>
-
-                    <div className="flex items-center justify-end mt-4 gap-3">
-                        <Link
-                            href={`${process.env.NEXT_PUBLIC_BACKEND_URL}/login/github`}
-                            className="underline text-sm >text-gray-600 hover:text-gray-900">
-                            Github
-                        </Link>
-
-                        <Link
-                            href={`${process.env.NEXT_PUBLIC_BACKEND_URL}/login/google`}
-                            className="underline text-sm text-gray-600 hover:text-gray-900">
-                            Google
-                        </Link>
-                    </div>
-
-                    <div className="flex items-center justify-end mt-4">
-                        <Link
-                            href="/forgot-password"
-                            className="underline text-sm text-gray-600 hover:text-gray-900">
-                            Forgot your password?
-                        </Link>
-
-                        <Button className="ml-3">Login</Button>
-                    </div>
-                </form>
-            </AuthCard>
-        </GuestLayout>
-    )
+// POSTデータの型
+type LoginForm = {
+  email: string
+  password: string
 }
 
-export default Login
+// バリデーションメッセージの型
+type Validation = {
+  email?: string
+  password?: string
+  loginFailed?: string
+}
+
+const Home: NextPage = () => {
+  // ルーター定義
+  const router = useRouter()
+  // state定義
+  const [validation, setValidation] = useState<Validation>({})
+  // recoil stateの呼び出し
+  const { setUser } = useUserState()
+
+  // React-Hook-Form
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginForm>()
+
+  // ログイン
+  const login = (data: LoginForm) => {
+    // バリデーションメッセージの初期化
+    setValidation({})
+
+    apiClient
+      // CSRF保護の初期化
+      .get('/auth/sanctum/csrf-cookie')
+      .then((res) => {
+        // ログイン処理
+        apiClient
+          .post('/auth/login', data)
+          .then((response: AxiosResponse) => {
+            setUser(response.data.data)
+            router.push('/memos')
+          })
+          .catch((err: AxiosError) => {
+            console.log(err.response)
+            // バリデーションエラー
+            if (err.response?.status === 422) {
+              const errors = err.response?.data.errors
+              // state更新用のオブジェクトを別で定義
+              const validationMessages: {
+                [index: string]: string
+              } = {} as Validation
+              Object.keys(errors).map((key: string) => {
+                validationMessages[key] = errors[key][0]
+              })
+              // state更新用オブジェクトに更新
+              setValidation(validationMessages)
+            }
+            if (err.response?.status === 500) {
+              alert('システムエラーです！！')
+            }
+          })
+      })
+  }
+
+  return (
+    <div className='w-2/3 mx-auto py-24'>
+      <div className='w-1/2 mx-auto border-2 px-12 py-16 rounded-2xl'>
+        <h3 className='mb-10 text-2xl text-center'>ログイン</h3>
+        <div className='mb-5'>
+          <div className='flex justify-start my-2'>
+            <p>メールアドレス</p>
+            <RequiredMark />
+          </div>
+          <input
+            className='p-2 border rounded-md w-full outline-none'
+            {...register('email', {
+              required: '必須入力です。',
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: '有効なメールアドレスを入力してください。',
+              },
+            })}
+          />
+          <ErrorMessage
+            errors={errors}
+            name={'email'}
+            render={({ message }) => <p className='py-3 text-red-500'>{message}</p>}
+          />
+          {validation.email && <p className='py-3 text-red-500'>{validation.email}</p>}
+        </div>
+        <div className='mb-5'>
+          <div className='flex justify-start my-2'>
+            <p>パスワード</p>
+            <RequiredMark />
+          </div>
+          <small className='mb-2 text-gray-500 block'>
+            8文字以上の半角英数字で入力してください
+          </small>
+          <input
+            className='p-2 border rounded-md w-full outline-none'
+            type='password'
+            {...register('password', {
+              required: '必須入力です。',
+              pattern: {
+                value: /^([a-zA-Z0-9]{8,})$/,
+                message: '8文字以上の半角英数字で入力してください',
+              },
+            })}
+          />
+          <ErrorMessage
+            errors={errors}
+            name={'password'}
+            render={({ message }) => <p className='py-3 text-red-500'>{message}</p>}
+          />
+          {validation.password && <p className='py-3 text-red-500'>{validation.password}</p>}
+        </div>
+        <div className='text-center mt-12'>
+          {validation.loginFailed && <p className='py-3 text-red-500'>{validation.loginFailed}</p>}
+          <button
+            className='bg-gray-700 text-gray-50 py-3 sm:px-20 px-10 rounded-xl cursor-pointer drop-shadow-md hover:bg-gray-600'
+            onClick={handleSubmit(login)}
+          >
+            ログイン
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default Home
