@@ -27,12 +27,6 @@ type Validation = {
 const Post: NextPage = () => {
   // ルーター定義
   const router = useRouter()
-  // state定義
-  // const [memoForm, setMemoForm] = useState<MemoForm>({
-  //   title: '',
-  //   body: '',
-  //   category_id: '1', // 初期値はフォアハンド
-  // })
   const [validation, setValidation] = useState<Validation>({})
   const { user } = useAuth({ middleware: 'auth' })
   const [category, setCategory] = useState<any[]>([])
@@ -42,7 +36,7 @@ const Post: NextPage = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<MemoForm>()
+  } = useForm<MemoForm>({ defaultValues: { category_id: 1 } })
 
   useEffect(() => {
     const init = async () => {
@@ -60,15 +54,6 @@ const Post: NextPage = () => {
     init()
   }, [])
 
-  console.log(category)
-
-  // POSTデータの更新
-  // const updateMemoForm = (
-  //   e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
-  // ) => {
-  //   setMemoForm({ ...memoForm, [e.target.name]: e.target.value })
-  // }
-
   // メモの登録
   const createMemo = (postData: MemoForm) => {
     // バリデーションメッセージの初期化
@@ -80,7 +65,7 @@ const Post: NextPage = () => {
       .then((res) => {
         // APIへのリクエスト
         apiClient
-          .post('/memos', postData)
+          .post('/api/memos', postData)
           .then((response: AxiosResponse) => {
             console.log(response.data)
             router.push('/memos')
@@ -97,7 +82,7 @@ const Post: NextPage = () => {
                 validationMessages[key] = errors[key][0]
               })
               // state更新用オブジェクトに更新
-              setValidation(validationMessages)
+              setValidation({ ...validation, ...validationMessages })
             }
             if (err.response?.status === 500) {
               alert('システムエラーです！！')
@@ -153,20 +138,9 @@ const Post: NextPage = () => {
             />
             {validation.body && <p className='py-3 text-red-500'>{validation.body}</p>}
           </div>
-          {/* <select name="category_id" onChange={updateMemoForm}>
-            {category.map((item, i) => (
-              <option value={item.id} key={item.id}>
-                {item.name}
-              </option>
-            ))}
-          </select> */}
           <select
             {...register('category_id', {
               validate: (value) => {
-                // return category.findIndex(item => item.id === Number(value)) !=
-                //   -1
-                //   ? true
-                //   : '不正な値です'
                 return !!category.find((item) => item.id === Number(value)) ? true : '不正な値です'
               },
             })}
@@ -182,6 +156,7 @@ const Post: NextPage = () => {
             name={'category_id'}
             render={({ message }) => <p className='py-3 text-red-500'>{message}</p>}
           />
+          {validation.category_id && <p className='py-3 text-red-500'>{validation.category_id}</p>}
           <div className='text-center'>
             <button
               className='bg-gray-700 text-gray-50 py-3 sm:px-20 px-10 mt-8 rounded-xl cursor-pointer drop-shadow-md hover:bg-gray-600'
