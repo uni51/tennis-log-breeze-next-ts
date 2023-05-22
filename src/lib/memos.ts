@@ -5,7 +5,7 @@ export async function getAllMemoIds() {
   const res = await apiClient.get('/memos')
   const memos = res.data.data
 
-  return memos.map((memo: Memo['data']['memo']) => {
+  return memos.map((memo: Memo['memo']) => {
     return {
       params: {
         id: memo.id.toString,
