@@ -7,18 +7,19 @@ import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import { useAuth } from '@/hooks/useAuth'
 import { apiClient } from '@/lib/utils/apiClient'
+import { Memo } from '@/types/Memo'
 
-type Memo = {
-  id: number
-  title: string
-  body: string
-  category_name: string
-}
+// type Memo = {
+//   id: number
+//   title: string
+//   body: string
+//   category_name: string
+// }
 
 const MemoList: NextPage = () => {
   const router = useRouter()
   // state定義
-  const [memos, setMemos] = useState<Memo[]>([])
+  const [memos, setMemos] = useState<Memo['memo'][]>([])
   const [isLoading, setIsLoading] = useState(true)
   const { checkLoggedIn } = useAuth()
 
@@ -64,13 +65,15 @@ const MemoList: NextPage = () => {
         <div className='mt-3'>
           {/* DBから取得したメモデータの一覧表示 */}
           <div className='grid w-4/5 mx-auto gap-4 grid-cols-2'>
-            {memos.map((memo: Memo, index) => {
+            {memos.map((memo: Memo['memo'], index) => {
               return (
                 <a href={`/memos/${memo.id}`} key={index}>
                   <div className='bg-gray-100 shadow-lg mb-5 p-4'>
                     <p className='text-lg font-bold mb-1'>{memo.title}</p>
                     <p className=''>{memo.body}</p>
                     <p className='text-lg font-bold mb-1'>{memo.category_name}</p>
+                    <p className='text-sm mb-1'>作成日時：{memo.created_at}</p>
+                    <p className='text-sm mb-1'>更新日時：{memo.updated_at}</p>
                   </div>
                 </a>
               )

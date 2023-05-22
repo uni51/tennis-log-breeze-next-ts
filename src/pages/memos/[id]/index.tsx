@@ -4,8 +4,6 @@ import AppLayout from '@/components/Layouts/AppLayout'
 import { apiServer } from '@/lib/utils/apiServer'
 import { Memo } from '@/types/Memo'
 
-type Props = Memo['data']
-
 export async function getServerSideProps(context: { query: any; req: any }) {
   const { query, req } = context
 
@@ -22,7 +20,7 @@ export async function getServerSideProps(context: { query: any; req: any }) {
   }
 }
 
-const MemoDetail: NextPage<Props> = ({ memo }) => {
+const MemoDetail: NextPage<Memo> = ({ memo }) => {
   return (
     <AppLayout
       header={<h2 className='font-semibold text-xl text-gray-800 leading-tight'>メモ詳細</h2>}
@@ -36,6 +34,8 @@ const MemoDetail: NextPage<Props> = ({ memo }) => {
             <p className='text-lg font-bold mb-1'>{memo.title}</p>
             <p className=''>{memo.body}</p>
             <p className='text-lg font-bold mb-1'>{memo.category_name}</p>
+            <p className='text-sm mb-1'>作成日時：{memo.created_at}</p>
+            <p className='text-sm mb-1'>更新日時：{memo.updated_at}</p>
           </div>
         </div>
       </div>

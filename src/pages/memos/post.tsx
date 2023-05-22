@@ -122,7 +122,7 @@ const Post: NextPage = () => {
           </div>
           <div className='mb-5'>
             <div className='flex justify-start my-2'>
-              <p>メモの内容</p>
+              <p>内容</p>
               <RequiredMark />
             </div>
             <textarea
@@ -138,6 +138,7 @@ const Post: NextPage = () => {
             />
             {validation.body && <p className='py-3 text-red-500'>{validation.body}</p>}
           </div>
+          <p>カテゴリー</p>
           <select
             {...register('category_id', {
               validate: (value) => {
