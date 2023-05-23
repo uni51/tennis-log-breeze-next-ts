@@ -1,6 +1,7 @@
 export type Memo = {
   memo: {
     id: number
+    user_id: number
     title: string
     body: string
     category_id: number
