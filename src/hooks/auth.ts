@@ -42,7 +42,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
       }),
   )
 
-  const csrf = () => apiClient.get('/sanctum/csrf-cookie')
+  const csrf = () => apiClient.get('/auth/sanctum/csrf-cookie')
 
   const register = async (args: IApiRequest) => {
     const { setErrors, ...props } = args
@@ -70,7 +70,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
     setStatus(null)
 
     apiClient
-      .post('/login', props)
+      .post('/auth/login', props)
       .then(() => mutate())
       .catch((error) => {
         if (error.response.status !== 422) throw error
@@ -126,6 +126,23 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
     window.location.pathname = '/login'
   }
 
+  const checkLoggedIn = async (): Promise<boolean> => {
+    if (user) {
+      return true
+    }
+
+    try {
+      const res = await apiClient.get('/api/user')
+      if (!res.data.data) {
+        return false
+      }
+      // console.log('checkLoggedIn')
+      return true
+    } catch {
+      return false
+    }
+  }
+
   useEffect(() => {
     if (middleware === 'guest' && redirectIfAuthenticated && user)
       router.push(redirectIfAuthenticated)
@@ -146,5 +163,6 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
     resetPassword,
     resendEmailVerification,
     logout,
+    checkLoggedIn,
   }
 }

@@ -1,13 +1,12 @@
 import 'tailwindcss/tailwind.css'
+
+import React from 'react'
 import type { AppProps } from 'next/app'
-import { RecoilRoot } from 'recoil'
 
 function App({ Component, pageProps }: AppProps) {
-  return (
-    <RecoilRoot>
-      <Component {...pageProps} />
-    </RecoilRoot>
-  )
-}
+  // suppress useLayoutEffect warnings when running outside a browser
+  if (!process.browser) React.useLayoutEffect = React.useEffect
 
+  return <Component {...pageProps} />
+}
 export default App

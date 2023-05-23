@@ -5,17 +5,23 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
-import { useAuth } from '@/hooks/auth'
+import { useAuth } from '@/hooks/useAuth'
 import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
 
+// type Memo = {
+//   id: number
+//   title: string
+//   body: string
+//   category_name: string
+// }
+
 const MemoList: NextPage = () => {
   const router = useRouter()
-  const { checkLoggedIn } = useAuth({ middleware: 'auth' })
-
   // state定義
   const [memos, setMemos] = useState<Memo['memo'][]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const { checkLoggedIn } = useAuth()
 
   // 初回レンダリング時にAPIリクエスト
   useEffect(() => {
@@ -23,7 +29,7 @@ const MemoList: NextPage = () => {
       // ログイン中か判定
       const res: boolean = await checkLoggedIn()
       if (!res) {
-        router.push('/login')
+        router.push('/')
         return
       }
       apiClient
