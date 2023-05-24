@@ -61,7 +61,6 @@ const PrivateMemoDetail: NextPage<MemoDetailProps> = () => {
       )}
     </AppLayout>
   )
-  // }
 }
 
 export default PrivateMemoDetail

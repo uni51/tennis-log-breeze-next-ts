@@ -53,6 +53,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
 
     apiClient
       .post('/register', props)
+      // useSWR の mutate は、keyが対応付けられているため、keyの指定は必要ない
       .then(() => mutate())
       .catch((error) => {
         if (error.response.status !== 422) throw error
@@ -71,6 +72,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
 
     apiClient
       .post('/auth/login', props)
+      // useSWR の mutate は、keyが対応付けられているため、keyの指定は必要ない
       .then(() => mutate())
       .catch((error) => {
         if (error.response.status !== 422) throw error
@@ -120,6 +122,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
 
   const logout = async () => {
     if (!error) {
+      // useSWR の mutate は、keyが対応付けられているため、keyの指定は必要ない
       await apiClient.post('/auth/logout').then(() => mutate())
     }
 
