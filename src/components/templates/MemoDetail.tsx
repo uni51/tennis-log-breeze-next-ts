@@ -3,7 +3,7 @@ import Head from 'next/head'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Memo } from '@/types/Memo'
 
-const MemoDetail: NextPage<Memo> = ({ memo }) => {
+const MemoDetail: NextPage<{ memo: Memo }> = ({ memo }) => {
   return (
     <div className='mx-auto mt-32'>
       <div className='grid w-4/5 mx-auto gap-4'>

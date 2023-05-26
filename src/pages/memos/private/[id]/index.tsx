@@ -12,10 +12,8 @@ import { apiClient } from '@/lib/utils/apiClient'
 import NotFoundPage from '@/pages/404'
 import { Memo } from '@/types/Memo'
 
-type MemoDetailProps = Memo['memo']
-
-const PrivateMemoDetail: NextPage<MemoDetailProps> = () => {
-  const [memo, setMemo] = useState<MemoDetailProps>()
+const PrivateMemoDetail: NextPage<Memo> = () => {
+  const [memo, setMemo] = useState<Memo>()
   const [isLoading, setIsLoading] = useState(true)
   const { checkLoggedIn, user } = useAuth({ middleware: 'auth' })
 

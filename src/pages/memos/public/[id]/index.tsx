@@ -38,7 +38,7 @@ export async function getServerSideProps(context: { query: any; req: any }) {
 }
 
 type Props = {
-  memo: Memo['memo']
+  memo: Memo
 }
 
 const PublicMemoDetail: NextPage<Props> = ({ memo }) => {

@@ -12,7 +12,7 @@ const MemoList: NextPage = () => {
   const router = useRouter()
 
   // state定義
-  const [memos, setMemos] = useState<Memo['memo'][]>([])
+  const [memos, setMemos] = useState<Memo[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
   // 初回レンダリング時にAPIリクエスト
@@ -53,7 +53,7 @@ const MemoList: NextPage = () => {
         <div className='mt-3'>
           {/* DBから取得したメモデータの一覧表示 */}
           <div className='grid w-4/5 mx-auto gap-4 grid-cols-2'>
-            {memos.map((memo: Memo['memo'], index) => {
+            {memos.map((memo: Memo, index) => {
               return (
                 <a href={`/memos/${memo.id}`} key={index}>
                   <div className='bg-gray-100 shadow-lg mb-5 p-4'>
