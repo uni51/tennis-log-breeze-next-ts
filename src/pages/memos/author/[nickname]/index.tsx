@@ -7,35 +7,43 @@ import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
+import { DataWithPagination } from '@/types/dataWithPagination'
+
+type ReturnType = DataWithPagination<Memo[]>
 
 const MemoList: NextPage = () => {
   const router = useRouter()
+  const { nickname } = router.query
 
   // state定義
-  const [memos, setMemos] = useState<Memo[]>([])
+  const [memos, setMemos] = useState<ReturnType>()
   const [isLoading, setIsLoading] = useState(true)
 
   const [pageIndex, setPageIndex] = useState(1)
+
+  const userId = nickname === undefined ? 1 : Number(nickname)
 
   // 初回レンダリング時にAPIリクエスト
   useEffect(() => {
     const init = async () => {
       apiClient
-        .get(`/api/public/memos?page=${pageIndex}`)
+        .get(`/api/public/memos/${userId}`)
         .then((response: AxiosResponse) => {
           console.log(response.data)
-          setMemos(response.data.data)
+          setMemos(response.data)
         })
         .catch((err: AxiosError) => console.log(err.response))
         .finally(() => setIsLoading(false))
       setIsLoading(false)
     }
     init()
-  }, [pageIndex])
+  }, [userId])
 
   if (isLoading) return <Loading />
 
-  const headline = '公開中のメモ一覧'
+  const headline = memos?.data[0]?.user_name
+    ? `${memos?.data[0]?.user_name}さんの公開中のメモ一覧`
+    : '公開中のメモ一覧'
 
   return (
     <AppLayout
@@ -45,18 +53,10 @@ const MemoList: NextPage = () => {
         <title>{headline}</title>
       </Head>
       <div className='mx-auto mt-32'>
-        <div className='w-1/2 mx-auto text-center'>
-          <button
-            className='text-xl mb-12 py-3 px-10 bg-blue-500 text-white rounded-3xl drop-shadow-md hover:bg-blue-400'
-            onClick={() => router.push('/memos/post')}
-          >
-            メモを追加する
-          </button>
-        </div>
         <div className='mt-3'>
           {/* DBから取得したメモデータの一覧表示 */}
           <div className='grid w-4/5 mx-auto gap-4 grid-cols-2'>
-            {memos.map((memo: Memo, index) => {
+            {memos?.data?.map((memo: Memo, index) => {
               return (
                 <a href={`/memos/${memo.id}`} key={index}>
                   <div className='bg-gray-100 shadow-lg mb-5 p-4'>
@@ -79,8 +79,6 @@ const MemoList: NextPage = () => {
               )
             })}
           </div>
-          <button onClick={() => setPageIndex(pageIndex - 1)}>Previous</button>
-          <button onClick={() => setPageIndex(pageIndex + 1)}>Next</button>
         </div>
       </div>
     </AppLayout>
