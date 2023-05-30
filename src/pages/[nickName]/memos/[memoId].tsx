@@ -6,8 +6,6 @@ import { useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import MemoDetail from '@/components/templates/MemoDetail'
-import MemoDetailNoContent from '@/components/templates/MemoDetailNoContent'
-import { useAuth } from '@/hooks/auth'
 import { apiClient } from '@/lib/utils/apiClient'
 import NotFoundPage from '@/pages/404'
 import { Memo } from '@/types/Memo'
@@ -19,20 +17,8 @@ const PrivateMemoDetail: NextPage<Memo> = () => {
 
   const [memo, setMemo] = useState<Memo>()
   const [isLoading, setIsLoading] = useState(true)
-  const { checkLoggedIn, user } = useAuth({ middleware: 'auth' })
-
-  let loginUser = user?.data
 
   useEffect(() => {
-    // const init = async () => {
-    //   // ログイン中か判定
-    //   const checkLoginResponse: boolean = await checkLoggedIn()
-    //   if (!checkLoginResponse) {
-    //     router.push('/login')
-    //     return
-    //   }
-    // }
-    // init()
     if (router.isReady) {
       apiClient
         .get(`api/public/${nickName}/memos/${memoId}`)
@@ -48,9 +34,11 @@ const PrivateMemoDetail: NextPage<Memo> = () => {
 
   if (!memo) return <NotFoundPage />
 
+  const headline = `${nickName}さんの公開メモ`
+
   return (
     <AppLayout
-      header={<h2 className='font-semibold text-xl text-gray-800 leading-tight'>メモ詳細</h2>}
+      header={<h2 className='font-semibold text-xl text-gray-800 leading-tight'>{headline}</h2>}
     >
       <Head>
         <title>メモ詳細を表示</title>
