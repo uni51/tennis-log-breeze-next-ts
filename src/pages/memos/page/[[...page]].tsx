@@ -5,9 +5,9 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
+import Pagination from '@/components/Pagination/Pagination'
 import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
-import Pagination from '@/components/Pagination/Pagination'
 import { DataWithPagination } from '@/types/dataWithPagination'
 
 type ReturnType = DataWithPagination<Memo[]>
