@@ -73,7 +73,10 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
 
     await csrf()
 
-    setErrors({ email: undefined, password: undefined })
+    setErrors({
+      email: undefined,
+      password: undefined,
+    })
     setStatus(null)
 
     apiClient
