@@ -28,7 +28,7 @@ const Post: NextPage = () => {
   // ルーター定義
   const router = useRouter()
   const [validation, setValidation] = useState<Validation>({})
-  const { user } = useAuth({ middleware: 'auth' })
+  const { checkLoggedIn } = useAuth({ middleware: 'auth' })
   const [category, setCategory] = useState<any[]>([])
 
   // React-Hook-Form
@@ -41,8 +41,10 @@ const Post: NextPage = () => {
   useEffect(() => {
     const init = async () => {
       // ログイン中か判定
-      if (!user) {
-        router.push('/')
+      const res: boolean = await checkLoggedIn()
+      if (!res) {
+        router.push('/login')
+        return
       }
       const responseCategories = await apiClient.get('api/categories')
       const objectResponseCategories = responseCategories.data.data

@@ -20,7 +20,11 @@ export async function getServerSideProps(context: { query: any; req: any }) {
   }
 }
 
-const MemoDetail: NextPage<Memo> = ({ memo }) => {
+type Props = {
+  memo: Memo
+}
+
+const MemoDetail: NextPage<Props> = ({ memo }) => {
   return (
     <AppLayout
       header={<h2 className='font-semibold text-xl text-gray-800 leading-tight'>メモ詳細</h2>}

@@ -5,42 +5,37 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
-import { useAuth } from '@/hooks/auth'
 import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
 
 const MemoList: NextPage = () => {
   const router = useRouter()
-  const { checkLoggedIn, user } = useAuth({ middleware: 'auth' })
 
   // state定義
   const [memos, setMemos] = useState<Memo[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
+  const [pageIndex, setPageIndex] = useState(1)
+
   // 初回レンダリング時にAPIリクエスト
   useEffect(() => {
     const init = async () => {
-      // ログイン中か判定
-      const res: boolean = await checkLoggedIn()
-      if (!res) {
-        router.push('/login')
-        return
-      }
       apiClient
-        .get('/api/memos')
+        .get(`/api/public/memos?page=${pageIndex}`)
         .then((response: AxiosResponse) => {
           console.log(response.data)
           setMemos(response.data.data)
         })
         .catch((err: AxiosError) => console.log(err.response))
         .finally(() => setIsLoading(false))
+      setIsLoading(false)
     }
     init()
-  }, [])
+  }, [pageIndex])
 
   if (isLoading) return <Loading />
 
-  const headline = user?.data?.name ? `${user.data.name}さんのメモ一覧` : 'メモ一覧'
+  const headline = '公開中のメモ一覧'
 
   return (
     <AppLayout
@@ -67,13 +62,14 @@ const MemoList: NextPage = () => {
                   <div className='bg-gray-100 shadow-lg mb-5 p-4'>
                     <p className='text-lg font-bold mb-5'>{memo.title}</p>
                     <p className='mb-5'>{memo.body}</p>
-                    <p className='text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-pink-600 bg-pink-200 last:mr-0 mr-1'>
+                    <p className='text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-pink-600 bg-pink-200 uppercase last:mr-0 mr-1'>
                       {memo.category_name}
                     </p>
-                    <p className='text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blue-600 bg-blue-200 last:mr-0 mr-1'>
-                      {memo.status === 0 && '非公開'}
-                      {memo.status === 1 && 'シェア'}
-                      {memo.status === 2 && '公開中'}
+                    <p className='text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blue-600 bg-blue-200 uppercase last:mr-0 mr-1'>
+                      公開中
+                    </p>
+                    <p className='text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-green-600 bg-green-200 uppercase last:mr-0 mr-1'>
+                      {memo.user_name}
                     </p>
                     <p className='text-sm leading-6 text-gray-500 mt-2'>
                       更新日時：{memo.updated_at}
@@ -83,6 +79,8 @@ const MemoList: NextPage = () => {
               )
             })}
           </div>
+          <button onClick={() => setPageIndex(pageIndex - 1)}>Previous</button>
+          <button onClick={() => setPageIndex(pageIndex + 1)}>Next</button>
         </div>
       </div>
     </AppLayout>
