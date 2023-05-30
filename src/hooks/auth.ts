@@ -16,6 +16,12 @@ interface IApiRequest {
   [key: string]: any
 }
 
+interface IApiRequestLogin {
+  setErrors: (errors: LoginError) => void
+  setStatus: React.Dispatch<React.SetStateAction<any | null>>
+  [key: string]: any
+}
+
 export interface User {
   data?: {
     id?: number
@@ -62,12 +68,12 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
       })
   }
 
-  const login = async (args: IApiRequest) => {
+  const login = async (args: IApiRequestLogin) => {
     const { setErrors, setStatus, ...props } = args
 
     await csrf()
 
-    setErrors([])
+    setErrors({ email: undefined, password: undefined })
     setStatus(null)
 
     apiClient
