@@ -23,12 +23,13 @@ const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   // const [shouldRemember, setShouldRemember] = useState(false)
-  const [errors, setErrors]: [any, React.Dispatch<React.SetStateAction<never[]>>] = useState([])
+  // const [errors, setErrors]: [any, React.Dispatch<React.SetStateAction<never[]>>] = useState([])
+  const [errors, setErrors] = useState<LoginError | null>(null)
   const [status, setStatus] = useState<string | null>(null)
 
   useEffect(() => {
     const reset = query && query.reset ? (query.reset as string) : ''
-    if (reset.length > 0 && errors.length === 0) {
+    if (reset.length > 0 && errors?.email === undefined && errors?.password === undefined) {
       setStatus(atob(reset))
     } else {
       setStatus(null)
@@ -67,11 +68,11 @@ const Login = () => {
               value={email}
               className='block mt-1 w-full'
               onChange={(event) => setEmail(event.target.value)}
-              required
+              // required
               isFocused={true}
             />
 
-            <InputError messages={errors.email} className='mt-2' />
+            <InputError messages={errors?.email} className='mt-2' />
           </div>
 
           {/* Password */}
@@ -84,11 +85,11 @@ const Login = () => {
               value={password}
               className='block mt-1 w-full'
               onChange={(event) => setPassword(event.target.value)}
-              required
+              // required
               autoComplete='current-password'
             />
 
-            <InputError messages={errors.password} className='mt-2' />
+            <InputError messages={errors?.password} className='mt-2' />
           </div>
 
           {/* Remember Me */}

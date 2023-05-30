@@ -1,6 +1,7 @@
 import { AxiosError, AxiosResponse } from 'axios'
 import type { NextPage } from 'next'
 import Head from 'next/head'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
@@ -33,7 +34,7 @@ const MemoList: NextPage = () => {
 
   if (isLoading) return <Loading />
 
-  const headline = nickName ? `${nickName}さんの公開メモ一覧` : '公開メモ一覧'
+  const headline = `${nickName}さんの公開メモ一覧`
 
   return (
     <AppLayout
@@ -42,21 +43,13 @@ const MemoList: NextPage = () => {
       <Head>
         <title>{headline}</title>
       </Head>
-      <div className='mx-auto mt-32'>
-        <div className='w-1/2 mx-auto text-center'>
-          <button
-            className='text-xl mb-12 py-3 px-10 bg-blue-500 text-white rounded-3xl drop-shadow-md hover:bg-blue-400'
-            onClick={() => router.push('/memos/post')}
-          >
-            メモを追加する
-          </button>
-        </div>
+      <div className='mx-auto mt-20'>
         <div className='mt-3'>
           {/* DBから取得したメモデータの一覧表示 */}
           <div className='grid w-4/5 mx-auto gap-4 grid-cols-2'>
             {memos.map((memo: Memo, index) => {
               return (
-                <a href={`/memos/${memo.id}`} key={index}>
+                <Link href={`/${nickName}/memos/${memo.id}`} key={index}>
                   <div className='bg-gray-100 shadow-lg mb-5 p-4'>
                     <p className='text-lg font-bold mb-5'>{memo.title}</p>
                     <p className='mb-5'>{memo.body}</p>
@@ -64,13 +57,13 @@ const MemoList: NextPage = () => {
                       {memo.category_name}
                     </p>
                     <p className='text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blue-600 bg-blue-200 last:mr-0 mr-1'>
-                      非公開
+                      公開中
                     </p>
                     <p className='text-sm leading-6 text-gray-500 mt-2'>
                       更新日時：{memo.updated_at}
                     </p>
                   </div>
-                </a>
+                </Link>
               )
             })}
           </div>
