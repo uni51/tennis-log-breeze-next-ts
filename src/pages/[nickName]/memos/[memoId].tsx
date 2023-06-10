@@ -5,7 +5,7 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
-import MemoDetail from '@/components/templates/MemoDetail'
+import SingleDetailMemo from '@/components/templates/SingleDetailMemo'
 import { apiClient } from '@/lib/utils/apiClient'
 import NotFoundPage from '@/pages/404'
 import { Memo } from '@/types/Memo'
@@ -43,7 +43,7 @@ const PrivateMemoDetail: NextPage<Memo> = () => {
       <Head>
         <title>メモ詳細を表示</title>
       </Head>
-      <MemoDetail memo={memo} />
+      <SingleDetailMemo memo={memo} />
     </AppLayout>
   )
 }

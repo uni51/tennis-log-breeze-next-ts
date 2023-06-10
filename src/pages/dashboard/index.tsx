@@ -38,7 +38,7 @@ const Dashboard = () => {
             <div className='p-6 bg-gray-100 border-b border-gray-200'>Youre logged in!</div>
           </div>
           <div className='mt-10'>
-            <Link href='/memos'>メモ一覧ページへ</Link>
+            <Link href='/dashboard/memos'>メモ一覧ページへ</Link>
           </div>
         </div>
       </div>

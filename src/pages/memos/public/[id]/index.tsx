@@ -1,7 +1,7 @@
 import { NextPage } from 'next'
 import Head from 'next/head'
 import AppLayout from '@/components/Layouts/AppLayout'
-import MemoDetail from '@/components/templates/MemoDetail'
+import MemoDetail from '@/components/templates/SingleDetailMemo'
 import { apiServer } from '@/lib/utils/apiServer'
 import { Memo } from '@/types/Memo'
 
