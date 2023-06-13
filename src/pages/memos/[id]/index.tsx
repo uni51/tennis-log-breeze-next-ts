@@ -5,35 +5,22 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
-import MemoDetail from '@/components/templates/SingleDetailMemo'
-import MemoDetailNoContent from '@/components/templates/MemoDetailNoContent'
-import { useAuth } from '@/hooks/auth'
+import SingleMemoDetail from '@/components/templates/SingleMemoDetail'
 import { apiClient } from '@/lib/utils/apiClient'
 import NotFoundPage from '@/pages/404'
 import { Memo } from '@/types/Memo'
 
-const PrivateMemoDetail: NextPage<Memo> = () => {
+/* 公開記事のメモ詳細ページ */
+const PublicMemoDetail: NextPage<Memo> = () => {
   const [memo, setMemo] = useState<Memo>()
   const [isLoading, setIsLoading] = useState(true)
-  const { checkLoggedIn, user } = useAuth({ middleware: 'auth' })
 
   const router = useRouter()
 
-  let loginUser = user?.data
-
   useEffect(() => {
-    const init = async () => {
-      // ログイン中か判定
-      const checkLoginResponse: boolean = await checkLoggedIn()
-      if (!checkLoginResponse) {
-        router.push('/login')
-        return
-      }
-    }
-    init()
     if (router.isReady) {
       apiClient
-        .get(`api/memos/${router.query.id}`)
+        .get(`api/public/memos/${router.query.id}`)
         .then((response: AxiosResponse) => {
           setMemo(response.data.data)
         })
@@ -53,12 +40,9 @@ const PrivateMemoDetail: NextPage<Memo> = () => {
       <Head>
         <title>メモ詳細を表示</title>
       </Head>
-      {memo && loginUser && memo.user_id === loginUser.id && <MemoDetail memo={memo} />}
-      {memo && loginUser && memo.user_id !== loginUser.id && (
-        <MemoDetailNoContent message={'閲覧権限がありません'} />
-      )}
+      <SingleMemoDetail memo={memo} />
     </AppLayout>
   )
 }
 
-export default PrivateMemoDetail
+export default PublicMemoDetail

@@ -10,12 +10,13 @@ import Pagination from '@/components/Pagination/Pagination'
 import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
 import { DataWithPagination } from '@/types/dataWithPagination'
-import SingleBlockMemoForList from '@/components/templates/SingleBlockMemoForList'
+import SingleMemoBlockForList from '@/components/templates/SingleMemoBlockForList'
+import Link from 'next/link'
 
 type ReturnType = DataWithPagination<Memo[]>
 
-/* マイページのメモ一覧ページ（withページャー） */
-const MemoList: NextPage = () => {
+/* Dashboard（マイページ）のメモ一覧ページ */
+const DashboardMemoList: NextPage = () => {
   const router = useRouter()
   const { checkLoggedIn, user } = useAuth({ middleware: 'auth' })
 
@@ -63,22 +64,35 @@ const MemoList: NextPage = () => {
         <title>{headline}</title>
       </Head>
       <div className='mx-auto mt-20'>
+        <div className='w-1/2 mx-auto text-center'>
+          <button
+            className='text-xl mb-12 py-3 px-10 bg-blue-500 text-white rounded-3xl drop-shadow-md hover:bg-blue-400'
+            onClick={() => router.push('/memos/post')}
+          >
+            メモを追加する
+          </button>
+        </div>
+
         <div className='mt-3'>
           {/* DBから取得したメモデータの一覧表示 */}
-          <div className='grid w-4/5 mx-auto gap-4 grid-cols-2'>
+          <div className='grid w-4/5 mx-auto gap-16 grid-cols-2'>
             {memos?.data?.map((memo: Memo, index) => {
               return (
-                <a href={`/memos/${memo.id}`} key={index}>
-                  <SingleBlockMemoForList memo={memo} />
-                </a>
+                <Link href={`/dashboard/memos/${memo.id}`} key={index}>
+                  <SingleMemoBlockForList memo={memo} />
+                </Link>
               )
             })}
           </div>
-          <Pagination numberOfPage={Number(memos?.meta?.last_page)} tag={''} />
+          <Pagination
+            numberOfPage={Number(memos?.meta?.last_page)}
+            tag={''}
+            pageLink={'getDashboardMemosListPageLink'}
+          />
         </div>
       </div>
     </AppLayout>
   )
 }
 
-export default MemoList
+export default DashboardMemoList

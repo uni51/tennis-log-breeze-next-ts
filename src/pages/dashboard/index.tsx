@@ -1,28 +1,33 @@
 import { AxiosError, AxiosResponse } from 'axios'
 import Head from 'next/head'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
+import { useAuth } from '@/hooks/auth'
 import AppLayout from '@/components/Layouts/AppLayout'
-import { apiClient } from '@/lib/utils/apiClient'
+import { Loading } from '@/components/Loading'
 
-type Memo = {
-  title: string
-  body: string
-}
+/* dashboard（マイページ）のTOPページ */
+const DashboardTop = () => {
+  const router = useRouter()
+  const [isLoading, setIsLoading] = useState(true)
+  const { checkLoggedIn } = useAuth({ middleware: 'auth' })
 
-const Dashboard = () => {
-  const [memos, setMemos] = useState<Memo[]>([])
-
-  // 初回レンダリング時にAPIリクエスト
+  // 初回レンダリング時にログインチェック
   useEffect(() => {
-    apiClient
-      .get('/memos')
-      .then((response: AxiosResponse) => {
-        console.log(response.data)
-        setMemos(response.data.data)
-      })
-      .catch((err: AxiosError) => console.log(err.response))
+    const init = async () => {
+      // ログイン中か判定
+      const res: boolean = await checkLoggedIn()
+      if (!res) {
+        router.push('/login')
+        return
+      }
+      setIsLoading(false)
+    }
+    init()
   }, [])
+
+  if (isLoading) return <Loading />
 
   return (
     <AppLayout
@@ -38,7 +43,7 @@ const Dashboard = () => {
             <div className='p-6 bg-gray-100 border-b border-gray-200'>Youre logged in!</div>
           </div>
           <div className='mt-10'>
-            <Link href='/dashboard/memos'>メモ一覧ページへ</Link>
+            <Link href='/dashboard/memos/page/1'>あなたのメモ一覧ページへ</Link>
           </div>
         </div>
       </div>
@@ -46,4 +51,4 @@ const Dashboard = () => {
   )
 }
 
-export default Dashboard
+export default DashboardTop
