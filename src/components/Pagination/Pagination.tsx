@@ -1,11 +1,11 @@
 import Link from 'next/link'
 import React from 'react'
-import { getMemosListPageLink, getDashboardMemosListPageLink } from '@/lib/pagination-helper'
+import { getPublicMemosListPageLink, getDashboardMemosListPageLink } from '@/lib/pagination-helper'
 
 interface Props {
   numberOfPage: number
   tag: string
-  pageLink: string
+  pageLink: 'getPublicMemosListPageLink' | 'getDashboardMemosListPageLink'
 }
 
 const Pagination = (props: Props) => {
@@ -21,9 +21,9 @@ const Pagination = (props: Props) => {
       <ul className='flex items-center justify-center gap-4'>
         {pages.map((page) => (
           <li className='bg-sky-900 rounded-lg w-6 h-8 relative' key={page}>
-            {pageLink === 'getMemosListPageLink' && (
+            {pageLink === 'getPublicMemosListPageLink' && (
               <Link
-                href={getMemosListPageLink(tag, page)}
+                href={getPublicMemosListPageLink(tag, page)}
                 className='absolute top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4 text-gray-100'
               >
                 {page}

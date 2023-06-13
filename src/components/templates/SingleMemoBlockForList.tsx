@@ -1,7 +1,7 @@
 import { NextPage } from 'next'
 import { Memo } from '@/types/Memo'
 
-const SingleBlockMemoForList: NextPage<{ memo: Memo }> = ({ memo }) => {
+const SingleMemoBlockForList: NextPage<{ memo: Memo }> = ({ memo }) => {
   return (
     <div className='bg-gray-100 shadow-lg mb-5 p-4'>
       <p className='text-lg font-bold mb-5'>{memo.title}</p>
@@ -23,4 +23,4 @@ const SingleBlockMemoForList: NextPage<{ memo: Memo }> = ({ memo }) => {
   )
 }
 
-export default SingleBlockMemoForList
+export default SingleMemoBlockForList

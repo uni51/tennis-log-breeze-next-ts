@@ -68,7 +68,7 @@ const PublicMemoList: NextPage = () => {
           <Pagination
             numberOfPage={Number(memos?.meta?.last_page)}
             tag={''}
-            pageLink={'getMemosListPageLink'}
+            pageLink={'getPublicMemosListPageLink'}
           />
         </div>
       </div>
