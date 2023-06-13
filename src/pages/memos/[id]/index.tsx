@@ -10,35 +10,32 @@ import { apiClient } from '@/lib/utils/apiClient'
 import NotFoundPage from '@/pages/404'
 import { Memo } from '@/types/Memo'
 
-/* ユーザー毎の公開中のメモ詳細ページ */
-const PrivateMemoDetail: NextPage<Memo> = () => {
-  const router = useRouter()
-  const { nickName, memoId } = router.query
-
+/* 公開記事のメモ詳細ページ TODO: SSR化 */
+const PublicMemoDetail: NextPage<Memo> = () => {
   const [memo, setMemo] = useState<Memo>()
   const [isLoading, setIsLoading] = useState(true)
+
+  const router = useRouter()
 
   useEffect(() => {
     if (router.isReady) {
       apiClient
-        .get(`api/public/${nickName}/memos/${memoId}`)
+        .get(`api/public/memos/${router.query.id}`)
         .then((response: AxiosResponse) => {
           setMemo(response.data.data)
         })
         .catch((err: AxiosError) => console.log(err.response))
         .finally(() => setIsLoading(false))
     }
-  }, [nickName, memoId])
+  }, [router])
 
   if (isLoading) return <Loading />
 
   if (!memo) return <NotFoundPage />
 
-  const headline = `${nickName}さんの公開メモ`
-
   return (
     <AppLayout
-      header={<h2 className='font-semibold text-xl text-gray-800 leading-tight'>{headline}</h2>}
+      header={<h2 className='font-semibold text-xl text-gray-800 leading-tight'>メモ詳細</h2>}
     >
       <Head>
         <title>メモ詳細を表示</title>
@@ -48,4 +45,4 @@ const PrivateMemoDetail: NextPage<Memo> = () => {
   )
 }
 
-export default PrivateMemoDetail
+export default PublicMemoDetail

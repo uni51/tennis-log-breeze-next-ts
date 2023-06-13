@@ -9,7 +9,7 @@ import { Loading } from '@/components/Loading'
 import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
 
-/* ユーザー毎の公開中の記事一覧 */
+/* ユーザー毎の公開中の記事一覧ページ */
 const MemoList: NextPage = () => {
   const router = useRouter()
   const { nickName } = router.query

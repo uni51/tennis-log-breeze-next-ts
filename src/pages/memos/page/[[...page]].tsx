@@ -1,18 +1,21 @@
 import { AxiosError, AxiosResponse } from 'axios'
 import type { NextPage } from 'next'
 import Head from 'next/head'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import Pagination from '@/components/Pagination/Pagination'
+import SingleMemoBlockForList from '@/components/templates/SingleMemoBlockForList'
 import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
 import { DataWithPagination } from '@/types/dataWithPagination'
 
 type ReturnType = DataWithPagination<Memo[]>
 
-const MemoList: NextPage = () => {
+/* 公開記事のメモ一覧ページ TODO: SSR化 */
+const PublicMemoList: NextPage = () => {
   const router = useRouter()
 
   const { page } = router.query
@@ -51,45 +54,26 @@ const MemoList: NextPage = () => {
         <title>{headline}</title>
       </Head>
       <div className='mx-auto mt-32'>
-        <div className='w-1/2 mx-auto text-center'>
-          <button
-            className='text-xl mb-12 py-3 px-10 bg-blue-500 text-white rounded-3xl drop-shadow-md hover:bg-blue-400'
-            onClick={() => router.push('/memos/post')}
-          >
-            メモを追加する
-          </button>
-        </div>
         <div className='mt-3'>
           {/* DBから取得したメモデータの一覧表示 */}
-          <div className='grid w-4/5 mx-auto gap-4 grid-cols-2'>
+          <div className='grid w-4/5 mx-auto gap-16 grid-cols-2'>
             {memos?.data?.map((memo: Memo, index) => {
               return (
-                <a href={`/memos/${memo.id}`} key={index}>
-                  <div className='bg-gray-100 shadow-lg mb-5 p-4'>
-                    <p className='text-lg font-bold mb-5'>{memo.title}</p>
-                    <p className='mb-5'>{memo.body}</p>
-                    <p className='text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-pink-600 bg-pink-200 last:mr-0 mr-1'>
-                      {memo.category_name}
-                    </p>
-                    <p className='text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blue-600 bg-blue-200 last:mr-0 mr-1'>
-                      公開中
-                    </p>
-                    <p className='text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-green-600 bg-green-200 last:mr-0 mr-1'>
-                      {memo.user_name}
-                    </p>
-                    <p className='text-sm leading-6 text-gray-500 mt-2'>
-                      更新日時：{memo.updated_at}
-                    </p>
-                  </div>
-                </a>
+                <Link href={`/memos/${memo.id}`} key={index}>
+                  <SingleMemoBlockForList memo={memo} />
+                </Link>
               )
             })}
           </div>
-          <Pagination numberOfPage={Number(memos?.meta?.last_page)} tag={''} />
+          <Pagination
+            numberOfPage={Number(memos?.meta?.last_page)}
+            tag={''}
+            pageLink={'getPublicMemosListPageLink'}
+          />
         </div>
       </div>
     </AppLayout>
   )
 }
 
-export default MemoList
+export default PublicMemoList
