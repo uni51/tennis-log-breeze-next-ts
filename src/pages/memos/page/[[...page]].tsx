@@ -1,20 +1,20 @@
 import { AxiosError, AxiosResponse } from 'axios'
 import type { NextPage } from 'next'
 import Head from 'next/head'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import Pagination from '@/components/Pagination/Pagination'
+import SingleMemoBlockForList from '@/components/templates/SingleMemoBlockForList'
 import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
 import { DataWithPagination } from '@/types/dataWithPagination'
-import Link from 'next/link'
-import SingleMemoBlockForList from '@/components/templates/SingleMemoBlockForList'
 
 type ReturnType = DataWithPagination<Memo[]>
 
-/* 公開記事のメモ一覧ページ */
+/* 公開記事のメモ一覧ページ TODO: SSR化 */
 const PublicMemoList: NextPage = () => {
   const router = useRouter()
 

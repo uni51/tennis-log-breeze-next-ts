@@ -10,7 +10,7 @@ import { apiClient } from '@/lib/utils/apiClient'
 import NotFoundPage from '@/pages/404'
 import { Memo } from '@/types/Memo'
 
-/* 公開記事のメモ詳細ページ */
+/* 公開記事のメモ詳細ページ TODO: SSR化 */
 const PublicMemoDetail: NextPage<Memo> = () => {
   const [memo, setMemo] = useState<Memo>()
   const [isLoading, setIsLoading] = useState(true)

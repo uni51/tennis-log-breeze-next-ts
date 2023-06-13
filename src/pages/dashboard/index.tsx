@@ -3,9 +3,9 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { useAuth } from '@/hooks/auth'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
+import { useAuth } from '@/hooks/auth'
 
 /* dashboard（マイページ）のTOPページ */
 const DashboardTop = () => {
