@@ -11,7 +11,7 @@ import { useAuth } from '@/hooks/auth'
 const DashboardTop = () => {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(true)
-  const { checkLoggedIn } = useAuth({ middleware: 'auth' })
+  const { checkLoggedIn, user } = useAuth({ middleware: 'auth' })
 
   // 初回レンダリング時にログインチェック
   useEffect(() => {
@@ -43,7 +43,7 @@ const DashboardTop = () => {
             <div className='p-6 bg-gray-100 border-b border-gray-200'>Youre logged in!</div>
           </div>
           <div className='mt-10'>
-            <Link href='/dashboard/memos/page/1'>あなたのメモ一覧ページへ</Link>
+            <Link href='/dashboard/memos/page/1'>{user?.data?.name}さんのメモ一覧ページへ</Link>
           </div>
         </div>
       </div>

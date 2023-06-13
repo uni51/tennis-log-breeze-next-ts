@@ -1,7 +1,7 @@
 import { NextPage } from 'next'
 import { Memo } from '@/types/Memo'
 
-const SingleDetailMemo: NextPage<{ memo: Memo }> = ({ memo }) => {
+const SingleMemoDetail: NextPage<{ memo: Memo }> = ({ memo }) => {
   return (
     <div className='mx-auto mt-20'>
       <div className='grid w-4/5 mx-auto gap-4'>
@@ -24,4 +24,4 @@ const SingleDetailMemo: NextPage<{ memo: Memo }> = ({ memo }) => {
   )
 }
 
-export default SingleDetailMemo
+export default SingleMemoDetail
