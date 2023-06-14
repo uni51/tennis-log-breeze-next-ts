@@ -1,15 +1,23 @@
 import Link from 'next/link'
 import React from 'react'
-import { getPublicMemosListPageLink, getDashboardMemosListPageLink } from '@/lib/pagination-helper'
+import {
+  getPublicMemosListPageLink,
+  getDashboardMemosListPageLink,
+  getNicknameMemosListPageLink,
+} from '@/lib/pagination-helper'
 
 interface Props {
   numberOfPage: number
   tag: string
-  pageLink: 'getPublicMemosListPageLink' | 'getDashboardMemosListPageLink'
+  nickname?: string
+  pageLink:
+    | 'getPublicMemosListPageLink'
+    | 'getDashboardMemosListPageLink'
+    | 'getNicknameMemosListPageLink'
 }
 
 const Pagination = (props: Props) => {
-  const { numberOfPage, tag, pageLink } = props
+  const { numberOfPage, tag, nickname, pageLink } = props
 
   let pages: number[] = []
   for (let i = 1; i <= numberOfPage; i++) {
@@ -32,6 +40,14 @@ const Pagination = (props: Props) => {
             {pageLink === 'getDashboardMemosListPageLink' && (
               <Link
                 href={getDashboardMemosListPageLink(tag, page)}
+                className='absolute top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4 text-gray-100'
+              >
+                {page}
+              </Link>
+            )}
+            {pageLink === 'getNicknameMemosListPageLink' && (
+              <Link
+                href={getNicknameMemosListPageLink(nickname!, tag, page)}
                 className='absolute top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4 text-gray-100'
               >
                 {page}
