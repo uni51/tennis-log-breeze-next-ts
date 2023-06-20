@@ -1,62 +1,45 @@
 import Link from 'next/link'
 import React from 'react'
-import {
-  getPublicMemosListPageLink,
-  getDashboardMemosListPageLink,
-  getNicknameMemosListPageLink,
-} from '@/lib/pagination-helper'
+import usePagination from '@/hooks/usePagination'
+import { getPublicMemosListPageLink } from '@/lib/pagination-helper'
 
-interface Props {
-  numberOfPage: number
-  tag: string
-  nickname?: string
-  pageLink:
-    | 'getPublicMemosListPageLink'
-    | 'getDashboardMemosListPageLink'
-    | 'getNicknameMemosListPageLink'
+export type PaginationProps = {
+  totalItems: number
+  currentPage: number
+  renderPageLink: (page: number, tag?: string) => string
+  itemsPerPage?: number
 }
 
-const Pagination = (props: Props) => {
-  const { numberOfPage, tag, nickname, pageLink } = props
+export const dotts = '...'
 
-  let pages: number[] = []
-  for (let i = 1; i <= numberOfPage; i++) {
-    pages.push(i)
-  }
+const Pagination = ({
+  totalItems,
+  currentPage,
+  itemsPerPage = 6,
+  renderPageLink,
+}: PaginationProps) => {
+  const pages = usePagination(totalItems, currentPage, itemsPerPage)
 
   return (
-    <section className='mb-8 lg:w-1/2 mx-auto rounded-md p-5'>
-      <ul className='flex items-center justify-center gap-4'>
-        {pages.map((page) => (
-          <li className='bg-sky-900 rounded-lg w-6 h-8 relative' key={page}>
-            {pageLink === 'getPublicMemosListPageLink' && (
-              <Link
-                href={getPublicMemosListPageLink(tag, page)}
-                className='absolute top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4 text-gray-100'
-              >
-                {page}
-              </Link>
-            )}
-            {pageLink === 'getDashboardMemosListPageLink' && (
-              <Link
-                href={getDashboardMemosListPageLink(tag, page)}
-                className='absolute top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4 text-gray-100'
-              >
-                {page}
-              </Link>
-            )}
-            {pageLink === 'getNicknameMemosListPageLink' && (
-              <Link
-                href={getNicknameMemosListPageLink(nickname!, tag, page)}
-                className='absolute top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4 text-gray-100'
-              >
-                {page}
-              </Link>
-            )}
-          </li>
-        ))}
-      </ul>
-    </section>
+    <div className='flex items-center justify-center my-8'>
+      {pages.map((pageNumber, i) =>
+        pageNumber === dotts ? (
+          <span key={i} className='px-4 py-2 rounded-full text-sm font-semibold text-black'>
+            {pageNumber}
+          </span>
+        ) : (
+          <Link
+            key={i}
+            href={renderPageLink(Number(pageNumber))}
+            className={`${
+              pageNumber === currentPage ? 'text-success-dark' : 'text-black'
+            } px-4 py-2 mx-1 rounded-full text-sm font-semibold no-underline`}
+          >
+            {pageNumber}
+          </Link>
+        ),
+      )}
+    </div>
   )
 }
 

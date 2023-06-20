@@ -1,4 +1,4 @@
-export const getPublicMemosListPageLink = (tag: string, page: number) => {
+export const getPublicMemosListPageLink = (page: number, tag?: string) => {
   return tag ? `/memos/tag/${tag}/page/${page}` : `/memos/page/${page}`
 }
 

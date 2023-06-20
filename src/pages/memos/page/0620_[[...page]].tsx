@@ -11,7 +11,6 @@ import SingleMemoBlockForList from '@/components/templates/SingleMemoBlockForLis
 import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
 import { DataWithPagination } from '@/types/dataWithPagination'
-import { getPublicMemosListPageLink } from '@/lib/pagination-helper'
 
 type ReturnType = DataWithPagination<Memo[]>
 
@@ -33,7 +32,7 @@ const PublicMemoList: NextPage = () => {
       apiClient
         .get(`/api/public/memos?page=${pageNumber}`)
         .then((response: AxiosResponse) => {
-          // console.log(response.data)
+          console.log(response.data)
           setMemos(response.data)
         })
         .catch((err: AxiosError) => console.log(err.response))
@@ -67,10 +66,9 @@ const PublicMemoList: NextPage = () => {
             })}
           </div>
           <Pagination
-            totalItems={Number(memos?.meta?.total)}
-            currentPage={Number(memos?.meta?.current_page)}
-            itemsPerPage={6}
-            renderPageLink={getPublicMemosListPageLink}
+            numberOfPage={Number(memos?.meta?.last_page)}
+            tag={''}
+            pageLink={'getPublicMemosListPageLink'}
           />
         </div>
       </div>
