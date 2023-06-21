@@ -11,15 +11,16 @@ import SingleMemoBlockForList from '@/components/templates/SingleMemoBlockForLis
 import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
 import { DataWithPagination } from '@/types/dataWithPagination'
+import { ITEMS_PER_PAGE } from '@/constants/PaginationConst'
 
 type ReturnType = DataWithPagination<Memo[]>
 
-/* ユーザー毎の公開中の記事一覧ページ */
+/* ユーザー毎の公開中の記事一覧ページ TODO: SSR or ISR化 */
 const ByNicknameMemoList: NextPage = () => {
   const router = useRouter()
   const { nickName, page } = router.query
 
-  const nickNameTypeCast = nickName as string | undefined
+  const nickNameTypeCasted = nickName as string | undefined
 
   const pageNumber = page === undefined ? 1 : Number(page)
 
@@ -29,6 +30,7 @@ const ByNicknameMemoList: NextPage = () => {
 
   // 初回レンダリング時にAPIリクエスト
   useEffect(() => {
+    if (typeof nickNameTypeCasted === 'undefined') return
     const init = async () => {
       apiClient
         .get(`/api/public/${nickName}/memos?page=${pageNumber}`)
@@ -45,7 +47,7 @@ const ByNicknameMemoList: NextPage = () => {
 
   if (isLoading) return <Loading />
 
-  const headline = `${nickName}さんの公開メモ一覧`
+  const headline = `${nickNameTypeCasted}さんの公開メモ一覧`
 
   return (
     <AppLayout
@@ -67,10 +69,11 @@ const ByNicknameMemoList: NextPage = () => {
             })}
           </div>
           <Pagination
-            numberOfPage={Number(memos?.meta?.last_page)}
-            nickname={nickNameTypeCast}
-            tag={''}
-            pageLink={'getNicknameMemosListPageLink'}
+            totalItems={Number(memos?.meta?.total)}
+            currentPage={Number(memos?.meta?.current_page)}
+            itemsPerPage={ITEMS_PER_PAGE}
+            renderPageLink={'getNicknameMemosListPageLink'}
+            nickname={nickNameTypeCasted}
           />
         </div>
       </div>

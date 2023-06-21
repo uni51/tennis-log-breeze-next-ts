@@ -12,10 +12,11 @@ import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
 import { DataWithPagination } from '@/types/dataWithPagination'
 import { getPublicMemosListPageLink } from '@/lib/pagination-helper'
+import { ITEMS_PER_PAGE } from '@/constants/PaginationConst'
 
 type ReturnType = DataWithPagination<Memo[]>
 
-/* 公開記事のメモ一覧ページ TODO: SSR化 */
+/* 公開記事のメモ一覧ページ TODO: SSR or ISR化 */
 const PublicMemoList: NextPage = () => {
   const router = useRouter()
 
@@ -69,8 +70,8 @@ const PublicMemoList: NextPage = () => {
           <Pagination
             totalItems={Number(memos?.meta?.total)}
             currentPage={Number(memos?.meta?.current_page)}
-            itemsPerPage={6}
-            renderPageLink={getPublicMemosListPageLink}
+            itemsPerPage={ITEMS_PER_PAGE}
+            renderPageLink={'getPublicMemosListPageLink'}
           />
         </div>
       </div>
