@@ -11,7 +11,6 @@ import SingleMemoBlockForList from '@/components/templates/SingleMemoBlockForLis
 import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
 import { DataWithPagination } from '@/types/dataWithPagination'
-import { getPublicMemosListPageLink } from '@/lib/pagination-helper'
 import { ITEMS_PER_PAGE } from '@/constants/PaginationConst'
 
 type ReturnType = DataWithPagination<Memo[]>

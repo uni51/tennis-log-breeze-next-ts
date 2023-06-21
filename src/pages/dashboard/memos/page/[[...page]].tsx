@@ -12,6 +12,7 @@ import { useAuth } from '@/hooks/auth'
 import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
 import { DataWithPagination } from '@/types/dataWithPagination'
+import { ITEMS_PER_PAGE } from '@/constants/PaginationConst'
 
 type ReturnType = DataWithPagination<Memo[]>
 
@@ -85,9 +86,11 @@ const DashboardMemoList: NextPage = () => {
             })}
           </div>
           <Pagination
-            numberOfPage={Number(memos?.meta?.last_page)}
+            totalItems={Number(memos?.meta?.total)}
+            currentPage={Number(memos?.meta?.current_page)}
+            itemsPerPage={ITEMS_PER_PAGE}
+            renderPageLink={'getDashboardMemosListPageLink'}
             tag={''}
-            pageLink={'getDashboardMemosListPageLink'}
           />
         </div>
       </div>
