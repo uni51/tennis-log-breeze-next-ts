@@ -45,8 +45,10 @@ const Pagination = ({
               key={i}
               href={getNicknameMemosListPageLink(Number(pageNumber), nickname)}
               className={`${
-                pageNumber === currentPage ? 'text-success-dark' : 'text-black'
-              } px-4 py-2 mx-1 rounded-full text-sm font-semibold no-underline`}
+                pageNumber === currentPage
+                  ? `z-10 inline-flex bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`
+                  : `hidden text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0 md:inline-flex`
+              } relative items-center px-4 py-2 text-sm font-semibold focus:z-20`}
             >
               {pageNumber}
             </Link>
@@ -67,8 +69,10 @@ const Pagination = ({
               key={i}
               href={getDashboardMemosListPageLink(Number(pageNumber), tag)}
               className={`${
-                pageNumber === currentPage ? 'text-success-dark' : 'text-black'
-              } px-4 py-2 mx-1 rounded-full text-sm font-semibold no-underline`}
+                pageNumber === currentPage
+                  ? `z-10 inline-flex bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`
+                  : `hidden text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0 md:inline-flex`
+              } relative items-center px-4 py-2 text-sm font-semibold focus:z-20`}
             >
               {pageNumber}
             </Link>
@@ -89,8 +93,10 @@ const Pagination = ({
               key={i}
               href={getPublicMemosListPageLink(Number(pageNumber))}
               className={`${
-                pageNumber === currentPage ? 'text-success-dark' : 'text-black'
-              } px-4 py-2 mx-1 rounded-full text-sm font-semibold no-underline`}
+                pageNumber === currentPage
+                  ? `z-10 inline-flex bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`
+                  : `hidden text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0 md:inline-flex`
+              } relative items-center px-4 py-2 text-sm font-semibold focus:z-20`}
             >
               {pageNumber}
             </Link>
