@@ -3,7 +3,9 @@ import React from 'react'
 import usePagination from '@/hooks/usePagination'
 import {
   getDashboardMemosListPageLink,
+  getDashboardMemosListPageLinkType,
   getNicknameMemosListPageLink,
+  getNicknameMemosListPageLinkType,
   getPublicMemosListPageLink,
 } from '@/lib/pagination-helper'
 import { ITEMS_PER_PAGE } from '@/constants/PaginationConst'
@@ -11,10 +13,7 @@ import { ITEMS_PER_PAGE } from '@/constants/PaginationConst'
 export type PaginationProps = {
   totalItems: number
   currentPage: number
-  renderPageLink:
-    | 'getPublicMemosListPageLink'
-    | 'getNicknameMemosListPageLink'
-    | 'getDashboardMemosListPageLink'
+  renderPagerLink: getNicknameMemosListPageLinkType | getDashboardMemosListPageLinkType
   itemsPerPage?: number
   nickname?: string
   tag?: string
@@ -25,14 +24,14 @@ export const dotts = '...'
 const Pagination = ({
   totalItems,
   currentPage,
-  renderPageLink,
+  renderPagerLink,
   itemsPerPage = ITEMS_PER_PAGE,
   nickname,
   tag,
 }: PaginationProps) => {
   const pages = usePagination(totalItems, currentPage, itemsPerPage)
 
-  if (renderPageLink === 'getNicknameMemosListPageLink' && nickname) {
+  if (renderPagerLink === getNicknameMemosListPageLink && nickname) {
     return (
       <div className='flex items-center justify-center my-8'>
         {pages.map((pageNumber, i) =>
@@ -50,13 +49,13 @@ const Pagination = ({
                   : `hidden text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0 md:inline-flex`
               } relative items-center px-4 py-2 text-sm font-semibold focus:z-20`}
             >
-              {pageNumber}
+              {pageNumber || '-'}
             </Link>
           ),
         )}
       </div>
     )
-  } else if (renderPageLink === 'getDashboardMemosListPageLink') {
+  } else if (renderPagerLink === getDashboardMemosListPageLink) {
     return (
       <div className='flex items-center justify-center my-8'>
         {pages.map((pageNumber, i) =>
@@ -74,7 +73,7 @@ const Pagination = ({
                   : `hidden text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0 md:inline-flex`
               } relative items-center px-4 py-2 text-sm font-semibold focus:z-20`}
             >
-              {pageNumber}
+              {pageNumber || '-'}
             </Link>
           ),
         )}
@@ -98,7 +97,7 @@ const Pagination = ({
                   : `hidden text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0 md:inline-flex`
               } relative items-center px-4 py-2 text-sm font-semibold focus:z-20`}
             >
-              {pageNumber}
+              {pageNumber || '-'}
             </Link>
           ),
         )}

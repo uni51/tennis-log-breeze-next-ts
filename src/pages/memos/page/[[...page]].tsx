@@ -12,6 +12,7 @@ import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
 import { DataWithPagination } from '@/types/dataWithPagination'
 import { ITEMS_PER_PAGE } from '@/constants/PaginationConst'
+import { getPublicMemosListPageLink } from '@/lib/pagination-helper'
 
 type ReturnType = DataWithPagination<Memo[]>
 
@@ -60,9 +61,11 @@ const PublicMemoList: NextPage = () => {
           <div className='grid w-4/5 mx-auto gap-16 grid-cols-2'>
             {memos?.data?.map((memo: Memo, index) => {
               return (
-                <Link href={`/memos/${memo.id}`} key={index}>
-                  <SingleMemoBlockForList memo={memo} />
-                </Link>
+                <SingleMemoBlockForList
+                  memo={memo}
+                  renderMemoDetailLink={`/memos/${memo.id}`}
+                  key={index}
+                />
               )
             })}
           </div>
@@ -70,7 +73,7 @@ const PublicMemoList: NextPage = () => {
             totalItems={Number(memos?.meta?.total)}
             currentPage={Number(memos?.meta?.current_page)}
             itemsPerPage={ITEMS_PER_PAGE}
-            renderPageLink={'getPublicMemosListPageLink'}
+            renderPagerLink={getPublicMemosListPageLink}
           />
         </div>
       </div>
