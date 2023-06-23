@@ -15,6 +15,11 @@ const nextConfig = {
         destination: '/dashboard/memos/page/1', // リダイレクト先のURL
         permanent: true, // 永続的なリダイレクトかのフラグ
       },
+      {
+        source: '/memos/categories', // リダイレクト元のURL
+        destination: '/memos/categories/1/page/1', // リダイレクト先のURL
+        permanent: true, // 永続的なリダイレクトかのフラグ
+      },
     ]
   },
 }

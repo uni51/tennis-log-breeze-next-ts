@@ -1,3 +1,4 @@
+import React from 'react'
 import { AxiosError, AxiosResponse } from 'axios'
 import type { NextPage } from 'next'
 import Head from 'next/head'
@@ -11,17 +12,21 @@ import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
 import { DataWithPagination } from '@/types/dataWithPagination'
 import { ITEMS_PER_PAGE } from '@/constants/PaginationConst'
-import { getPublicMemosListPageLink } from '@/lib/pagination-helper'
+import {
+  getPublicMemosListByCategoryPageLink,
+  getPublicMemosListPageLink,
+} from '@/lib/pagination-helper'
+import { getPublicMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
 
 type ReturnType = DataWithPagination<Memo[]>
 
 /* 公開記事のメモ一覧ページ TODO: SSR or ISR化 */
-const PublicMemoList: NextPage = () => {
+const PublicMemoListByCategory: NextPage = () => {
   const router = useRouter()
-
-  const { page } = router.query
+  const { categoryId, page } = router.query
 
   const pageNumber = page === undefined ? 1 : Number(page)
+  const categoryNumber = categoryId === undefined ? 1 : Number(categoryId)
 
   // state定義
   const [memos, setMemos] = useState<ReturnType>()
@@ -31,7 +36,7 @@ const PublicMemoList: NextPage = () => {
   useEffect(() => {
     const init = async () => {
       apiClient
-        .get(`/api/public/memos?page=${pageNumber}`)
+        .get(`/api/public/memos/category/${categoryNumber}?page=${pageNumber}`)
         .then((response: AxiosResponse) => {
           // console.log(response.data)
           setMemos(response.data)
@@ -41,11 +46,13 @@ const PublicMemoList: NextPage = () => {
       setIsLoading(false)
     }
     init()
-  }, [pageNumber])
+  }, [categoryNumber, pageNumber])
 
   if (isLoading) return <Loading />
 
-  const headline = '公開中のメモ一覧'
+  const headline = getPublicMemosListByCategoryHeadLineTitle(categoryNumber)
+
+  // const headline = '公開中のメモ一覧'
 
   return (
     <AppLayout
@@ -72,7 +79,8 @@ const PublicMemoList: NextPage = () => {
             totalItems={Number(memos?.meta?.total)}
             currentPage={Number(memos?.meta?.current_page)}
             itemsPerPage={ITEMS_PER_PAGE}
-            renderPagerLink={getPublicMemosListPageLink}
+            renderPagerLink={getPublicMemosListByCategoryPageLink}
+            categoryNumber={categoryNumber}
           />
         </div>
       </div>
@@ -80,4 +88,4 @@ const PublicMemoList: NextPage = () => {
   )
 }
 
-export default PublicMemoList
+export default PublicMemoListByCategory
