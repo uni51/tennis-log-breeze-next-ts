@@ -9,7 +9,7 @@ import {
   CATEGORY_NAME_VOLLEY,
 } from '@/constants/CategoryNameConst'
 
-export const getPublicMemosListByCategoryHeadLineTitle = (categoryNumber: number | undefined) => {
+export const getMemosListByCategoryHeadLineTitle = (categoryNumber: number | undefined) => {
   const separator = ' : '
   switch (categoryNumber) {
     case 1:

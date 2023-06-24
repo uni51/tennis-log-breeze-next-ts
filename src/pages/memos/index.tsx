@@ -15,7 +15,7 @@ import {
   getPublicMemosListByCategoryPageLink,
   getPublicMemosListPageLink,
 } from '@/lib/pagination-helper'
-import { getPublicMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
+import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
 
 type ReturnType = DataWithPagination<Memo[]>
 
@@ -61,9 +61,7 @@ const PublicMemoList: NextPage = () => {
 
   if (isLoading) return <Loading />
 
-  const headline = `みんなの公開中のメモ一覧${getPublicMemosListByCategoryHeadLineTitle(
-    categoryNumber,
-  )}`
+  const headline = `みんなの公開中のメモ一覧${getMemosListByCategoryHeadLineTitle(categoryNumber)}`
 
   return (
     <AppLayout

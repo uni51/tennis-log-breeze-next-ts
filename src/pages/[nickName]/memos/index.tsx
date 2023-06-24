@@ -14,9 +14,8 @@ import { ITEMS_PER_PAGE } from '@/constants/PaginationConst'
 import {
   getNicknameMemosListByCategoryPageLink,
   getNicknameMemosListPageLink,
-  getPublicMemosListByCategoryPageLink,
-  getPublicMemosListPageLink,
 } from '@/lib/pagination-helper'
+import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
 
 type ReturnType = DataWithPagination<Memo[]>
 
@@ -67,7 +66,9 @@ const PublicMemoListByNickname: NextPage = () => {
 
   if (isLoading) return <Loading />
 
-  const headline = `${nickNameTypeCasted}さんの公開中のメモ一覧`
+  const headline = `${nickNameTypeCasted}さんの公開中のメモ一覧${getMemosListByCategoryHeadLineTitle(
+    categoryNumber,
+  )}`
 
   return (
     <AppLayout
