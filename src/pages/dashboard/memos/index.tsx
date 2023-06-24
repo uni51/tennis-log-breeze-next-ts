@@ -13,7 +13,11 @@ import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
 import { DataWithPagination } from '@/types/dataWithPagination'
 import { ITEMS_PER_PAGE } from '@/constants/PaginationConst'
-import { getDashboardMemosListPageLink } from '@/lib/pagination-helper'
+import {
+  getDashboardMemosListByCategoryPageLink,
+  getDashboardMemosListPageLink,
+} from '@/lib/pagination-helper'
+import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
 
 type ReturnType = DataWithPagination<Memo[]>
 
@@ -22,9 +26,10 @@ const DashboardMemoList: NextPage = () => {
   const router = useRouter()
   const { checkLoggedIn, user } = useAuth({ middleware: 'auth' })
 
-  const { page } = router.query
+  const { page, category } = router.query
 
   const pageNumber = page === undefined ? 1 : Number(page)
+  const categoryNumber = category === undefined ? undefined : Number(category)
 
   // state定義
   const [memos, setMemos] = useState<ReturnType>()
@@ -34,28 +39,42 @@ const DashboardMemoList: NextPage = () => {
   useEffect(() => {
     const init = async () => {
       // ログイン中か判定
-      const res: boolean = await checkLoggedIn()
-      if (!res) {
-        router.push('/login')
-        return
+      if (router.isReady) {
+        const res: boolean = await checkLoggedIn()
+        if (!res) {
+          router.push('/login')
+          return
+        }
+        if (categoryNumber === undefined) {
+          apiClient
+            .get(`/api/dashboard/memos?page=${pageNumber}`)
+            .then((response: AxiosResponse) => {
+              console.log(response.data)
+              setMemos(response.data)
+            })
+            .catch((err: AxiosError) => console.log(err.response))
+            .finally(() => setIsLoading(false))
+        } else {
+          apiClient
+            .get(`/api/dashboard/memos/category/${categoryNumber}?page=${pageNumber}`)
+            .then((response: AxiosResponse) => {
+              // console.log(response.data)
+              setMemos(response.data)
+            })
+            .catch((err: AxiosError) => console.log(err.response))
+            .finally(() => setIsLoading(false))
+        }
       }
-      apiClient
-        .get(`/api/dashboard/memos?page=${pageNumber}`)
-        .then((response: AxiosResponse) => {
-          console.log(response.data)
-          setMemos(response.data)
-        })
-        .catch((err: AxiosError) => console.log(err.response))
-        .finally(() => setIsLoading(false))
+      setIsLoading(false)
     }
     init()
-  }, [pageNumber])
+  }, [pageNumber, categoryNumber])
 
   if (isLoading) return <Loading />
 
-  const headline = user?.data?.name
-    ? `DashBoard > ${user.data.name}さんのメモ一覧（withページャー）`
-    : 'DashBoard > メモ一覧（withページャー）'
+  const headline = `${user!.data!.name}さんのメモ一覧${getMemosListByCategoryHeadLineTitle(
+    categoryNumber,
+  )}`
 
   return (
     <AppLayout
@@ -82,6 +101,8 @@ const DashboardMemoList: NextPage = () => {
                 <SingleMemoBlockForList
                   memo={memo}
                   renderMemoDetailLink={`/dashboard/memos/${memo.id}`}
+                  renderMemoListByCategoryLink={`/dashboard/memos?category=${memo.category_id}`}
+                  renderMemoListByNickNameLink={`/dashboard/memos/`}
                   key={index}
                 />
               )
@@ -91,8 +112,12 @@ const DashboardMemoList: NextPage = () => {
             totalItems={Number(memos?.meta?.total)}
             currentPage={Number(memos?.meta?.current_page)}
             itemsPerPage={ITEMS_PER_PAGE}
-            renderPagerLink={getDashboardMemosListPageLink}
-            tag={''}
+            renderPagerLink={
+              categoryNumber === undefined
+                ? getDashboardMemosListPageLink
+                : getDashboardMemosListByCategoryPageLink
+            }
+            category={categoryNumber}
           />
         </div>
       </div>

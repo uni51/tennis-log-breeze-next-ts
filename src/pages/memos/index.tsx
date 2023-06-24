@@ -53,8 +53,8 @@ const PublicMemoList: NextPage = () => {
           })
           .catch((err: AxiosError) => console.log(err.response))
           .finally(() => setIsLoading(false))
-        setIsLoading(false)
       }
+      setIsLoading(false)
     }
     init()
   }, [categoryNumber, pageNumber])

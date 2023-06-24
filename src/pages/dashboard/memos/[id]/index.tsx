@@ -47,18 +47,22 @@ const DashboardMemoDetail: NextPage<Memo> = () => {
 
   if (!memo) return <NotFoundPage />
 
+  const headline = `${user!.data!.name}さんのメモ詳細`
+
   return (
-    <AppLayout
-      header={<h2 className='font-semibold text-xl text-gray-800 leading-tight'>メモ詳細</h2>}
-    >
+    <>
       <Head>
-        <title>メモ詳細を表示</title>
+        <title>{memo.title}</title>
       </Head>
-      {memo && loginUser && memo.user_id === loginUser.id && <SingleMemoDetail memo={memo} />}
-      {memo && loginUser && memo.user_id !== loginUser.id && (
-        <MemoDetailNoContent message={'閲覧権限がありません'} />
-      )}
-    </AppLayout>
+      <AppLayout
+        header={<h2 className='font-semibold text-xl text-gray-800 leading-tight'>{headline}</h2>}
+      >
+        {memo && loginUser && memo.user_id === loginUser.id && <SingleMemoDetail memo={memo} />}
+        {memo && loginUser && memo.user_id !== loginUser.id && (
+          <MemoDetailNoContent message={'閲覧権限がありません'} />
+        )}
+      </AppLayout>
+    </>
   )
 }
 
