@@ -22,12 +22,6 @@ export type getPublicMemosListByCategoryPageLinkType = (
   query: { category: string; page: string }
 }
 
-export const getDashboardMemosListPageLink = (page: number, tag?: string) => {
-  return tag ? `/dashboard/memos/tag/${tag}/page/${page}` : `/dashboard/memos/page/${page}`
-}
-
-export type getDashboardMemosListPageLinkType = (page: number, tag?: string) => string
-
 export const getNicknameMemosListPageLink = (nickname: string, page: number) => {
   return { pathname: `/${nickname}/memos/`, query: { page: `${page}` } }
 }
@@ -39,3 +33,26 @@ export type getNicknameMemosListPageLinkType = (
   pathname: string
   query: { page: string }
 }
+
+export const getNicknameMemosListByCategoryPageLink = (
+  nickname: string,
+  category: number,
+  page: number,
+) => {
+  return { pathname: `/${nickname}/memos/`, query: { category: `${category}`, page: `${page}` } }
+}
+
+export type getNicknameMemosListByCategoryPageLinkType = (
+  nickname: string,
+  category: number,
+  page: number,
+) => {
+  pathname: string
+  query: { category: string; page: string }
+}
+
+export const getDashboardMemosListPageLink = (page: number, tag?: string) => {
+  return tag ? `/dashboard/memos/tag/${tag}/page/${page}` : `/dashboard/memos/page/${page}`
+}
+
+export type getDashboardMemosListPageLinkType = (page: number, tag?: string) => string

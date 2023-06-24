@@ -6,6 +6,8 @@ import {
   getDashboardMemosListPageLinkType,
   getNicknameMemosListPageLink,
   getNicknameMemosListPageLinkType,
+  getNicknameMemosListByCategoryPageLink,
+  getNicknameMemosListByCategoryPageLinkType,
   getPublicMemosListByCategoryPageLink,
   getPublicMemosListByCategoryPageLinkType,
   getPublicMemosListPageLink,
@@ -18,9 +20,10 @@ export type PaginationProps = {
   currentPage: number
   renderPagerLink:
     | getPublicMemosListPageLinkType
-    | getNicknameMemosListPageLinkType
-    | getDashboardMemosListPageLinkType
     | getPublicMemosListByCategoryPageLinkType
+    | getNicknameMemosListPageLinkType
+    | getNicknameMemosListByCategoryPageLinkType
+    | getDashboardMemosListPageLinkType
   itemsPerPage?: number
   nickname?: string
   category?: number
@@ -40,6 +43,7 @@ const Pagination = ({
 }: PaginationProps) => {
   const pages = usePagination(totalItems, currentPage, itemsPerPage)
 
+  // ユーザー毎の記事一覧ページで、カテゴリーでの絞り込みが行われていない場合
   if (renderPagerLink === getNicknameMemosListPageLink && nickname) {
     return (
       <div className='flex items-center justify-center my-8'>
@@ -64,6 +68,32 @@ const Pagination = ({
         )}
       </div>
     )
+    // ユーザー毎の記事一覧ページで、カテゴリーでの絞り込みが行われている場合
+  } else if (renderPagerLink === getNicknameMemosListByCategoryPageLink && nickname && category) {
+    return (
+      <div className='flex items-center justify-center my-8'>
+        {pages.map((pageNumber, i) =>
+          pageNumber === dotts ? (
+            <span key={i} className='px-4 py-2 rounded-full text-sm font-semibold text-black'>
+              {pageNumber}
+            </span>
+          ) : (
+            <Link
+              key={i}
+              href={getNicknameMemosListByCategoryPageLink(nickname, category, Number(pageNumber))}
+              className={`${
+                pageNumber === currentPage
+                  ? `z-10 inline-flex bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`
+                  : `hidden text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0 md:inline-flex`
+              } relative items-center px-4 py-2 text-sm font-semibold focus:z-20`}
+            >
+              {pageNumber || '-'}
+            </Link>
+          ),
+        )}
+      </div>
+    )
+    // みんなの記事一覧ページで、カテゴリーでの絞り込みが行われている場合
   } else if (renderPagerLink === getPublicMemosListByCategoryPageLink && category) {
     return (
       <div className='flex items-center justify-center my-8'>
@@ -112,6 +142,7 @@ const Pagination = ({
         )}
       </div>
     )
+    // みんなの記事一覧ページで、カテゴリーでの絞り込みが行われていない場合
   } else {
     return (
       <div className='flex items-center justify-center my-8'>

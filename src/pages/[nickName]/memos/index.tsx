@@ -12,6 +12,7 @@ import { Memo } from '@/types/Memo'
 import { DataWithPagination } from '@/types/dataWithPagination'
 import { ITEMS_PER_PAGE } from '@/constants/PaginationConst'
 import {
+  getNicknameMemosListByCategoryPageLink,
   getNicknameMemosListPageLink,
   getPublicMemosListByCategoryPageLink,
   getPublicMemosListPageLink,
@@ -20,7 +21,7 @@ import {
 type ReturnType = DataWithPagination<Memo[]>
 
 /* 公開記事のメモ一覧ページ TODO: SSR or ISR化 */
-const PublicMemoByNicknameListIndex: NextPage = () => {
+const PublicMemoListByNickname: NextPage = () => {
   const router = useRouter()
 
   const { nickname, category, page } = router.query
@@ -50,7 +51,9 @@ const PublicMemoByNicknameListIndex: NextPage = () => {
           .finally(() => setIsLoading(false))
       } else {
         apiClient
-          .get(`/api/public/memos/category/${categoryNumber}?page=${pageNumber}`)
+          .get(
+            `/api/public/${nickNameTypeCasted}/memos/category/${categoryNumber}?page=${pageNumber}`,
+          )
           .then((response: AxiosResponse) => {
             // console.log(response.data)
             setMemos(response.data)
@@ -82,7 +85,7 @@ const PublicMemoByNicknameListIndex: NextPage = () => {
                 <SingleMemoBlockForList
                   memo={memo}
                   renderMemoDetailLink={`/${memo.user_nickname}/memos/${memo.id}`}
-                  renderMemoListByCategoryLink={`/memos?category=${memo.category_id}`}
+                  renderMemoListByCategoryLink={`/${memo.user_nickname}/memos?category=${memo.category_id}`}
                   renderMemoListByNickNameLink={`/${memo.user_nickname}/memos/`}
                   key={index}
                 />
@@ -93,7 +96,11 @@ const PublicMemoByNicknameListIndex: NextPage = () => {
             totalItems={Number(memos?.meta?.total)}
             currentPage={Number(memos?.meta?.current_page)}
             itemsPerPage={ITEMS_PER_PAGE}
-            renderPagerLink={getNicknameMemosListPageLink}
+            renderPagerLink={
+              categoryNumber === undefined
+                ? getNicknameMemosListPageLink
+                : getNicknameMemosListByCategoryPageLink
+            }
             category={categoryNumber}
             nickname={nickNameTypeCasted}
           />
@@ -103,4 +110,4 @@ const PublicMemoByNicknameListIndex: NextPage = () => {
   )
 }
 
-export default PublicMemoByNicknameListIndex
+export default PublicMemoListByNickname
