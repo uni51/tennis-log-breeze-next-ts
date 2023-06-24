@@ -1,22 +1,26 @@
-export const getPublicMemosListPageLink = (page: number, tag?: string) => {
-  return tag ? `/memos/tag/${tag}/page/${page}` : `/memos/page/${page}`
+// See: https://kiyobl.com/nextjs-routing/#toc4
+export const getPublicMemosListPageLink = (page: number) => {
+  return { pathname: '/memos/', query: { page: `${page}` } }
 }
 
-export const getPublicMemosListByCategoryPageLink = (
+export type getPublicMemosListPageLinkType = (
   page: number,
-  categoryNumber: number,
-  tag?: string,
 ) => {
-  return tag
-    ? `/memos/categories/${categoryNumber}/tag/${tag}/page/${page}`
-    : `/memos/categories/${categoryNumber}/page/${page}`
+  pathname: string
+  query: { page: string }
+}
+
+export const getPublicMemosListByCategoryPageLink = (category: number, page: number) => {
+  return { pathname: '/memos/', query: { category: `${category}`, page: `${page}` } }
 }
 
 export type getPublicMemosListByCategoryPageLinkType = (
+  category: number,
   page: number,
-  categoryNumber: number,
-  tag?: string,
-) => string
+) => {
+  pathname: string
+  query: { category: string; page: string }
+}
 
 export const getDashboardMemosListPageLink = (page: number, tag?: string) => {
   return tag ? `/dashboard/memos/tag/${tag}/page/${page}` : `/dashboard/memos/page/${page}`
@@ -33,9 +37,3 @@ export type getNicknameMemosListPageLinkType = (
   nickname: string,
   tag?: string,
 ) => string
-
-// export const getNicknameMemosListPageLink = (nickname: string) => {
-//   return (page: number, tag?: string) => {
-//     return tag ? `/${nickname}/memos/tag/${tag}/page/${page}` : `/${nickname}/memos/page/${page}`
-//   }
-// }

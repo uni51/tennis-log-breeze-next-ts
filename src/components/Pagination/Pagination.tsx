@@ -9,6 +9,7 @@ import {
   getPublicMemosListByCategoryPageLink,
   getPublicMemosListByCategoryPageLinkType,
   getPublicMemosListPageLink,
+  getPublicMemosListPageLinkType,
 } from '@/lib/pagination-helper'
 import { ITEMS_PER_PAGE } from '@/constants/PaginationConst'
 
@@ -16,12 +17,13 @@ export type PaginationProps = {
   totalItems: number
   currentPage: number
   renderPagerLink:
+    | getPublicMemosListPageLinkType
     | getNicknameMemosListPageLinkType
     | getDashboardMemosListPageLinkType
     | getPublicMemosListByCategoryPageLinkType
   itemsPerPage?: number
   nickname?: string
-  categoryNumber?: number
+  category?: number
   tag?: string
 }
 
@@ -33,7 +35,7 @@ const Pagination = ({
   renderPagerLink,
   itemsPerPage = ITEMS_PER_PAGE,
   nickname,
-  categoryNumber,
+  category,
   tag,
 }: PaginationProps) => {
   const pages = usePagination(totalItems, currentPage, itemsPerPage)
@@ -62,7 +64,7 @@ const Pagination = ({
         )}
       </div>
     )
-  } else if (renderPagerLink === getPublicMemosListByCategoryPageLink && categoryNumber) {
+  } else if (renderPagerLink === getPublicMemosListByCategoryPageLink && category) {
     return (
       <div className='flex items-center justify-center my-8'>
         {pages.map((pageNumber, i) =>
@@ -73,7 +75,7 @@ const Pagination = ({
           ) : (
             <Link
               key={i}
-              href={getPublicMemosListByCategoryPageLink(Number(pageNumber), categoryNumber)}
+              href={getPublicMemosListByCategoryPageLink(category, Number(pageNumber))}
               className={`${
                 pageNumber === currentPage
                   ? `z-10 inline-flex bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`
