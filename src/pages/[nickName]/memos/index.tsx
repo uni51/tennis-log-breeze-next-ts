@@ -64,7 +64,7 @@ const PublicMemoByNicknameListIndex: NextPage = () => {
 
   if (isLoading) return <Loading />
 
-  const headline = '公開中のメモ一覧'
+  const headline = `${nickNameTypeCasted}さんの公開中のメモ一覧`
 
   return (
     <AppLayout
@@ -82,7 +82,8 @@ const PublicMemoByNicknameListIndex: NextPage = () => {
                 <SingleMemoBlockForList
                   memo={memo}
                   renderMemoDetailLink={`/${memo.user_nickname}/memos/${memo.id}`}
-                  renderMemoByCategorylLink={`/memos?category=${memo.category_id}`}
+                  renderMemoListByCategoryLink={`/memos?category=${memo.category_id}`}
+                  renderMemoListByNickNameLink={`/${memo.user_nickname}/memos/`}
                   key={index}
                 />
               )

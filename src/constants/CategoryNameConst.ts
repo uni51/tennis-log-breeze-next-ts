@@ -1,0 +1,8 @@
+export const CATEGORY_NAME_FOREHAND = 'フォアハンド'
+export const CATEGORY_NAME_BACKHAND = 'バックハンド'
+export const CATEGORY_NAME_SERVE = 'サーブ'
+export const CATEGORY_NAME_RETURN = 'リターン'
+export const CATEGORY_NAME_VOLLEY = 'ボレー'
+export const CATEGORY_NAME_SMASH = 'スマッシュ'
+export const CATEGORY_NAME_GAME = 'ゲーム'
+export const CATEGORY_NAME_OTHER = 'その他'

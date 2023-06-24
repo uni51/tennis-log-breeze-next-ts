@@ -15,11 +15,12 @@ import {
   getPublicMemosListByCategoryPageLink,
   getPublicMemosListPageLink,
 } from '@/lib/pagination-helper'
+import { getPublicMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
 
 type ReturnType = DataWithPagination<Memo[]>
 
-/* 公開記事のメモ一覧ページ TODO: SSR or ISR化 */
-const PublicMemoListIndex: NextPage = () => {
+/* みんなの公開中のメモ一覧ページ TODO: SSR or ISR化 */
+const PublicMemoList: NextPage = () => {
   const router = useRouter()
 
   const { category, page } = router.query
@@ -60,7 +61,9 @@ const PublicMemoListIndex: NextPage = () => {
 
   if (isLoading) return <Loading />
 
-  const headline = '公開中のメモ一覧'
+  const headline = `みんなの公開中のメモ一覧${getPublicMemosListByCategoryHeadLineTitle(
+    categoryNumber,
+  )}`
 
   return (
     <AppLayout
@@ -78,7 +81,8 @@ const PublicMemoListIndex: NextPage = () => {
                 <SingleMemoBlockForList
                   memo={memo}
                   renderMemoDetailLink={`/${memo.user_nickname}/memos/${memo.id}`}
-                  renderMemoByCategorylLink={`/memos?category=${memo.category_id}`}
+                  renderMemoListByCategoryLink={`/memos?category=${memo.category_id}`}
+                  renderMemoListByNickNameLink={`/${memo.user_nickname}/memos/`}
                   key={index}
                 />
               )
@@ -101,4 +105,4 @@ const PublicMemoListIndex: NextPage = () => {
   )
 }
 
-export default PublicMemoListIndex
+export default PublicMemoList

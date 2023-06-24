@@ -5,13 +5,15 @@ import Link from 'next/link'
 type SingleMemoBlockForListProps = {
   memo: Memo
   renderMemoDetailLink: string
-  renderMemoByCategorylLink: string
+  renderMemoListByCategoryLink: string
+  renderMemoListByNickNameLink: string
 }
 
 const SingleMemoBlockForList: NextPage<SingleMemoBlockForListProps> = ({
   memo,
   renderMemoDetailLink,
-  renderMemoByCategorylLink,
+  renderMemoListByCategoryLink,
+  renderMemoListByNickNameLink,
 }) => {
   return (
     <div className='bg-gray-100 shadow-lg mb-5 p-4'>
@@ -20,7 +22,7 @@ const SingleMemoBlockForList: NextPage<SingleMemoBlockForListProps> = ({
       </p>
       <p className='mb-5'>{memo.body}</p>
       <p className='text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-pink-600 bg-pink-200 last:mr-0 mr-1'>
-        <Link href={renderMemoByCategorylLink}>{memo.category_name}</Link>
+        <Link href={renderMemoListByCategoryLink}>{memo.category_name}</Link>
       </p>
       <p className='text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blue-600 bg-blue-200 last:mr-0 mr-1'>
         {memo.status === 0 && '下書き'}
@@ -29,7 +31,7 @@ const SingleMemoBlockForList: NextPage<SingleMemoBlockForListProps> = ({
         {memo.status === 3 && '非公開'}
       </p>
       <p className='text-xs font-semibold inline-block py-1 px-2 rounded-full text-green-600 bg-green-200 last:mr-0 mr-1'>
-        <Link href={`/${memo.user_nickname}/memos/page/1`}>{memo.user_nickname}</Link>
+        <Link href={renderMemoListByNickNameLink}>{memo.user_nickname}</Link>
       </p>
       <p className='text-sm leading-6 text-gray-500 mt-2'>更新日時：{memo.updated_at}</p>
     </div>
