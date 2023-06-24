@@ -9,7 +9,6 @@ import {
   getPublicMemosListByCategoryPageLink,
   getPublicMemosListByCategoryPageLinkType,
   getPublicMemosListPageLink,
-  getPublicMemosListPageLinkType,
 } from '@/lib/pagination-helper'
 import { ITEMS_PER_PAGE } from '@/constants/PaginationConst'
 
@@ -17,13 +16,12 @@ export type PaginationProps = {
   totalItems: number
   currentPage: number
   renderPagerLink:
-    | getPublicMemosListPageLinkType
     | getNicknameMemosListPageLinkType
     | getDashboardMemosListPageLinkType
     | getPublicMemosListByCategoryPageLinkType
   itemsPerPage?: number
   nickname?: string
-  category?: number
+  categoryNumber?: number
   tag?: string
 }
 
@@ -35,7 +33,7 @@ const Pagination = ({
   renderPagerLink,
   itemsPerPage = ITEMS_PER_PAGE,
   nickname,
-  category,
+  categoryNumber,
   tag,
 }: PaginationProps) => {
   const pages = usePagination(totalItems, currentPage, itemsPerPage)
@@ -51,7 +49,7 @@ const Pagination = ({
           ) : (
             <Link
               key={i}
-              href={getNicknameMemosListPageLink(nickname, Number(pageNumber))}
+              href={getNicknameMemosListPageLink(Number(pageNumber), nickname)}
               className={`${
                 pageNumber === currentPage
                   ? `z-10 inline-flex bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`
@@ -64,7 +62,7 @@ const Pagination = ({
         )}
       </div>
     )
-  } else if (renderPagerLink === getPublicMemosListByCategoryPageLink && category) {
+  } else if (renderPagerLink === getPublicMemosListByCategoryPageLink && categoryNumber) {
     return (
       <div className='flex items-center justify-center my-8'>
         {pages.map((pageNumber, i) =>
@@ -75,7 +73,7 @@ const Pagination = ({
           ) : (
             <Link
               key={i}
-              href={getPublicMemosListByCategoryPageLink(category, Number(pageNumber))}
+              href={getPublicMemosListByCategoryPageLink(Number(pageNumber), categoryNumber)}
               className={`${
                 pageNumber === currentPage
                   ? `z-10 inline-flex bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`

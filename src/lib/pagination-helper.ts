@@ -28,12 +28,14 @@ export const getDashboardMemosListPageLink = (page: number, tag?: string) => {
 
 export type getDashboardMemosListPageLinkType = (page: number, tag?: string) => string
 
-export const getNicknameMemosListPageLink = (page: number, nickname: string, tag?: string) => {
-  return tag ? `/${nickname}/memos/tag/${tag}/page/${page}` : `/${nickname}/memos/page/${page}`
+export const getNicknameMemosListPageLink = (nickname: string, page: number) => {
+  return { pathname: `/${nickname}/memos/`, query: { page: `${page}` } }
 }
 
 export type getNicknameMemosListPageLinkType = (
-  page: number,
   nickname: string,
-  tag?: string,
-) => string
+  page: number,
+) => {
+  pathname: string
+  query: { page: string }
+}
