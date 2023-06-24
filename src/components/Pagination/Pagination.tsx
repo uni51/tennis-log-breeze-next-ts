@@ -55,7 +55,7 @@ const Pagination = ({
           ) : (
             <Link
               key={i}
-              href={getNicknameMemosListPageLink(nickname, Number(pageNumber))}
+              href={getNicknameMemosListPageLink(Number(pageNumber), nickname)}
               className={`${
                 pageNumber === currentPage
                   ? `z-10 inline-flex bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`
@@ -80,7 +80,7 @@ const Pagination = ({
           ) : (
             <Link
               key={i}
-              href={getNicknameMemosListByCategoryPageLink(nickname, category, Number(pageNumber))}
+              href={getNicknameMemosListByCategoryPageLink(Number(pageNumber), nickname, category)}
               className={`${
                 pageNumber === currentPage
                   ? `z-10 inline-flex bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`
@@ -105,7 +105,7 @@ const Pagination = ({
           ) : (
             <Link
               key={i}
-              href={getPublicMemosListByCategoryPageLink(category, Number(pageNumber))}
+              href={getPublicMemosListByCategoryPageLink(Number(pageNumber), category)}
               className={`${
                 pageNumber === currentPage
                   ? `z-10 inline-flex bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`
