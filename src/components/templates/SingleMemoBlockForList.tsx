@@ -5,11 +5,13 @@ import Link from 'next/link'
 type SingleMemoBlockForListProps = {
   memo: Memo
   renderMemoDetailLink: string
+  renderMemoByCategorylLink: string
 }
 
 const SingleMemoBlockForList: NextPage<SingleMemoBlockForListProps> = ({
   memo,
   renderMemoDetailLink,
+  renderMemoByCategorylLink,
 }) => {
   return (
     <div className='bg-gray-100 shadow-lg mb-5 p-4'>
@@ -18,7 +20,7 @@ const SingleMemoBlockForList: NextPage<SingleMemoBlockForListProps> = ({
       </p>
       <p className='mb-5'>{memo.body}</p>
       <p className='text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-pink-600 bg-pink-200 last:mr-0 mr-1'>
-        {memo.category_name}
+        <Link href={renderMemoByCategorylLink}>{memo.category_name}</Link>
       </p>
       <p className='text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blue-600 bg-blue-200 last:mr-0 mr-1'>
         {memo.status === 0 && '下書き'}

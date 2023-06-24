@@ -11,16 +11,20 @@ import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
 import { DataWithPagination } from '@/types/dataWithPagination'
 import { ITEMS_PER_PAGE } from '@/constants/PaginationConst'
-import { getPublicMemosListPageLink } from '@/lib/pagination-helper'
+import {
+  getPublicMemosListByCategoryPageLink,
+  getPublicMemosListPageLink,
+} from '@/lib/pagination-helper'
 
 type ReturnType = DataWithPagination<Memo[]>
 
 /* 公開記事のメモ一覧ページ TODO: SSR or ISR化 */
-const PublicMemoList: NextPage = () => {
+const PublicMemoListIndex: NextPage = () => {
   const router = useRouter()
 
-  const { page } = router.query
+  const { category, page } = router.query
 
+  const categoryNumber = category === undefined ? undefined : Number(category)
   const pageNumber = page === undefined ? 1 : Number(page)
 
   // state定義
@@ -30,18 +34,29 @@ const PublicMemoList: NextPage = () => {
   // 初回レンダリング時にAPIリクエスト
   useEffect(() => {
     const init = async () => {
-      apiClient
-        .get(`/api/public/memos?page=${pageNumber}`)
-        .then((response: AxiosResponse) => {
-          // console.log(response.data)
-          setMemos(response.data)
-        })
-        .catch((err: AxiosError) => console.log(err.response))
-        .finally(() => setIsLoading(false))
-      setIsLoading(false)
+      if (categoryNumber === undefined) {
+        apiClient
+          .get(`/api/public/memos?page=${pageNumber}`)
+          .then((response: AxiosResponse) => {
+            // console.log(response.data)
+            setMemos(response.data)
+          })
+          .catch((err: AxiosError) => console.log(err.response))
+          .finally(() => setIsLoading(false))
+      } else {
+        apiClient
+          .get(`/api/public/memos/category/${categoryNumber}?page=${pageNumber}`)
+          .then((response: AxiosResponse) => {
+            // console.log(response.data)
+            setMemos(response.data)
+          })
+          .catch((err: AxiosError) => console.log(err.response))
+          .finally(() => setIsLoading(false))
+        setIsLoading(false)
+      }
     }
     init()
-  }, [pageNumber])
+  }, [pageNumber, categoryNumber])
 
   if (isLoading) return <Loading />
 
@@ -62,7 +77,8 @@ const PublicMemoList: NextPage = () => {
               return (
                 <SingleMemoBlockForList
                   memo={memo}
-                  renderMemoDetailLink={`/memos/${memo.id}`}
+                  renderMemoDetailLink={`/${memo.user_nickname}/memos/${memo.id}`}
+                  renderMemoByCategorylLink={`/memos?category=${memo.category_id}`}
                   key={index}
                 />
               )
@@ -72,7 +88,12 @@ const PublicMemoList: NextPage = () => {
             totalItems={Number(memos?.meta?.total)}
             currentPage={Number(memos?.meta?.current_page)}
             itemsPerPage={ITEMS_PER_PAGE}
-            renderPagerLink={getPublicMemosListPageLink}
+            renderPagerLink={
+              categoryNumber === undefined
+                ? getPublicMemosListPageLink
+                : getPublicMemosListByCategoryPageLink
+            }
+            category={categoryNumber}
           />
         </div>
       </div>
@@ -80,4 +101,4 @@ const PublicMemoList: NextPage = () => {
   )
 }
 
-export default PublicMemoList
+export default PublicMemoListIndex
