@@ -5,12 +5,11 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
-import Pagination from '@/components/Pagination/Pagination'
+import MemoListPaginationAdapter from '@/components/Pagination/MemoListPaginationAdapter'
 import SingleMemoBlockForList from '@/components/templates/SingleMemoBlockForList'
 import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
 import { DataWithPagination } from '@/types/dataWithPagination'
-import { ITEMS_PER_PAGE } from '@/constants/PaginationConst'
 import {
   getNicknameMemosListByCategoryPageLink,
   getNicknameMemosListPageLink,
@@ -93,17 +92,16 @@ const PublicMemoListByNickname: NextPage = () => {
               )
             })}
           </div>
-          <Pagination
+          <MemoListPaginationAdapter
+            baseUrl={`/${nickname}/memos`}
             totalItems={Number(memos?.meta?.total)}
             currentPage={Number(memos?.meta?.current_page)}
-            itemsPerPage={ITEMS_PER_PAGE}
             renderPagerLink={
               categoryNumber === undefined
                 ? getNicknameMemosListPageLink
                 : getNicknameMemosListByCategoryPageLink
             }
             category={categoryNumber}
-            nickname={nickNameTypeCasted}
           />
         </div>
       </div>

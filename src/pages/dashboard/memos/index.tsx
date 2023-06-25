@@ -1,18 +1,16 @@
 import { AxiosError, AxiosResponse } from 'axios'
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
-import Pagination from '@/components/Pagination/Pagination'
+import MemoListPaginationAdapter from '@/components/Pagination/MemoListPaginationAdapter'
 import SingleMemoBlockForList from '@/components/templates/SingleMemoBlockForList'
 import { useAuth } from '@/hooks/auth'
 import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
 import { DataWithPagination } from '@/types/dataWithPagination'
-import { ITEMS_PER_PAGE } from '@/constants/PaginationConst'
 import {
   getDashboardMemosListByCategoryPageLink,
   getDashboardMemosListPageLink,
@@ -72,9 +70,9 @@ const DashboardMemoList: NextPage = () => {
 
   if (isLoading) return <Loading />
 
-  const headline = `${user!.data!.name}さんのメモ一覧${getMemosListByCategoryHeadLineTitle(
-    categoryNumber,
-  )}`
+  const headline = user?.data?.name
+    ? `${user.data.name}さんのメモ一覧${getMemosListByCategoryHeadLineTitle(categoryNumber)}`
+    : ' 作成したメモ一覧'
 
   return (
     <AppLayout
@@ -108,10 +106,10 @@ const DashboardMemoList: NextPage = () => {
               )
             })}
           </div>
-          <Pagination
+          <MemoListPaginationAdapter
+            baseUrl='/dashboard/memos/'
             totalItems={Number(memos?.meta?.total)}
             currentPage={Number(memos?.meta?.current_page)}
-            itemsPerPage={ITEMS_PER_PAGE}
             renderPagerLink={
               categoryNumber === undefined
                 ? getDashboardMemosListPageLink
