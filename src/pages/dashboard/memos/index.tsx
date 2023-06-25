@@ -11,10 +11,7 @@ import { useAuth } from '@/hooks/auth'
 import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
 import { DataWithPagination } from '@/types/dataWithPagination'
-import {
-  getDashboardMemosListByCategoryPageLink,
-  getDashboardMemosListPageLink,
-} from '@/lib/pagination-helper'
+import { getMemosListByCategoryPageLink, getMemosListPageLink } from '@/lib/pagination-helper'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
 
 type ReturnType = DataWithPagination<Memo[]>
@@ -110,10 +107,8 @@ const DashboardMemoList: NextPage = () => {
             baseUrl='/dashboard/memos/'
             totalItems={Number(memos?.meta?.total)}
             currentPage={Number(memos?.meta?.current_page)}
-            renderPagerLink={
-              categoryNumber === undefined
-                ? getDashboardMemosListPageLink
-                : getDashboardMemosListByCategoryPageLink
+            renderPagerLinkFunc={
+              categoryNumber === undefined ? getMemosListPageLink : getMemosListByCategoryPageLink
             }
             category={categoryNumber}
           />

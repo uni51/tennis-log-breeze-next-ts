@@ -10,10 +10,7 @@ import SingleMemoBlockForList from '@/components/templates/SingleMemoBlockForLis
 import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
 import { DataWithPagination } from '@/types/dataWithPagination'
-import {
-  getNicknameMemosListByCategoryPageLink,
-  getNicknameMemosListPageLink,
-} from '@/lib/pagination-helper'
+import { getMemosListByCategoryPageLink, getMemosListPageLink } from '@/lib/pagination-helper'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
 
 type ReturnType = DataWithPagination<Memo[]>
@@ -58,7 +55,6 @@ const PublicMemoListByNickname: NextPage = () => {
           })
           .catch((err: AxiosError) => console.log(err.response))
           .finally(() => setIsLoading(false))
-        setIsLoading(false)
       }
     }
   }, [nickNameTypeCasted, categoryNumber, pageNumber])
@@ -96,10 +92,8 @@ const PublicMemoListByNickname: NextPage = () => {
             baseUrl={`/${nickname}/memos`}
             totalItems={Number(memos?.meta?.total)}
             currentPage={Number(memos?.meta?.current_page)}
-            renderPagerLink={
-              categoryNumber === undefined
-                ? getNicknameMemosListPageLink
-                : getNicknameMemosListByCategoryPageLink
+            renderPagerLinkFunc={
+              categoryNumber === undefined ? getMemosListPageLink : getMemosListByCategoryPageLink
             }
             category={categoryNumber}
           />

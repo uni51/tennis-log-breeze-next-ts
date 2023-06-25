@@ -10,10 +10,7 @@ import SingleMemoBlockForList from '@/components/templates/SingleMemoBlockForLis
 import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
 import { DataWithPagination } from '@/types/dataWithPagination'
-import {
-  getPublicMemosListByCategoryPageLink,
-  getPublicMemosListPageLink,
-} from '@/lib/pagination-helper'
+import { getMemosListByCategoryPageLink, getMemosListPageLink } from '@/lib/pagination-helper'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
 
 type ReturnType = DataWithPagination<Memo[]>
@@ -89,10 +86,8 @@ const PublicMemoList: NextPage = () => {
             baseUrl={'/memos/'}
             totalItems={Number(memos?.meta?.total)}
             currentPage={Number(memos?.meta?.current_page)}
-            renderPagerLink={
-              categoryNumber === undefined
-                ? getPublicMemosListPageLink
-                : getPublicMemosListByCategoryPageLink
+            renderPagerLinkFunc={
+              categoryNumber === undefined ? getMemosListPageLink : getMemosListByCategoryPageLink
             }
             category={categoryNumber}
           />

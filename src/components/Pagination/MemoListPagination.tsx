@@ -1,14 +1,14 @@
 import Link from 'next/link'
 import React from 'react'
 import usePagination from '@/hooks/usePagination'
-import { RenderPagerLinkFcType, getRenderPagerLinkUrl } from '@/lib/pagination-helper'
+import { RenderPagerLinkFuncType, getRenderPagerLinkUrl } from '@/lib/pagination-helper'
 import { DOTS_STRING, ITEMS_PER_PAGE } from '@/constants/PaginationConst'
 
 export type PaginationProps = {
   baseUrl: string
   totalItems: number
   currentPage: number
-  renderPagerLinkFc: RenderPagerLinkFcType
+  renderPagerLinkFunc: RenderPagerLinkFuncType
   itemsPerPage?: number
   category?: number
   nickname?: string
@@ -18,7 +18,7 @@ const MemoListPagination = ({
   baseUrl,
   totalItems,
   currentPage,
-  renderPagerLinkFc,
+  renderPagerLinkFunc,
   itemsPerPage = ITEMS_PER_PAGE,
   category,
 }: PaginationProps) => {
@@ -34,7 +34,7 @@ const MemoListPagination = ({
         ) : (
           <Link
             key={i}
-            href={getRenderPagerLinkUrl(renderPagerLinkFc, baseUrl, Number(pageNumber), category)}
+            href={getRenderPagerLinkUrl(renderPagerLinkFunc, baseUrl, Number(pageNumber), category)}
             className={`${
               pageNumber === currentPage
                 ? `z-10 inline-flex bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`
