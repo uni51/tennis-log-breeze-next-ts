@@ -2,7 +2,7 @@ import { AxiosError, AxiosResponse } from 'axios'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { Key, useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import MemoListPaginationAdapter from '@/components/Pagination/MemoListPaginationAdapter'
@@ -12,52 +12,81 @@ import { Memo } from '@/types/Memo'
 import { DataWithPagination } from '@/types/dataWithPagination'
 import { getMemosListByCategoryPageLink, getMemosListPageLink } from '@/lib/pagination-helper'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
+import { apiServer } from '@/lib/utils/apiServer'
 
 type ReturnType = DataWithPagination<Memo[]>
 
-/* みんなの公開中のメモ一覧ページ TODO: SSR or ISR化 */
-const PublicMemoList: NextPage = () => {
-  const router = useRouter()
+//サーバーサイドレンダリング
+export async function getServerSideProps(context: { query: { category?: string; page?: string } }) {
+  const { category, page } = context.query
 
-  const { category, page } = router.query
-
-  const categoryNumber = category === undefined ? undefined : Number(category)
+  const categoryNumber = category === undefined ? null : Number(category)
   const pageNumber = page === undefined ? 1 : Number(page)
 
-  // state定義
-  const [memos, setMemos] = useState<ReturnType>()
-  const [isLoading, setIsLoading] = useState(true)
-
-  // 初回レンダリング時にAPIリクエスト
-  useEffect(() => {
-    const init = async () => {
-      if (categoryNumber === undefined) {
-        apiClient
-          .get(`/api/public/memos?page=${pageNumber}`)
-          .then((response: AxiosResponse) => {
-            // console.log(response.data)
-            setMemos(response.data)
-          })
-          .catch((err: AxiosError) => console.log(err.response))
-          .finally(() => setIsLoading(false))
-      } else {
-        apiClient
+  const response: ReturnType =
+    categoryNumber !== null
+      ? await apiServer
           .get(`/api/public/memos/category/${categoryNumber}?page=${pageNumber}`)
           .then((response: AxiosResponse) => {
-            // console.log(response.data)
-            setMemos(response.data)
+            return response.data
           })
-          .catch((err: AxiosError) => console.log(err.response))
-          .finally(() => setIsLoading(false))
-      }
-      setIsLoading(false)
-    }
-    init()
-  }, [categoryNumber, pageNumber])
+      : await apiServer
+          .get(`/api/public/memos?page=${pageNumber}`)
+          .then((response: AxiosResponse) => {
+            return response.data
+          })
 
-  if (isLoading) return <Loading />
+  return {
+    props: {
+      memos: JSON.stringify(response),
+      category: categoryNumber,
+      // page: pageNumber,
+    },
+  }
+}
 
-  const headline = `みんなの公開中のメモ一覧${getMemosListByCategoryHeadLineTitle(categoryNumber)}`
+/* みんなの公開中のメモ一覧ページ TODO: SSR or ISR化 */
+export default function PublicMemoList(props: { memos: string; category: number | null }) {
+  // const router = useRouter()
+
+  const { memos, category } = props
+
+  const memosData = (JSON.parse(memos) as unknown) as ReturnType
+
+  // state定義
+  // const [memos, setMemos] = useState<ReturnType>()
+  // const [isLoading, setIsLoading] = useState(true)
+
+  // // 初回レンダリング時にAPIリクエスト
+  // useEffect(() => {
+  //   const init = async () => {
+  //     if (categoryNumber === undefined) {
+  //       apiClient
+  //         .get(`/api/public/memos?page=${pageNumber}`)
+  //         .then((response: AxiosResponse) => {
+  //           // console.log(response.data)
+  //           setMemos(response.data)
+  //         })
+  //         .catch((err: AxiosError) => console.log(err.response))
+  //         .finally(() => setIsLoading(false))
+  //     } else {
+  //       apiClient
+  //         .get(`/api/public/memos/category/${categoryNumber}?page=${pageNumber}`)
+  //         .then((response: AxiosResponse) => {
+  //           // console.log(response.data)
+  //           setMemos(response.data)
+  //         })
+  //         .catch((err: AxiosError) => console.log(err.response))
+  //         .finally(() => setIsLoading(false))
+  //     }
+  //     setIsLoading(false)
+  //   }
+  //   init()
+  // }, [categoryNumber, pageNumber])
+
+  // if (isLoading) return <Loading />
+
+  const headline = `みんなの公開中のメモ一覧${getMemosListByCategoryHeadLineTitle(category)}`
 
   return (
     <AppLayout
@@ -70,7 +99,7 @@ const PublicMemoList: NextPage = () => {
         <div className='mt-3'>
           {/* DBから取得したメモデータの一覧表示 */}
           <div className='grid w-4/5 mx-auto gap-16 grid-cols-2'>
-            {memos?.data?.map((memo: Memo, index) => {
+            {memosData?.data?.map((memo: Memo, index: Key | null | undefined) => {
               return (
                 <SingleMemoBlockForList
                   memo={memo}
@@ -84,17 +113,15 @@ const PublicMemoList: NextPage = () => {
           </div>
           <MemoListPaginationAdapter
             baseUrl={'/memos/'}
-            totalItems={Number(memos?.meta?.total)}
-            currentPage={Number(memos?.meta?.current_page)}
+            totalItems={Number(memosData?.meta?.total)}
+            currentPage={Number(memosData?.meta?.current_page)}
             renderPagerLinkFunc={
-              categoryNumber === undefined ? getMemosListPageLink : getMemosListByCategoryPageLink
+              category === null ? getMemosListPageLink : getMemosListByCategoryPageLink
             }
-            category={categoryNumber}
+            category={category}
           />
         </div>
       </div>
     </AppLayout>
   )
 }
-
-export default PublicMemoList

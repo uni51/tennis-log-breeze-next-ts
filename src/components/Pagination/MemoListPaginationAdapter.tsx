@@ -11,7 +11,7 @@ export type PaginationProps = {
   totalItems: number
   currentPage: number
   renderPagerLinkFunc: getMemosListPageLinkType | getMemosListByCategoryPageLinkType
-  category?: number
+  category?: number | null
 }
 
 const MemoListPaginationAdapter = ({
