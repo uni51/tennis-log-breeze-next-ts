@@ -6,7 +6,7 @@ import NProgress from 'nprogress'
 import React, { useEffect } from 'react'
 
 function App({ Component, pageProps }: AppProps) {
-  // See.) https://github.com/vercel/next.js/tree/canary/examples/with-loading
+  // See) https://github.com/vercel/next.js/tree/canary/examples/with-loading
   const router = useRouter()
 
   useEffect(() => {
