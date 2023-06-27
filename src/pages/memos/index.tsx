@@ -22,12 +22,12 @@ export async function getServerSideProps(context: { query: { category?: string; 
   const response: ReturnType =
     categoryNumber !== null
       ? await apiServer
-          .get(`/api/publicmemos/memos/category/${categoryNumber}?page=${pageNumber}`)
+          .get(`/api/public/memos/category/${categoryNumber}?page=${pageNumber}`)
           .then((response: AxiosResponse) => {
             return response.data
           })
       : await apiServer
-          .get(`/api/publicmemos/memos?page=${pageNumber}`)
+          .get(`/api/public/memos?page=${pageNumber}`)
           .then((response: AxiosResponse) => {
             return response.data
           })
@@ -58,7 +58,7 @@ export default function PublicMemoList(props: { memos: string; category: number 
   //   const init = async () => {
   //     if (categoryNumber === undefined) {
   //       apiClient
-  //         .get(`/api/publicmemos/memos?page=${pageNumber}`)
+  //         .get(`/api/public/memos?page=${pageNumber}`)
   //         .then((response: AxiosResponse) => {
   //           // console.log(response.data)
   //           setMemos(response.data)
@@ -67,7 +67,7 @@ export default function PublicMemoList(props: { memos: string; category: number 
   //         .finally(() => setIsLoading(false))
   //     } else {
   //       apiClient
-  //         .get(`/api/publicmemos/memos/category/${categoryNumber}?page=${pageNumber}`)
+  //         .get(`/api/public/memos/category/${categoryNumber}?page=${pageNumber}`)
   //         .then((response: AxiosResponse) => {
   //           // console.log(response.data)
   //           setMemos(response.data)
