@@ -11,30 +11,33 @@ import NotFoundPage from '@/pages/404'
 import { Memo } from '@/types/Memo'
 
 /* ユーザー毎の公開中のメモ詳細ページ */
-const PrivateMemoDetail: NextPage<Memo> = () => {
+const MemoByNickNameDetail: NextPage<Memo> = () => {
   const router = useRouter()
-  const { nickName, memoId } = router.query
+  const { nickname, id } = router.query
 
   const [memo, setMemo] = useState<Memo>()
   const [isLoading, setIsLoading] = useState(true)
 
+  console.log(id)
+  console.log(nickname)
+
   useEffect(() => {
     if (router.isReady) {
       apiClient
-        .get(`api/public/${nickName}/memos/${memoId}`)
+        .get(`api/public/${nickname}/memos/${id}`)
         .then((response: AxiosResponse) => {
           setMemo(response.data.data)
         })
         .catch((err: AxiosError) => console.log(err.response))
         .finally(() => setIsLoading(false))
     }
-  }, [nickName, memoId])
+  }, [nickname, id])
 
   if (isLoading) return <Loading />
 
   if (!memo) return <NotFoundPage />
 
-  const headline = `${nickName}さんの公開メモ`
+  const headline = `${nickname}さんの公開メモ`
 
   return (
     <AppLayout
@@ -48,4 +51,4 @@ const PrivateMemoDetail: NextPage<Memo> = () => {
   )
 }
 
-export default PrivateMemoDetail
+export default MemoByNickNameDetail
