@@ -1,8 +1,8 @@
 import Link from 'next/link'
 import React from 'react'
+import { DOTS_STRING, ITEMS_PER_PAGE } from '@/constants/PaginationConst'
 import usePagination from '@/hooks/usePagination'
 import { RenderPagerLinkFuncType, getRenderPagerLinkUrl } from '@/lib/pagination-helper'
-import { DOTS_STRING, ITEMS_PER_PAGE } from '@/constants/PaginationConst'
 
 export type PaginationProps = {
   baseUrl: string

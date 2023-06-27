@@ -7,16 +7,16 @@ import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import MemoListPaginationAdapter from '@/components/Pagination/MemoListPaginationAdapter'
 import SingleMemoBlockForList from '@/components/templates/SingleMemoBlockForList'
+import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
+import { getMemosListByCategoryPageLink, getMemosListPageLink } from '@/lib/pagination-helper'
 import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
 import { DataWithPagination } from '@/types/dataWithPagination'
-import { getMemosListByCategoryPageLink, getMemosListPageLink } from '@/lib/pagination-helper'
-import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
 
 type ReturnType = DataWithPagination<Memo[]>
 
 /* みんなの公開中のメモ一覧ページ TODO: SSR or ISR化 */
-const PublicMemoList: NextPage = () => {
+const PublicMemoList_CSR: NextPage = () => {
   const router = useRouter()
 
   const { category, page } = router.query
@@ -97,4 +97,4 @@ const PublicMemoList: NextPage = () => {
   )
 }
 
-export default PublicMemoList
+export default PublicMemoList_CSR

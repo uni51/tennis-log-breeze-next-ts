@@ -1,10 +1,10 @@
+import MemoListPagination from '@/components/Pagination/MemoListPagination'
 import {
   getMemosListPageLink,
   getMemosListPageLinkType,
   getMemosListByCategoryPageLinkType,
   getMemosListByCategoryPageLink,
 } from '@/lib/pagination-helper'
-import MemoListPagination from '@/components/Pagination/MemoListPagination'
 
 export type PaginationProps = {
   baseUrl: string

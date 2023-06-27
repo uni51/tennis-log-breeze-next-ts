@@ -1,4 +1,4 @@
-import { DOTS } from '@/constants/PaginationConst'
+import { DOTS_STRING } from '@/constants/PaginationConst'
 
 const getPages = (length: number, inc: number = 1) => Array.from({ length }, (_, i) => i + inc)
 
@@ -15,12 +15,12 @@ export default function usePagination(
   }
   // -> 1 2 3 4 ... 10
   if (currentPage <= 3) {
-    return [1, 2, 3, 4, DOTS, totalPages]
+    return [1, 2, 3, 4, DOTS_STRING, totalPages]
   }
   // -> 1 ... 4 5 6 ... 10
   if (currentPage < totalPages - 2) {
-    return [1, DOTS, currentPage - 1, currentPage, currentPage + 1, DOTS, totalPages]
+    return [1, DOTS_STRING, currentPage - 1, currentPage, currentPage + 1, DOTS_STRING, totalPages]
   }
   // -> 1 ... 7 8 9 10
-  return [1, DOTS, ...getPages(4, totalPages - 3)]
+  return [1, DOTS_STRING, ...getPages(4, totalPages - 3)]
 }

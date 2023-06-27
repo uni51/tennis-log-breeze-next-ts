@@ -1,6 +1,6 @@
 import { NextPage } from 'next'
-import { Memo } from '@/types/Memo'
 import Link from 'next/link'
+import { Memo } from '@/types/Memo'
 
 type SingleMemoBlockForListProps = {
   memo: Memo

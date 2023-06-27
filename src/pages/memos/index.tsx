@@ -1,18 +1,14 @@
-import { AxiosError, AxiosResponse } from 'axios'
-import type { NextPage } from 'next'
+import { AxiosResponse } from 'axios'
 import Head from 'next/head'
-import { useRouter } from 'next/router'
-import { Key, useEffect, useState } from 'react'
+import { Key } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
-import { Loading } from '@/components/Loading'
 import MemoListPaginationAdapter from '@/components/Pagination/MemoListPaginationAdapter'
 import SingleMemoBlockForList from '@/components/templates/SingleMemoBlockForList'
-import { apiClient } from '@/lib/utils/apiClient'
+import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
+import { getMemosListByCategoryPageLink, getMemosListPageLink } from '@/lib/pagination-helper'
+import { apiServer } from '@/lib/utils/apiServer'
 import { Memo } from '@/types/Memo'
 import { DataWithPagination } from '@/types/dataWithPagination'
-import { getMemosListByCategoryPageLink, getMemosListPageLink } from '@/lib/pagination-helper'
-import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
-import { apiServer } from '@/lib/utils/apiServer'
 
 type ReturnType = DataWithPagination<Memo[]>
 
