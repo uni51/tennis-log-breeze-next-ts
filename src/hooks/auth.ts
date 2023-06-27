@@ -16,6 +16,12 @@ interface IApiRequest {
   [key: string]: any
 }
 
+interface IApiRequestLogin {
+  setErrors: (errors: LoginError) => void
+  setStatus: React.Dispatch<React.SetStateAction<any | null>>
+  [key: string]: any
+}
+
 export interface User {
   data?: {
     id?: number
@@ -42,7 +48,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
       }),
   )
 
-  const csrf = () => apiClient.get('/sanctum/csrf-cookie')
+  const csrf = () => apiClient.get('/auth/sanctum/csrf-cookie')
 
   const register = async (args: IApiRequest) => {
     const { setErrors, ...props } = args
@@ -53,6 +59,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
 
     apiClient
       .post('/register', props)
+      // useSWR の mutate は、keyが対応付けられているため、keyの指定は必要ない
       .then(() => mutate())
       .catch((error) => {
         if (error.response.status !== 422) throw error
@@ -61,16 +68,20 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
       })
   }
 
-  const login = async (args: IApiRequest) => {
+  const login = async (args: IApiRequestLogin) => {
     const { setErrors, setStatus, ...props } = args
 
     await csrf()
 
-    setErrors([])
+    setErrors({
+      email: undefined,
+      password: undefined,
+    })
     setStatus(null)
 
     apiClient
-      .post('/login', props)
+      .post('/auth/login', props)
+      // useSWR の mutate は、keyが対応付けられているため、keyの指定は必要ない
       .then(() => mutate())
       .catch((error) => {
         if (error.response.status !== 422) throw error
@@ -120,10 +131,28 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
 
   const logout = async () => {
     if (!error) {
+      // useSWR の mutate は、keyが対応付けられているため、keyの指定は必要ない
       await apiClient.post('/auth/logout').then(() => mutate())
     }
 
     window.location.pathname = '/login'
+  }
+
+  const checkLoggedIn = async (): Promise<boolean> => {
+    if (user) {
+      return true
+    }
+
+    try {
+      const res = await apiClient.get('/api/user')
+      if (!res.data.data) {
+        return false
+      }
+      // console.log('checkLoggedIn')
+      return true
+    } catch {
+      return false
+    }
   }
 
   useEffect(() => {
@@ -146,5 +175,6 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
     resetPassword,
     resendEmailVerification,
     logout,
+    checkLoggedIn,
   }
 }

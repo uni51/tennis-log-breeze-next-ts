@@ -19,7 +19,7 @@ const CatgeoryList: NextPage = () => {
   useEffect(() => {
     const init = async () => {
       apiClient
-        .get('/categories')
+        .get('/api/categories')
         .then((response: AxiosResponse) => {
           console.log(response.data)
           setCatgeories(response.data.data)

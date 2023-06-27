@@ -20,12 +20,13 @@ interface Props {
 }
 
 const navigation = [
-  { name: 'Dashboard', icon: HomeIcon, current: true, href: '#' },
+  { name: 'Dashboard', icon: HomeIcon, current: true, href: '/dashboard' },
   {
     name: 'Memos',
     icon: UsersIcon,
     current: false,
     children: [
+      { name: 'メモ一覧', href: '/memos' },
       { name: 'フォアハンド', href: '#' },
       { name: 'バックハンド', href: '#' },
       { name: 'サーブ', href: '#' },
@@ -212,7 +213,7 @@ const AppLayout = ({ header, children }: PropsWithChildren<Props>) => {
                   !item.children ? (
                     <div key={item.name}>
                       <a
-                        href='#'
+                        href={item.href}
                         className={classNames(
                           item.current
                             ? 'bg-gray-100 text-gray-900'
@@ -248,6 +249,7 @@ const AppLayout = ({ header, children }: PropsWithChildren<Props>) => {
                               className='mr-3 h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500'
                               aria-hidden='true'
                             />
+
                             <span className='flex-1'>{item.name}</span>
                             <svg
                               className={classNames(
