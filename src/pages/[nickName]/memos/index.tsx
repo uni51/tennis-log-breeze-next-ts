@@ -23,12 +23,12 @@ export async function getServerSideProps(context: {
   const response: ReturnType =
     categoryNumber !== null
       ? await apiServer
-          .get(`/api/publicmemos/${nickname}/memos/category/${categoryNumber}?page=${pageNumber}`)
+          .get(`/api/public/${nickname}/memos/category/${categoryNumber}?page=${pageNumber}`)
           .then((response: AxiosResponse) => {
             return response.data
           })
       : await apiServer
-          .get(`/api/publicmemos/${nickname}/memos?page=${pageNumber}`)
+          .get(`/api/public/${nickname}/memos?page=${pageNumber}`)
           .then((response: AxiosResponse) => {
             return response.data
           })

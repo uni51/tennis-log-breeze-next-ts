@@ -16,7 +16,7 @@ import { Memo } from '@/types/Memo.d'
 // }
 
 export const getAllPublicMemos = async () => {
-  const res = await apiClient.get('/api/publicmemos/memos')
+  const res = await apiClient.get('/api/public/memos')
 
   const allPublicMemos = res.data
 
