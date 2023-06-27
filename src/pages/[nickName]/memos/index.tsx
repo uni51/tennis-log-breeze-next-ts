@@ -1,68 +1,95 @@
-import { AxiosError, AxiosResponse } from 'axios'
-import type { NextPage } from 'next'
+import { AxiosResponse } from 'axios'
 import Head from 'next/head'
-import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
-import { Loading } from '@/components/Loading'
 import MemoListPaginationAdapter from '@/components/Pagination/MemoListPaginationAdapter'
 import SingleMemoBlockForList from '@/components/templates/SingleMemoBlockForList'
-import { apiClient } from '@/lib/utils/apiClient'
+import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
+import { getMemosListByCategoryPageLink, getMemosListPageLink } from '@/lib/pagination-helper'
+import { apiServer } from '@/lib/utils/apiServer'
 import { Memo } from '@/types/Memo'
 import { DataWithPagination } from '@/types/dataWithPagination'
-import { getMemosListByCategoryPageLink, getMemosListPageLink } from '@/lib/pagination-helper'
-import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
 
 type ReturnType = DataWithPagination<Memo[]>
 
-/* 公開記事のメモ一覧ページ TODO: SSR or ISR化 */
-const PublicMemoListByNickname: NextPage = () => {
-  const router = useRouter()
+//サーバーサイドレンダリング
+export async function getServerSideProps(context: {
+  query: { nickname: string; category?: string; page?: string }
+}) {
+  const { nickname, category, page } = context.query
 
-  const { nickname, category, page } = router.query
-
-  console.log(nickname)
-
-  const nickNameTypeCasted = nickname as string | undefined
-  const categoryNumber = category === undefined ? undefined : Number(category)
+  const categoryNumber = category === undefined ? null : Number(category)
   const pageNumber = page === undefined ? 1 : Number(page)
 
-  // state定義
-  const [memos, setMemos] = useState<ReturnType>()
-  const [isLoading, setIsLoading] = useState(true)
-
-  // 初回レンダリング時にAPIリクエスト
-  useEffect(() => {
-    if (router.isReady) {
-      if (typeof nickNameTypeCasted === 'undefined') return
-      if (categoryNumber === undefined) {
-        apiClient
-          .get(`/api/public/${nickNameTypeCasted}/memos?page=${pageNumber}`)
+  const response: ReturnType =
+    categoryNumber !== null
+      ? await apiServer
+          .get(`/api/public/${nickname}/memos/category/${categoryNumber}?page=${pageNumber}`)
           .then((response: AxiosResponse) => {
-            // console.log(response.data)
-            setMemos(response.data)
+            return response.data
           })
-          .catch((err: AxiosError) => console.log(err.response))
-          .finally(() => setIsLoading(false))
-      } else {
-        apiClient
-          .get(
-            `/api/public/${nickNameTypeCasted}/memos/category/${categoryNumber}?page=${pageNumber}`,
-          )
+      : await apiServer
+          .get(`/api/public/${nickname}/memos?page=${pageNumber}`)
           .then((response: AxiosResponse) => {
-            // console.log(response.data)
-            setMemos(response.data)
+            return response.data
           })
-          .catch((err: AxiosError) => console.log(err.response))
-          .finally(() => setIsLoading(false))
-      }
-    }
-  }, [nickNameTypeCasted, categoryNumber, pageNumber])
 
-  if (isLoading) return <Loading />
+  return {
+    props: {
+      memos: JSON.stringify(response),
+      nickname: nickname,
+      category: categoryNumber,
+      // page: pageNumber,
+    },
+  }
+}
 
-  const headline = `${nickNameTypeCasted}さんの公開中のメモ一覧${getMemosListByCategoryHeadLineTitle(
-    categoryNumber,
+/* ユーザー毎の公開メモ一覧ページ */
+export default function PublicMemoListByNickname(props: {
+  memos: string
+  nickname: string
+  category: number | null
+}) {
+  // const router = useRouter()
+  const { memos, nickname, category } = props
+
+  const memosData = (JSON.parse(memos) as unknown) as ReturnType
+
+  // // state定義
+  // const [memos, setMemos] = useState<ReturnType>()
+  // const [isLoading, setIsLoading] = useState(true)
+
+  // // 初回レンダリング時にAPIリクエスト
+  // useEffect(() => {
+  //   if (router.isReady) {
+  //     if (typeof nickNameTypeCasted === 'undefined') return
+  //     if (categoryNumber === undefined) {
+  //       apiClient
+  //         .get(`/api/public/${nickNameTypeCasted}/memos?page=${pageNumber}`)
+  //         .then((response: AxiosResponse) => {
+  //           // console.log(response.data)
+  //           setMemos(response.data)
+  //         })
+  //         .catch((err: AxiosError) => console.log(err.response))
+  //         .finally(() => setIsLoading(false))
+  //     } else {
+  //       apiClient
+  //         .get(
+  //           `/api/public/${nickNameTypeCasted}/memos/category/${categoryNumber}?page=${pageNumber}`,
+  //         )
+  //         .then((response: AxiosResponse) => {
+  //           // console.log(response.data)
+  //           setMemos(response.data)
+  //         })
+  //         .catch((err: AxiosError) => console.log(err.response))
+  //         .finally(() => setIsLoading(false))
+  //     }
+  //   }
+  // }, [nickNameTypeCasted, categoryNumber, pageNumber])
+
+  // if (isLoading) return <Loading />
+
+  const headline = `${nickname}さんの公開中のメモ一覧${getMemosListByCategoryHeadLineTitle(
+    category,
   )}`
 
   return (
@@ -76,7 +103,7 @@ const PublicMemoListByNickname: NextPage = () => {
         <div className='mt-3'>
           {/* DBから取得したメモデータの一覧表示 */}
           <div className='grid w-4/5 mx-auto gap-16 grid-cols-2'>
-            {memos?.data?.map((memo: Memo, index) => {
+            {memosData?.data?.map((memo: Memo, index) => {
               return (
                 <SingleMemoBlockForList
                   memo={memo}
@@ -90,17 +117,15 @@ const PublicMemoListByNickname: NextPage = () => {
           </div>
           <MemoListPaginationAdapter
             baseUrl={`/${nickname}/memos`}
-            totalItems={Number(memos?.meta?.total)}
-            currentPage={Number(memos?.meta?.current_page)}
+            totalItems={Number(memosData?.meta?.total)}
+            currentPage={Number(memosData?.meta?.current_page)}
             renderPagerLinkFunc={
-              categoryNumber === undefined ? getMemosListPageLink : getMemosListByCategoryPageLink
+              category === undefined ? getMemosListPageLink : getMemosListByCategoryPageLink
             }
-            category={categoryNumber}
+            category={category}
           />
         </div>
       </div>
     </AppLayout>
   )
 }
-
-export default PublicMemoListByNickname
