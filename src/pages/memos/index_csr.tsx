@@ -33,7 +33,7 @@ const PublicMemoList_CSR: NextPage = () => {
     const init = async () => {
       if (categoryNumber === undefined) {
         apiClient
-          .get(`/api/publicmemos/memos?page=${pageNumber}`)
+          .get(`/api/public/memos?page=${pageNumber}`)
           .then((response: AxiosResponse) => {
             // console.log(response.data)
             setMemos(response.data)
@@ -42,7 +42,7 @@ const PublicMemoList_CSR: NextPage = () => {
           .finally(() => setIsLoading(false))
       } else {
         apiClient
-          .get(`/api/publicmemos/memos/category/${categoryNumber}?page=${pageNumber}`)
+          .get(`/api/public/memos/category/${categoryNumber}?page=${pageNumber}`)
           .then((response: AxiosResponse) => {
             // console.log(response.data)
             setMemos(response.data)
