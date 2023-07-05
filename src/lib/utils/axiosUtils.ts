@@ -2,11 +2,15 @@ import { AxiosError, AxiosResponse } from 'axios'
 import { apiClient } from '@/lib/utils/apiClient'
 import { apiServer } from '@/lib/utils/apiServer'
 
-function isAxiosError(error: any): error is AxiosError {
+export const isAxiosError = (error: any): error is AxiosError => {
   return !!error.isAxiosError
 }
 
-export const axiosRequest = async (type: 'client' | 'server', uri: string) => {
+export const axiosRequest = async (
+  type: 'client' | 'server',
+  uri: string,
+  showBoundary: (error: any) => void,
+) => {
   switch (type) {
     case 'client':
       return await apiClient
@@ -16,7 +20,7 @@ export const axiosRequest = async (type: 'client' | 'server', uri: string) => {
         })
         .catch((err) => {
           if (isAxiosError(err) && err.response && err.response.status === 400) {
-            throw new Error(err.response.data.message)
+            showBoundary(err.response.data)
           } else {
             throw new Error(err.message)
           }

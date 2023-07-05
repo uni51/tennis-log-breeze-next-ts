@@ -9,9 +9,12 @@ import SingleMemoBlockForList from '@/components/templates/SingleMemoBlockForLis
 import { useAuth } from '@/hooks/auth'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
 import { getMemosListByCategoryPageLink, getMemosListPageLink } from '@/lib/pagination-helper'
-import { axiosRequest } from '@/lib/utils/axiosUtils'
+import { axiosRequest, isAxiosError } from '@/lib/utils/axiosUtils'
 import { Memo } from '@/types/Memo'
 import { DataWithPagination } from '@/types/dataWithPagination'
+import { apiClient } from '@/lib/utils/apiClient'
+import { AxiosResponse } from 'axios'
+import { useErrorBoundary } from 'react-error-boundary'
 
 type ReturnType = DataWithPagination<Memo[]>
 
@@ -19,6 +22,7 @@ type ReturnType = DataWithPagination<Memo[]>
 const DashboardMemoList: NextPage = () => {
   const router = useRouter()
   const { checkLoggedIn, user } = useAuth({ middleware: 'auth' })
+  const { showBoundary } = useErrorBoundary()
 
   const { page, category } = router.query
 
@@ -41,11 +45,28 @@ const DashboardMemoList: NextPage = () => {
         }
         if (categoryNumber === undefined) {
           const dashboardMemoListUri = `/api/dashboard/memos?page=${pageNumber}`
-          const response = await axiosRequest('client', dashboardMemoListUri)
+          const response = await axiosRequest('client', dashboardMemoListUri, showBoundary)
+          // const response = await apiClient
+          //   .get(dashboardMemoListUri)
+          //   .then((response: AxiosResponse) => {
+          //     return response.data
+          //   })
+          //   .catch((err) => {
+          //     if (isAxiosError(err) && err.response && err.response.status === 400) {
+          //       // throw new Error(err.response.data.message)
+          //       showBoundary(err.response.data.message)
+          //     } else {
+          //       throw new Error(err.message)
+          //     }
+          //   })
           setMemos(response)
         } else {
           const dashboardMemoListUriWithCategory = `/api/dashboard/memos/category/${categoryNumber}?page=${pageNumber}`
-          const response = await axiosRequest('client', dashboardMemoListUriWithCategory)
+          const response = await axiosRequest(
+            'client',
+            dashboardMemoListUriWithCategory,
+            showBoundary,
+          )
           setMemos(response)
         }
       }
