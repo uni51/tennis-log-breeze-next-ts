@@ -1,5 +1,5 @@
-import { apiClient } from '@/lib/utils/apiClient'
 import { AxiosError, AxiosResponse } from 'axios'
+import { apiClient } from '@/lib/utils/apiClient'
 import { apiServer } from '@/lib/utils/apiServer'
 
 function isAxiosError(error: any): error is AxiosError {

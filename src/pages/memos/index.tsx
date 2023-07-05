@@ -5,9 +5,9 @@ import MemoListPaginationAdapter from '@/components/Pagination/MemoListPaginatio
 import SingleMemoBlockForList from '@/components/templates/SingleMemoBlockForList'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
 import { getMemosListByCategoryPageLink, getMemosListPageLink } from '@/lib/pagination-helper'
+import { axiosRequest } from '@/lib/utils/axiosUtils'
 import { Memo } from '@/types/Memo'
 import { DataWithPagination } from '@/types/dataWithPagination'
-import { axiosRequest } from '@/lib/utils/axiosUtils'
 
 type ReturnType = DataWithPagination<Memo[]>
 
@@ -42,39 +42,6 @@ export default function PublicMemoList(props: { memos: string; category: number 
   const { memos, category } = props
 
   const memosData = (JSON.parse(memos) as unknown) as ReturnType
-
-  // state定義
-  // const [memos, setMemos] = useState<ReturnType>()
-  // const [isLoading, setIsLoading] = useState(true)
-
-  // // 初回レンダリング時にAPIリクエスト
-  // useEffect(() => {
-  //   const init = async () => {
-  //     if (categoryNumber === undefined) {
-  //       apiClient
-  //         .get(`/api/public/memos?page=${pageNumber}`)
-  //         .then((response: AxiosResponse) => {
-  //           // console.log(response.data)
-  //           setMemos(response.data)
-  //         })
-  //         .catch((err: AxiosError) => console.log(err.response))
-  //         .finally(() => setIsLoading(false))
-  //     } else {
-  //       apiClient
-  //         .get(`/api/public/memos/category/${categoryNumber}?page=${pageNumber}`)
-  //         .then((response: AxiosResponse) => {
-  //           // console.log(response.data)
-  //           setMemos(response.data)
-  //         })
-  //         .catch((err: AxiosError) => console.log(err.response))
-  //         .finally(() => setIsLoading(false))
-  //     }
-  //     setIsLoading(false)
-  //   }
-  //   init()
-  // }, [categoryNumber, pageNumber])
-
-  // if (isLoading) return <Loading />
 
   const headline = `みんなの公開中のメモ一覧${getMemosListByCategoryHeadLineTitle(category)}`
 

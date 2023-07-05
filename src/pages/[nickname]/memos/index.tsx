@@ -1,14 +1,12 @@
-import { AxiosResponse } from 'axios'
 import Head from 'next/head'
 import AppLayout from '@/components/Layouts/AppLayout'
 import MemoListPaginationAdapter from '@/components/Pagination/MemoListPaginationAdapter'
 import SingleMemoBlockForList from '@/components/templates/SingleMemoBlockForList'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
 import { getMemosListByCategoryPageLink, getMemosListPageLink } from '@/lib/pagination-helper'
-import { apiServer } from '@/lib/utils/apiServer'
+import { axiosRequest } from '@/lib/utils/axiosUtils'
 import { Memo } from '@/types/Memo'
 import { DataWithPagination } from '@/types/dataWithPagination'
-import { axiosRequest } from '@/lib/utils/axiosUtils'
 
 type ReturnType = DataWithPagination<Memo[]>
 

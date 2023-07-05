@@ -9,9 +9,9 @@ import SingleMemoBlockForList from '@/components/templates/SingleMemoBlockForLis
 import { useAuth } from '@/hooks/auth'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
 import { getMemosListByCategoryPageLink, getMemosListPageLink } from '@/lib/pagination-helper'
+import { axiosRequest } from '@/lib/utils/axiosUtils'
 import { Memo } from '@/types/Memo'
 import { DataWithPagination } from '@/types/dataWithPagination'
-import { axiosRequest } from '@/lib/utils/axiosUtils'
 
 type ReturnType = DataWithPagination<Memo[]>
 
