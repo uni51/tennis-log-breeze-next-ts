@@ -8,6 +8,7 @@ import { getMemosListByCategoryPageLink, getMemosListPageLink } from '@/lib/pagi
 import { apiServer } from '@/lib/utils/apiServer'
 import { Memo } from '@/types/Memo'
 import { DataWithPagination } from '@/types/dataWithPagination'
+import { axiosRequest } from '@/lib/utils/axiosUtils'
 
 type ReturnType = DataWithPagination<Memo[]>
 
@@ -20,18 +21,13 @@ export async function getServerSideProps(context: {
   const categoryNumber = category === undefined ? null : Number(category)
   const pageNumber = page === undefined ? 1 : Number(page)
 
+  const publicMemoListByNicknameUriWithCategory = `/api/public/${nickname}/memos/category/${categoryNumber}?page=${pageNumber}`
+  const publicMemoListByNicknameUri = `/api/public/${nickname}/memos?page=${pageNumber}`
+
   const response: ReturnType =
     categoryNumber !== null
-      ? await apiServer
-          .get(`/api/public/${nickname}/memos/category/${categoryNumber}?page=${pageNumber}`)
-          .then((response: AxiosResponse) => {
-            return response.data
-          })
-      : await apiServer
-          .get(`/api/public/${nickname}/memos?page=${pageNumber}`)
-          .then((response: AxiosResponse) => {
-            return response.data
-          })
+      ? await axiosRequest('server', publicMemoListByNicknameUriWithCategory)
+      : await axiosRequest('server', publicMemoListByNicknameUri)
 
   return {
     props: {
@@ -53,40 +49,6 @@ export default function PublicMemoListByNickname(props: {
   const { memos, nickname, category } = props
 
   const memosData = (JSON.parse(memos) as unknown) as ReturnType
-
-  // // state定義
-  // const [memos, setMemos] = useState<ReturnType>()
-  // const [isLoading, setIsLoading] = useState(true)
-
-  // // 初回レンダリング時にAPIリクエスト
-  // useEffect(() => {
-  //   if (router.isReady) {
-  //     if (typeof nickNameTypeCasted === 'undefined') return
-  //     if (categoryNumber === undefined) {
-  //       apiClient
-  //         .get(`/api/public/${nickNameTypeCasted}/memos?page=${pageNumber}`)
-  //         .then((response: AxiosResponse) => {
-  //           // console.log(response.data)
-  //           setMemos(response.data)
-  //         })
-  //         .catch((err: AxiosError) => console.log(err.response))
-  //         .finally(() => setIsLoading(false))
-  //     } else {
-  //       apiClient
-  //         .get(
-  //           `/api/public/${nickNameTypeCasted}/memos/category/${categoryNumber}?page=${pageNumber}`,
-  //         )
-  //         .then((response: AxiosResponse) => {
-  //           // console.log(response.data)
-  //           setMemos(response.data)
-  //         })
-  //         .catch((err: AxiosError) => console.log(err.response))
-  //         .finally(() => setIsLoading(false))
-  //     }
-  //   }
-  // }, [nickNameTypeCasted, categoryNumber, pageNumber])
-
-  // if (isLoading) return <Loading />
 
   const headline = `${nickname}さんの公開中のメモ一覧${getMemosListByCategoryHeadLineTitle(
     category,
