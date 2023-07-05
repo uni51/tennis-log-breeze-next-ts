@@ -1,4 +1,3 @@
-import { AxiosError, AxiosResponse } from 'axios'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
@@ -10,9 +9,9 @@ import SingleMemoBlockForList from '@/components/templates/SingleMemoBlockForLis
 import { useAuth } from '@/hooks/auth'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
 import { getMemosListByCategoryPageLink, getMemosListPageLink } from '@/lib/pagination-helper'
-import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
 import { DataWithPagination } from '@/types/dataWithPagination'
+import { axiosRequest } from '@/lib/utils/axiosUtils'
 
 type ReturnType = DataWithPagination<Memo[]>
 
@@ -41,23 +40,13 @@ const DashboardMemoList: NextPage = () => {
           return
         }
         if (categoryNumber === undefined) {
-          apiClient
-            .get(`/api/dashboard/memos?page=${pageNumber}`)
-            .then((response: AxiosResponse) => {
-              console.log(response.data)
-              setMemos(response.data)
-            })
-            .catch((err: AxiosError) => console.log(err.response))
-            .finally(() => setIsLoading(false))
+          const dashboardMemoListUri = `/api/dashboard/memos?page=${pageNumber}`
+          const response = await axiosRequest('client', dashboardMemoListUri)
+          setMemos(response)
         } else {
-          apiClient
-            .get(`/api/dashboard/memos/category/${categoryNumber}?page=${pageNumber}`)
-            .then((response: AxiosResponse) => {
-              // console.log(response.data)
-              setMemos(response.data)
-            })
-            .catch((err: AxiosError) => console.log(err.response))
-            .finally(() => setIsLoading(false))
+          const dashboardMemoListUriWithCategory = `/api/dashboard/memos/category/${categoryNumber}?page=${pageNumber}`
+          const response = await axiosRequest('client', dashboardMemoListUriWithCategory)
+          setMemos(response)
         }
       }
       setIsLoading(false)

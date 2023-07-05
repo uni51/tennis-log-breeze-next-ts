@@ -1,4 +1,3 @@
-import { AxiosResponse } from 'axios'
 import Head from 'next/head'
 import { Key } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
@@ -6,9 +5,9 @@ import MemoListPaginationAdapter from '@/components/Pagination/MemoListPaginatio
 import SingleMemoBlockForList from '@/components/templates/SingleMemoBlockForList'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
 import { getMemosListByCategoryPageLink, getMemosListPageLink } from '@/lib/pagination-helper'
-import { apiServer } from '@/lib/utils/apiServer'
 import { Memo } from '@/types/Memo'
 import { DataWithPagination } from '@/types/dataWithPagination'
+import { axiosRequest } from '@/lib/utils/axiosUtils'
 
 type ReturnType = DataWithPagination<Memo[]>
 
@@ -19,18 +18,13 @@ export async function getServerSideProps(context: { query: { category?: string; 
   const categoryNumber = category === undefined ? null : Number(category)
   const pageNumber = page === undefined ? 1 : Number(page)
 
+  const publicMemoListUriWithCategory = `/api/public/memos/category/${categoryNumber}?page=${pageNumber}`
+  const publicMemoListUri = `/api/public/memos?page=${pageNumber}`
+
   const response: ReturnType =
     categoryNumber !== null
-      ? await apiServer
-          .get(`/api/public/memos/category/${categoryNumber}?page=${pageNumber}`)
-          .then((response: AxiosResponse) => {
-            return response.data
-          })
-      : await apiServer
-          .get(`/api/public/memos?page=${pageNumber}`)
-          .then((response: AxiosResponse) => {
-            return response.data
-          })
+      ? await axiosRequest('server', publicMemoListUriWithCategory)
+      : await axiosRequest('server', publicMemoListUri)
 
   return {
     props: {
