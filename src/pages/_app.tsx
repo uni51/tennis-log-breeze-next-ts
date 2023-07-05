@@ -5,7 +5,7 @@ import { useRouter } from 'next/router'
 import NProgress from 'nprogress'
 import React, { useEffect } from 'react'
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary'
-// import Modal from '@/components/Modal'
+import Modal from '@/components/Modal'
 
 function App({ Component, pageProps }: AppProps) {
   // See) https://github.com/vercel/next.js/tree/canary/examples/with-loading
@@ -40,7 +40,7 @@ function App({ Component, pageProps }: AppProps) {
 }
 
 const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
-  return (
+  const detail = (
     <>
       <pre>react-error-boundary {error.message}</pre>
       <button type='button' onClick={resetErrorBoundary}>
@@ -48,7 +48,8 @@ const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
       </button>
     </>
   )
-  // return Modal({ children: error.message, show: true, onClose: resetErrorBoundary })
+
+  return Modal({ children: detail, show: true, onClose: resetErrorBoundary })
 }
 
 const onError = (error: Error, info: { componentStack: string }) => {
