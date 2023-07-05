@@ -94,7 +94,7 @@ export default function PublicMemoList(props: { memos: string; category: number 
       <div className='mx-auto mt-32'>
         <div className='mt-3'>
           {/* DBから取得したメモデータの一覧表示 */}
-          <div className='grid w-4/5 mx-auto gap-16 grid-cols-2'>
+          <div className='grid w-4/5 mx-auto gap-16 lg:grid-cols-2'>
             {memosData?.data?.map((memo: Memo, index: Key | null | undefined) => {
               return (
                 <SingleMemoBlockForList
