@@ -1,13 +1,10 @@
-import { NextPage } from 'next'
-import Head from 'next/head'
-import AppLayout from '@/components/Layouts/AppLayout'
-import { Memo } from '@/types/Memo'
+import { FC } from 'react'
 
 type Props = {
   message: string
 }
 
-const MemoDetailNotAllowed: NextPage<Props> = ({ message }) => {
+const MemoDetailNotAllowed: FC<Props> = ({ message }) => {
   return (
     <div className='mx-auto mt-32'>
       <div className='grid w-4/5 mx-auto gap-4'>

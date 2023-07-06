@@ -1,6 +1,5 @@
-import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { PropsWithChildren, ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { Loading } from '@/components/Loading'
 import MemoListPaginationAdapter from '@/components/Pagination/MemoListPaginationAdapter'
 import SingleMemoBlockForList from '@/components/templates/SingleMemoBlockForList'
@@ -13,7 +12,7 @@ import { useErrorBoundary } from 'react-error-boundary'
 type ReturnType = DataWithPagination<Memo[]>
 
 /* Dashboard（マイページ）のメモ一覧ページ */
-export default function DashboardMemoListQuery(): ReactElement {
+export default function DashboardMemoQueryList(): ReactElement {
   const router = useRouter()
   const { showBoundary } = useErrorBoundary()
 

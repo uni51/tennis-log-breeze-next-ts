@@ -6,23 +6,19 @@ import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import { useAuth } from '@/hooks/auth'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
-import { Memo } from '@/types/Memo'
-import { DataWithPagination } from '@/types/dataWithPagination'
-import DashboardMemoListQuery from '@/components/templates/DashboardMemoListQuery'
-import { ErrorBoundary, FallbackProps } from 'react-error-boundary'
-
-type ReturnType = DataWithPagination<Memo[]>
+import DashboardMemoQueryList from '@/components/features/memos/components/DashboardMemoQueryList'
+import { ErrorBoundary } from 'react-error-boundary'
+import { ErrorFallback, onError } from '@/components/errorBoundaryUtils'
 
 /* Dashboard（マイページ）のメモ一覧ページ */
 const DashboardMemoList: NextPage = () => {
   const router = useRouter()
   const { checkLoggedIn, user } = useAuth({ middleware: 'auth' })
 
-  const { page, category } = router.query
+  const { category } = router.query
   const categoryNumber = category === undefined ? undefined : Number(category)
 
   // state定義
-  const [memos, setMemos] = useState<ReturnType>()
   const [isLoading, setIsLoading] = useState(true)
 
   // 初回レンダリング時にAPIリクエスト
@@ -55,25 +51,10 @@ const DashboardMemoList: NextPage = () => {
         <title>{headline}</title>
       </Head>
       <ErrorBoundary FallbackComponent={ErrorFallback} onError={onError}>
-        <DashboardMemoListQuery />
+        <DashboardMemoQueryList />
       </ErrorBoundary>
     </AppLayout>
   )
-}
-
-const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
-  return (
-    <>
-      <pre>react-error-boundary {error}</pre>
-      <button type='button' onClick={resetErrorBoundary}>
-        reset button
-      </button>
-    </>
-  )
-}
-
-const onError = (error: Error, info: { componentStack: string }) => {
-  console.error(error, info)
 }
 
 export default DashboardMemoList
