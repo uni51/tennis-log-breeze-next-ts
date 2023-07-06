@@ -1,6 +1,6 @@
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { PropsWithChildren, ReactElement, useEffect, useState } from 'react'
 import { Loading } from '@/components/Loading'
 import MemoListPaginationAdapter from '@/components/Pagination/MemoListPaginationAdapter'
 import SingleMemoBlockForList from '@/components/templates/SingleMemoBlockForList'
@@ -12,15 +12,15 @@ import { useErrorBoundary } from 'react-error-boundary'
 
 type ReturnType = DataWithPagination<Memo[]>
 
-type Props = {
-  pageNumber: number
-  categoryNumber?: number
-}
-
 /* Dashboard（マイページ）のメモ一覧ページ */
-const DashboardMemoListQuery: NextPage<Props> = ({ pageNumber, categoryNumber }) => {
+export default function DashboardMemoListQuery(): ReactElement {
   const router = useRouter()
   const { showBoundary } = useErrorBoundary()
+
+  const { page, category } = router.query
+
+  const pageNumber = page === undefined ? 1 : Number(page)
+  const categoryNumber = category === undefined ? undefined : Number(category)
 
   // state定義
   const [memos, setMemos] = useState<ReturnType>()
@@ -33,19 +33,6 @@ const DashboardMemoListQuery: NextPage<Props> = ({ pageNumber, categoryNumber })
         if (categoryNumber === undefined) {
           const dashboardMemoListUri = `/api/dashboard/memos?page=${pageNumber}`
           const response = await axiosRequest('client', dashboardMemoListUri, showBoundary)
-          // const response = await apiClient
-          //   .get(dashboardMemoListUri)
-          //   .then((response: AxiosResponse) => {
-          //     return response.data
-          //   })
-          //   .catch((err) => {
-          //     if (isAxiosError(err) && err.response && err.response.status === 400) {
-          //       // throw new Error(err.response.data.message)
-          //       showBoundary(err.response.data.message)
-          //     } else {
-          //       throw new Error(err.message)
-          //     }
-          //   })
           setMemos(response)
         } else {
           const dashboardMemoListUriWithCategory = `/api/dashboard/memos/category/${categoryNumber}?page=${pageNumber}`
@@ -103,5 +90,3 @@ const DashboardMemoListQuery: NextPage<Props> = ({ pageNumber, categoryNumber })
     </div>
   )
 }
-
-export default DashboardMemoListQuery

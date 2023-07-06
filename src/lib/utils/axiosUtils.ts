@@ -20,9 +20,9 @@ export const axiosRequest = async (
         })
         .catch((err) => {
           if (isAxiosError(err) && err.response && err.response.status === 400) {
-            showBoundary(err.response.data)
+            showBoundary(err.response.data.message)
           } else {
-            throw new Error(err.message)
+            showBoundary(err.message)
           }
         })
     case 'server':
@@ -33,9 +33,9 @@ export const axiosRequest = async (
         })
         .catch((err) => {
           if (isAxiosError(err) && err.response && err.response.status === 400) {
-            throw new Error(err.response.data.message)
+            showBoundary(err.response.data.message)
           } else {
-            throw new Error(err.message)
+            showBoundary(err.message)
           }
         })
   }

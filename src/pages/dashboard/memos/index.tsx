@@ -19,8 +19,6 @@ const DashboardMemoList: NextPage = () => {
   const { checkLoggedIn, user } = useAuth({ middleware: 'auth' })
 
   const { page, category } = router.query
-
-  const pageNumber = page === undefined ? 1 : Number(page)
   const categoryNumber = category === undefined ? undefined : Number(category)
 
   // state定義
@@ -41,7 +39,7 @@ const DashboardMemoList: NextPage = () => {
       setIsLoading(false)
     }
     init()
-  }, [pageNumber, categoryNumber])
+  }, [categoryNumber])
 
   if (isLoading) return <Loading />
 
@@ -57,7 +55,7 @@ const DashboardMemoList: NextPage = () => {
         <title>{headline}</title>
       </Head>
       <ErrorBoundary FallbackComponent={ErrorFallback} onError={onError}>
-        <DashboardMemoListQuery pageNumber={pageNumber} categoryNumber={categoryNumber} />
+        <DashboardMemoListQuery />
       </ErrorBoundary>
     </AppLayout>
   )
@@ -66,7 +64,7 @@ const DashboardMemoList: NextPage = () => {
 const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
   return (
     <>
-      <pre>react-error-boundary {error.message}</pre>
+      <pre>react-error-boundary {error}</pre>
       <button type='button' onClick={resetErrorBoundary}>
         reset button
       </button>
