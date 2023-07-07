@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router'
 import { ReactElement, useEffect, useState } from 'react'
+import { useErrorBoundary } from 'react-error-boundary'
 import { Loading } from '@/components/Loading'
 import MemoListPaginationAdapter from '@/components/Pagination/MemoListPaginationAdapter'
 import SingleMemoBlockForList from '@/components/templates/SingleMemoBlockForList'
@@ -7,7 +8,6 @@ import { getMemosListByCategoryPageLink, getMemosListPageLink } from '@/lib/pagi
 import { axiosRequest } from '@/lib/utils/axiosUtils'
 import { Memo } from '@/types/Memo'
 import { DataWithPagination } from '@/types/dataWithPagination'
-import { useErrorBoundary } from 'react-error-boundary'
 
 type ReturnType = DataWithPagination<Memo[]>
 

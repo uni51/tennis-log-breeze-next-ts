@@ -9,7 +9,7 @@ export const isAxiosError = (error: any): error is AxiosError => {
 export const axiosRequest = async (
   type: 'client' | 'server',
   uri: string,
-  showBoundary: (error: any) => void,
+  showBoundary?: (error: any) => void,
 ) => {
   switch (type) {
     case 'client':
@@ -20,9 +20,9 @@ export const axiosRequest = async (
         })
         .catch((err) => {
           if (isAxiosError(err) && err.response && err.response.status === 400) {
-            showBoundary(err.response.data.message)
+            showBoundary!(err.response.data.message)
           } else {
-            showBoundary(err.message)
+            showBoundary!(err.message)
           }
         })
     case 'server':
@@ -33,9 +33,9 @@ export const axiosRequest = async (
         })
         .catch((err) => {
           if (isAxiosError(err) && err.response && err.response.status === 400) {
-            showBoundary(err.response.data.message)
+            throw new Error(err.response.data.message)
           } else {
-            showBoundary(err.message)
+            throw new Error(err.message)
           }
         })
   }

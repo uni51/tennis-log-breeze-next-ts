@@ -2,13 +2,13 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
+import { ErrorBoundary } from 'react-error-boundary'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
+import { ErrorFallback, onError } from '@/components/errorBoundaryUtils'
+import DashboardMemoQueryList from '@/components/features/memos/components/DashboardMemoQueryList'
 import { useAuth } from '@/hooks/auth'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
-import DashboardMemoQueryList from '@/components/features/memos/components/DashboardMemoQueryList'
-import { ErrorBoundary } from 'react-error-boundary'
-import { ErrorFallback, onError } from '@/components/errorBoundaryUtils'
 
 /* Dashboard（マイページ）のメモ一覧ページ */
 const DashboardMemoList: NextPage = () => {
