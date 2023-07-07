@@ -1,4 +1,3 @@
-import { Head } from 'next/document'
 import AppLayout from '@/components/Layouts/AppLayout'
 
 export const ContentsError = ({ name, message, status, config, stack, headline }: any) => {
