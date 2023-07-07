@@ -1,6 +1,7 @@
 import { AxiosError, AxiosResponse } from 'axios'
 import { apiClient } from '@/lib/utils/apiClient'
 import { apiServer } from '@/lib/utils/apiServer'
+import { HttpError } from '@/types/HttpError'
 
 export const isAxiosError = (error: any): error is AxiosError => {
   return !!error.isAxiosError
@@ -26,17 +27,8 @@ export const axiosRequest = async (
           }
         })
     case 'server':
-      return await apiServer
-        .get(uri)
-        .then((response: AxiosResponse) => {
-          return response.data
-        })
-        .catch((err) => {
-          if (isAxiosError(err) && err.response && err.response.status === 400) {
-            throw new Error(err.response.data.message)
-          } else {
-            throw new Error(err.message)
-          }
-        })
+      return await apiServer.get(uri).then((response: AxiosResponse) => {
+        return response.data
+      })
   }
 }

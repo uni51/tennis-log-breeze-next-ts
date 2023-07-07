@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import { Key } from 'react'
+import { ContentsError } from '@/components/Layouts/ContentsError'
 import AppLayout from '@/components/Layouts/AppLayout'
 import MemoListPaginationAdapter from '@/components/Pagination/MemoListPaginationAdapter'
 import SingleMemoBlockForList from '@/components/templates/SingleMemoBlockForList'
@@ -21,29 +22,45 @@ export async function getServerSideProps(context: { query: { category?: string; 
   const publicMemoListUriWithCategory = `/api/public/memos/category/${categoryNumber}?page=${pageNumber}`
   const publicMemoListUri = `/api/public/memos?page=${pageNumber}`
 
-  const response: ReturnType =
-    categoryNumber !== null
-      ? await axiosRequest('server', publicMemoListUriWithCategory)
-      : await axiosRequest('server', publicMemoListUri)
+  try {
+    const response: ReturnType =
+      categoryNumber !== null
+        ? await axiosRequest('server', publicMemoListUriWithCategory)
+        : await axiosRequest('server', publicMemoListUri)
 
-  return {
-    props: {
-      memos: JSON.stringify(response),
-      category: categoryNumber,
-      // page: pageNumber,
-    },
+    return {
+      props: {
+        memos: JSON.stringify(response),
+        category: categoryNumber,
+      },
+    }
+  } catch (err) {
+    return { props: { error: JSON.stringify(err) } }
   }
 }
 
-/* みんなの公開中のメモ一覧ページ TODO: SSR or ISR化 */
-export default function PublicMemoList(props: { memos: string; category: number | null }) {
+type Props = {
+  memos: string
+  category: number | null
+  error?: string
+}
+
+/* みんなの公開中のメモ一覧ページ */
+export default function PublicMemoList(props: Props) {
   // const router = useRouter()
 
-  const { memos, category } = props
-
-  const memosData = (JSON.parse(memos) as unknown) as ReturnType
+  const { memos, category, error } = props
 
   const headline = `みんなの公開中のメモ一覧${getMemosListByCategoryHeadLineTitle(category)}`
+
+  if (error) {
+    const errorText = JSON.parse(error)
+    errorText.headline = headline
+
+    return <ContentsError {...errorText} />
+  }
+
+  const memosData = (JSON.parse(memos) as unknown) as ReturnType
 
   return (
     <AppLayout
