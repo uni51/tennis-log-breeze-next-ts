@@ -67,10 +67,10 @@ const Post: NextPage = () => {
       .then((res) => {
         // APIへのリクエスト
         apiClient
-          .post('/api/memos', postData)
+          .post('/api/dashboard/memos', postData)
           .then((response: AxiosResponse) => {
             console.log(response.data)
-            router.push('/memos')
+            router.push('/dashboard/memos')
           })
           .catch((err: AxiosError) => {
             // バリデーションエラー
