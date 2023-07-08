@@ -15,6 +15,7 @@ type MemoForm = {
   title: string
   body: string
   category_id: number
+  status_id: number
 }
 
 // バリデーションメッセージの型
@@ -22,6 +23,7 @@ type Validation = {
   title?: string
   body?: string
   category_id?: string
+  status_id?: string
 }
 
 const Post: NextPage = () => {
@@ -30,13 +32,14 @@ const Post: NextPage = () => {
   const [validation, setValidation] = useState<Validation>({})
   const { checkLoggedIn } = useAuth({ middleware: 'auth' })
   const [category, setCategory] = useState<any[]>([])
+  const [status, setStatus] = useState<any[]>([])
 
   // React-Hook-Form
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<MemoForm>({ defaultValues: { category_id: 1 } })
+  } = useForm<MemoForm>({ defaultValues: { category_id: 1, status_id: 1 } })
 
   useEffect(() => {
     const init = async () => {
@@ -46,12 +49,22 @@ const Post: NextPage = () => {
         router.push('/login')
         return
       }
-      const responseCategories = await apiClient.get('api/categories')
-      const objectResponseCategories = responseCategories.data.data
+      const responseCategories = await apiClient.get('api/memos/categories')
+      let objectResponseCategories = responseCategories.data.data
+      console.log(objectResponseCategories)
       const arrayResponseCategories = Object.keys(objectResponseCategories).map(function (key) {
         return objectResponseCategories[key]
       })
       setCategory(arrayResponseCategories)
+      // console.log(category)
+      const responseStatuses = await apiClient.get('api/memos/status')
+      let objectResponseStatuses = Object.entries(responseStatuses.data)
+      // console.log(objectResponseStatuses)
+      const arrayResponseStatuses = objectResponseStatuses.map((item: [string, unknown]) => {
+        return Object.assign({ id: item[0], name: item[1] })
+      })
+      setStatus(arrayResponseStatuses)
+      console.log(arrayResponseStatuses)
     }
     init()
   }, [])
@@ -160,6 +173,26 @@ const Post: NextPage = () => {
             render={({ message }) => <p className='py-3 text-red-500'>{message}</p>}
           />
           {validation.category_id && <p className='py-3 text-red-500'>{validation.category_id}</p>}
+          <p>ステータス</p>
+          <select
+            {...register('status_id', {
+              validate: (value) => {
+                return !!status.find((item) => item.id == value) ? true : '不正な値です'
+              },
+            })}
+          >
+            {status.map((item, i) => (
+              <option value={item.id} key={item.id}>
+                {item.name}
+              </option>
+            ))}
+          </select>
+          <ErrorMessage
+            errors={errors}
+            name={'status_id'}
+            render={({ message }) => <p className='py-3 text-red-500'>{message}</p>}
+          />
+          {validation.status_id && <p className='py-3 text-red-500'>{validation.status_id}</p>}
           <div className='text-center'>
             <button
               className='bg-gray-700 text-gray-50 py-3 sm:px-20 px-10 mt-8 rounded-xl cursor-pointer drop-shadow-md hover:bg-gray-600'
