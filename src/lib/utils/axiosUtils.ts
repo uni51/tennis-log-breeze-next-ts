@@ -20,10 +20,11 @@ export const axiosRequest = async (
           return response.data
         })
         .catch((err) => {
-          if (isAxiosError(err) && err.response && err.response.status === 400) {
-            showBoundary!(err.response.data.message)
+          if (isAxiosError(err) && err.response) {
+            err.response.data.status = err.response.status
+            showBoundary!(err.response.data)
           } else {
-            showBoundary!(err.message)
+            showBoundary!(err)
           }
         })
     case 'server':

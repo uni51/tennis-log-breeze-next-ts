@@ -4,6 +4,8 @@ import type { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
 import NProgress from 'nprogress'
 import React, { useEffect } from 'react'
+import { ErrorBoundary, FallbackProps } from 'react-error-boundary'
+import { ContentsError } from '@/components/Layouts/ContentsError'
 
 function App({ Component, pageProps }: AppProps) {
   // See) https://github.com/vercel/next.js/tree/canary/examples/with-loading
@@ -30,7 +32,31 @@ function App({ Component, pageProps }: AppProps) {
     }
   }, [router])
 
-  return <Component {...pageProps} />
+  // return <Component {...pageProps} />
+  return (
+    <ErrorBoundary FallbackComponent={ErrorFallback} onError={onError}>
+      <Component {...pageProps} />
+    </ErrorBoundary>
+  )
+}
+
+const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
+  return (
+    <>
+      <ContentsError
+        name={error.name}
+        message={error.message}
+        status={error.status}
+        exception={error.exception}
+        resetErrorBoundary={resetErrorBoundary}
+      />
+    </>
+  )
+  // return Modal({ children: error.message, show: true, onClose: resetErrorBoundary })
+}
+
+const onError = (error: Error, info: { componentStack: string }) => {
+  console.error(error, info)
 }
 
 export default App

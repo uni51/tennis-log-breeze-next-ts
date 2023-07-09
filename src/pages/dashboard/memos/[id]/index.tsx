@@ -11,12 +11,15 @@ import { useAuth } from '@/hooks/auth'
 import { apiClient } from '@/lib/utils/apiClient'
 import NotFoundPage from '@/pages/404'
 import { Memo } from '@/types/Memo'
+import { isAxiosError } from '@/lib/utils/axiosUtils'
+import { useErrorBoundary } from 'react-error-boundary'
 
 /* Dashboard（マイページ）のメモ詳細ページ */
 const DashboardMemoDetail: NextPage<Memo> = () => {
   const [memo, setMemo] = useState<Memo>()
   const [isLoading, setIsLoading] = useState(true)
   const { checkLoggedIn, user } = useAuth({ middleware: 'auth' })
+  const { showBoundary } = useErrorBoundary()
 
   const router = useRouter()
 
@@ -38,7 +41,15 @@ const DashboardMemoDetail: NextPage<Memo> = () => {
         .then((response: AxiosResponse) => {
           setMemo(response.data.data)
         })
-        .catch((err: AxiosError) => console.log(err.response))
+        // .catch((err: AxiosError) => console.log(err.response))
+        .catch((err) => {
+          if (isAxiosError(err) && err.response && err.response.status === 400) {
+            err.response.data.status = err.response.status
+            showBoundary!(err.response.data)
+          } else {
+            showBoundary!(err)
+          }
+        })
         .finally(() => setIsLoading(false))
     }
   }, [router])
