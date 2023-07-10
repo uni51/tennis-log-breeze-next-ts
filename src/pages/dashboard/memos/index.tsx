@@ -13,6 +13,7 @@ import { axiosRequest } from '@/lib/utils/axiosUtils'
 import { Memo } from '@/types/Memo'
 import { DataWithPagination } from '@/types/dataWithPagination'
 import { useErrorBoundary } from 'react-error-boundary'
+import AddMemo from '@/components/features/Memos/components/dashboard/AddMemo'
 
 type ReturnType = DataWithPagination<Memo[]>
 
@@ -74,14 +75,7 @@ const DashboardMemoList: NextPage = () => {
         <title>{headline}</title>
       </Head>
       <div className='mx-auto mt-20'>
-        <div className='w-1/2 mx-auto text-center'>
-          <button
-            className='text-xl mb-12 py-3 px-10 bg-blue-500 text-white rounded-3xl drop-shadow-md hover:bg-blue-400'
-            onClick={() => router.push('/memos/post')}
-          >
-            メモを追加する
-          </button>
-        </div>
+        <AddMemo />
 
         <div className='mt-3'>
           {/* DBから取得したメモデータの一覧表示 */}
