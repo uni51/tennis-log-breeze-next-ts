@@ -7,7 +7,9 @@ export const ContentsError = ({
   message,
   status,
   exception,
+  config,
   resetErrorBoundary,
+  stack,
 }: any) => {
   return (
     <AppLayout
@@ -18,14 +20,18 @@ export const ContentsError = ({
       }
     >
       <div>
-        <div>エラー名称：{name ?? 'Error'}</div>
-        <p>エラーメッセージ：{message ?? 'Errorが発生しました'}</p>
-        <p>{exception ?? ''}</p>
-        <p>ステータスコード : {status ?? ''}</p>
+        <div>エラー名称 : {name ?? 'Error'}</div>
+        <p>エラーメッセージ : {message ?? 'Errorが発生しました'}</p>
+        {exception && <p>{exception}</p>}
+        {status && <p>ステータスコード : {status}</p>}
+        {config?.url && <p>URL : {config?.url}</p>}
+        {/* <p>stack : {stack ?? ''}</p> */}
       </div>
-      <button type='button' onClick={resetErrorBoundary}>
-        reset button
-      </button>
+      {resetErrorBoundary && (
+        <button type='button' onClick={resetErrorBoundary}>
+          reset button
+        </button>
+      )}
     </AppLayout>
   )
 }

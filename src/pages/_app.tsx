@@ -43,13 +43,7 @@ function App({ Component, pageProps }: AppProps) {
 const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
   return (
     <>
-      <ContentsError
-        name={error.name}
-        message={error.message}
-        status={error.status}
-        exception={error.exception}
-        resetErrorBoundary={resetErrorBoundary}
-      />
+      <ContentsError {...error} resetErrorBoundary={resetErrorBoundary} />
     </>
   )
   // return Modal({ children: error.message, show: true, onClose: resetErrorBoundary })
