@@ -1,18 +1,18 @@
-import { AxiosError, AxiosResponse } from 'axios'
+import { AxiosResponse } from 'axios'
 import { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
+import { useErrorBoundary } from 'react-error-boundary'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import MemoDetailNoContent from '@/components/templates/MemoDetailNoContent'
 import SingleMemoDetail from '@/components/templates/SingleMemoDetail'
 import { useAuth } from '@/hooks/auth'
 import { apiClient } from '@/lib/utils/apiClient'
+import { isAxiosError } from '@/lib/utils/axiosUtils'
 import NotFoundPage from '@/pages/404'
 import { Memo } from '@/types/Memo'
-import { isAxiosError } from '@/lib/utils/axiosUtils'
-import { useErrorBoundary } from 'react-error-boundary'
 
 /* Dashboard（マイページ）のメモ詳細ページ */
 const DashboardMemoDetail: NextPage<Memo> = () => {

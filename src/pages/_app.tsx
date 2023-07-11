@@ -4,7 +4,8 @@ import type { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
 import NProgress from 'nprogress'
 import React, { useEffect } from 'react'
-import { ErrorBoundary, FallbackProps } from 'react-error-boundary'
+// eslint-disable-next-line
+import { ErrorBoundary, FallbackProps } from 'react-error-boundary' // build時に、FallbackProps not found in 'react-error-boundary' のエラーが出る
 import { ContentsError } from '@/components/Layouts/ContentsError'
 
 function App({ Component, pageProps }: AppProps) {

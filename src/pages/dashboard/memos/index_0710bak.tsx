@@ -2,9 +2,11 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
+import { useErrorBoundary } from 'react-error-boundary'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import MemoListPaginationAdapter from '@/components/Pagination/MemoListPaginationAdapter'
+import AddMemo from '@/components/features/Memos/components/dashboard/AddMemo'
 import SingleMemoBlockForList from '@/components/templates/SingleMemoBlockForList'
 import { useAuth } from '@/hooks/auth'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
@@ -12,8 +14,6 @@ import { getMemosListByCategoryPageLink, getMemosListPageLink } from '@/lib/pagi
 import { axiosRequest } from '@/lib/utils/axiosUtils'
 import { Memo } from '@/types/Memo'
 import { DataWithPagination } from '@/types/dataWithPagination'
-import { useErrorBoundary } from 'react-error-boundary'
-import AddMemo from '@/components/features/Memos/components/dashboard/AddMemo'
 
 type ReturnType = DataWithPagination<Memo[]>
 

@@ -1,8 +1,7 @@
 import useSWR from 'swr'
-import axios from 'axios'
-import { DataWithPagination } from '@/types/dataWithPagination'
-import { Memo } from '@/types/Memo'
 import { apiClient } from '@/lib/utils/apiClient'
+import { Memo } from '@/types/Memo'
+import { DataWithPagination } from '@/types/dataWithPagination'
 
 type ReturnType = DataWithPagination<Memo[]>
 

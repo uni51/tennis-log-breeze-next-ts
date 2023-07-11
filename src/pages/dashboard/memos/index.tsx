@@ -1,12 +1,12 @@
+import { NextPage } from 'next'
+// eslint-disable-next-line
+import { ErrorBoundary, FallbackProps, useErrorBoundary } from 'react-error-boundary' // build時に、FallbackProps not found in 'react-error-boundary' のエラーが出る
 import AppLayout from '@/components/Layouts/AppLayout'
 import ErrorDisplayDuringCsr from '@/components/Layouts/ErrorDisplayDuringCsr'
 import SingleMemoBlockForList from '@/components/templates/SingleMemoBlockForList'
 import { useDashBoardMemoList } from '@/hooks/memos'
 import { isAxiosError } from '@/lib/utils/axiosUtils'
 import { Memo } from '@/types/Memo'
-import axios from 'axios'
-import { NextPage } from 'next'
-import { ErrorBoundary, FallbackProps, useErrorBoundary } from 'react-error-boundary'
 
 const DashboardMemoList = () => {
   const { data: memos, error: err } = useDashBoardMemoList()
