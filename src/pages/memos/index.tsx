@@ -1,12 +1,12 @@
-import { AxiosResponse } from 'axios'
 import Head from 'next/head'
 import { Key } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
+import { ContentsError } from '@/components/Layouts/ContentsError'
 import MemoListPaginationAdapter from '@/components/Pagination/MemoListPaginationAdapter'
 import SingleMemoBlockForList from '@/components/templates/SingleMemoBlockForList'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
 import { getMemosListByCategoryPageLink, getMemosListPageLink } from '@/lib/pagination-helper'
-import { apiServer } from '@/lib/utils/apiServer'
+import { axiosRequest } from '@/lib/utils/axiosUtils'
 import { Memo } from '@/types/Memo'
 import { DataWithPagination } from '@/types/dataWithPagination'
 
@@ -19,70 +19,48 @@ export async function getServerSideProps(context: { query: { category?: string; 
   const categoryNumber = category === undefined ? null : Number(category)
   const pageNumber = page === undefined ? 1 : Number(page)
 
-  const response: ReturnType =
-    categoryNumber !== null
-      ? await apiServer
-          .get(`/api/public/memos/category/${categoryNumber}?page=${pageNumber}`)
-          .then((response: AxiosResponse) => {
-            return response.data
-          })
-      : await apiServer
-          .get(`/api/public/memos?page=${pageNumber}`)
-          .then((response: AxiosResponse) => {
-            return response.data
-          })
+  const publicMemoListUriWithCategory = `/api/public/memos/category/${categoryNumber}?page=${pageNumber}`
+  const publicMemoListUri = `/api/public/memos?page=${pageNumber}`
 
-  return {
-    props: {
-      memos: JSON.stringify(response),
-      category: categoryNumber,
-      // page: pageNumber,
-    },
+  try {
+    const response: ReturnType =
+      categoryNumber !== null
+        ? await axiosRequest('server', publicMemoListUriWithCategory)
+        : await axiosRequest('server', publicMemoListUri)
+
+    return {
+      props: {
+        memos: JSON.stringify(response),
+        category: categoryNumber,
+      },
+    }
+  } catch (err) {
+    return { props: { error: JSON.stringify(err) } }
   }
 }
 
-/* みんなの公開中のメモ一覧ページ TODO: SSR or ISR化 */
-export default function PublicMemoList(props: { memos: string; category: number | null }) {
+type Props = {
+  memos: string
+  category: number | null
+  error?: string
+}
+
+/* みんなの公開中のメモ一覧ページ */
+export default function PublicMemoList(props: Props) {
   // const router = useRouter()
 
-  const { memos, category } = props
-
-  const memosData = (JSON.parse(memos) as unknown) as ReturnType
-
-  // state定義
-  // const [memos, setMemos] = useState<ReturnType>()
-  // const [isLoading, setIsLoading] = useState(true)
-
-  // // 初回レンダリング時にAPIリクエスト
-  // useEffect(() => {
-  //   const init = async () => {
-  //     if (categoryNumber === undefined) {
-  //       apiClient
-  //         .get(`/api/public/memos?page=${pageNumber}`)
-  //         .then((response: AxiosResponse) => {
-  //           // console.log(response.data)
-  //           setMemos(response.data)
-  //         })
-  //         .catch((err: AxiosError) => console.log(err.response))
-  //         .finally(() => setIsLoading(false))
-  //     } else {
-  //       apiClient
-  //         .get(`/api/public/memos/category/${categoryNumber}?page=${pageNumber}`)
-  //         .then((response: AxiosResponse) => {
-  //           // console.log(response.data)
-  //           setMemos(response.data)
-  //         })
-  //         .catch((err: AxiosError) => console.log(err.response))
-  //         .finally(() => setIsLoading(false))
-  //     }
-  //     setIsLoading(false)
-  //   }
-  //   init()
-  // }, [categoryNumber, pageNumber])
-
-  // if (isLoading) return <Loading />
+  const { memos, category, error } = props
 
   const headline = `みんなの公開中のメモ一覧${getMemosListByCategoryHeadLineTitle(category)}`
+
+  if (error) {
+    const errorText = JSON.parse(error)
+    errorText.headline = headline
+
+    return <ContentsError {...errorText} />
+  }
+
+  const memosData = (JSON.parse(memos) as unknown) as ReturnType
 
   return (
     <AppLayout
@@ -94,7 +72,7 @@ export default function PublicMemoList(props: { memos: string; category: number 
       <div className='mx-auto mt-32'>
         <div className='mt-3'>
           {/* DBから取得したメモデータの一覧表示 */}
-          <div className='grid w-4/5 mx-auto gap-16 grid-cols-2'>
+          <div className='grid w-4/5 mx-auto gap-16 lg:grid-cols-2'>
             {memosData?.data?.map((memo: Memo, index: Key | null | undefined) => {
               return (
                 <SingleMemoBlockForList

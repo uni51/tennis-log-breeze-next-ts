@@ -1,5 +1,5 @@
-import { NextPage } from 'next'
 import Link from 'next/link'
+import { FC } from 'react'
 import { Memo } from '@/types/Memo'
 
 type SingleMemoBlockForListProps = {
@@ -9,7 +9,7 @@ type SingleMemoBlockForListProps = {
   renderMemoListByNickNameLink: string
 }
 
-const SingleMemoBlockForList: NextPage<SingleMemoBlockForListProps> = ({
+const SingleMemoBlockForList: FC<SingleMemoBlockForListProps> = ({
   memo,
   renderMemoDetailLink,
   renderMemoListByCategoryLink,
