@@ -11,6 +11,7 @@ import GuestLayout from '@/components/Layouts/GuestLayout'
 import PrimaryButton from '@/components/PrimaryButton'
 // import Checkbox from '@/components/CheckBox'
 import { useAuth } from '@/hooks/auth'
+import { LoginError } from '@/types/authError'
 
 const Login = () => {
   const { query } = useRouter()

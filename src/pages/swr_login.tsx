@@ -10,6 +10,7 @@ import InputError from '@/components/InputError'
 import Label from '@/components/Label'
 import GuestLayout from '@/components/Layouts/GuestLayout'
 import { useAuth } from '@/hooks/auth'
+import { LoginError } from '@/types/authError'
 
 const Login = () => {
   const { query } = useRouter()

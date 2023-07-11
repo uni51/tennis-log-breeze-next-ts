@@ -1,14 +1,16 @@
-import { AxiosError, AxiosResponse } from 'axios'
+import { AxiosResponse } from 'axios'
 import { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
+import { useErrorBoundary } from 'react-error-boundary'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import MemoDetailNoContent from '@/components/templates/MemoDetailNoContent'
 import SingleMemoDetail from '@/components/templates/SingleMemoDetail'
 import { useAuth } from '@/hooks/auth'
 import { apiClient } from '@/lib/utils/apiClient'
+import { isAxiosError } from '@/lib/utils/axiosUtils'
 import NotFoundPage from '@/pages/404'
 import { Memo } from '@/types/Memo'
 
@@ -17,6 +19,7 @@ const DashboardMemoDetail: NextPage<Memo> = () => {
   const [memo, setMemo] = useState<Memo>()
   const [isLoading, setIsLoading] = useState(true)
   const { checkLoggedIn, user } = useAuth({ middleware: 'auth' })
+  const { showBoundary } = useErrorBoundary()
 
   const router = useRouter()
 
@@ -38,7 +41,15 @@ const DashboardMemoDetail: NextPage<Memo> = () => {
         .then((response: AxiosResponse) => {
           setMemo(response.data.data)
         })
-        .catch((err: AxiosError) => console.log(err.response))
+        // .catch((err: AxiosError) => console.log(err.response))
+        .catch((err) => {
+          if (isAxiosError(err) && err.response && err.response.status === 400) {
+            err.response.data.status = err.response.status
+            showBoundary!(err.response.data)
+          } else {
+            showBoundary!(err)
+          }
+        })
         .finally(() => setIsLoading(false))
     }
   }, [router])

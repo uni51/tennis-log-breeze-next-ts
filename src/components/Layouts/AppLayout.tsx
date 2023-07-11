@@ -333,6 +333,7 @@ const AppLayout = ({ header, children }: PropsWithChildren<Props>) => {
             <div className='max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8'>{header}</div>
           </header>
 
+          {/* Page Content */}
           <main className='flex-1'>{children}</main>
         </div>
       </div>
