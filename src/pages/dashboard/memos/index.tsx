@@ -1,111 +1,71 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
-import { Loading } from '@/components/Loading'
-import MemoListPaginationAdapter from '@/components/Pagination/MemoListPaginationAdapter'
+import ErrorDisplayDuringCsr from '@/components/Layouts/ErrorDisplayDuringCsr'
 import SingleMemoBlockForList from '@/components/templates/SingleMemoBlockForList'
-import { useAuth } from '@/hooks/auth'
-import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
-import { getMemosListByCategoryPageLink, getMemosListPageLink } from '@/lib/pagination-helper'
-import { axiosRequest } from '@/lib/utils/axiosUtils'
+import { useDashBoardMemoList } from '@/hooks/memos'
+import { isAxiosError } from '@/lib/utils/axiosUtils'
 import { Memo } from '@/types/Memo'
-import { DataWithPagination } from '@/types/dataWithPagination'
-import { useErrorBoundary } from 'react-error-boundary'
-import AddMemo from '@/components/features/Memos/components/dashboard/AddMemo'
+import axios from 'axios'
+import { NextPage } from 'next'
+import { ErrorBoundary, FallbackProps, useErrorBoundary } from 'react-error-boundary'
 
-type ReturnType = DataWithPagination<Memo[]>
-
-/* Dashboard（マイページ）のメモ一覧ページ */
-const DashboardMemoList: NextPage = () => {
-  const router = useRouter()
-  const { checkLoggedIn, user } = useAuth({ middleware: 'auth' })
-
-  const { page, category } = router.query
-
-  const pageNumber = page === undefined ? 1 : Number(page)
-  const categoryNumber = category === undefined ? undefined : Number(category)
-
-  // state定義
-  const [memos, setMemos] = useState<ReturnType>()
-  const [isLoading, setIsLoading] = useState(true)
+const DashboardMemoList = () => {
+  const { data: memos, error: err } = useDashBoardMemoList()
   const { showBoundary } = useErrorBoundary()
 
-  // 初回レンダリング時にAPIリクエスト
-  useEffect(() => {
-    const init = async () => {
-      // ログイン中か判定
-      if (router.isReady) {
-        const res: boolean = await checkLoggedIn()
-        if (!res) {
-          router.push('/login')
-          return
-        }
-        if (categoryNumber === undefined) {
-          const dashboardMemoListUri = `/api/dashboard/memos?page=${pageNumber}`
-          const response = await axiosRequest('client', dashboardMemoListUri, showBoundary)
-          setMemos(response)
-        } else {
-          const dashboardMemoListUriWithCategory = `/api/dashboard/memos/category/${categoryNumber}?page=${pageNumber}`
-          const response = await axiosRequest(
-            'client',
-            dashboardMemoListUriWithCategory,
-            showBoundary,
-          )
-          setMemos(response)
-        }
-      }
-      setIsLoading(false)
+  console.log(err)
+
+  if (err) {
+    if (isAxiosError(err) && err.response) {
+      err.response.data.status = err.response.status
+      showBoundary!(err.response.data)
+    } else {
+      showBoundary!(err)
     }
-    init()
-  }, [pageNumber, categoryNumber])
+  }
 
-  if (isLoading) return <Loading />
-
-  const headline = user?.data?.name
-    ? `${user.data.name}さんのメモ一覧${getMemosListByCategoryHeadLineTitle(categoryNumber)}`
-    : ' 作成したメモ一覧'
+  if (!memos) return <div>Loading...</div>
 
   return (
-    <>
-      <Head>
-        <title>{headline}</title>
-      </Head>
-      <AppLayout
-        header={<h2 className='font-semibold text-xl text-gray-800 leading-tight'>{headline}</h2>}
-      >
-        <div className='mx-auto mt-20'>
-          <AddMemo />
-          <div className='mt-3'>
-            {/* DBから取得したメモデータの一覧表示 */}
-            <div className='grid w-4/5 mx-auto gap-16 lg:grid-cols-2'>
-              {memos?.data?.map((memo: Memo, index) => {
-                return (
-                  <SingleMemoBlockForList
-                    memo={memo}
-                    renderMemoDetailLink={`/dashboard/memos/${memo.id}`}
-                    renderMemoListByCategoryLink={`/dashboard/memos?category=${memo.category_id}`}
-                    renderMemoListByNickNameLink={`/dashboard/memos/`}
-                    key={index}
-                  />
-                )
-              })}
-            </div>
-            <MemoListPaginationAdapter
-              baseUrl='/dashboard/memos/'
-              totalItems={Number(memos?.meta?.total)}
-              currentPage={Number(memos?.meta?.current_page)}
-              renderPagerLinkFunc={
-                categoryNumber === undefined ? getMemosListPageLink : getMemosListByCategoryPageLink
-              }
-              category={categoryNumber}
+    <div className='mt-3'>
+      {/* DBから取得したメモデータの一覧表示 */}
+      <div className='grid w-4/5 mx-auto gap-16 lg:grid-cols-2'>
+        {memos?.data?.map((memo: Memo, index) => {
+          return (
+            <SingleMemoBlockForList
+              memo={memo}
+              renderMemoDetailLink={`/dashboard/memos/${memo.id}`}
+              renderMemoListByCategoryLink={`/dashboard/memos?category=${memo.category_id}`}
+              renderMemoListByNickNameLink={`/dashboard/memos/`}
+              key={index}
             />
-          </div>
-        </div>
-      </AppLayout>
-    </>
+          )
+        })}
+      </div>
+    </div>
   )
 }
 
-export default DashboardMemoList
+const Index: NextPage = () => {
+  return (
+    <AppLayout header={<h2 className='font-semibold text-xl text-gray-800 leading-tight'>{''}</h2>}>
+      <ErrorBoundary FallbackComponent={ErrorFallback} onError={onError}>
+        <DashboardMemoList />
+      </ErrorBoundary>
+    </AppLayout>
+  )
+}
+
+export default Index
+
+const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
+  return (
+    <>
+      <ErrorDisplayDuringCsr {...error} resetErrorBoundary={resetErrorBoundary} />
+    </>
+  )
+  // return Modal({ children: error.message, show: true, onClose: resetErrorBoundary })
+}
+
+const onError = (error: Error, info: { componentStack: string }) => {
+  console.error(error, info)
+}
