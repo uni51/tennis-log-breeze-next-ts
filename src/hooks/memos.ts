@@ -6,7 +6,7 @@ import { apiClient } from '@/lib/utils/apiClient'
 
 type ReturnType = DataWithPagination<Memo[]>
 
-const APIURL = '/api/dashboard/memosw'
+const APIURL = '/api/dashboard/memos'
 
 export const useDashBoardMemoList = () => {
   const { data, error } = useSWR<ReturnType>(APIURL, () =>
