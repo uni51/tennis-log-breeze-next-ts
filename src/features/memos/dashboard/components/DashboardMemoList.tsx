@@ -7,11 +7,10 @@ import MemoListPagination from '@/components/Pagination/MemoListPagination'
 
 type Props = {
   apiUrl: string
-  pageNumber: number
   categoryNumber: number | undefined
 }
 
-const DashboardMemoList = ({ apiUrl, pageNumber, categoryNumber }: Props) => {
+const DashboardMemoList = ({ apiUrl, categoryNumber }: Props) => {
   const { showBoundary } = useErrorBoundary()
   const { data: memos, error } = getDashBoardMemoList(apiUrl)
 
