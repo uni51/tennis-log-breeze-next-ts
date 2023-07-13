@@ -4,7 +4,6 @@ import { useErrorBoundary } from 'react-error-boundary'
 import { getDashBoardMemoList } from '../api/getDashBoardMemos'
 import MemoListPaginationAdapter from '@/components/Pagination/MemoListPaginationAdapter'
 import { getMemosListByCategoryPageLink, getMemosListPageLink } from '@/lib/pagination-helper'
-import MemoListPagination from '@/components/Pagination/MemoListPagination'
 
 type Props = {
   apiUrl: string
