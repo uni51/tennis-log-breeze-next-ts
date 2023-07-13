@@ -1,5 +1,5 @@
 /** TODO 本番運用時には、エラーの詳細を非表示にして、代わりに、一般的なメッセージを出すこと */
-const ErrorDisplayDuringCsr = ({
+const CsrErrorDisplay = ({
   headline,
   name,
   message,
@@ -28,4 +28,4 @@ const ErrorDisplayDuringCsr = ({
   )
 }
 
-export default ErrorDisplayDuringCsr
+export default CsrErrorDisplay

@@ -1,12 +1,12 @@
 import { NextPage } from 'next'
 // eslint-disable-next-line
-import { ErrorBoundary, FallbackProps, useErrorBoundary } from 'react-error-boundary' // build時に、FallbackProps not found in 'react-error-boundary' のエラーが出る
+import { ErrorBoundary, useErrorBoundary } from 'react-error-boundary' // build時に、FallbackProps not found in 'react-error-boundary' のエラーが出る
 import AppLayout from '@/components/Layouts/AppLayout'
-import ErrorDisplayDuringCsr from '@/components/Layouts/ErrorDisplayDuringCsr'
 import SingleMemoBlockForList from '@/components/templates/SingleMemoBlockForList'
 import { useDashBoardMemoList } from '@/hooks/memos'
 import { isAxiosError } from '@/lib/utils/axiosUtils'
 import { Memo } from '@/types/Memo'
+import { CsrErrorFallback } from '@/components/functional/Error/CSR/ErrorFallBack/CsrErrorFallBack'
 
 const DashboardMemoList = () => {
   const { data: memos, error: err } = useDashBoardMemoList()
@@ -48,7 +48,7 @@ const DashboardMemoList = () => {
 const Index: NextPage = () => {
   return (
     <AppLayout header={<h2 className='font-semibold text-xl text-gray-800 leading-tight'>{''}</h2>}>
-      <ErrorBoundary FallbackComponent={ErrorFallback} onError={onError}>
+      <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
         <DashboardMemoList />
       </ErrorBoundary>
     </AppLayout>
@@ -56,15 +56,6 @@ const Index: NextPage = () => {
 }
 
 export default Index
-
-const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
-  return (
-    <>
-      <ErrorDisplayDuringCsr {...error} resetErrorBoundary={resetErrorBoundary} />
-    </>
-  )
-  // return Modal({ children: error.message, show: true, onClose: resetErrorBoundary })
-}
 
 const onError = (error: Error, info: { componentStack: string }) => {
   console.error(error, info)
