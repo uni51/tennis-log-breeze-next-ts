@@ -1,80 +1,57 @@
-import { AxiosResponse } from 'axios'
 import { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { useErrorBoundary } from 'react-error-boundary'
+import { ErrorBoundary } from 'react-error-boundary'
 import AppLayout from '@/components/Layouts/AppLayout'
-import { Loading } from '@/components/Loading'
-import MemoDetailNoContent from '@/components/templates/MemoDetailNoContent'
-import SingleMemoDetail from '@/components/templates/SingleMemoDetail'
 import { useAuth } from '@/hooks/auth'
-import { apiClient } from '@/lib/utils/apiClient'
-import { isAxiosError } from '@/lib/utils/axiosUtils'
-import NotFoundPage from '@/pages/404'
 import { Memo } from '@/types/Memo'
+import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
+import { onError } from '@/lib/error-helper'
+import DashboardMemoDetail from '@/features/memos/dashboard/components/DashBoardMemoDetail'
 
 /* Dashboard（マイページ）のメモ詳細ページ */
-const DashboardMemoDetail: NextPage<Memo> = () => {
-  const [memo, setMemo] = useState<Memo>()
-  const [isLoading, setIsLoading] = useState(true)
+const DashboardMemoIndex: NextPage<Memo> = () => {
   const { checkLoggedIn, user } = useAuth({ middleware: 'auth' })
-  const { showBoundary } = useErrorBoundary()
+  const [apiUrl, setApiUrl] = useState('')
+  const [titleText, setTitleText] = useState('')
 
   const router = useRouter()
-
   let loginUser = user?.data
 
+  // 初回レンダリング時にログインチェック、Fetch用URL組み立て
   useEffect(() => {
     const init = async () => {
       // ログイン中か判定
-      const checkLoginResponse: boolean = await checkLoggedIn()
-      if (!checkLoginResponse) {
-        router.push('/login')
-        return
+      if (router.isReady) {
+        const res: boolean = await checkLoggedIn()
+        if (!res) {
+          router.push('/login')
+          return
+        }
+        const apiUri = `api/dashboard/memoss/${router.query.id}`
+        setApiUrl(apiUri)
       }
     }
     init()
-    if (router.isReady) {
-      apiClient
-        .get(`api/dashboard/memos/${router.query.id}`)
-        .then((response: AxiosResponse) => {
-          setMemo(response.data.data)
-        })
-        // .catch((err: AxiosError) => console.log(err.response))
-        .catch((err) => {
-          if (isAxiosError(err) && err.response && err.response.status === 400) {
-            err.response.data.status = err.response.status
-            showBoundary!(err.response.data)
-          } else {
-            showBoundary!(err)
-          }
-        })
-        .finally(() => setIsLoading(false))
-    }
-  }, [router])
+  }, [router, apiUrl])
 
-  if (isLoading) return <Loading />
-
-  if (!memo) return <NotFoundPage />
-
-  const headline = `${user!.data!.name}さんのメモ詳細`
+  const headLine = `${user?.data?.name}さんのメモ詳細`
 
   return (
     <>
       <Head>
-        <title>{memo.title}</title>
+        <title>{titleText}</title>
       </Head>
       <AppLayout
-        header={<h2 className='font-semibold text-xl text-gray-800 leading-tight'>{headline}</h2>}
+        header={<h2 className='font-semibold text-xl text-gray-800 leading-tight'>{headLine}</h2>}
       >
-        {memo && loginUser && memo.user_id === loginUser.id && <SingleMemoDetail memo={memo} />}
-        {memo && loginUser && memo.user_id !== loginUser.id && (
-          <MemoDetailNoContent message={'閲覧権限がありません'} />
-        )}
+        <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
+          <DashboardMemoDetail apiUrl={apiUrl} loginUser={loginUser} setTitleText={setTitleText} />
+        </ErrorBoundary>
       </AppLayout>
     </>
   )
 }
 
-export default DashboardMemoDetail
+export default DashboardMemoIndex

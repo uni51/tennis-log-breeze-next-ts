@@ -15,13 +15,13 @@ export const ContentsError = ({
     <AppLayout
       header={
         <h2 className='font-semibold text-xl text-gray-800 leading-tight'>
-          {headline ?? `エラーが発生しました`}
+          {headline ?? `エラーが発生しました_app.tsx`}
         </h2>
       }
     >
       <div>
         <div>エラー名称 : {name ?? 'Error'}</div>
-        <p>エラーメッセージ : {message ?? 'Errorが発生しました'}</p>
+        <p>エラーメッセージ : {message ?? 'Errorが発生しました_app.tsx'}</p>
         {exception && <p>{exception}</p>}
         {status && <p>ステータスコード : {status}</p>}
         {config?.url && <p>URL : {config?.url}</p>}
