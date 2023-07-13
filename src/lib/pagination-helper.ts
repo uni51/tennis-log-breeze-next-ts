@@ -1,4 +1,5 @@
-export type RenderPagerLinkFuncType = getMemosListPageLinkType | getMemosListByCategoryPageLinkType
+// export type RenderPagerLinkFuncType = getMemosListPageLinkType | getMemosListByCategoryPageLinkType
+export type RenderPagerLinkFuncType = getMemosListByCategoryPageLinkType
 
 export const getRenderPagerLinkUrl = (
   renderPagerLinkFunc: RenderPagerLinkFuncType,
@@ -7,8 +8,8 @@ export const getRenderPagerLinkUrl = (
   category?: number,
 ) => {
   switch (renderPagerLinkFunc) {
-    case getMemosListPageLink:
-      return getMemosListPageLink(baseUrl, pageNumber)
+    // case getMemosListPageLink:
+    //   return getMemosListPageLink(baseUrl, pageNumber)
     case getMemosListByCategoryPageLink:
       return getMemosListByCategoryPageLink(baseUrl, pageNumber, category!)
     default:
@@ -17,27 +18,34 @@ export const getRenderPagerLinkUrl = (
 }
 
 // See: https://kiyobl.com/nextjs-routing/#toc4
-export const getMemosListPageLink = (baseUrl: string, page: number) => {
-  return { pathname: baseUrl, query: { page: `${page}` } }
-}
+// export const getMemosListPageLink = (baseUrl: string, page: number) => {
+//   return { pathname: baseUrl, query: { page: `${page}` } }
+// }
 
-export type getMemosListPageLinkType = (
+// export type getMemosListPageLinkType = (
+//   baseUrl: string,
+//   page: number,
+// ) => {
+//   pathname: string
+//   query: { page: string }
+// }
+
+// See: https://kiyobl.com/nextjs-routing/#toc4
+export const getMemosListByCategoryPageLink = (
   baseUrl: string,
   page: number,
+  category?: number,
 ) => {
-  pathname: string
-  query: { page: string }
-}
-
-export const getMemosListByCategoryPageLink = (baseUrl: string, page: number, category: number) => {
-  return { pathname: baseUrl, query: { category: `${category}`, page: `${page}` } }
+  return category
+    ? { pathname: baseUrl, query: { category: `${category}`, page: `${page}` } }
+    : { pathname: baseUrl, query: { page: `${page}` } }
 }
 
 export type getMemosListByCategoryPageLinkType = (
   baseUrl: string,
   page: number,
-  category: number,
+  category?: number,
 ) => {
   pathname: string
-  query: { category: string; page: string }
+  query: { category?: string; page: string }
 }

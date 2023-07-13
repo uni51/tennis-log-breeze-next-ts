@@ -2,8 +2,8 @@ import SingleMemoBlockForList from '@/components/templates/SingleMemoBlockForLis
 import { Memo } from '@/types/Memo'
 import { useErrorBoundary } from 'react-error-boundary'
 import { getDashBoardMemoList } from '../api/getDashBoardMemos'
-import MemoListPaginationAdapter from '@/components/Pagination/MemoListPaginationAdapter'
-import { getMemosListByCategoryPageLink, getMemosListPageLink } from '@/lib/pagination-helper'
+import { getMemosListByCategoryPageLink } from '@/lib/pagination-helper'
+import MemoListPagination from '@/components/Pagination/MemoListPagination'
 
 type Props = {
   apiUrl: string
@@ -35,13 +35,11 @@ const DashboardMemoList = ({ apiUrl, pageNumber, categoryNumber }: Props) => {
           )
         })}
       </div>
-      <MemoListPaginationAdapter
+      <MemoListPagination
         baseUrl='/dashboard/memos/'
         totalItems={Number(memos?.meta?.total)}
         currentPage={Number(memos?.meta?.current_page)}
-        renderPagerLinkFunc={
-          categoryNumber === undefined ? getMemosListPageLink : getMemosListByCategoryPageLink
-        }
+        renderPagerLinkFunc={getMemosListByCategoryPageLink}
         category={categoryNumber}
       />
     </div>

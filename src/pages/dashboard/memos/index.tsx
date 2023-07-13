@@ -1,7 +1,7 @@
 import { NextPage } from 'next'
 import Head from 'next/head'
 // eslint-disable-next-line
-import { ErrorBoundary, useErrorBoundary } from 'react-error-boundary' // build時に、FallbackProps not found in 'react-error-boundary' のエラーが出る
+import { ErrorBoundary } from 'react-error-boundary' // build時に、FallbackProps not found in 'react-error-boundary' のエラーが出る
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import AppLayout from '@/components/Layouts/AppLayout'
