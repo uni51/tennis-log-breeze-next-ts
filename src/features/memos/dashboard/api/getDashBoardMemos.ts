@@ -6,9 +6,9 @@ import { API_URL_DASHBOARD_MEMOS } from '@/constants/ApiUrlConst'
 
 type ReturnType = DataWithPagination<Memo[]>
 
-export const getDashBoardMemoList = () => {
-  const { data, error, isLoading } = useSWR<ReturnType>(API_URL_DASHBOARD_MEMOS, () =>
-    apiClient.get(API_URL_DASHBOARD_MEMOS).then((res: any) => res.data),
+export const getDashBoardMemoList = (apiUrl: string) => {
+  const { data, error, isLoading } = useSWR<ReturnType>(apiUrl, () =>
+    apiClient.get(apiUrl).then((res: any) => res.data),
   )
 
   return {

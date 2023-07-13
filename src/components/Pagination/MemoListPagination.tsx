@@ -11,7 +11,6 @@ export type PaginationProps = {
   renderPagerLinkFunc: RenderPagerLinkFuncType
   itemsPerPage?: number
   category?: number
-  nickname?: string
 }
 
 const MemoListPagination = ({
