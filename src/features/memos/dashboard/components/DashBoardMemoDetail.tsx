@@ -1,8 +1,8 @@
 import { useErrorBoundary } from 'react-error-boundary'
 import { getDashBoardMemoDetail } from '../api/getDashBoardMemoDetail'
 import { LoginUser } from '@/types/loginUser'
-import SingleMemoDetail from '@/components/templates/SingleMemoDetail'
-import MemoDetailNoContent from '@/components/templates/MemoDetailNoContent'
+import SingleMemoDetail from '@/features/memos/common/components/templates/SingleMemoDetail'
+import MemoDetailNoContent from '@/features/memos/common/components/templates/MemoDetailNoContent'
 import { Dispatch, SetStateAction } from 'react'
 
 type Props = {

@@ -20,6 +20,7 @@ const DashboardMemoIndex: NextPage = () => {
   const pageNumber = page === undefined ? 1 : Number(page)
   const categoryNumber = category === undefined ? undefined : Number(category)
 
+  // TODO: useEffectを複数に分割
   // 初回レンダリング時にログインチェック、Fetch用URL組み立て
   useEffect(() => {
     const init = async () => {

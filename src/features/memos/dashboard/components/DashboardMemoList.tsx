@@ -1,4 +1,4 @@
-import SingleMemoBlockForList from '@/components/templates/SingleMemoBlockForList'
+import SingleMemoBlockForList from '@/features/memos/common/components/templates/SingleMemoBlockForList'
 import { Memo } from '@/types/Memo'
 import { useErrorBoundary } from 'react-error-boundary'
 import { getDashBoardMemoList } from '../api/getDashBoardMemos'
