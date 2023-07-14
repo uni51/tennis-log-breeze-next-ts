@@ -29,7 +29,7 @@ const DashboardMemoIndex: NextPage<Memo> = () => {
           router.push('/login')
           return
         }
-        const apiUri = `api/dashboard/memoss/${router.query.id}`
+        const apiUri = `api/dashboard/memos/${router.query.id}`
         setApiUrl(apiUri)
       }
     }

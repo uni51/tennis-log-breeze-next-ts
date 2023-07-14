@@ -1,5 +1,5 @@
-// export type RenderPagerLinkFuncType = getMemosListPageLinkType | getMemosListByCategoryPageLinkType
-export type RenderPagerLinkFuncType = getMemosListByCategoryPageLinkType
+export type RenderPagerLinkFuncType = getMemosListPageLinkType | getMemosListByCategoryPageLinkType
+// export type RenderPagerLinkFuncType = getMemosListByCategoryPageLinkType
 
 export const getRenderPagerLinkUrl = (
   renderPagerLinkFunc: RenderPagerLinkFuncType,
@@ -17,18 +17,20 @@ export const getRenderPagerLinkUrl = (
   }
 }
 
+// TODO：最終的に削除
 // See: https://kiyobl.com/nextjs-routing/#toc4
-// export const getMemosListPageLink = (baseUrl: string, page: number) => {
-//   return { pathname: baseUrl, query: { page: `${page}` } }
-// }
+export const getMemosListPageLink = (baseUrl: string, page: number) => {
+  return { pathname: baseUrl, query: { page: `${page}` } }
+}
 
-// export type getMemosListPageLinkType = (
-//   baseUrl: string,
-//   page: number,
-// ) => {
-//   pathname: string
-//   query: { page: string }
-// }
+// TODO：最終的に削除
+export type getMemosListPageLinkType = (
+  baseUrl: string,
+  page: number,
+) => {
+  pathname: string
+  query: { page: string }
+}
 
 // See: https://kiyobl.com/nextjs-routing/#toc4
 export const getMemosListByCategoryPageLink = (
