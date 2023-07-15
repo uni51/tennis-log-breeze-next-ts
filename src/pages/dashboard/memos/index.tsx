@@ -20,17 +20,22 @@ const DashboardMemoIndex: NextPage = () => {
   const pageNumber = page === undefined ? 1 : Number(page)
   const categoryNumber = category === undefined ? undefined : Number(category)
 
-  // TODO: useEffectを複数に分割
-  // 初回レンダリング時にログインチェック、Fetch用URL組み立て
+  // 初回レンダリング時にログインチェック
   useEffect(() => {
-    const init = async () => {
-      // ログイン中か判定
+    const authCheck = async () => {
+      const res: boolean = await checkLoggedIn()
+      if (!res) {
+        router.push('/login')
+        return
+      }
+    }
+    authCheck()
+  }, [])
+
+  // Fetch用URL組み立て
+  useEffect(() => {
+    const init = () => {
       if (router.isReady) {
-        const res: boolean = await checkLoggedIn()
-        if (!res) {
-          router.push('/login')
-          return
-        }
         const apiUri =
           categoryNumber === undefined
             ? `/api/dashboard/memos?page=${pageNumber}`

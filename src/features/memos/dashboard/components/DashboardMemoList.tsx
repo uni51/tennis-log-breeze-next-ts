@@ -1,6 +1,7 @@
+import ClipLoader from 'react-spinners/ClipLoader'
+import { useErrorBoundary } from 'react-error-boundary'
 import SingleMemoBlockForList from '@/features/memos/common/components/templates/SingleMemoBlockForList'
 import { Memo } from '@/types/Memo'
-import { useErrorBoundary } from 'react-error-boundary'
 import { getDashBoardMemoList } from '../api/getDashBoardMemos'
 import { getMemosListByCategoryPageLink } from '@/lib/pagination-helper'
 import MemoListPagination from '@/components/Pagination/MemoListPagination'
@@ -17,7 +18,14 @@ const DashboardMemoList = ({ apiUrl, categoryNumber }: Props) => {
 
   if (error) showBoundary(error)
 
-  if (!memos) return <div>Loading...</div>
+  if (!memos)
+    return (
+      <div className='mx-auto mt-20'>
+        <div className='w-1/2 mx-auto text-center'>
+          <ClipLoader />
+        </div>
+      </div>
+    )
 
   return (
     <div className='mx-auto mt-20'>
