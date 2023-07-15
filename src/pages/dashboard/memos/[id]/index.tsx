@@ -19,16 +19,23 @@ const DashboardMemoIndex: NextPage<Memo> = () => {
   const router = useRouter()
   let loginUser = user?.data
 
-  // 初回レンダリング時にログインチェック、Fetch用URL組み立て
+  // 初回レンダリング時にログインチェック
+  useEffect(() => {
+    const authCheck = async () => {
+      const res: boolean = await checkLoggedIn()
+      if (!res) {
+        router.push('/login')
+        return
+      }
+    }
+    authCheck()
+  }, [])
+
+  // Fetch用URL組み立て
   useEffect(() => {
     const init = async () => {
       // ログイン中か判定
       if (router.isReady) {
-        const res: boolean = await checkLoggedIn()
-        if (!res) {
-          router.push('/login')
-          return
-        }
         const apiUri = `api/dashboard/memos/${router.query.id}`
         setApiUrl(apiUri)
       }
