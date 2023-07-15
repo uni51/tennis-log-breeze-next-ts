@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import AppLayout from '@/components/Layouts/AppLayout'
 import MemoListPaginationAdapter from '@/components/Pagination/MemoListPaginationAdapter'
-import SingleMemoBlockForList from '@/components/templates/SingleMemoBlockForList'
+import SingleMemoBlockForList from '@/features/memos/common/components/templates/SingleMemoBlockForList'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
 import { getMemosListByCategoryPageLink, getMemosListPageLink } from '@/lib/pagination-helper'
 import { axiosRequest } from '@/lib/utils/axiosUtils'

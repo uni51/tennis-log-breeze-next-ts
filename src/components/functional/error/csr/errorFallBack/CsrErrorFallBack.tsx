@@ -1,4 +1,5 @@
-import { FallbackProps } from 'react-error-boundary'
+// eslint-disable-next-line
+import { FallbackProps } from 'react-error-boundary' // build時に、FallbackProps not found in 'react-error-boundary' のエラーが出る
 import CsrErrorDisplay from '@/components/Layouts/Error/CSR/CsrErrorDisplay'
 import { isAxiosError } from '@/lib/utils/axiosUtils'
 

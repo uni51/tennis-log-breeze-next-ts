@@ -2,10 +2,10 @@ import ClipLoader from 'react-spinners/ClipLoader'
 import { useErrorBoundary } from 'react-error-boundary'
 import SingleMemoBlockForList from '@/features/memos/common/components/templates/SingleMemoBlockForList'
 import { Memo } from '@/types/Memo'
-import { getDashBoardMemoList } from '../api/getDashBoardMemos'
+import { getDashBoardMemoList } from '@/features/memos/dashboard/api/getDashBoardMemos'
 import { getMemosListByCategoryPageLink } from '@/lib/pagination-helper'
 import MemoListPagination from '@/components/Pagination/MemoListPagination'
-import AddMemoButton from './AddMemoButton'
+import AddMemoButton from '@/features/memos/dashboard/components/AddMemoButton'
 
 type Props = {
   apiUrl: string
