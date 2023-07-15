@@ -1,11 +1,11 @@
-import ClipLoader from 'react-spinners/ClipLoader'
 import { useErrorBoundary } from 'react-error-boundary'
-import SingleMemoBlockForList from '@/features/memos/common/components/templates/SingleMemoBlockForList'
-import { Memo } from '@/types/Memo'
-import { getDashBoardMemoList } from '@/features/memos/dashboard/api/getDashBoardMemos'
-import { getMemosListByCategoryPageLink } from '@/lib/pagination-helper'
+import ClipLoader from 'react-spinners/ClipLoader'
 import MemoListPagination from '@/components/Pagination/MemoListPagination'
 import AddMemoButton from '@/features/memos/dashboard/components/AddMemoButton'
+import SingleMemoBlockForList from '@/features/memos/common/components/templates/SingleMemoBlockForList'
+import { useGetDashBoardMemoList } from '@/hooks/memos/dashboard/api/useGetDashBoardMemos'
+import { getMemosListByCategoryPageLink } from '@/lib/pagination-helper'
+import { Memo } from '@/types/Memo'
 
 type Props = {
   apiUrl: string
@@ -14,7 +14,7 @@ type Props = {
 
 const DashboardMemoList = ({ apiUrl, categoryNumber }: Props) => {
   const { showBoundary } = useErrorBoundary()
-  const { data: memos, error } = getDashBoardMemoList(apiUrl)
+  const { data: memos, error } = useGetDashBoardMemoList(apiUrl)
 
   if (error) showBoundary(error)
 

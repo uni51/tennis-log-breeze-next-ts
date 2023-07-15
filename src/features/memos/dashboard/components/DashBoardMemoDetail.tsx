@@ -1,10 +1,10 @@
-import { useErrorBoundary } from 'react-error-boundary'
-import { useGetDashBoardMemoDetail } from '@/hooks/memos/dashboard/useGetDashBoardMemoDetail'
-import { LoginUser } from '@/types/loginUser'
-import SingleMemoDetail from '@/features/memos/common/components/templates/SingleMemoDetail'
-import MemoDetailNoContent from '@/features/memos/common/components/templates/MemoDetailNoContent'
 import { Dispatch, SetStateAction } from 'react'
+import { useErrorBoundary } from 'react-error-boundary'
 import ClipLoader from 'react-spinners/ClipLoader'
+import MemoDetailNoContent from '@/features/memos/common/components/templates/MemoDetailNoContent'
+import SingleMemoDetail from '@/features/memos/common/components/templates/SingleMemoDetail'
+import { useGetDashBoardMemoDetail } from '@/hooks/memos/dashboard/api/useGetDashBoardMemoDetail'
+import { LoginUser } from '@/types/loginUser'
 
 type Props = {
   apiUrl: string
