@@ -1,10 +1,10 @@
 import useSWR from 'swr'
-import { apiServer } from '@/lib/utils/apiServer'
+import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
 
-export const useGetNickNameMemoDetail = (apiUrl: string) => {
+export const useGetMemoDetail = (apiUrl: string) => {
   const { data, error, isLoading } = useSWR<Memo>(apiUrl, () =>
-    apiServer.get(apiUrl).then((res: any) => res.data.data),
+    apiClient.get(apiUrl).then((res: any) => res.data.data),
   )
 
   return {

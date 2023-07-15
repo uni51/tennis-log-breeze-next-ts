@@ -3,7 +3,7 @@ import ClipLoader from 'react-spinners/ClipLoader'
 import MemoListPagination from '@/components/Pagination/MemoListPagination'
 import SingleMemoBlockForList from '@/features/memos/common/components/templates/SingleMemoBlockForList'
 import AddMemoButton from '@/features/memos/dashboard/components/AddMemoButton'
-import { useGetDashBoardMemoList } from '@/hooks/memos/dashboard/api/useGetDashBoardMemos'
+import { useGetMemoList } from '@/hooks/memos/useGetMemoList'
 import { getMemosListByCategoryPageLink } from '@/lib/pagination-helper'
 import { Memo } from '@/types/Memo'
 
@@ -14,7 +14,7 @@ type Props = {
 
 const DashboardMemoList = ({ apiUrl, categoryNumber }: Props) => {
   const { showBoundary } = useErrorBoundary()
-  const { data: memos, error } = useGetDashBoardMemoList(apiUrl)
+  const { data: memos, error } = useGetMemoList(apiUrl)
 
   if (error) showBoundary(error)
 

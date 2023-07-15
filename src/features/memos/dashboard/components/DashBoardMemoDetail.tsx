@@ -3,7 +3,7 @@ import { useErrorBoundary } from 'react-error-boundary'
 import ClipLoader from 'react-spinners/ClipLoader'
 import MemoDetailNoContent from '@/features/memos/common/components/templates/MemoDetailNoContent'
 import SingleMemoDetail from '@/features/memos/common/components/templates/SingleMemoDetail'
-import { useGetDashBoardMemoDetail } from '@/hooks/memos/dashboard/api/useGetDashBoardMemoDetail'
+import { useGetMemoDetail } from '@/hooks/memos/useGetMemoDetail'
 import { LoginUser } from '@/types/loginUser'
 
 type Props = {
@@ -15,7 +15,7 @@ type Props = {
 const DashboardMemoDetail = ({ apiUrl, loginUser, setTitleText }: Props) => {
   const { showBoundary } = useErrorBoundary()
 
-  const { data: memo, error } = useGetDashBoardMemoDetail(apiUrl)
+  const { data: memo, error } = useGetMemoDetail(apiUrl)
   if (error) showBoundary(error)
   if (!memo)
     return (

@@ -5,7 +5,7 @@ import { DataWithPagination } from '@/types/dataWithPagination'
 
 type ReturnType = DataWithPagination<Memo[]>
 
-export const useGetDashBoardMemoList = (apiUrl: string) => {
+export const useGetMemoList = (apiUrl: string) => {
   const { data, error, isLoading } = useSWR<ReturnType>(apiUrl, () =>
     apiClient.get(apiUrl).then((res: any) => res.data),
   )

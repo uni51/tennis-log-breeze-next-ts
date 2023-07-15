@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Memo } from '@/types/Memo'
-import NickNameMemoDetail from '@/features/memos/nickname/NickNameMemoDetail'
+import NickNameMemoDetail from '@/features/memos/nickname/components/NickNameMemoDetail'
 
 /* ユーザー毎の公開中のメモ詳細ページ */
 const MemoByNickNameDetail: NextPage<Memo> = () => {
