@@ -4,11 +4,11 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import AppLayout from '@/components/Layouts/AppLayout'
-import { useAuth } from '@/hooks/auth'
-import { Memo } from '@/types/Memo'
 import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
-import { onError } from '@/lib/error-helper'
 import DashboardMemoDetail from '@/features/memos/dashboard/components/DashBoardMemoDetail'
+import { useAuth } from '@/hooks/auth'
+import { onError } from '@/lib/error-helper'
+import { Memo } from '@/types/Memo'
 
 /* Dashboard（マイページ）のメモ詳細ページ */
 const DashboardMemoIndex: NextPage<Memo> = () => {

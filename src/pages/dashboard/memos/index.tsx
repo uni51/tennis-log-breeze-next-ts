@@ -1,14 +1,14 @@
 import { NextPage } from 'next'
 import Head from 'next/head'
-import { ErrorBoundary } from 'react-error-boundary' // build時に、FallbackProps not found in 'react-error-boundary' のエラーが出る
-import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
+import { ErrorBoundary } from 'react-error-boundary' // build時に、FallbackProps not found in 'react-error-boundary' のエラーが出る
 import AppLayout from '@/components/Layouts/AppLayout'
 import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
 import DashboardMemoList from '@/features/memos/dashboard/components/DashboardMemoList'
+import { useAuth } from '@/hooks/auth'
 import { onError } from '@/lib/error-helper'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
-import { useAuth } from '@/hooks/auth'
 
 const DashboardMemoIndex: NextPage = () => {
   const router = useRouter()
