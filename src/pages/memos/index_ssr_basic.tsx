@@ -63,39 +63,41 @@ export default function PublicMemoList(props: Props) {
   const memosData = (JSON.parse(memos) as unknown) as ReturnType
 
   return (
-    <AppLayout
-      header={<h2 className='font-semibold text-xl text-gray-800 leading-tight'>{headline}</h2>}
-    >
+    <>
       <Head>
         <title>{headline}</title>
       </Head>
-      <div className='mx-auto mt-32'>
-        <div className='mt-3'>
-          {/* DBから取得したメモデータの一覧表示 */}
-          <div className='grid w-4/5 mx-auto gap-16 lg:grid-cols-2'>
-            {memosData?.data?.map((memo: Memo, index: Key | null | undefined) => {
-              return (
-                <SingleMemoBlockForList
-                  memo={memo}
-                  renderMemoDetailLink={`/${memo.user_nickname}/memos/${memo.id}`}
-                  renderMemoListByCategoryLink={`/memos?category=${memo.category_id}`}
-                  renderMemoListByNickNameLink={`/${memo.user_nickname}/memos/`}
-                  key={index}
-                />
-              )
-            })}
+      <AppLayout
+        header={<h2 className='font-semibold text-xl text-gray-800 leading-tight'>{headline}</h2>}
+      >
+        <div className='mx-auto mt-32'>
+          <div className='mt-3'>
+            {/* DBから取得したメモデータの一覧表示 */}
+            <div className='grid w-4/5 mx-auto gap-16 lg:grid-cols-2'>
+              {memosData?.data?.map((memo: Memo, index: Key | null | undefined) => {
+                return (
+                  <SingleMemoBlockForList
+                    memo={memo}
+                    renderMemoDetailLink={`/${memo.user_nickname}/memos/${memo.id}`}
+                    renderMemoListByCategoryLink={`/memos?category=${memo.category_id}`}
+                    renderMemoListByNickNameLink={`/${memo.user_nickname}/memos/`}
+                    key={index}
+                  />
+                )
+              })}
+            </div>
+            <MemoListPaginationAdapter
+              baseUrl={'/memos/'}
+              totalItems={Number(memosData?.meta?.total)}
+              currentPage={Number(memosData?.meta?.current_page)}
+              renderPagerLinkFunc={
+                category === null ? getMemosListPageLink : getMemosListByCategoryPageLink
+              }
+              category={category}
+            />
           </div>
-          <MemoListPaginationAdapter
-            baseUrl={'/memos/'}
-            totalItems={Number(memosData?.meta?.total)}
-            currentPage={Number(memosData?.meta?.current_page)}
-            renderPagerLinkFunc={
-              category === null ? getMemosListPageLink : getMemosListByCategoryPageLink
-            }
-            category={category}
-          />
         </div>
-      </div>
-    </AppLayout>
+      </AppLayout>
+    </>
   )
 }
