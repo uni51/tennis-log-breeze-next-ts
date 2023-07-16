@@ -5,7 +5,7 @@ export const getRenderPagerLinkUrl = (
   renderPagerLinkFunc: RenderPagerLinkFuncType,
   baseUrl: string,
   pageNumber: number,
-  category?: number,
+  category?: number | null,
 ) => {
   switch (renderPagerLinkFunc) {
     // case getMemosListPageLink:

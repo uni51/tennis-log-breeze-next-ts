@@ -1,12 +1,13 @@
 import Head from 'next/head'
-import { Key } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
-import SingleMemoBlockForList from '@/features/memos/common/components/templates/SingleMemoBlockForList'
 import { Memo } from '@/types/Memo'
 import getInitialPublishedMemoList from '@/features/memos/published/api/getInitialPublishedMemoList'
-import useSWR, { SWRConfig } from 'swr'
-import { apiClient } from '@/lib/utils/apiClient'
+import { SWRConfig } from 'swr'
 import PublishedMemoList from '@/features/memos/published/components/PublishedMemoList'
+import { DataWithPagination } from '@/types/dataWithPagination'
+import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
+
+type ReturnType = DataWithPagination<Memo[]>
 
 //サーバーサイドレンダリング
 export async function getServerSideProps(context: { query: { category?: string; page?: string } }) {
@@ -21,9 +22,13 @@ export async function getServerSideProps(context: { query: { category?: string; 
 
   const initialMemos = await getInitialPublishedMemoList()
 
+  const headline = `みんなの公開中のメモ一覧${getMemosListByCategoryHeadLineTitle(categoryNumber)}`
+
   return {
     props: {
       apiUrl: apiUrl,
+      categoryNumber: categoryNumber,
+      headline: headline,
       fallback: {
         '/api/public/memos': initialMemos,
       },
@@ -33,17 +38,25 @@ export async function getServerSideProps(context: { query: { category?: string; 
 
 type Props = {
   apiUrl: string
+  categoryNumber: number | null
+  headline: string
+  fallback: ReturnType
 }
 
 /* みんなの公開中のメモ一覧ページ */
-export default function PublishedMemoIndex({ apiUrl, fallback }: any) {
+export default function PublishedMemoIndex({ apiUrl, categoryNumber, headline, fallback }: Props) {
   return (
     <>
+      <Head>
+        <title>{headline}</title>
+      </Head>
       <AppLayout
-        header={<h2 className='font-semibold text-xl text-gray-800 leading-tight'>{''}</h2>}
+        header={
+          <h2 className='font-semibold text-xl text-gray-800 leading-tight'>{`${headline}`}</h2>
+        }
       >
         <SWRConfig value={{ fallback }}>
-          <PublishedMemoList apiUrl={apiUrl} />
+          <PublishedMemoList apiUrl={apiUrl} categoryNumber={categoryNumber} />
         </SWRConfig>
       </AppLayout>
     </>

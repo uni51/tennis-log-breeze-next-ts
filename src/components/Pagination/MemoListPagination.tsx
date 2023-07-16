@@ -9,7 +9,7 @@ export type PaginationProps = {
   totalItems: number
   currentPage: number
   itemsPerPage?: number
-  category?: number
+  category?: number | null
   renderPagerLinkFunc: RenderPagerLinkFuncType
 }
 
