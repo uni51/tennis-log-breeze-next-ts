@@ -6,6 +6,9 @@ import { SWRConfig } from 'swr'
 import PublishedMemoList from '@/features/memos/published/components/PublishedMemoList'
 import { DataWithPagination } from '@/types/dataWithPagination'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
+import { ErrorBoundary } from 'react-error-boundary'
+import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
+import { onError } from '@/lib/error-helper'
 
 type ReturnType = DataWithPagination<Memo[]>
 
@@ -55,9 +58,11 @@ export default function PublishedMemoIndex({ apiUrl, categoryNumber, headline, f
           <h2 className='font-semibold text-xl text-gray-800 leading-tight'>{`${headline}`}</h2>
         }
       >
-        <SWRConfig value={{ fallback }}>
-          <PublishedMemoList apiUrl={apiUrl} categoryNumber={categoryNumber} />
-        </SWRConfig>
+        <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
+          <SWRConfig value={{ fallback }}>
+            <PublishedMemoList apiUrl={apiUrl} categoryNumber={categoryNumber} />
+          </SWRConfig>
+        </ErrorBoundary>
       </AppLayout>
     </>
   )
