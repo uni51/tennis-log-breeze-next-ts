@@ -9,9 +9,7 @@ import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
 import { ErrorBoundary } from 'react-error-boundary'
 import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
 import { onError } from '@/lib/error-helper'
-import { HttpError, HttpErrorObject } from '@/types/HttpError'
-import { ContentsError } from '@/components/Layouts/ContentsError'
-import Error from 'next/error'
+import { ErrorDisplay } from '@/components/Layouts/Error/ErrorDisplay'
 
 type ReturnType = DataWithPagination<Memo[]>
 
@@ -62,9 +60,9 @@ export default function PublishedMemoIndex({
   error,
 }: Props) {
   if (error) {
-    const errorText = JSON.parse(error)
-    errorText.headline = headline
-    return <ContentsError {...errorText} />
+    const errorObj = JSON.parse(error)
+    errorObj.headline = headline
+    return <ErrorDisplay {...errorObj} />
   }
 
   return (

@@ -6,7 +6,7 @@ import NProgress from 'nprogress'
 import React, { useEffect } from 'react'
 // eslint-disable-next-line
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary' // build時に、FallbackProps not found in 'react-error-boundary' のエラーが出る
-import { ContentsError } from '@/components/Layouts/ContentsError'
+import { ErrorDisplay } from '@/components/Layouts/Error/ErrorDisplay'
 
 function App({ Component, pageProps }: AppProps) {
   // See) https://github.com/vercel/next.js/tree/canary/examples/with-loading
@@ -44,7 +44,7 @@ function App({ Component, pageProps }: AppProps) {
 const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
   return (
     <>
-      <ContentsError {...error} resetErrorBoundary={resetErrorBoundary} />
+      <ErrorDisplay {...error} resetErrorBoundary={resetErrorBoundary} />
     </>
   )
   // return Modal({ children: error.message, show: true, onClose: resetErrorBoundary })

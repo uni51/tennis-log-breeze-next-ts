@@ -1,15 +1,15 @@
 import AppLayout from '@/components/Layouts/AppLayout'
 
 /** TODO 本番運用時には、エラーの詳細を非表示にして、代わりに、一般的なメッセージを出すこと */
-export const ContentsError = ({
+export const ErrorDisplay = ({
   headline,
   name,
   message,
   status,
   exception,
   config,
-  resetErrorBoundary,
   stack,
+  resetErrorBoundary,
 }: any) => {
   return (
     <AppLayout
