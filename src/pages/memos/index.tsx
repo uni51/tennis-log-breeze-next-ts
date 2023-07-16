@@ -10,6 +10,8 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
 import { onError } from '@/lib/error-helper'
 import { ErrorDisplay } from '@/components/Layouts/Error/ErrorDisplay'
+import { Suspense } from 'react'
+import { ClipLoader } from 'react-spinners'
 
 type ReturnType = DataWithPagination<Memo[]>
 
@@ -27,14 +29,14 @@ export async function getServerSideProps(context: { query: { category?: string; 
   const headline = `みんなの公開中のメモ一覧${getMemosListByCategoryHeadLineTitle(categoryNumber)}`
 
   try {
-    const res = await getInitialPublishedMemoList()
+    const res = await getInitialPublishedMemoList(apiUrl)
     return {
       props: {
         apiUrl: apiUrl,
         categoryNumber: categoryNumber,
         headline: headline,
         fallback: {
-          '/api/public/memos': res,
+          [`${apiUrl}`]: res,
         },
       },
     }
