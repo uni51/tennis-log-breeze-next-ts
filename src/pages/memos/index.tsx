@@ -10,8 +10,6 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
 import { onError } from '@/lib/error-helper'
 import { ErrorDisplay } from '@/components/Layouts/Error/ErrorDisplay'
-import { Suspense } from 'react'
-import { ClipLoader } from 'react-spinners'
 
 type ReturnType = DataWithPagination<Memo[]>
 
