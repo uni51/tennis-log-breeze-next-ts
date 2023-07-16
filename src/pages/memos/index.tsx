@@ -9,6 +9,9 @@ import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
 import { ErrorBoundary } from 'react-error-boundary'
 import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
 import { onError } from '@/lib/error-helper'
+import { HttpError, HttpErrorObject } from '@/types/HttpError'
+import { ContentsError } from '@/components/Layouts/ContentsError'
+import Error from 'next/error'
 
 type ReturnType = DataWithPagination<Memo[]>
 
@@ -23,31 +26,47 @@ export async function getServerSideProps(context: { query: { category?: string; 
     ? `/api/public/memos/category/${categoryNumber}?page=${pageNumber}`
     : `/api/public/memos?page=${pageNumber}`
 
-  const initialMemos = await getInitialPublishedMemoList()
-
   const headline = `みんなの公開中のメモ一覧${getMemosListByCategoryHeadLineTitle(categoryNumber)}`
 
-  return {
-    props: {
-      apiUrl: apiUrl,
-      categoryNumber: categoryNumber,
-      headline: headline,
-      fallback: {
-        '/api/public/memos': initialMemos,
+  try {
+    const res = await getInitialPublishedMemoList()
+    return {
+      props: {
+        apiUrl: apiUrl,
+        categoryNumber: categoryNumber,
+        headline: headline,
+        fallback: {
+          '/api/public/memos': res,
+        },
       },
-    },
+    }
+  } catch (error) {
+    return { props: { error: JSON.stringify(error) } }
   }
 }
 
 type Props = {
-  apiUrl: string
-  categoryNumber: number | null
-  headline: string
-  fallback: ReturnType
+  apiUrl?: string
+  categoryNumber?: number | null
+  headline?: string
+  fallback?: ReturnType
+  error?: string
 }
 
 /* みんなの公開中のメモ一覧ページ */
-export default function PublishedMemoIndex({ apiUrl, categoryNumber, headline, fallback }: Props) {
+export default function PublishedMemoIndex({
+  apiUrl,
+  categoryNumber,
+  headline,
+  fallback,
+  error,
+}: Props) {
+  if (error) {
+    const errorText = JSON.parse(error)
+    errorText.headline = headline
+    return <ContentsError {...errorText} />
+  }
+
   return (
     <>
       <Head>
@@ -60,7 +79,7 @@ export default function PublishedMemoIndex({ apiUrl, categoryNumber, headline, f
       >
         <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
           <SWRConfig value={{ fallback }}>
-            <PublishedMemoList apiUrl={apiUrl} categoryNumber={categoryNumber} />
+            <PublishedMemoList apiUrl={apiUrl!} categoryNumber={categoryNumber!} />
           </SWRConfig>
         </ErrorBoundary>
       </AppLayout>
