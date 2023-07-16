@@ -39,7 +39,7 @@ export async function getServerSideProps(context: { query: { category?: string; 
       },
     }
   } catch (error) {
-    return { props: { error: JSON.stringify(error) } }
+    return { props: { ssrError: JSON.stringify(error) } }
   }
 }
 
@@ -48,7 +48,7 @@ type Props = {
   categoryNumber?: number | null
   headline?: string
   fallback?: ReturnType
-  error?: string
+  ssrError?: string
 }
 
 /* みんなの公開中のメモ一覧ページ */
@@ -57,10 +57,10 @@ export default function PublishedMemoIndex({
   categoryNumber,
   headline,
   fallback,
-  error,
+  ssrError,
 }: Props) {
-  if (error) {
-    const errorObj = JSON.parse(error)
+  if (ssrError) {
+    const errorObj = JSON.parse(ssrError)
     errorObj.headline = headline
     return <ErrorDisplay {...errorObj} />
   }
