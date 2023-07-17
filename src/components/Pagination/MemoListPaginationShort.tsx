@@ -28,12 +28,10 @@ const MemoListPaginationShort = ({
     <div className='flex items-center justify-center my-8'>
       {pages.map((pageNumber, i) => {
         if (
-          pageNumber !== currentPage &&
-          pageNumber !== currentPage - 1 &&
-          pageNumber !== currentPage + 1
+          pageNumber === currentPage ||
+          pageNumber === currentPage - 1 ||
+          pageNumber === currentPage + 1
         ) {
-          return <></>
-        } else {
           return (
             <Link
               key={i}
