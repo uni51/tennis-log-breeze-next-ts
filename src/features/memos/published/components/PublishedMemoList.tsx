@@ -5,6 +5,7 @@ import SingleMemoBlockForList from '@/features/memos/common/components/templates
 import { useGetMemoList } from '@/hooks/memos/useGetMemoList'
 import { getMemosListByCategoryPageLink } from '@/lib/pagination-helper'
 import { Memo } from '@/types/Memo'
+import MemoListPaginationLong from '@/components/Pagination/MemoListPaginationLong'
 
 type Props = {
   apiUrl: string
@@ -43,13 +44,24 @@ const PublishedMemoList = ({ apiUrl, categoryNumber }: Props) => {
             )
           })}
         </div>
-        <MemoListPaginationShort
-          baseUrl={'/memos/'}
-          totalItems={Number(memos?.meta?.total)}
-          currentPage={Number(memos?.meta?.current_page)}
-          renderPagerLinkFunc={getMemosListByCategoryPageLink}
-          category={categoryNumber}
-        />
+        <div className='md:hidden'>
+          <MemoListPaginationShort
+            baseUrl={'/memos/'}
+            totalItems={Number(memos?.meta?.total)}
+            currentPage={Number(memos?.meta?.current_page)}
+            renderPagerLinkFunc={getMemosListByCategoryPageLink}
+            category={categoryNumber}
+          />
+        </div>
+        <div className='hidden sm:hidden md:block lg:block  xl:block'>
+          <MemoListPaginationLong
+            baseUrl={'/memos/'}
+            totalItems={Number(memos?.meta?.total)}
+            currentPage={Number(memos?.meta?.current_page)}
+            renderPagerLinkFunc={getMemosListByCategoryPageLink}
+            category={categoryNumber}
+          />
+        </div>
       </div>
     </div>
   )

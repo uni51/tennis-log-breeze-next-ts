@@ -22,9 +22,22 @@ const MemoListPaginationLong = ({
   renderPagerLinkFunc,
 }: PaginationProps) => {
   const pages = usePagination(totalItems, currentPage, itemsPerPage)
+  const totalPage = Math.ceil(totalItems / itemsPerPage)
 
   return (
     <div className='flex items-center justify-center my-8'>
+      {currentPage - 1 >= 1 && (
+        <Link
+          href={getRenderPagerLinkUrl(
+            renderPagerLinkFunc,
+            baseUrl,
+            Number(currentPage - 1),
+            category,
+          )}
+        >
+          &lt; 前へ
+        </Link>
+      )}
       {pages.map((pageNumber, i) =>
         pageNumber === DOTS_STRING ? (
           <span key={i} className='px-4 py-2 rounded-full text-sm font-semibold text-black'>
@@ -43,6 +56,18 @@ const MemoListPaginationLong = ({
             {pageNumber || '-'}
           </Link>
         ),
+      )}
+      {currentPage < totalPage && (
+        <Link
+          href={getRenderPagerLinkUrl(
+            renderPagerLinkFunc,
+            baseUrl,
+            Number(currentPage + 1),
+            category,
+          )}
+        >
+          次へ &gt;
+        </Link>
       )}
     </div>
   )

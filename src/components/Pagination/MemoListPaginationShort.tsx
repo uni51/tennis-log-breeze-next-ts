@@ -22,7 +22,7 @@ const MemoListPaginationShort = ({
   renderPagerLinkFunc,
 }: PaginationProps) => {
   const pages = usePagination(totalItems, currentPage, itemsPerPage)
-  const totalPages = Math.ceil(totalItems / itemsPerPage)
+  const totalPage = Math.ceil(totalItems / itemsPerPage)
 
   return (
     <div className='flex items-center justify-center my-8'>
@@ -48,7 +48,7 @@ const MemoListPaginationShort = ({
               }`}
             >
               {pageNumber === currentPage - 1 && '< 前へ'}
-              {pageNumber === currentPage && `${pageNumber} / ${totalPages}`}
+              {pageNumber === currentPage && `${pageNumber} / ${totalPage}`}
               {pageNumber === currentPage + 1 && '次へ >'}
             </Link>
           )
