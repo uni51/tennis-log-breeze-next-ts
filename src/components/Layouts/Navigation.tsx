@@ -110,7 +110,12 @@ const Navigation = (user?: User) => {
 
             <div className='mt-3 space-y-1'>
               {/* Authentication */}
-              <ResponsiveNavButton onClick={logout}>Logout</ResponsiveNavButton>
+              {isEmptyObject(user!) && (
+                <ResponsiveNavButton onClick={renderLogin}>Login</ResponsiveNavButton>
+              )}
+              {!isEmptyObject(user!) && (
+                <ResponsiveNavButton onClick={logout}>Logout</ResponsiveNavButton>
+              )}
             </div>
           </div>
         </div>
