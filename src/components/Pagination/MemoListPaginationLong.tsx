@@ -13,7 +13,7 @@ export type PaginationProps = {
   renderPagerLinkFunc: RenderPagerLinkFuncType
 }
 
-const MemoListPagination = ({
+const MemoListPaginationLong = ({
   baseUrl,
   totalItems,
   currentPage,
@@ -48,4 +48,4 @@ const MemoListPagination = ({
   )
 }
 
-export default MemoListPagination
+export default MemoListPaginationLong

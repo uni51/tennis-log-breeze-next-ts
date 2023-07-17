@@ -4,14 +4,14 @@ import { useErrorBoundary } from 'react-error-boundary'
 import { useGetMemoList } from '@/hooks/memos/useGetMemoList'
 import ClipLoader from 'react-spinners/ClipLoader'
 import { getMemosListByCategoryPageLink } from '@/lib/pagination-helper'
-import MemoListPaginationShort from '@/components/Pagination/MemoListPaginationShort'
+import MemoListPaginationLong from '@/components/Pagination/MemoListPaginationLong'
 
 type Props = {
   apiUrl: string
   categoryNumber: number | null
 }
 
-const PublishedMemoList = ({ apiUrl, categoryNumber }: Props) => {
+const PublishedMemoList0717 = ({ apiUrl, categoryNumber }: Props) => {
   const { showBoundary } = useErrorBoundary()
   const { data: memos, error } = useGetMemoList(apiUrl)
 
@@ -43,7 +43,7 @@ const PublishedMemoList = ({ apiUrl, categoryNumber }: Props) => {
             )
           })}
         </div>
-        <MemoListPaginationShort
+        <MemoListPaginationLong
           baseUrl={'/memos/'}
           totalItems={Number(memos?.meta?.total)}
           currentPage={Number(memos?.meta?.current_page)}
@@ -55,4 +55,4 @@ const PublishedMemoList = ({ apiUrl, categoryNumber }: Props) => {
   )
 }
 
-export default PublishedMemoList
+export default PublishedMemoList0717
