@@ -139,6 +139,10 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
     window.location.pathname = '/login'
   }
 
+  const renderLogin = () => {
+    window.location.pathname = '/login'
+  }
+
   const checkLoggedIn = async (): Promise<boolean> => {
     if (user) {
       return true
@@ -176,6 +180,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
     resetPassword,
     resendEmailVerification,
     logout,
+    renderLogin,
     checkLoggedIn,
   }
 }

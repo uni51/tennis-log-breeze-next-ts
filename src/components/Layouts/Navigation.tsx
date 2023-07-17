@@ -1,16 +1,17 @@
-import { useRouter } from 'next/router'
 import { useState } from 'react'
 import Dropdown from '@/components/Dropdown'
 import { DropdownButton } from '@/components/DropdownLink'
 import { ResponsiveNavButton } from '@/components/ResponsiveNavLink'
 import { User, useAuth } from '@/hooks/auth'
+import Link from 'next/link'
+import { isEmptyObject } from '@/lib/common-helper'
 
 const Navigation = (user?: User) => {
-  const router = useRouter()
-
-  const { logout } = useAuth({ middleware: 'auth' })
+  const { logout, renderLogin } = useAuth({ middleware: 'guest' })
 
   const [open, setOpen] = useState(false)
+
+  console.log(user)
 
   return (
     <nav className='bg-white border-b border-gray-100'>
@@ -43,7 +44,8 @@ const Navigation = (user?: User) => {
               }
             >
               {/* Authentication */}
-              <DropdownButton onClick={logout}>Logout</DropdownButton>
+              {isEmptyObject(user!) && <DropdownButton onClick={renderLogin}>Login</DropdownButton>}
+              {!isEmptyObject(user!) && <DropdownButton onClick={logout}>Logout</DropdownButton>}
             </Dropdown>
           </div>
 
