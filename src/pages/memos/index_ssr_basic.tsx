@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import { Key } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
-import { ContentsError } from '@/components/Layouts/ContentsError'
+import { ErrorDisplay } from '@/components/Layouts/Error/ErrorDisplay'
 import MemoListPaginationAdapter from '@/components/Pagination/MemoListPaginationAdapter'
 import SingleMemoBlockForList from '@/features/memos/common/components/templates/SingleMemoBlockForList'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
@@ -57,7 +57,7 @@ export default function PublicMemoList(props: Props) {
     const errorText = JSON.parse(error)
     errorText.headline = headline
 
-    return <ContentsError {...errorText} />
+    return <ErrorDisplay {...errorText} />
   }
 
   const memosData = (JSON.parse(memos) as unknown) as ReturnType
