@@ -1,5 +1,5 @@
-import { apiServer } from '@/lib/utils/apiServer'
 import { AxiosResponse } from 'axios'
+import { apiServer } from '@/lib/utils/apiServer'
 
 const getInitialPublishedMemoList = (apiUrl: string) => {
   const data = apiServer.get(apiUrl).then((response: AxiosResponse) => {
