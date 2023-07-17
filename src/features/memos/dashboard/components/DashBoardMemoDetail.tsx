@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch, SetStateAction, useEffect } from 'react'
 import { useErrorBoundary } from 'react-error-boundary'
 import ClipLoader from 'react-spinners/ClipLoader'
 import MemoDetailNoContent from '@/features/memos/common/components/templates/MemoDetailNoContent'
@@ -26,11 +26,11 @@ const DashboardMemoDetail = ({ apiUrl, loginUser, setTitleText }: Props) => {
       </div>
     )
 
-  setTitleText(memo.title)
-
   return (
     <>
-      {memo && loginUser && memo.user_id === loginUser.id && <SingleMemoDetail memo={memo} />}
+      {memo && loginUser && memo.user_id === loginUser.id && (
+        <SingleMemoDetail memo={memo} setTitleText={setTitleText} />
+      )}
       {memo && loginUser && memo.user_id !== loginUser.id && (
         <MemoDetailNoContent message={'閲覧権限がありません'} />
       )}
