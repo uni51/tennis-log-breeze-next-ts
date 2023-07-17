@@ -1,7 +1,7 @@
 import { NextPage } from 'next'
 import Link from 'next/link'
-import { Memo } from '@/types/Memo'
 import { Dispatch, SetStateAction, useEffect } from 'react'
+import { Memo } from '@/types/Memo'
 
 type Props = {
   memo: Memo
