@@ -1,6 +1,6 @@
 import { useErrorBoundary } from 'react-error-boundary'
 import ClipLoader from 'react-spinners/ClipLoader'
-import MemoListPaginationLong from '@/components/Pagination/MemoListPaginationLong'
+import MemoListPaginationShort from '@/components/Pagination/MemoListPaginationShort'
 import SingleMemoBlockForList from '@/features/memos/common/components/templates/SingleMemoBlockForList'
 import AddMemoButton from '@/features/memos/dashboard/components/AddMemoButton'
 import { useGetMemoList } from '@/hooks/memos/useGetMemoList'
@@ -45,7 +45,7 @@ const DashboardMemoList = ({ apiUrl, categoryNumber }: Props) => {
             )
           })}
         </div>
-        <MemoListPaginationLong
+        <MemoListPaginationShort
           baseUrl='/dashboard/memos/'
           totalItems={Number(memos?.meta?.total)}
           currentPage={Number(memos?.meta?.current_page)}
