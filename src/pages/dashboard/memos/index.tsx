@@ -12,28 +12,24 @@ import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
 
 const DashboardMemoIndex: NextPage = () => {
   const router = useRouter()
-  const { page, category } = router.query
   const { checkLoggedIn, user } = useAuth({ middleware: 'auth' })
+  const { page, category } = router.query
   const [apiUrl, setApiUrl] = useState('')
 
   const pageNumber = page === undefined ? 1 : Number(page)
   const categoryNumber = category === undefined ? undefined : Number(category)
 
-  // 初回レンダリング時にログインチェック
+  // Fetch用URL組み立て
   useEffect(() => {
-    const authCheck = async () => {
+    // ログイン中か判定
+    const init = async () => {
+      // ログイン中か判定
       const res: boolean = await checkLoggedIn()
       if (!res) {
         router.push('/login')
         return
       }
-    }
-    authCheck()
-  }, [])
-
-  // Fetch用URL組み立て
-  useEffect(() => {
-    const init = () => {
+      // Fetch用URL組み立て
       if (router.isReady) {
         const apiUri =
           categoryNumber === undefined
@@ -43,7 +39,7 @@ const DashboardMemoIndex: NextPage = () => {
       }
     }
     init()
-  }, [pageNumber, categoryNumber])
+  }, [router, pageNumber, categoryNumber])
 
   const headLine = user?.data?.name
     ? `${user.data.name}さんのメモ一覧${getMemosListByCategoryHeadLineTitle(categoryNumber)}`

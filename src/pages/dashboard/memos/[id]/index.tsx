@@ -11,7 +11,7 @@ import { onError } from '@/lib/error-helper'
 import { Memo } from '@/types/Memo'
 
 /* Dashboard（マイページ）のメモ詳細ページ */
-const DashboardMemoIndex: NextPage<Memo> = () => {
+const DashboardMemoDetailIndex: NextPage<Memo> = () => {
   const { checkLoggedIn, user } = useAuth({ middleware: 'auth' })
   const [apiUrl, setApiUrl] = useState('')
   const [titleText, setTitleText] = useState('')
@@ -19,22 +19,15 @@ const DashboardMemoIndex: NextPage<Memo> = () => {
   const router = useRouter()
   let loginUser = user?.data
 
-  // 初回レンダリング時にログインチェック
   useEffect(() => {
-    const authCheck = async () => {
+    const init = async () => {
+      // ログイン中か判定
       const res: boolean = await checkLoggedIn()
       if (!res) {
         router.push('/login')
         return
       }
-    }
-    authCheck()
-  }, [])
-
-  // Fetch用URL組み立て
-  useEffect(() => {
-    const init = async () => {
-      // ログイン中か判定
+      // Fetch用URL組み立て
       if (router.isReady) {
         const apiUri = `api/dashboard/memos/${router.query.id}`
         setApiUrl(apiUri)
@@ -61,4 +54,4 @@ const DashboardMemoIndex: NextPage<Memo> = () => {
   )
 }
 
-export default DashboardMemoIndex
+export default DashboardMemoDetailIndex

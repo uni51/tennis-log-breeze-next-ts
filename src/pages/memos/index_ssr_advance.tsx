@@ -52,7 +52,13 @@ type Props = {
 }
 
 /* みんなの公開中のメモ一覧ページ */
-const PublishedMemoIndex = ({ apiUrl, categoryNumber, headline, fallback, ssrError }: Props) => {
+const PublishedMemoIndexSsrAdvance = ({
+  apiUrl,
+  categoryNumber,
+  headline,
+  fallback,
+  ssrError,
+}: Props) => {
   if (ssrError) {
     const errorObj = JSON.parse(ssrError)
     errorObj.headline = headline
@@ -79,4 +85,4 @@ const PublishedMemoIndex = ({ apiUrl, categoryNumber, headline, fallback, ssrErr
   )
 }
 
-export default PublishedMemoIndex
+export default PublishedMemoIndexSsrAdvance
