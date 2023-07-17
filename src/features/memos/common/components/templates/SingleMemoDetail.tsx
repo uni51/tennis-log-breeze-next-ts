@@ -3,12 +3,15 @@ import Link from 'next/link'
 import { Memo } from '@/types/Memo'
 import { Dispatch, SetStateAction, useEffect } from 'react'
 
-const SingleMemoDetail: NextPage<{
+type Props = {
   memo: Memo
-  setTitleText: Dispatch<SetStateAction<string>>
-}> = ({ memo, setTitleText }) => {
+  setTitleText?: Dispatch<SetStateAction<string>>
+}
+const SingleMemoDetail: NextPage<Props> = ({ memo, setTitleText }) => {
   useEffect(() => {
-    setTitleText(memo.title)
+    if (setTitleText) {
+      setTitleText(memo.title)
+    }
   }, [memo, setTitleText])
 
   return (
