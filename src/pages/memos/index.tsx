@@ -31,6 +31,7 @@ export async function getServerSideProps(context: { query: { category?: string; 
     return {
       props: {
         apiUrl: apiUrl,
+        pageIndex: pageNumber,
         categoryNumber: categoryNumber,
         headline: headline,
         fallback: {
@@ -45,6 +46,7 @@ export async function getServerSideProps(context: { query: { category?: string; 
 
 type Props = {
   apiUrl?: string
+  pageIndex: number
   categoryNumber?: number | null
   headline?: string
   fallback?: ReturnType
@@ -52,7 +54,14 @@ type Props = {
 }
 
 /* みんなの公開中のメモ一覧ページ */
-const PublishedMemoIndex = ({ apiUrl, categoryNumber, headline, fallback, ssrError }: Props) => {
+const PublishedMemoIndex = ({
+  apiUrl,
+  pageIndex,
+  categoryNumber,
+  headline,
+  fallback,
+  ssrError,
+}: Props) => {
   if (ssrError) {
     const errorObj = JSON.parse(ssrError)
     errorObj.headline = headline
@@ -71,7 +80,20 @@ const PublishedMemoIndex = ({ apiUrl, categoryNumber, headline, fallback, ssrErr
       >
         <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
           <SWRConfig value={{ fallback }}>
-            <PublishedMemoList apiUrl={apiUrl!} categoryNumber={categoryNumber!} />
+            <PublishedMemoList
+              apiUrl={apiUrl!}
+              pageIndex={pageIndex}
+              categoryNumber={categoryNumber!}
+            />
+            {/* キャッシュ作成用に、次のページを事前にロードしておく */}
+            {/* TODO: 最後のページの場合は、このロジックをくぐらないようにする */}
+            <div style={{ display: 'none' }}>
+              <PublishedMemoList
+                apiUrl={apiUrl!}
+                pageIndex={pageIndex + 1}
+                categoryNumber={categoryNumber!}
+              />
+            </div>
           </SWRConfig>
         </ErrorBoundary>
       </AppLayout>

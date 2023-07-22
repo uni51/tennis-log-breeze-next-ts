@@ -9,12 +9,15 @@ import MemoListPaginationLong from '@/components/Pagination/MemoListPaginationLo
 
 type Props = {
   apiUrl: string
+  pageIndex: number
   categoryNumber: number | null
 }
 
-const PublishedMemoList = ({ apiUrl, categoryNumber }: Props) => {
+const PublishedMemoList = ({ apiUrl, pageIndex, categoryNumber }: Props) => {
   const { showBoundary } = useErrorBoundary()
-  const { data: memos, error } = useGetMemoList(apiUrl)
+  const { data: memos, error } = useGetMemoList(pageIndex)
+
+  console.log(memos)
 
   if (error) showBoundary(error)
 
