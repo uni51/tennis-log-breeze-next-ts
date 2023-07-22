@@ -1,8 +1,7 @@
-import useSWR from 'swr'
+import useSWR, { useSWRConfig } from 'swr'
 import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
 import { DataWithPagination } from '@/types/dataWithPagination'
-import { useSWRConfig } from 'swr'
 
 type ReturnType = DataWithPagination<Memo[]>
 

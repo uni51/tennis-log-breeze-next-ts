@@ -1,7 +1,7 @@
-import { apiClient } from '@/lib/utils/apiClient'
-import { Memo } from '@/types/Memo'
 import { useState } from 'react'
 import useSWRInfinite from 'swr/infinite'
+import { apiClient } from '@/lib/utils/apiClient'
+import { Memo } from '@/types/Memo'
 
 const getKey = (pageIndex: any, previousPageData: string | any[]) => {
   if (previousPageData && !previousPageData.length) return null // 最後に到達した

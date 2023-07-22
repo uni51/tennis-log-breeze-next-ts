@@ -54,7 +54,7 @@ const DashboardMemoIndex: NextPage = () => {
         header={<h2 className='font-semibold text-xl text-gray-800 leading-tight'>{headLine}</h2>}
       >
         <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
-          <DashboardMemoList apiUrl={apiUrl} categoryNumber={categoryNumber} />
+          <DashboardMemoList categoryNumber={categoryNumber} pageIndex={pageNumber} />
         </ErrorBoundary>
       </AppLayout>
     </>

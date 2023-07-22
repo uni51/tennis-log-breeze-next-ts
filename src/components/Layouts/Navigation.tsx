@@ -3,7 +3,6 @@ import Dropdown from '@/components/Dropdown'
 import { DropdownButton } from '@/components/DropdownLink'
 import { ResponsiveNavButton } from '@/components/ResponsiveNavLink'
 import { User, useAuth } from '@/hooks/auth'
-import Link from 'next/link'
 import { isEmptyObject } from '@/lib/common-helper'
 
 const Navigation = (user?: User) => {

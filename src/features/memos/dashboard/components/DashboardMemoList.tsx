@@ -8,13 +8,13 @@ import { getMemosListByCategoryPageLink } from '@/lib/pagination-helper'
 import { Memo } from '@/types/Memo'
 
 type Props = {
-  apiUrl: string
+  pageIndex: number
   categoryNumber: number | undefined
 }
 
-const DashboardMemoList = ({ apiUrl, categoryNumber }: Props) => {
+const DashboardMemoList = ({ pageIndex, categoryNumber }: Props) => {
   const { showBoundary } = useErrorBoundary()
-  const { data: memos, error } = useGetMemoList(apiUrl)
+  const { data: memos, error } = useGetMemoList(pageIndex)
 
   if (error) showBoundary(error)
 

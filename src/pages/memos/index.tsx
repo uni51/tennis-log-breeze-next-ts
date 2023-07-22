@@ -80,19 +80,11 @@ const PublishedMemoIndex = ({
       >
         <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
           <SWRConfig value={{ fallback }}>
-            <PublishedMemoList
-              apiUrl={apiUrl!}
-              pageIndex={pageIndex}
-              categoryNumber={categoryNumber!}
-            />
+            <PublishedMemoList pageIndex={pageIndex} categoryNumber={categoryNumber!} />
             {/* キャッシュ作成用に、次のページを事前にロードしておく */}
             {/* TODO: 最後のページの場合は、このロジックをくぐらないようにする */}
             <div style={{ display: 'none' }}>
-              <PublishedMemoList
-                apiUrl={apiUrl!}
-                pageIndex={pageIndex + 1}
-                categoryNumber={categoryNumber!}
-              />
+              <PublishedMemoList pageIndex={pageIndex + 1} categoryNumber={categoryNumber!} />
             </div>
           </SWRConfig>
         </ErrorBoundary>
