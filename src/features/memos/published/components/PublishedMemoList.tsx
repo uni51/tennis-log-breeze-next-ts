@@ -50,7 +50,7 @@ const PublishedMemoList = ({ pageIndex, categoryNumber }: Props) => {
         </div>
         <div className='md:hidden'>
           <MemoListPaginationShort
-            baseUrl={'/memos/'}
+            baseUrl='/memos/'
             totalItems={Number(memos?.meta?.total)}
             currentPage={Number(memos?.meta?.current_page)}
             renderPagerLinkFunc={getMemosListByCategoryPageLink}
@@ -59,7 +59,7 @@ const PublishedMemoList = ({ pageIndex, categoryNumber }: Props) => {
         </div>
         <div className='hidden sm:hidden md:block lg:block  xl:block'>
           <MemoListPaginationLong
-            baseUrl={'/memos/'}
+            baseUrl='/memos/'
             totalItems={Number(memos?.meta?.total)}
             currentPage={Number(memos?.meta?.current_page)}
             renderPagerLinkFunc={getMemosListByCategoryPageLink}

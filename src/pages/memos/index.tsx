@@ -15,8 +15,8 @@ import { getMemoListApiUrl } from '@/lib/pagination-helper'
 export async function getServerSideProps(context: { query: { category?: string; page?: string } }) {
   const { category, page } = context.query
 
-  const categoryNumber = category === undefined ? null : Number(category)
   const pageIndex = page === undefined ? 1 : Number(page)
+  const categoryNumber = category === undefined ? null : Number(category)
 
   const preApiUrl = '/api/public/memos'
   const apiUrl = getMemoListApiUrl({ preApiUrl, pageIndex, categoryNumber })

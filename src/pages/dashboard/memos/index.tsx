@@ -17,7 +17,7 @@ const DashboardMemoIndex: NextPage = () => {
   const [apiUrl, setApiUrl] = useState('')
 
   const pageNumber = page === undefined ? 1 : Number(page)
-  const categoryNumber = category === undefined ? undefined : Number(category)
+  const categoryNumber = category === undefined ? null : Number(category)
 
   // Fetch用URL組み立て
   useEffect(() => {
@@ -43,7 +43,7 @@ const DashboardMemoIndex: NextPage = () => {
 
   const headLine = user?.data?.name
     ? `${user.data.name}さんのメモ一覧${getMemosListByCategoryHeadLineTitle(categoryNumber)}`
-    : ' 作成したメモ一覧'
+    : ' あなたが作成したメモ一覧'
 
   return (
     <>
@@ -54,7 +54,12 @@ const DashboardMemoIndex: NextPage = () => {
         header={<h2 className='font-semibold text-xl text-gray-800 leading-tight'>{headLine}</h2>}
       >
         <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
-          <DashboardMemoList categoryNumber={categoryNumber} pageIndex={pageNumber} />
+          <DashboardMemoList pageIndex={pageNumber} categoryNumber={categoryNumber} />
+          {/* キャッシュ作成用に、次のページを事前にロードしておく */}
+          {/* TODO: 最後のページの場合は、このロジックをくぐらないようにさせる？ */}
+          <div style={{ display: 'none' }}>
+            <DashboardMemoList pageIndex={pageNumber + 1} categoryNumber={categoryNumber} />
+          </div>
         </ErrorBoundary>
       </AppLayout>
     </>

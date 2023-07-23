@@ -6,15 +6,18 @@ import AddMemoButton from '@/features/memos/dashboard/components/AddMemoButton'
 import { useGetMemoList } from '@/hooks/memos/useGetMemoList'
 import { getMemosListByCategoryPageLink } from '@/lib/pagination-helper'
 import { Memo } from '@/types/Memo'
+import MemoListPaginationLong from '@/components/Pagination/MemoListPaginationLong'
 
 type Props = {
   pageIndex: number
-  categoryNumber: number | undefined
+  categoryNumber: number | null
 }
 
 const DashboardMemoList = ({ pageIndex, categoryNumber }: Props) => {
   const { showBoundary } = useErrorBoundary()
-  const { data: memos, error } = useGetMemoList(pageIndex)
+
+  const preApiUrl = '/api/dashboard/memos'
+  const { data: memos, error } = useGetMemoList({ preApiUrl, pageIndex, categoryNumber })
 
   if (error) showBoundary(error)
 
@@ -45,13 +48,24 @@ const DashboardMemoList = ({ pageIndex, categoryNumber }: Props) => {
             )
           })}
         </div>
-        <MemoListPaginationShort
-          baseUrl='/dashboard/memos/'
-          totalItems={Number(memos?.meta?.total)}
-          currentPage={Number(memos?.meta?.current_page)}
-          renderPagerLinkFunc={getMemosListByCategoryPageLink}
-          category={categoryNumber}
-        />
+        <div className='md:hidden'>
+          <MemoListPaginationShort
+            baseUrl='/dashboard/memos/'
+            totalItems={Number(memos?.meta?.total)}
+            currentPage={Number(memos?.meta?.current_page)}
+            renderPagerLinkFunc={getMemosListByCategoryPageLink}
+            category={categoryNumber}
+          />
+        </div>
+        <div className='hidden sm:hidden md:block lg:block  xl:block'>
+          <MemoListPaginationLong
+            baseUrl='/dashboard/memos/'
+            totalItems={Number(memos?.meta?.total)}
+            currentPage={Number(memos?.meta?.current_page)}
+            renderPagerLinkFunc={getMemosListByCategoryPageLink}
+            category={categoryNumber}
+          />
+        </div>
       </div>
     </div>
   )
