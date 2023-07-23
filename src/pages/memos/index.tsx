@@ -8,21 +8,18 @@ import getInitialPublishedMemoList from '@/features/memos/published/api/getIniti
 import PublishedMemoList from '@/features/memos/published/components/PublishedMemoList'
 import { onError } from '@/lib/error-helper'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
-import { Memo } from '@/types/Memo'
-import { DataWithPagination } from '@/types/dataWithPagination'
-
-type ReturnType = DataWithPagination<Memo[]>
+import { MemoListReturnType } from '@/types/memoList'
+import { getMemoListApiUrl } from '@/lib/pagination-helper'
 
 //サーバーサイドレンダリング
 export async function getServerSideProps(context: { query: { category?: string; page?: string } }) {
   const { category, page } = context.query
 
   const categoryNumber = category === undefined ? null : Number(category)
-  const pageNumber = page === undefined ? 1 : Number(page)
+  const pageIndex = page === undefined ? 1 : Number(page)
 
-  const apiUrl = categoryNumber
-    ? `/api/public/memos/category/${categoryNumber}?page=${pageNumber}`
-    : `/api/public/memos?page=${pageNumber}`
+  const preApiUrl = '/api/public/memos'
+  const apiUrl = getMemoListApiUrl({ preApiUrl, pageIndex, categoryNumber })
 
   const headline = `みんなの公開中のメモ一覧${getMemosListByCategoryHeadLineTitle(categoryNumber)}`
 
@@ -30,8 +27,7 @@ export async function getServerSideProps(context: { query: { category?: string; 
     const res = await getInitialPublishedMemoList(apiUrl)
     return {
       props: {
-        apiUrl: apiUrl,
-        pageIndex: pageNumber,
+        pageIndex: pageIndex,
         categoryNumber: categoryNumber,
         headline: headline,
         fallback: {
@@ -45,23 +41,15 @@ export async function getServerSideProps(context: { query: { category?: string; 
 }
 
 type Props = {
-  apiUrl?: string
   pageIndex: number
-  categoryNumber?: number | null
+  categoryNumber: number | null
   headline?: string
-  fallback?: ReturnType
+  fallback?: MemoListReturnType
   ssrError?: string
 }
 
 /* みんなの公開中のメモ一覧ページ */
-const PublishedMemoIndex = ({
-  apiUrl,
-  pageIndex,
-  categoryNumber,
-  headline,
-  fallback,
-  ssrError,
-}: Props) => {
+const PublishedMemoIndex = ({ pageIndex, categoryNumber, headline, fallback, ssrError }: Props) => {
   if (ssrError) {
     const errorObj = JSON.parse(ssrError)
     errorObj.headline = headline
@@ -80,11 +68,11 @@ const PublishedMemoIndex = ({
       >
         <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
           <SWRConfig value={{ fallback }}>
-            <PublishedMemoList pageIndex={pageIndex} categoryNumber={categoryNumber!} />
+            <PublishedMemoList pageIndex={pageIndex} categoryNumber={categoryNumber} />
             {/* キャッシュ作成用に、次のページを事前にロードしておく */}
             {/* TODO: 最後のページの場合は、このロジックをくぐらないようにする */}
             <div style={{ display: 'none' }}>
-              <PublishedMemoList pageIndex={pageIndex + 1} categoryNumber={categoryNumber!} />
+              <PublishedMemoList pageIndex={pageIndex + 1} categoryNumber={categoryNumber} />
             </div>
           </SWRConfig>
         </ErrorBoundary>

@@ -14,9 +14,11 @@ type Props = {
 
 const PublishedMemoList = ({ pageIndex, categoryNumber }: Props) => {
   const { showBoundary } = useErrorBoundary()
-  const { data: memos, error } = useGetMemoList(pageIndex)
 
-  console.log(memos)
+  const preApiUrl = '/api/public/memos'
+  const { data: memos, error } = useGetMemoList({ preApiUrl, pageIndex, categoryNumber })
+
+  // console.log(memos)
 
   if (error) showBoundary(error)
 

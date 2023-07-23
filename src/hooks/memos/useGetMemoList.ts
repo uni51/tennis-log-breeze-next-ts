@@ -1,19 +1,25 @@
 import useSWR, { useSWRConfig } from 'swr'
 import { apiClient } from '@/lib/utils/apiClient'
-import { Memo } from '@/types/Memo'
-import { DataWithPagination } from '@/types/dataWithPagination'
+import { MemoListReturnType } from '@/types/memoList'
+import { getMemoListApiUrl } from '@/lib/pagination-helper'
 
-type ReturnType = DataWithPagination<Memo[]>
+type Props = {
+  preApiUrl: string
+  pageIndex: number
+  categoryNumber: number | null
+}
 
-export const useGetMemoList = (pageIndex: number) => {
+export const useGetMemoList = ({ preApiUrl, pageIndex, categoryNumber }: Props) => {
   const { cache } = useSWRConfig()
 
-  const { data, error, isLoading } = useSWR<ReturnType>(`/api/public/memos?page=${pageIndex}`, () =>
-    apiClient.get(`/api/public/memos?page=${pageIndex}`).then((res: any) => res.data),
+  const apiUrl = getMemoListApiUrl({ preApiUrl, pageIndex, categoryNumber })
+
+  const { data, error, isLoading } = useSWR<MemoListReturnType>(apiUrl, () =>
+    apiClient.get(apiUrl).then((res: any) => res.data),
   )
 
   // キャッシュ確認時に利用
-  // console.log(cache.get(`/api/public/memos?page=${pageIndex}`))
+  console.log(cache.get(apiUrl))
 
   return {
     data,

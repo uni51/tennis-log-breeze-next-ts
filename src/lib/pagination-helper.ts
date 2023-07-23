@@ -51,3 +51,21 @@ export type getMemosListByCategoryPageLinkType = (
   pathname: string
   query: { category?: string; page: string }
 }
+
+export type MemoListsPaginationProps = {
+  preApiUrl: string
+  pageIndex: number
+  categoryNumber: number | null
+}
+
+export const getMemoListApiUrl = ({
+  preApiUrl,
+  pageIndex,
+  categoryNumber,
+}: MemoListsPaginationProps) => {
+  const apiUrl = categoryNumber
+    ? preApiUrl + `/category/${categoryNumber}?page=${pageIndex}`
+    : preApiUrl + `?page=${pageIndex}`
+
+  return apiUrl
+}
