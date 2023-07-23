@@ -1,12 +1,12 @@
 import { useErrorBoundary } from 'react-error-boundary'
 import ClipLoader from 'react-spinners/ClipLoader'
+import MemoListPaginationLong from '@/components/Pagination/MemoListPaginationLong'
 import MemoListPaginationShort from '@/components/Pagination/MemoListPaginationShort'
 import SingleMemoBlockForList from '@/features/memos/common/components/templates/SingleMemoBlockForList'
 import AddMemoButton from '@/features/memos/dashboard/components/AddMemoButton'
 import { useGetMemoList } from '@/hooks/memos/useGetMemoList'
 import { getMemosListByCategoryPageLink } from '@/lib/pagination-helper'
 import { Memo } from '@/types/Memo'
-import MemoListPaginationLong from '@/components/Pagination/MemoListPaginationLong'
 
 type Props = {
   pageIndex: number

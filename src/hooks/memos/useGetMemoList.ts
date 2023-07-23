@@ -1,7 +1,7 @@
 import useSWR, { useSWRConfig } from 'swr'
+import { getMemoListApiUrl } from '@/lib/pagination-helper'
 import { apiClient } from '@/lib/utils/apiClient'
 import { MemoListReturnType } from '@/types/memoList'
-import { getMemoListApiUrl } from '@/lib/pagination-helper'
 
 type Props = {
   preApiUrl: string

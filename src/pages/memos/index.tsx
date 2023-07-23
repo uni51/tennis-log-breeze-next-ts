@@ -8,8 +8,8 @@ import getInitialPublishedMemoList from '@/features/memos/published/api/getIniti
 import PublishedMemoList from '@/features/memos/published/components/PublishedMemoList'
 import { onError } from '@/lib/error-helper'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
-import { MemoListReturnType } from '@/types/memoList'
 import { getMemoListApiUrl } from '@/lib/pagination-helper'
+import { MemoListReturnType } from '@/types/memoList'
 
 //サーバーサイドレンダリング
 export async function getServerSideProps(context: { query: { category?: string; page?: string } }) {
