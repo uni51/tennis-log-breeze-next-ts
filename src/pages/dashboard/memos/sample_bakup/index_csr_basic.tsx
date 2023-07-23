@@ -6,8 +6,8 @@ import { useErrorBoundary } from 'react-error-boundary'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import MemoListPaginationAdapter from '@/components/Pagination/MemoListPaginationAdapter'
-import AddMemo from '@/components/features/Memos/components/dashboard/AddMemo'
-import SingleMemoBlockForList from '@/components/templates/SingleMemoBlockForList'
+import SingleMemoBlockForList from '@/features/memos/common/components/templates/SingleMemoBlockForList'
+import AddMemoButton from '@/features/memos/dashboard/components/AddMemoButton'
 import { useAuth } from '@/hooks/auth'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
 import { getMemosListByCategoryPageLink, getMemosListPageLink } from '@/lib/pagination-helper'
@@ -76,7 +76,7 @@ const DashboardMemoListCopy: NextPage = () => {
         header={<h2 className='font-semibold text-xl text-gray-800 leading-tight'>{headline}</h2>}
       >
         <div className='mx-auto mt-20'>
-          <AddMemo />
+          <AddMemoButton />
           <div className='mt-3'>
             {/* DBから取得したメモデータの一覧表示 */}
             <div className='grid w-4/5 mx-auto gap-16 lg:grid-cols-2'>

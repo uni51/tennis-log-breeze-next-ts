@@ -1,8 +1,13 @@
 import { NextPage } from 'next'
 import Link from 'next/link'
+import { Dispatch, SetStateAction, useEffect } from 'react'
 import { Memo } from '@/types/Memo'
 
-const SingleMemoDetail: NextPage<{ memo: Memo }> = ({ memo }) => {
+type Props = {
+  memo: Memo
+  setTitleText?: Dispatch<SetStateAction<string>>
+}
+const SingleMemoDetail: NextPage<Props> = ({ memo }) => {
   return (
     <div className='mx-auto mt-20'>
       <div className='grid w-4/5 mx-auto gap-4'>

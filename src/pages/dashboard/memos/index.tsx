@@ -1,71 +1,69 @@
 import { NextPage } from 'next'
-// eslint-disable-next-line
-import { ErrorBoundary, FallbackProps, useErrorBoundary } from 'react-error-boundary' // build時に、FallbackProps not found in 'react-error-boundary' のエラーが出る
+import Head from 'next/head'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
+import { ErrorBoundary } from 'react-error-boundary' // build時に、FallbackProps not found in 'react-error-boundary' のエラーが出る
 import AppLayout from '@/components/Layouts/AppLayout'
-import ErrorDisplayDuringCsr from '@/components/Layouts/ErrorDisplayDuringCsr'
-import SingleMemoBlockForList from '@/components/templates/SingleMemoBlockForList'
-import { useDashBoardMemoList } from '@/hooks/memos'
-import { isAxiosError } from '@/lib/utils/axiosUtils'
-import { Memo } from '@/types/Memo'
+import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
+import DashboardMemoList from '@/features/memos/dashboard/components/DashboardMemoList'
+import { useAuth } from '@/hooks/auth'
+import { onError } from '@/lib/error-helper'
+import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
 
-const DashboardMemoList = () => {
-  const { data: memos, error: err } = useDashBoardMemoList()
-  const { showBoundary } = useErrorBoundary()
+const DashboardMemoIndex: NextPage = () => {
+  const router = useRouter()
+  const { checkLoggedIn, user } = useAuth({ middleware: 'auth' })
+  const { page, category } = router.query
+  const [apiUrl, setApiUrl] = useState('')
 
-  console.log(err)
+  const pageNumber = page === undefined ? 1 : Number(page)
+  const categoryNumber = category === undefined ? null : Number(category)
 
-  if (err) {
-    if (isAxiosError(err) && err.response) {
-      err.response.data.status = err.response.status
-      showBoundary!(err.response.data)
-    } else {
-      showBoundary!(err)
+  // Fetch用URL組み立て
+  useEffect(() => {
+    // ログイン中か判定
+    const init = async () => {
+      // ログイン中か判定
+      const res: boolean = await checkLoggedIn()
+      if (!res) {
+        router.push('/login')
+        return
+      }
+      // Fetch用URL組み立て
+      if (router.isReady) {
+        const apiUri =
+          categoryNumber === undefined
+            ? `/api/dashboard/memos?page=${pageNumber}`
+            : `/api/dashboard/memos/category/${categoryNumber}?page=${pageNumber}`
+        setApiUrl(apiUri)
+      }
     }
-  }
+    init()
+  }, [router, pageNumber, categoryNumber])
 
-  if (!memos) return <div>Loading...</div>
+  const headLine = user?.data?.name
+    ? `${user.data.name}さんのメモ一覧${getMemosListByCategoryHeadLineTitle(categoryNumber)}`
+    : ' あなたが作成したメモ一覧'
 
-  return (
-    <div className='mt-3'>
-      {/* DBから取得したメモデータの一覧表示 */}
-      <div className='grid w-4/5 mx-auto gap-16 lg:grid-cols-2'>
-        {memos?.data?.map((memo: Memo, index) => {
-          return (
-            <SingleMemoBlockForList
-              memo={memo}
-              renderMemoDetailLink={`/dashboard/memos/${memo.id}`}
-              renderMemoListByCategoryLink={`/dashboard/memos?category=${memo.category_id}`}
-              renderMemoListByNickNameLink={`/dashboard/memos/`}
-              key={index}
-            />
-          )
-        })}
-      </div>
-    </div>
-  )
-}
-
-const Index: NextPage = () => {
-  return (
-    <AppLayout header={<h2 className='font-semibold text-xl text-gray-800 leading-tight'>{''}</h2>}>
-      <ErrorBoundary FallbackComponent={ErrorFallback} onError={onError}>
-        <DashboardMemoList />
-      </ErrorBoundary>
-    </AppLayout>
-  )
-}
-
-export default Index
-
-const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
   return (
     <>
-      <ErrorDisplayDuringCsr {...error} resetErrorBoundary={resetErrorBoundary} />
+      <Head>
+        <title>{headLine}</title>
+      </Head>
+      <AppLayout
+        header={<h2 className='font-semibold text-xl text-gray-800 leading-tight'>{headLine}</h2>}
+      >
+        <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
+          <DashboardMemoList pageIndex={pageNumber} categoryNumber={categoryNumber} />
+          {/* キャッシュ作成用に、次のページを事前にロードしておく */}
+          {/* TODO: 最後のページの場合は、このロジックをくぐらないようにさせる？ */}
+          <div style={{ display: 'none' }}>
+            <DashboardMemoList pageIndex={pageNumber + 1} categoryNumber={categoryNumber} />
+          </div>
+        </ErrorBoundary>
+      </AppLayout>
     </>
   )
-  // return Modal({ children: error.message, show: true, onClose: resetErrorBoundary })
 }
 
-const onError = (error: Error, info: { componentStack: string }) => {
-  console.error(error, info)
-}
+export default DashboardMemoIndex

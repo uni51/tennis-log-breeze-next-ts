@@ -1,101 +1,84 @@
 import Head from 'next/head'
-import { Key } from 'react'
+import { ErrorBoundary } from 'react-error-boundary'
+import { SWRConfig } from 'swr'
 import AppLayout from '@/components/Layouts/AppLayout'
-import { ContentsError } from '@/components/Layouts/ContentsError'
-import MemoListPaginationAdapter from '@/components/Pagination/MemoListPaginationAdapter'
-import SingleMemoBlockForList from '@/components/templates/SingleMemoBlockForList'
+import { ErrorDisplay } from '@/components/Layouts/Error/ErrorDisplay'
+import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
+import getInitialPublishedMemoList from '@/features/memos/published/api/getInitialPublishedMemoList'
+import PublishedMemoList from '@/features/memos/published/components/PublishedMemoList'
+import { onError } from '@/lib/error-helper'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
-import { getMemosListByCategoryPageLink, getMemosListPageLink } from '@/lib/pagination-helper'
-import { axiosRequest } from '@/lib/utils/axiosUtils'
-import { Memo } from '@/types/Memo'
-import { DataWithPagination } from '@/types/dataWithPagination'
-
-type ReturnType = DataWithPagination<Memo[]>
+import { getMemoListApiUrl } from '@/lib/pagination-helper'
+import { MemoListReturnType } from '@/types/memoList'
 
 //サーバーサイドレンダリング
 export async function getServerSideProps(context: { query: { category?: string; page?: string } }) {
   const { category, page } = context.query
 
+  const pageIndex = page === undefined ? 1 : Number(page)
   const categoryNumber = category === undefined ? null : Number(category)
-  const pageNumber = page === undefined ? 1 : Number(page)
 
-  const publicMemoListUriWithCategory = `/api/public/memos/category/${categoryNumber}?page=${pageNumber}`
-  const publicMemoListUri = `/api/public/memos?page=${pageNumber}`
+  const preApiUrl = '/api/public/memos'
+  const apiUrl = getMemoListApiUrl({ preApiUrl, pageIndex, categoryNumber })
+
+  const headline = `みんなの公開中のメモ一覧${getMemosListByCategoryHeadLineTitle(categoryNumber)}`
 
   try {
-    const response: ReturnType =
-      categoryNumber !== null
-        ? await axiosRequest('server', publicMemoListUriWithCategory)
-        : await axiosRequest('server', publicMemoListUri)
-
+    const res = await getInitialPublishedMemoList(apiUrl)
     return {
       props: {
-        memos: JSON.stringify(response),
-        category: categoryNumber,
+        pageIndex: pageIndex,
+        categoryNumber: categoryNumber,
+        headline: headline,
+        fallback: {
+          [`${apiUrl}`]: res,
+        },
       },
     }
-  } catch (err) {
-    return { props: { error: JSON.stringify(err) } }
+  } catch (error) {
+    return { props: { ssrError: JSON.stringify(error) } }
   }
 }
 
 type Props = {
-  memos: string
-  category: number | null
-  error?: string
+  pageIndex: number
+  categoryNumber: number | null
+  headline?: string
+  fallback?: MemoListReturnType
+  ssrError?: string
 }
 
 /* みんなの公開中のメモ一覧ページ */
-export default function PublicMemoList(props: Props) {
-  // const router = useRouter()
-
-  const { memos, category, error } = props
-
-  const headline = `みんなの公開中のメモ一覧${getMemosListByCategoryHeadLineTitle(category)}`
-
-  if (error) {
-    const errorText = JSON.parse(error)
-    errorText.headline = headline
-
-    return <ContentsError {...errorText} />
+const PublishedMemoIndex = ({ pageIndex, categoryNumber, headline, fallback, ssrError }: Props) => {
+  if (ssrError) {
+    const errorObj = JSON.parse(ssrError)
+    errorObj.headline = headline
+    return <ErrorDisplay {...errorObj} />
   }
 
-  const memosData = (JSON.parse(memos) as unknown) as ReturnType
-
   return (
-    <AppLayout
-      header={<h2 className='font-semibold text-xl text-gray-800 leading-tight'>{headline}</h2>}
-    >
+    <>
       <Head>
         <title>{headline}</title>
       </Head>
-      <div className='mx-auto mt-32'>
-        <div className='mt-3'>
-          {/* DBから取得したメモデータの一覧表示 */}
-          <div className='grid w-4/5 mx-auto gap-16 lg:grid-cols-2'>
-            {memosData?.data?.map((memo: Memo, index: Key | null | undefined) => {
-              return (
-                <SingleMemoBlockForList
-                  memo={memo}
-                  renderMemoDetailLink={`/${memo.user_nickname}/memos/${memo.id}`}
-                  renderMemoListByCategoryLink={`/memos?category=${memo.category_id}`}
-                  renderMemoListByNickNameLink={`/${memo.user_nickname}/memos/`}
-                  key={index}
-                />
-              )
-            })}
-          </div>
-          <MemoListPaginationAdapter
-            baseUrl={'/memos/'}
-            totalItems={Number(memosData?.meta?.total)}
-            currentPage={Number(memosData?.meta?.current_page)}
-            renderPagerLinkFunc={
-              category === null ? getMemosListPageLink : getMemosListByCategoryPageLink
-            }
-            category={category}
-          />
-        </div>
-      </div>
-    </AppLayout>
+      <AppLayout
+        header={
+          <h2 className='font-semibold text-xl text-gray-800 leading-tight'>{`${headline}`}</h2>
+        }
+      >
+        <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
+          <SWRConfig value={{ fallback }}>
+            <PublishedMemoList pageIndex={pageIndex} categoryNumber={categoryNumber} />
+            {/* キャッシュ作成用に、次のページを事前にロードしておく */}
+            {/* TODO: 最後のページの場合は、このロジックをくぐらないようにする */}
+            <div style={{ display: 'none' }}>
+              <PublishedMemoList pageIndex={pageIndex + 1} categoryNumber={categoryNumber} />
+            </div>
+          </SWRConfig>
+        </ErrorBoundary>
+      </AppLayout>
+    </>
   )
 }
+
+export default PublishedMemoIndex

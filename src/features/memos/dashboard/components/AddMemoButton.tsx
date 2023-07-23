@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import React from 'react'
 
-const AddMemo = () => {
+const AddMemoButton = () => {
   const router = useRouter()
 
   return (
@@ -16,4 +16,4 @@ const AddMemo = () => {
   )
 }
 
-export default AddMemo
+export default AddMemoButton

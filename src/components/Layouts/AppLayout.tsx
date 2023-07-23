@@ -95,7 +95,7 @@ function classNames(...classes: string[]) {
 
 const AppLayout = ({ header, children }: PropsWithChildren<Props>) => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const { user } = useAuth({ middleware: 'auth' })
+  const { user } = useAuth({ middleware: 'guest' })
 
   return (
     <>
