@@ -1,4 +1,4 @@
-import MemoListPagination from '@/components/Pagination/MemoListPagination'
+import MemoListPaginationLong from '@/components/Pagination/MemoListPaginationLong'
 import {
   getMemosListPageLink,
   getMemosListPageLinkType,
@@ -24,7 +24,7 @@ const MemoListPaginationAdapter = ({
   // メモ一覧ページで、カテゴリーでの絞り込みが行われている場合
   if (renderPagerLinkFunc === getMemosListByCategoryPageLink && category) {
     return (
-      <MemoListPagination
+      <MemoListPaginationLong
         baseUrl={baseUrl}
         totalItems={totalItems}
         currentPage={currentPage}
@@ -34,7 +34,7 @@ const MemoListPaginationAdapter = ({
     )
   } else {
     return (
-      <MemoListPagination
+      <MemoListPaginationLong
         baseUrl={baseUrl}
         totalItems={totalItems}
         currentPage={currentPage}

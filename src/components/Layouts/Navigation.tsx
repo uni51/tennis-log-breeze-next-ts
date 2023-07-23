@@ -1,16 +1,15 @@
-import { useRouter } from 'next/router'
 import { useState } from 'react'
 import Dropdown from '@/components/Dropdown'
 import { DropdownButton } from '@/components/DropdownLink'
 import { ResponsiveNavButton } from '@/components/ResponsiveNavLink'
 import { User, useAuth } from '@/hooks/auth'
+import { isEmptyObject } from '@/lib/common-helper'
 
-const Navigation = (user?: User) => {
-  const router = useRouter()
-
-  const { logout } = useAuth({ middleware: 'auth' })
+const Navigation = (user: User) => {
+  const { logout, renderLogin } = useAuth({ middleware: 'guest' })
 
   const [open, setOpen] = useState(false)
+  // console.log(isEmptyObject(user))
 
   return (
     <nav className='bg-white border-b border-gray-100'>
@@ -24,7 +23,7 @@ const Navigation = (user?: User) => {
               width='48'
               trigger={
                 <button className='flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 focus:outline-none transition duration-150 ease-in-out'>
-                  <div>{user?.data?.name}</div>
+                  <div>{user.data?.name}</div>
 
                   <div className='ml-1'>
                     <svg
@@ -43,7 +42,8 @@ const Navigation = (user?: User) => {
               }
             >
               {/* Authentication */}
-              <DropdownButton onClick={logout}>Logout</DropdownButton>
+              {isEmptyObject(user) && <DropdownButton onClick={renderLogin}>Login</DropdownButton>}
+              {!isEmptyObject(user) && <DropdownButton onClick={logout}>Logout</DropdownButton>}
             </Dropdown>
           </div>
 
@@ -101,14 +101,19 @@ const Navigation = (user?: User) => {
               </div>
 
               <div className='ml-3'>
-                <div className='font-medium text-base text-gray-800'>{user?.data?.name}</div>
-                <div className='font-medium text-sm text-gray-500'>{user?.data?.email}</div>
+                <div className='font-medium text-base text-gray-800'>{user.data?.name}</div>
+                <div className='font-medium text-sm text-gray-500'>{user.data?.email}</div>
               </div>
             </div>
 
             <div className='mt-3 space-y-1'>
               {/* Authentication */}
-              <ResponsiveNavButton onClick={logout}>Logout</ResponsiveNavButton>
+              {isEmptyObject(user) && (
+                <ResponsiveNavButton onClick={renderLogin}>Login</ResponsiveNavButton>
+              )}
+              {!isEmptyObject(user) && (
+                <ResponsiveNavButton onClick={logout}>Logout</ResponsiveNavButton>
+              )}
             </div>
           </div>
         </div>
