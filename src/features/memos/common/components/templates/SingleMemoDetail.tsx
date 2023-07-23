@@ -7,13 +7,7 @@ type Props = {
   memo: Memo
   setTitleText?: Dispatch<SetStateAction<string>>
 }
-const SingleMemoDetail: NextPage<Props> = ({ memo, setTitleText }) => {
-  useEffect(() => {
-    if (setTitleText) {
-      setTitleText(memo.title)
-    }
-  }, [memo, setTitleText])
-
+const SingleMemoDetail: NextPage<Props> = ({ memo }) => {
   return (
     <div className='mx-auto mt-20'>
       <div className='grid w-4/5 mx-auto gap-4'>

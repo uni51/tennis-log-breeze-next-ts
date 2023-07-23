@@ -25,12 +25,13 @@ const DashboardMemoDetail = ({ apiUrl, loginUser, setTitleText }: Props) => {
         </div>
       </div>
     )
+  if (setTitleText) {
+    setTitleText(memo.title)
+  }
 
   return (
     <>
-      {memo && loginUser && memo.user_id === loginUser.id && (
-        <SingleMemoDetail memo={memo} setTitleText={setTitleText} />
-      )}
+      {memo && loginUser && memo.user_id === loginUser.id && <SingleMemoDetail memo={memo} />}
       {memo && loginUser && memo.user_id !== loginUser.id && (
         <MemoDetailNoContent message={'閲覧権限がありません'} />
       )}
