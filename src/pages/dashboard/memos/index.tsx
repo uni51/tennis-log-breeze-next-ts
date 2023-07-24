@@ -1,7 +1,7 @@
 import { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { ErrorBoundary } from 'react-error-boundary' // build時に、FallbackProps not found in 'react-error-boundary' のエラーが出る
 import AppLayout from '@/components/Layouts/AppLayout'
 import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
@@ -14,7 +14,6 @@ const DashboardMemoIndex: NextPage = () => {
   const router = useRouter()
   const { checkLoggedIn, user } = useAuth({ middleware: 'auth' })
   const { page, category } = router.query
-  const [apiUrl, setApiUrl] = useState('')
 
   const pageNumber = page === undefined ? 1 : Number(page)
   const categoryNumber = category === undefined ? null : Number(category)
@@ -28,14 +27,6 @@ const DashboardMemoIndex: NextPage = () => {
       if (!res) {
         router.push('/login')
         return
-      }
-      // Fetch用URL組み立て
-      if (router.isReady) {
-        const apiUri =
-          categoryNumber === undefined
-            ? `/api/dashboard/memos?page=${pageNumber}`
-            : `/api/dashboard/memos/category/${categoryNumber}?page=${pageNumber}`
-        setApiUrl(apiUri)
       }
     }
     init()
