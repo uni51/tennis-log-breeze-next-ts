@@ -11,6 +11,8 @@
     "format": "prettier --write --ignore-path .gitignore './**/*.{js,jsx,ts,tsx,json}'"
   },
   "dependencies": {
+    "@firebase/app": "^0.9.15",
+    "@firebase/auth": "^1.1.0",
     "@headlessui/react": "^1.7.15",
     "@heroicons/react": "^2.0.14",
     "@hookform/error-message": "^2.0.1",

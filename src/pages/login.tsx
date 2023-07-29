@@ -1,125 +1,107 @@
-import Head from 'next/head'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
-import { useEffect, useState, FormEventHandler } from 'react'
-import AuthCard from '@/components/AuthCard'
-import AuthSessionStatus from '@/components/AuthSessionStatus'
-import Input from '@/components/Input'
-import InputError from '@/components/InputError'
-import Label from '@/components/Label'
-import GuestLayout from '@/components/Layouts/GuestLayout'
-import PrimaryButton from '@/components/PrimaryButton'
-// import Checkbox from '@/components/CheckBox'
-import { useAuth } from '@/hooks/auth'
-import { LoginError } from '@/types/authError'
+import { initializeApp } from '@firebase/app'
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  UserCredential,
+  signInWithCredential,
+  signOut,
+  Auth,
+} from '@firebase/auth'
+import { useCallback, useEffect, useState } from 'react'
 
-const Login = () => {
-  const { query } = useRouter()
+const firebaseConfig = {
+  apiKey: process.env.NEXT_PUBLIC_APP_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_APP_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_APP_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_APP_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_APP_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_APP_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_APP_MEASUREMENT_ID,
+}
 
-  const { login } = useAuth({
-    middleware: 'guest',
-    redirectIfAuthenticated: '/dashboard',
-  })
+const useAuth = (auth: Auth) => {
+  const [state, setState] = useState<'idel' | 'progress' | 'logined' | 'logouted' | 'error'>('idel')
+  const [error, setError] = useState<unknown>('')
+  const [credential, setCredential] = useState<UserCredential>()
+  const dispatch = useCallback(
+    (action: { type: 'login'; payload?: { token: string } } | { type: 'logout' }) => {
+      setError('')
+      switch (action.type) {
+        case 'login':
+          setState('progress')
+          const token = action.payload?.token
+          if (token) {
+            signInWithCredential(auth, GoogleAuthProvider.credential(token))
+              .then((result) => {
+                setCredential(result)
+                setState('logined')
+              })
+              .catch((e) => {
+                setError(e)
+                setState('error')
+              })
+          } else {
+            signInWithPopup(auth, provider)
+              .then((result) => {
+                setCredential(result)
+                setState('logined')
+              })
+              .catch((e) => {
+                setError(e)
+                setState('error')
+              })
+          }
+          break
+        case 'logout':
+          setState('progress')
+          signOut(auth)
+            .then(() => {
+              setCredential(undefined)
+              setState('logouted')
+            })
+            .catch((e) => {
+              setError(e)
+              setState('error')
+            })
+          break
+      }
+    },
+    [auth],
+  )
+  return { state, error, credential, dispatch }
+}
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  // const [shouldRemember, setShouldRemember] = useState(false)
-  // const [errors, setErrors]: [any, React.Dispatch<React.SetStateAction<never[]>>] = useState([])
-  const [errors, setErrors] = useState<LoginError | null>(null)
-  const [status, setStatus] = useState<string | null>(null)
+const auth = getAuth(initializeApp(firebaseConfig))
+const provider = new GoogleAuthProvider()
 
+const Page = () => {
+  const { state, dispatch, credential, error } = useAuth(auth)
   useEffect(() => {
-    const reset = query && query.reset ? (query.reset as string) : ''
-    if (reset.length > 0 && errors?.email === undefined && errors?.password === undefined) {
-      setStatus(atob(reset))
-    } else {
-      setStatus(null)
+    const token = sessionStorage.getItem('token')
+    if (token) {
+      dispatch({ type: 'login', payload: { token } })
     }
-  })
-
-  const submitForm: FormEventHandler = async (event) => {
-    event.preventDefault()
-
-    login({
-      email,
-      password,
-      // remember: shouldRemember,
-      setErrors,
-      setStatus,
-    })
-  }
-
+  }, [dispatch])
+  useEffect(() => {
+    if (credential) {
+      const token = GoogleAuthProvider.credentialFromResult(credential)?.idToken
+      token && sessionStorage.setItem('token', token)
+    } else {
+      sessionStorage.removeItem('token')
+    }
+  }, [credential])
+  const handleLogin = () => dispatch({ type: 'login' })
+  const handleLogout = () => dispatch({ type: 'logout' })
   return (
-    <GuestLayout>
-      <Head>
-        <title>Laravel - Login</title>
-      </Head>
-      <AuthCard logo={undefined}>
-        {/* Session Status */}
-        <AuthSessionStatus className='mb-4' status={status} />
-
-        <form onSubmit={submitForm}>
-          {/* Email Address */}
-          <div>
-            <Label htmlFor='email'>Email</Label>
-
-            <Input
-              id='email'
-              type='email'
-              value={email}
-              className='block mt-1 w-full'
-              onChange={(event) => setEmail(event.target.value)}
-              // required
-              isFocused={true}
-            />
-
-            <InputError messages={errors?.email} className='mt-2' />
-          </div>
-
-          {/* Password */}
-          <div className='mt-4'>
-            <Label htmlFor='password'>Password</Label>
-
-            <Input
-              id='password'
-              type='password'
-              value={password}
-              className='block mt-1 w-full'
-              onChange={(event) => setPassword(event.target.value)}
-              // required
-              autoComplete='current-password'
-            />
-
-            <InputError messages={errors?.password} className='mt-2' />
-          </div>
-
-          {/* Remember Me */}
-          {/* <div className='block mt-4'>
-            <label htmlFor='remember_me' className='inline-flex items-center'>
-              <Checkbox
-                id='remember_me'
-                name='remember'
-                checked={shouldRemember}
-                onChange={(event) => setShouldRemember(event.target.checked)}
-              />
-              <span className='ml-2 text-sm text-gray-600 dark:text-gray-400'>Remember me</span>
-            </label>
-          </div> */}
-
-          <div className='flex items-center justify-end mt-4'>
-            <Link
-              href='/forgot-password'
-              className='underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800'
-            >
-              Forgot your password?
-            </Link>
-
-            <PrimaryButton className='ml-4'>Login</PrimaryButton>
-          </div>
-        </form>
-      </AuthCard>
-    </GuestLayout>
+    <div>
+      <button onClick={handleLogin}>ログイン</button>
+      <button onClick={handleLogout}>ログアウト</button>
+      <div>User: {credential?.user.displayName}</div>
+      <div>State: {state}</div>
+      <div>Error: {String(error)}</div>
+    </div>
   )
 }
 
-export default Login
+export default Page
