@@ -51,19 +51,19 @@ const useAuth = (auth: Auth) => {
           const token = action.payload?.token
           if (token) {
             signInWithCredential(auth, GoogleAuthProvider.credential(token))
-              .then((result) => {
+              .then(async (result) => {
                 setCredential(result)
                 setState('logined')
                 setResult(result)
+                const idToken = await getAuth().currentUser?.getIdToken()
                 // バックエンドにtokenを送る
                 apiClient
                   .post('/auth/login', {
-                    // idToken: credential,
-                    idToken: JSON.stringify(result?._tokenResponse.idToken),
-                    // idToken: JSON.stringify(result?.user.stsTokenManager.accessToken),
+                    idToken: JSON.stringify(idToken),
                   })
                   .then((response: any) => {
                     console.log(response)
+                    // ここでLaravelのPassportでセットした（返却された）Bearer用のトークンをセットする
                   })
                   .catch((err: any) => {
                     console.log(err)
@@ -73,20 +73,6 @@ const useAuth = (auth: Auth) => {
                 setError(e)
                 setState('error')
               })
-            // new Promise((resolve) => {
-            //   // バックエンドにtokenを送る
-            //   apiClient
-            //     .post('/auth/login', {
-            //       // idToken: credential,
-            //       idToken: JSON.stringify(result?._tokenResponse.idToken),
-            //     })
-            //     .then((response: any) => {
-            //       console.log(response)
-            //     })
-            //     .catch((err: any) => {
-            //       console.log(err)
-            //     })
-            // })
           } else {
             signInWithPopup(auth, provider)
               .then((result) => {
