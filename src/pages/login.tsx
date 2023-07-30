@@ -1,3 +1,4 @@
+import { apiClient } from '@/lib/utils/apiClient'
 import { initializeApp } from '@firebase/app'
 import {
   getAuth,
@@ -20,10 +21,27 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_APP_MEASUREMENT_ID,
 }
 
+type ExtraUserCredential = UserCredential & {
+  _tokenResponse: {
+    federatedId: string
+    providerId: 'google.com'
+    email: string
+    emailVerified: boolean
+    localId: string
+    idToken: string
+    refreshToken: string
+    expiresIn: number
+    oauthIdToken: string
+    rawUserInfo: string
+    kind: string
+  }
+}
+
 const useAuth = (auth: Auth) => {
   const [state, setState] = useState<'idel' | 'progress' | 'logined' | 'logouted' | 'error'>('idel')
   const [error, setError] = useState<unknown>('')
-  const [credential, setCredential] = useState<UserCredential>()
+  const [credential, setCredential] = useState<any>()
+  const [result, setResult] = useState<any>()
   const dispatch = useCallback(
     (action: { type: 'login'; payload?: { token: string } } | { type: 'logout' }) => {
       setError('')
@@ -36,11 +54,39 @@ const useAuth = (auth: Auth) => {
               .then((result) => {
                 setCredential(result)
                 setState('logined')
+                setResult(result)
+                // バックエンドにtokenを送る
+                apiClient
+                  .post('/auth/login', {
+                    // idToken: credential,
+                    idToken: JSON.stringify(result?._tokenResponse.idToken),
+                    // idToken: JSON.stringify(result?.user.stsTokenManager.accessToken),
+                  })
+                  .then((response: any) => {
+                    console.log(response)
+                  })
+                  .catch((err: any) => {
+                    console.log(err)
+                  })
               })
               .catch((e) => {
                 setError(e)
                 setState('error')
               })
+            // new Promise((resolve) => {
+            //   // バックエンドにtokenを送る
+            //   apiClient
+            //     .post('/auth/login', {
+            //       // idToken: credential,
+            //       idToken: JSON.stringify(result?._tokenResponse.idToken),
+            //     })
+            //     .then((response: any) => {
+            //       console.log(response)
+            //     })
+            //     .catch((err: any) => {
+            //       console.log(err)
+            //     })
+            // })
           } else {
             signInWithPopup(auth, provider)
               .then((result) => {
@@ -69,7 +115,7 @@ const useAuth = (auth: Auth) => {
     },
     [auth],
   )
-  return { state, error, credential, dispatch }
+  return { state, error, credential, result, dispatch }
 }
 
 const auth = getAuth(initializeApp(firebaseConfig))
