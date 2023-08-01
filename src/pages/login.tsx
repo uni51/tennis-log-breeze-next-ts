@@ -1,29 +1,27 @@
-import { apiClient } from '@/lib/utils/apiClient'
+// import { apiClient } from '@/lib/utils/apiClient'
 import { initializeApp } from '@firebase/app'
 import {
   getAuth,
   GoogleAuthProvider,
   signInWithPopup,
-  UserCredential,
   signInWithCredential,
   signOut,
+  // Auth not found in '@firebase/auth' のエラーが出るので
+  // eslint-disable-next-line
   Auth,
 } from '@firebase/auth'
 import { useCallback, useEffect, useState } from 'react'
 import { useAuth } from '@/hooks/auth'
+import { firebaseConfig } from '@/lib/firebase-helpers'
 import { LoginError } from '@/types/authError'
 
-import useSWR from 'swr'
-import { firebaseConfig } from '@/lib/firebase-helpers'
-
 const useAuthWithFirebase = (auth: Auth) => {
-  const { firebaseLogin, useSWRBearerToken } = useAuth({
+  const { firebaseLogin } = useAuth({
     middleware: 'guest',
     redirectIfAuthenticated: '/dashboard',
   })
   const [errors, setErrors] = useState<LoginError | null>(null)
   const [status, setStatus] = useState<string | null>(null)
-  const { data, mutate } = useSWRBearerToken('initaial data')
   //------------------
   const [state, setState] = useState<'idel' | 'progress' | 'logined' | 'logouted' | 'error'>('idel')
   const [error, setError] = useState<unknown>('')

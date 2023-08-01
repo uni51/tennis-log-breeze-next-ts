@@ -1,6 +1,6 @@
-import axios from 'axios'
-import { getAuth } from '@firebase/auth'
 import { initializeApp } from '@firebase/app'
+import { getAuth } from '@firebase/auth'
+import axios from 'axios'
 import { firebaseConfig } from '@/lib/firebase-helpers'
 
 export const apiClient = axios.create({

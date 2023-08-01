@@ -69,15 +69,15 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
       })
   }
 
-  const useSWRBearerToken = (
-    initailData: string,
-  ): { data: string | undefined; mutate: (updateData: string) => void } => {
-    const { data, mutate } = useSWR('bearerToken', null, {
-      fallbackData: initailData,
-    })
+  // const useSWRBearerToken = (
+  //   initailData: string,
+  // ): { data: string | undefined; mutate: (updateData: string) => void } => {
+  //   const { data, mutate } = useSWR('bearerToken', null, {
+  //     fallbackData: initailData,
+  //   })
 
-    return { data: data, mutate: mutate }
-  }
+  //   return { data: data, mutate: mutate }
+  // }
 
   const firebaseLogin = async (args: IApiRequestLogin) => {
     const { setErrors, setStatus, ...props } = args
@@ -207,7 +207,6 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
 
   return {
     user,
-    useSWRBearerToken,
     register,
     login,
     firebaseLogin,
