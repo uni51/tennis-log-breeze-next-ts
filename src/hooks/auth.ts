@@ -69,6 +69,39 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
       })
   }
 
+  const useSWRBearerToken = (
+    initailData: string,
+  ): { data: string | undefined; mutate: (updateData: string) => void } => {
+    const { data, mutate } = useSWR('bearerToken', null, {
+      fallbackData: initailData,
+    })
+
+    return { data: data, mutate: mutate }
+  }
+
+  const firebaseLogin = async (args: IApiRequestLogin) => {
+    const { setErrors, setStatus, ...props } = args
+
+    await csrf()
+
+    setErrors({
+      email: undefined,
+      password: undefined,
+    })
+    setStatus(null)
+
+    apiClient
+      .post('/auth/login', props)
+      // useSWR の mutate は、keyが対応付けられているため、keyの指定は必要ない
+      .then((response) => {
+        mutate()
+      })
+      .catch((error) => {
+        if (error.response.status !== 422) throw error
+        setErrors(error.response.data.errors)
+      })
+  }
+
   const login = async (args: IApiRequestLogin) => {
     const { setErrors, setStatus, ...props } = args
 
@@ -174,8 +207,10 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
 
   return {
     user,
+    useSWRBearerToken,
     register,
     login,
+    firebaseLogin,
     forgotPassword,
     resetPassword,
     resendEmailVerification,

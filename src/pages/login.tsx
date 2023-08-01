@@ -10,34 +10,21 @@ import {
   Auth,
 } from '@firebase/auth'
 import { useCallback, useEffect, useState } from 'react'
+import { useAuth } from '@/hooks/auth'
+import { LoginError } from '@/types/authError'
 
-const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_APP_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_APP_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_APP_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_APP_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_APP_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_APP_APP_ID,
-  measurementId: process.env.NEXT_PUBLIC_APP_MEASUREMENT_ID,
-}
+import useSWR from 'swr'
+import { firebaseConfig } from '@/lib/firebase-helpers'
 
-type ExtraUserCredential = UserCredential & {
-  _tokenResponse: {
-    federatedId: string
-    providerId: 'google.com'
-    email: string
-    emailVerified: boolean
-    localId: string
-    idToken: string
-    refreshToken: string
-    expiresIn: number
-    oauthIdToken: string
-    rawUserInfo: string
-    kind: string
-  }
-}
-
-const useAuth = (auth: Auth) => {
+const useAuthWithFirebase = (auth: Auth) => {
+  const { firebaseLogin, useSWRBearerToken } = useAuth({
+    middleware: 'guest',
+    redirectIfAuthenticated: '/dashboard',
+  })
+  const [errors, setErrors] = useState<LoginError | null>(null)
+  const [status, setStatus] = useState<string | null>(null)
+  const { data, mutate } = useSWRBearerToken('initaial data')
+  //------------------
   const [state, setState] = useState<'idel' | 'progress' | 'logined' | 'logouted' | 'error'>('idel')
   const [error, setError] = useState<unknown>('')
   const [credential, setCredential] = useState<any>()
@@ -55,19 +42,26 @@ const useAuth = (auth: Auth) => {
                 setCredential(result)
                 setState('logined')
                 setResult(result)
-                const idToken = await getAuth().currentUser?.getIdToken()
+                const idToken = JSON.stringify(await getAuth().currentUser?.getIdToken())
+                firebaseLogin({
+                  idToken,
+                  setErrors,
+                  setStatus,
+                })
+                // mutate(response.data)
+                // console.log(data)
                 // バックエンドにtokenを送る
-                apiClient
-                  .post('/auth/login', {
-                    idToken: JSON.stringify(idToken),
-                  })
-                  .then((response: any) => {
-                    console.log(response)
-                    // ここでLaravelのPassportでセットした（返却された）Bearer用のトークンをセットする
-                  })
-                  .catch((err: any) => {
-                    console.log(err)
-                  })
+                // apiClient
+                //   .post('/auth/login', {
+                //     idToken: JSON.stringify(idToken),
+                //   })
+                //   .then((response: any) => {
+                //     console.log(response)
+                //     // ここでLaravelのPassportでセットした（返却された）Bearer用のトークンをセットする
+                //   })
+                //   .catch((err: any) => {
+                //     console.log(err)
+                //   })
               })
               .catch((e) => {
                 setError(e)
@@ -108,7 +102,7 @@ const auth = getAuth(initializeApp(firebaseConfig))
 const provider = new GoogleAuthProvider()
 
 const Page = () => {
-  const { state, dispatch, credential, error } = useAuth(auth)
+  const { state, dispatch, credential, error } = useAuthWithFirebase(auth)
   useEffect(() => {
     const token = sessionStorage.getItem('token')
     if (token) {

@@ -1,5 +1,7 @@
 import axios from 'axios'
 import { getAuth } from '@firebase/auth'
+import { initializeApp } from '@firebase/app'
+import { firebaseConfig } from '@/lib/firebase-helpers'
 
 export const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_FROM_CLIENT_BASE_URL,
@@ -11,8 +13,10 @@ export const apiClient = axios.create({
 
 apiClient.interceptors.request.use(async (request) => {
   //リクエスト前に毎回idTokenを取得する
-  const idToken = await getAuth().currentUser?.getIdToken()
-  //console.log(currentUser.accessToken)
-  request.headers.Authorization = idToken
+  const app = initializeApp(firebaseConfig)
+  const auth = getAuth(app)
+  const idToken = await auth.currentUser?.getIdToken()
+  //console.log(auth.currentUser.accessToken)
+  request.headers!.Authorization = `Bearer ${idToken}`
   return request
 })
