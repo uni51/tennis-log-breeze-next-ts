@@ -15,7 +15,8 @@ apiClient.interceptors.request.use(async (request) => {
   //リクエスト前に毎回idTokenを取得する
   const app = initializeApp(firebaseConfig)
   const auth = getAuth(app)
-  const idToken = await auth.currentUser?.getIdToken()
+  // const idToken = await auth.currentUser?.getIdToken()
+  const idToken = sessionStorage.getItem('idToken')
   //console.log(auth.currentUser.accessToken)
   request.headers!.Authorization = `Bearer ${idToken}`
   return request
