@@ -40,7 +40,6 @@ const useAuthWithFirebase = (auth: Auth) => {
                 setCredential(result)
                 setState('logined')
                 setResult(result)
-                // const idToken = JSON.stringify(await getAuth().currentUser?.getIdToken())
                 firebaseLogin({
                   idToken: JSON.stringify(token),
                   setErrors,
