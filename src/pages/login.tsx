@@ -41,7 +41,8 @@ const useAuthWithFirebase = (auth: Auth) => {
                 setState('logined')
                 setResult(result)
                 firebaseLogin({
-                  idToken: JSON.stringify(token),
+                  idToken: JSON.stringify(result._tokenResponse.idToken),
+                  // idToken: JSON.stringify(token),
                   setErrors,
                   setStatus,
                 })
