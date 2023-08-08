@@ -84,6 +84,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
 
     await csrf()
 
+    // TODO：要変更
     setErrors({
       email: undefined,
       password: undefined,
@@ -173,6 +174,15 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
     window.location.pathname = '/login'
   }
 
+  const firebaseLogout = async () => {
+    if (!error) {
+      // useSWR の mutate は、keyが対応付けられているため、keyの指定は必要ない
+      await apiClient.post('/auth/logout').then(() => mutate())
+    }
+
+    window.location.pathname = '/login'
+  }
+
   const renderLogin = () => {
     window.location.pathname = '/login'
   }
@@ -215,6 +225,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
     resetPassword,
     resendEmailVerification,
     logout,
+    firebaseLogout,
     renderLogin,
     checkLoggedIn,
   }

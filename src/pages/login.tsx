@@ -16,7 +16,7 @@ import { firebaseConfig } from '@/lib/firebase-helpers'
 import { LoginError } from '@/types/authError'
 
 const useAuthWithFirebase = (auth: Auth) => {
-  const { firebaseLogin } = useAuth({
+  const { firebaseLogin, firebaseLogout } = useAuth({
     middleware: 'guest',
     redirectIfAuthenticated: '/dashboard',
   })
@@ -41,6 +41,8 @@ const useAuthWithFirebase = (auth: Auth) => {
                 setState('logined')
                 setResult(result)
                 firebaseLogin({
+                  // idToken: JSON.stringify(result._tokenResponse.idToken),
+                  /* @ts-ignore */
                   idToken: JSON.stringify(result._tokenResponse.idToken),
                   // idToken: JSON.stringify(token),
                   setErrors,
@@ -83,6 +85,7 @@ const useAuthWithFirebase = (auth: Auth) => {
             .then(() => {
               setCredential(undefined)
               setState('logouted')
+              firebaseLogout()
             })
             .catch((e) => {
               setError(e)
