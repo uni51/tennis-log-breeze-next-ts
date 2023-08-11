@@ -179,6 +179,8 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
       // useSWR の mutate は、keyが対応付けられているため、keyの指定は必要ない
       await apiClient.post('/auth/logout').then(() => mutate())
     }
+    sessionStorage.removeItem('token')
+    sessionStorage.removeItem('idToken')
 
     window.location.pathname = '/login'
   }

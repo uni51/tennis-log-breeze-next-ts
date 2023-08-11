@@ -115,7 +115,7 @@ const Navigation = (user: User) => {
                 <ResponsiveNavButton onClick={renderLogin}>Login</ResponsiveNavButton>
               )}
               {!isEmptyObject(user) && (
-                <ResponsiveNavButton onClick={logout}>Logout</ResponsiveNavButton>
+                <ResponsiveNavButton onClick={firebaseLogout}>Logout</ResponsiveNavButton>
               )}
             </div>
           </div>

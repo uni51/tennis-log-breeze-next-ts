@@ -42,9 +42,8 @@ const useAuthWithFirebase = (auth: Auth) => {
                 setResult(result)
                 firebaseLogin({
                   // idToken: JSON.stringify(result._tokenResponse.idToken),
-                  /* @ts-ignore */
-                  idToken: JSON.stringify(result._tokenResponse.idToken),
-                  // idToken: JSON.stringify(token),
+                  // idToken: result._tokenResponse.oauthIdToken,
+                  idToken: await auth.currentUser?.getIdToken(),
                   setErrors,
                   setStatus,
                 })
@@ -104,6 +103,7 @@ const provider = new GoogleAuthProvider()
 
 const Page = () => {
   const { state, dispatch, credential, error } = useAuthWithFirebase(auth)
+
   useEffect(() => {
     const token = sessionStorage.getItem('token')
     console.log(token)
@@ -111,12 +111,12 @@ const Page = () => {
       dispatch({ type: 'login', payload: { token } })
     }
   }, [dispatch])
+
   useEffect(() => {
     if (credential) {
       console.log(credential)
       const token = GoogleAuthProvider.credentialFromResult(credential)?.idToken
       token && sessionStorage.setItem('token', token)
-      token && sessionStorage.setItem('idToken', credential._tokenResponse.idToken)
     } else {
       sessionStorage.removeItem('token')
       sessionStorage.removeItem('idToken')
