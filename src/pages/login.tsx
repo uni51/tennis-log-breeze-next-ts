@@ -20,8 +20,8 @@ const useAuthWithFirebase = (auth: Auth) => {
     middleware: 'guest',
     redirectIfAuthenticated: '/dashboard',
   })
-  const [errors, setErrors] = useState<LoginError | null>(null)
-  const [status, setStatus] = useState<string | null>(null)
+  const [, setErrors] = useState<LoginError | null>(null)
+  const [, setStatus] = useState<string | null>(null)
   //------------------
   const [state, setState] = useState<'idel' | 'progress' | 'logined' | 'logouted' | 'error'>('idel')
   const [error, setError] = useState<unknown>('')
@@ -41,26 +41,10 @@ const useAuthWithFirebase = (auth: Auth) => {
                 setState('logined')
                 setResult(result)
                 firebaseLogin({
-                  // idToken: JSON.stringify(result._tokenResponse.idToken),
-                  // idToken: result._tokenResponse.oauthIdToken,
                   idToken: await auth.currentUser?.getIdToken(),
                   setErrors,
                   setStatus,
                 })
-                // mutate(response.data)
-                // console.log(data)
-                // バックエンドにtokenを送る
-                // apiClient
-                //   .post('/auth/login', {
-                //     idToken: JSON.stringify(idToken),
-                //   })
-                //   .then((response: any) => {
-                //     console.log(response)
-                //     // ここでLaravelのPassportでセットした（返却された）Bearer用のトークンをセットする
-                //   })
-                //   .catch((err: any) => {
-                //     console.log(err)
-                //   })
               })
               .catch((e) => {
                 setError(e)
@@ -117,6 +101,7 @@ const Page = () => {
       console.log(credential)
       const token = GoogleAuthProvider.credentialFromResult(credential)?.idToken
       token && sessionStorage.setItem('token', token)
+      token && dispatch({ type: 'login', payload: { token } })
     } else {
       sessionStorage.removeItem('token')
       sessionStorage.removeItem('idToken')
