@@ -95,8 +95,8 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
       .post('/auth/login', props)
       // useSWR の mutate は、keyが対応付けられているため、keyの指定は必要ない
       .then((response) => {
-        mutate()
         sessionStorage.setItem('idToken', response.data.token)
+        mutate()
       })
       .catch((error) => {
         if (error.response.status !== 422) throw error
@@ -177,11 +177,12 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
   const firebaseLogout = async () => {
     if (!error) {
       // useSWR の mutate は、keyが対応付けられているため、keyの指定は必要ない
-      await apiClient.post('/auth/logout').then(() => mutate())
+      await apiClient.post('/auth/logout').then(() => {
+        sessionStorage.removeItem('token')
+        sessionStorage.removeItem('idToken')
+        mutate()
+      })
     }
-    sessionStorage.removeItem('token')
-    sessionStorage.removeItem('idToken')
-
     window.location.pathname = '/login'
   }
 

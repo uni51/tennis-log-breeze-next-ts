@@ -98,7 +98,7 @@ const Page = () => {
 
   useEffect(() => {
     if (credential) {
-      console.log(credential)
+      // console.log(credential)
       const token = GoogleAuthProvider.credentialFromResult(credential)?.idToken
       token && sessionStorage.setItem('token', token)
       if (token && checkToken !== token) {
