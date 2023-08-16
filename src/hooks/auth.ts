@@ -95,6 +95,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
       .post('/auth/login', props)
       // useSWR の mutate は、keyが対応付けられているため、keyの指定は必要ない
       .then((response) => {
+        // console.log(response.data)
         sessionStorage.setItem('idToken', response.data.token)
         mutate()
       })
