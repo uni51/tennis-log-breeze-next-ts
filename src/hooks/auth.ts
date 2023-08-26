@@ -178,7 +178,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
   const firebaseLogout = async () => {
     if (!error) {
       // useSWR の mutate は、keyが対応付けられているため、keyの指定は必要ない
-      await apiClient.post('/auth/logout').then(() => {
+      await apiClient.get('/auth/logout').then(() => {
         sessionStorage.removeItem('token')
         sessionStorage.removeItem('idToken')
         mutate()
