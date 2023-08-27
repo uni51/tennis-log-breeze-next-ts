@@ -49,6 +49,8 @@ const useAuthWithFirebase = (auth: Auth) => {
               .catch((e) => {
                 setError(e)
                 setState('error')
+                // FirebaseのTokenが期限切れの場合は、ここでエラーになる
+                // ex.) FirebaseError: Firebase: ID Token issued at 1693031990 is stale to sign-in. (auth/invalid-credential).
               })
           } else {
             signInWithPopup(auth, provider)
