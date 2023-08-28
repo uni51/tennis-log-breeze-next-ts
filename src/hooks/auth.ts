@@ -3,6 +3,9 @@ import { useEffect } from 'react'
 import useSWR from 'swr'
 import { apiClient } from '@/lib/utils/apiClient'
 import { LoginError } from '@/types/authError'
+import { initializeApp } from '@firebase/app'
+import { getAuth } from '@firebase/auth'
+import { firebaseConfig } from '@/lib/firebase-helpers'
 
 declare type AuthMiddleware = 'auth' | 'guest'
 
@@ -35,13 +38,34 @@ export interface User {
   }
 }
 
+const auth = getAuth(initializeApp(firebaseConfig))
+// const idToken = async () => await auth.currentUser?.getIdToken(true)
+
 export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
   const router = useRouter()
 
   const { data: user, error, mutate } = useSWR<User>('/api/user', () =>
     apiClient
       .get('/api/user')
-      .then((res) => res.data)
+      .then(async (res) => {
+        console.log(res)
+        // Tokenが有効期限切れの場合の処理
+        if (res.status === 204) {
+          const idToken = await auth.currentUser?.getIdToken(true)
+          console.log(idToken)
+          console.log(204)
+          firebaseLogin({
+            idToken: idToken,
+            setErrors: function (errors: LoginError): void {
+              //throw new Error('Function not implemented.')
+            },
+            setStatus: function (value: any): void {
+              // throw new Error('Function not implemented.')
+            },
+          })
+        }
+        return res.data
+      })
       .catch((error) => {
         if (error.response.status !== 409) throw error
 
@@ -96,7 +120,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
       // useSWR の mutate は、keyが対応付けられているため、keyの指定は必要ない
       .then((response) => {
         // console.log(response.data)
-        sessionStorage.setItem('idToken', response.data.token)
+        localStorage.setItem('idToken', response.data.token)
         mutate()
       })
       .catch((error) => {
