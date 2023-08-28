@@ -11,10 +11,11 @@ export const apiClient = axios.create({
 
 apiClient.interceptors.request.use((request) => {
   //リクエスト前に毎回idTokenを取得する
-  // const cookie = parseCookies()
-  // console.log(cookie)
+  const cookie = parseCookies()
+  console.log(cookie)
   // const idToken = sessionStorage.getItem('idToken')
-  const idToken = localStorage.getItem('idToken')
+  // const idToken = localStorage.getItem('idToken')
+  const idToken = cookie.appToken
   request.headers!.Authorization = `Bearer ${idToken}`
   return request
 })
