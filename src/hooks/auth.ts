@@ -120,11 +120,11 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
       // useSWR の mutate は、keyが対応付けられているため、keyの指定は必要ない
       .then((response) => {
         // console.log(response.data)
-        localStorage.setItem('idToken', response.data.token)
+        // localStorage.setItem('idToken', response.data.token)
         mutate()
       })
       .catch((error) => {
-        if (error.response.status !== 422) throw error
+        if (error.response?.status !== 422) throw error
         setErrors(error.response.data.errors)
       })
   }
