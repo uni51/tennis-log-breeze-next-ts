@@ -29,7 +29,6 @@ const Page = () => {
       }
     } else {
       sessionStorage.removeItem('token')
-      sessionStorage.removeItem('idToken')
     }
   }, [credential])
 
