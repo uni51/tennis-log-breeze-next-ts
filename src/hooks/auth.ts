@@ -48,12 +48,10 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
     apiClient
       .get('/api/user')
       .then(async (res) => {
-        console.log(res)
-        // Tokenが有効期限切れの場合の処理
+        // console.log(res)
+        // appTokenの有効期限切れによりログアウトした場合は、Firebaseの新しいTokenを用いてログインし直す
         if (res.status === 204) {
           const idToken = await auth.currentUser?.getIdToken(true)
-          console.log(idToken)
-          console.log(204)
           firebaseLogin({
             idToken: idToken,
             setErrors: function (errors: LoginError): void {
