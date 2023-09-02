@@ -1,11 +1,11 @@
+import { initializeApp } from '@firebase/app'
+import { getAuth } from '@firebase/auth'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import useSWR from 'swr'
+import { firebaseConfig } from '@/lib/firebase-helpers'
 import { apiClient } from '@/lib/utils/apiClient'
 import { LoginError } from '@/types/authError'
-import { initializeApp } from '@firebase/app'
-import { getAuth } from '@firebase/auth'
-import { firebaseConfig } from '@/lib/firebase-helpers'
 
 declare type AuthMiddleware = 'auth' | 'guest'
 

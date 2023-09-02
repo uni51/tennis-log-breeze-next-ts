@@ -2,8 +2,8 @@
 import { initializeApp } from '@firebase/app'
 import { getAuth, GoogleAuthProvider } from '@firebase/auth'
 import { useEffect, useState } from 'react'
-import { firebaseConfig } from '@/lib/firebase-helpers'
 import { useAuthWithFirebase } from '@/hooks/useAuthWithFirebase'
+import { firebaseConfig } from '@/lib/firebase-helpers'
 
 const auth = getAuth(initializeApp(firebaseConfig))
 
