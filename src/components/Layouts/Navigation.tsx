@@ -6,7 +6,8 @@ import { User, useAuth } from '@/hooks/auth'
 import { isEmptyObject } from '@/lib/common-helper'
 
 const Navigation = (user: User) => {
-  const { logout, renderLogin } = useAuth({ middleware: 'guest' })
+  // const { logout, renderLogin } = useAuth({ middleware: 'guest' })
+  const { firebaseLogout, renderLogin } = useAuth({ middleware: 'guest' })
 
   const [open, setOpen] = useState(false)
   // console.log(isEmptyObject(user))
@@ -43,7 +44,9 @@ const Navigation = (user: User) => {
             >
               {/* Authentication */}
               {isEmptyObject(user) && <DropdownButton onClick={renderLogin}>Login</DropdownButton>}
-              {!isEmptyObject(user) && <DropdownButton onClick={logout}>Logout</DropdownButton>}
+              {!isEmptyObject(user) && (
+                <DropdownButton onClick={firebaseLogout}>Logout</DropdownButton>
+              )}
             </Dropdown>
           </div>
 
@@ -112,7 +115,7 @@ const Navigation = (user: User) => {
                 <ResponsiveNavButton onClick={renderLogin}>Login</ResponsiveNavButton>
               )}
               {!isEmptyObject(user) && (
-                <ResponsiveNavButton onClick={logout}>Logout</ResponsiveNavButton>
+                <ResponsiveNavButton onClick={firebaseLogout}>Logout</ResponsiveNavButton>
               )}
             </div>
           </div>

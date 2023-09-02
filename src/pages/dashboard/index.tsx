@@ -28,6 +28,11 @@ const DashboardTop = () => {
   }, [])
 
   if (isLoading) return <Loading />
+  // if (!user) {
+  //   router.push('/login')
+  //   return
+  // }
+  if (!user) return null
 
   return (
     <AppLayout
