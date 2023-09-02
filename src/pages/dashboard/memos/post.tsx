@@ -30,7 +30,7 @@ const Post: NextPage = () => {
   // ルーター定義
   const router = useRouter()
   const [validation, setValidation] = useState<Validation>({})
-  const { checkLoggedIn } = useAuth({ middleware: 'auth' })
+  const { checkLoggedIn, user } = useAuth({ middleware: 'auth' })
   const [category, setCategory] = useState<any[]>([])
   const [status, setStatus] = useState<any[]>([])
 
@@ -68,6 +68,8 @@ const Post: NextPage = () => {
     }
     init()
   }, [])
+
+  if (!user) return null
 
   // メモの登録
   const createMemo = (postData: MemoForm) => {

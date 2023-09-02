@@ -1,6 +1,9 @@
+import { initializeApp } from '@firebase/app'
+import { getAuth } from '@firebase/auth'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import useSWR from 'swr'
+import { firebaseConfig } from '@/lib/firebase-helpers'
 import { apiClient } from '@/lib/utils/apiClient'
 import { LoginError } from '@/types/authError'
 
@@ -35,13 +38,32 @@ export interface User {
   }
 }
 
+const auth = getAuth(initializeApp(firebaseConfig))
+// const idToken = async () => await auth.currentUser?.getIdToken(true)
+
 export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
   const router = useRouter()
 
   const { data: user, error, mutate } = useSWR<User>('/api/user', () =>
     apiClient
       .get('/api/user')
-      .then((res) => res.data)
+      .then(async (res) => {
+        // console.log(res)
+        // appTokenの有効期限切れによりログアウトした場合は、Firebaseの新しいTokenを用いてログインし直す
+        if (res.status === 204) {
+          const idToken = await auth.currentUser?.getIdToken(true)
+          firebaseLogin({
+            idToken: idToken,
+            setErrors: function (errors: LoginError): void {
+              //throw new Error('Function not implemented.')
+            },
+            setStatus: function (value: any): void {
+              // throw new Error('Function not implemented.')
+            },
+          })
+        }
+        return res.data
+      })
       .catch((error) => {
         if (error.response.status !== 409) throw error
 
@@ -65,6 +87,42 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
       .catch((error) => {
         if (error.response.status !== 422) throw error
 
+        setErrors(error.response.data.errors)
+      })
+  }
+
+  // const useSWRBearerToken = (
+  //   initailData: string,
+  // ): { data: string | undefined; mutate: (updateData: string) => void } => {
+  //   const { data, mutate } = useSWR('bearerToken', null, {
+  //     fallbackData: initailData,
+  //   })
+
+  //   return { data: data, mutate: mutate }
+  // }
+
+  const firebaseLogin = async (args: IApiRequestLogin) => {
+    const { setErrors, setStatus, ...props } = args
+
+    await csrf()
+
+    // TODO：要変更
+    setErrors({
+      email: undefined,
+      password: undefined,
+    })
+    setStatus(null)
+
+    apiClient
+      .post('/auth/login', props)
+      // useSWR の mutate は、keyが対応付けられているため、keyの指定は必要ない
+      .then((response) => {
+        // console.log(response.data)
+        // localStorage.setItem('idToken', response.data.token)
+        mutate()
+      })
+      .catch((error) => {
+        if (error.response?.status !== 422) throw error
         setErrors(error.response.data.errors)
       })
   }
@@ -139,6 +197,17 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
     window.location.pathname = '/login'
   }
 
+  const firebaseLogout = async () => {
+    if (!error) {
+      // useSWR の mutate は、keyが対応付けられているため、keyの指定は必要ない
+      await apiClient.get('/auth/logout').then(() => {
+        sessionStorage.removeItem('token')
+        mutate()
+      })
+    }
+    window.location.pathname = '/login'
+  }
+
   const renderLogin = () => {
     window.location.pathname = '/login'
   }
@@ -176,10 +245,12 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
     user,
     register,
     login,
+    firebaseLogin,
     forgotPassword,
     resetPassword,
     resendEmailVerification,
     logout,
+    firebaseLogout,
     renderLogin,
     checkLoggedIn,
   }
