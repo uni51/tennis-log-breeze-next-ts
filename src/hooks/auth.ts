@@ -6,7 +6,6 @@ import useSWR from 'swr'
 import { firebaseConfig } from '@/lib/firebase-helpers'
 import { apiClient } from '@/lib/utils/apiClient'
 import { LoginError } from '@/types/authError'
-import Cookie from 'universal-cookie'
 
 declare type AuthMiddleware = 'auth' | 'guest'
 
@@ -41,12 +40,8 @@ export interface User {
 
 const auth = getAuth(initializeApp(firebaseConfig))
 
-const cookie = new Cookie()
-
 export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
   const router = useRouter()
-
-  const appToken = cookie.get('appToken')
 
   // const { data: user, error, mutate } = useSWR<User>('/api/user', () =>
   const { data: user, error, mutate } = useSWR<User>(
