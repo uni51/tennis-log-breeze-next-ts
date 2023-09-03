@@ -50,6 +50,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
 
   // const { data: user, error, mutate } = useSWR<User>('/api/user', () =>
   const { data: user, error, mutate } = useSWR<User>(
+    // ['/api/user', appToken],
     '/api/user',
     () =>
       apiClient
