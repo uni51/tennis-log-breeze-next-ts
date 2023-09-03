@@ -6,6 +6,7 @@ import useSWR from 'swr'
 import { firebaseConfig } from '@/lib/firebase-helpers'
 import { apiClient } from '@/lib/utils/apiClient'
 import { LoginError } from '@/types/authError'
+import Cookie from 'universal-cookie'
 
 declare type AuthMiddleware = 'auth' | 'guest'
 
@@ -40,34 +41,45 @@ export interface User {
 
 const auth = getAuth(initializeApp(firebaseConfig))
 
+const cookie = new Cookie()
+
 export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
   const router = useRouter()
 
-  const { data: user, error, mutate } = useSWR<User>('/api/user', () =>
-    apiClient
-      .get('/api/user')
-      .then(async (res) => {
-        // console.log(res)
-        // appTokenの有効期限切れによりログアウトした場合は、Firebaseの新しいTokenを用いてログインし直す
-        if (res.status === 204) {
-          const idToken = await auth.currentUser?.getIdToken(true)
-          firebaseLogin({
-            idToken: idToken,
-            setErrors: function (errors: LoginError): void {
-              //throw new Error('Function not implemented.')
-            },
-            setStatus: function (value: any): void {
-              // throw new Error('Function not implemented.')
-            },
-          })
-        }
-        return res.data
-      })
-      .catch((error) => {
-        if (error.response.status !== 409) throw error
+  const appToken = cookie.get('appToken')
 
-        router.push('/verify-email')
-      }),
+  // const { data: user, error, mutate } = useSWR<User>('/api/user', () =>
+  const { data: user, error, mutate } = useSWR<User>(
+    '/api/user',
+    () =>
+      apiClient
+        .get('/api/user')
+        .then(async (res) => {
+          // console.log(res)
+          // appTokenの有効期限切れによりログアウトした場合は、Firebaseの新しいTokenを用いてログインし直す
+          if (res.status === 204) {
+            const idToken = await auth.currentUser?.getIdToken(true)
+            firebaseLogin({
+              idToken: idToken,
+              setErrors: function (errors: LoginError): void {
+                //throw new Error('Function not implemented.')
+              },
+              setStatus: function (value: any): void {
+                // throw new Error('Function not implemented.')
+              },
+            })
+          }
+          return res.data
+        })
+        .catch((error) => {
+          if (error.response.status !== 409) throw error
+          router.push('/verify-email')
+        }),
+    {
+      revalidateOnMount: undefined,
+      revalidateIfStale: false,
+      dedupingInterval: 10000, // 重複したリクエストを削除する期間を、10秒で設定する
+    },
   )
 
   const csrf = () => apiClient.get('/auth/sanctum/csrf-cookie')
