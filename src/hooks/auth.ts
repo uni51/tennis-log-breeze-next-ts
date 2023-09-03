@@ -39,7 +39,6 @@ export interface User {
 }
 
 const auth = getAuth(initializeApp(firebaseConfig))
-// const idToken = async () => await auth.currentUser?.getIdToken(true)
 
 export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
   const router = useRouter()
