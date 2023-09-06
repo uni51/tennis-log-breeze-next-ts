@@ -245,7 +245,11 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
       user?.data?.email_verified_at
     )
       router.push(redirectIfAuthenticated)
-    if (middleware === 'auth' && error) logout()
+    if (middleware === 'auth' && error) {
+      // 念の為に追加
+      sessionStorage.removeItem('token')
+      logout()
+    }
   }, [user, error])
 
   return {
