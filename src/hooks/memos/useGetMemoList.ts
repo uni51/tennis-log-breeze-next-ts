@@ -14,8 +14,13 @@ export const useGetMemoList = ({ preApiUrl, pageIndex, categoryNumber }: Props) 
 
   const apiUrl = getMemoListApiUrl({ preApiUrl, pageIndex, categoryNumber })
 
-  const { data, error, isLoading } = useSWR<MemoListReturnType>(apiUrl, () =>
-    apiClient.get(apiUrl).then((res: any) => res.data),
+  const { data, error, isLoading } = useSWR<MemoListReturnType>(
+    apiUrl,
+    () => apiClient.get(apiUrl).then((res: any) => res.data),
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    },
   )
 
   // キャッシュ確認時に利用
