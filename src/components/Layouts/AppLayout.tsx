@@ -14,6 +14,7 @@ import {
 import React, { PropsWithChildren, Fragment, ReactNode, useState } from 'react'
 import Navigation from '@/components/Layouts/Navigation'
 import { useAuth } from '@/hooks/auth'
+import Link from 'next/link'
 
 interface Props {
   header: ReactNode
@@ -163,9 +164,9 @@ const AppLayout = ({ header, children }: PropsWithChildren<Props>) => {
                   <div className='mt-5 h-0 flex-1 overflow-y-auto'>
                     <nav className='space-y-1 px-2'>
                       {navigation.map((item) => (
-                        <a
+                        <Link
                           key={item.name}
-                          href={item.href}
+                          href={item.href ?? ''} // 一旦暫定的に、hrefが存在しない場合は、空文字を指定
                           className={classNames(
                             item.current
                               ? 'bg-gray-100 text-gray-900'
@@ -183,7 +184,7 @@ const AppLayout = ({ header, children }: PropsWithChildren<Props>) => {
                             aria-hidden='true'
                           />
                           {item.name}
-                        </a>
+                        </Link>
                       ))}
                     </nav>
                   </div>
@@ -212,7 +213,7 @@ const AppLayout = ({ header, children }: PropsWithChildren<Props>) => {
                 {navigation.map((item) =>
                   !item.children ? (
                     <div key={item.name}>
-                      <a
+                      <Link
                         href={item.href}
                         className={classNames(
                           item.current
@@ -231,7 +232,7 @@ const AppLayout = ({ header, children }: PropsWithChildren<Props>) => {
                           aria-hidden='true'
                         />
                         {item.name}
-                      </a>
+                      </Link>
                     </div>
                   ) : (
                     <Disclosure as='div' key={item.name} className='space-y-1'>
