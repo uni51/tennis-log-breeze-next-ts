@@ -52,10 +52,6 @@ export const useAuthWithFirebase = (auth: Auth) => {
                 // console.log(e.code)
                 // console.log(e.message)
                 // FirebaseのTokenが期限切れの場合や、Firebaseのアカウントが無効化された場合は、ログアウト状態にする
-                // 但し、初回ログインした後は、Laravel側で発行するtokenのみをチェックしているので、1週間以上経過しないと
-                // FirebaseのTokenの有効期限によるログアウト状態にはならない？
-                // Laravel側での独自トークンの有効期限が切れた状態（かつ、その場合は FirebaseのTokenも有効期限切れ）の場合
-                //（セッションストレージにTokenを入れている現状では、FirebaseのTokenが期限切れの場合は、ログアウト状態になるはず）
                 if (e.code === 'auth/invalid-credential') {
                   setCredential(undefined)
                   setState('logouted')
