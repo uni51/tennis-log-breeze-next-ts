@@ -1,3 +1,4 @@
+'use client'
 import { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
@@ -9,10 +10,12 @@ import DashboardMemoList from '@/features/memos/dashboard/components/DashboardMe
 import { useAuth } from '@/hooks/auth'
 import { onError } from '@/lib/error-helper'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
+// import { useSWRConfig } from 'swr'
 
 const DashboardMemoIndex: NextPage = () => {
   const router = useRouter()
   const { checkLoggedIn, user } = useAuth({ middleware: 'auth' })
+  // const { cache } = useSWRConfig()
   const { page, category } = router.query
 
   const pageNumber = page === undefined ? 1 : Number(page)
@@ -20,6 +23,7 @@ const DashboardMemoIndex: NextPage = () => {
 
   // Fetch用URL組み立て
   useEffect(() => {
+    // console.log(cache)
     // ログイン中か判定
     const init = async () => {
       // ログイン中か判定
@@ -31,6 +35,7 @@ const DashboardMemoIndex: NextPage = () => {
     }
     init()
   }, [router, pageNumber, categoryNumber])
+  // }, [router, pageNumber, categoryNumber, cache])
 
   const headLine = user?.data?.name
     ? `${user.data.name}さんのメモ一覧${getMemosListByCategoryHeadLineTitle(categoryNumber)}`

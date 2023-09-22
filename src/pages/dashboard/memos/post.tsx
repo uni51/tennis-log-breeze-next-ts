@@ -30,7 +30,7 @@ const Post: NextPage = () => {
   // ルーター定義
   const router = useRouter()
   const [validation, setValidation] = useState<Validation>({})
-  const { checkLoggedIn, user } = useAuth({ middleware: 'auth' })
+  const { user, checkLoggedIn } = useAuth({ middleware: 'auth' })
   const [category, setCategory] = useState<any[]>([])
   const [status, setStatus] = useState<any[]>([])
 
@@ -44,11 +44,15 @@ const Post: NextPage = () => {
   useEffect(() => {
     const init = async () => {
       // ログイン中か判定
-      const res: boolean = await checkLoggedIn()
-      if (!res) {
+      if (!user) {
         router.push('/login')
         return
       }
+      // const res: boolean = await checkLoggedIn()
+      // if (!res) {
+      //   router.push('/login')
+      //   return
+      // }
       const responseCategories = await apiClient.get('api/memos/categories')
       let objectResponseCategories = responseCategories.data.data
       console.log(objectResponseCategories)
