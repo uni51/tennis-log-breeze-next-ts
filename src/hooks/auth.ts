@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import useSWR from 'swr'
 import { firebaseConfig } from '@/lib/firebase-helpers'
+import { fetchWithParams } from '@/lib/user'
 import { apiClient } from '@/lib/utils/apiClient'
 import { LoginError } from '@/types/authError'
 
@@ -43,38 +44,24 @@ const auth = getAuth(initializeApp(firebaseConfig))
 export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
   const router = useRouter()
 
-  // const { data: user, error, mutate } = useSWR<User>('/api/user', () =>
   const { data: user, error, mutate } = useSWR<User>(
-    // ['/api/user', appToken],
-    '/api/user',
-    () =>
-      apiClient
-        .get('/api/user')
-        .then(async (res) => {
-          // console.log(res)
-          // appTokenの有効期限切れによりログアウトした場合は、Firebaseの新しいTokenを用いてログインし直す
-          if (res.status === 204) {
-            const idToken = await auth.currentUser?.getIdToken(true)
-            firebaseLogin({
-              idToken: idToken,
-              setErrors: function (errors: LoginError): void {
-                //throw new Error('Function not implemented.')
-              },
-              setStatus: function (value: any): void {
-                // throw new Error('Function not implemented.')
-              },
-            })
-          }
-          return res.data
-        })
-        .catch((error) => {
-          if (error.response.status !== 409) throw error
-          router.push('/verify-email')
-        }),
     {
-      revalidateOnMount: undefined,
-      revalidateIfStale: false,
-      dedupingInterval: 10000, // 重複したリクエストを削除する期間を、10秒で設定する
+      url: '/api/user',
+    },
+    fetchWithParams,
+    // () =>
+    //   apiClient
+    //     .get('/api/user')
+    //     .then(async (res) => {
+    //       return res.data
+    //     })
+    //     .catch((error) => {
+    //       if (error.response.status !== 409) throw error
+    //       router.push('/verify-email')
+    //     }),
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
     },
   )
 
