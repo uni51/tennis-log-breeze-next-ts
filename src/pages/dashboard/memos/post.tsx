@@ -26,7 +26,7 @@ type Validation = {
   status_id?: string
 }
 
-const Post: NextPage = () => {
+const PostMemo: NextPage = () => {
   // ルーター定義
   const router = useRouter()
   const [validation, setValidation] = useState<Validation>({})
@@ -216,4 +216,4 @@ const Post: NextPage = () => {
   )
 }
 
-export default Post
+export default PostMemo
