@@ -9,11 +9,11 @@ type Props = {
 }
 const SingleMemoDetail: NextPage<Props> = ({ memo }) => {
   return (
-    <div className='mx-auto mt-20'>
+    <div className='mx-auto mt-10 sm:mt-20'>
       <div className='grid w-4/5 mx-auto gap-4'>
         <div className='bg-gray-100 shadow-lg mb-5 p-4'>
-          <p className='text-lg font-bold mb-3'>{memo.title}</p>
-          <p className='mb-3'>{memo.body}</p>
+          <p className='bg-gray-200 text-lg font-bold mb-8 p-2'>{memo.title}</p>
+          <p className='mb-3 whitespace-pre-wrap p-2'>{memo.body}</p>
           <p className='text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-pink-600 bg-pink-200 last:mr-0 mr-1'>
             {memo.category_name}
           </p>

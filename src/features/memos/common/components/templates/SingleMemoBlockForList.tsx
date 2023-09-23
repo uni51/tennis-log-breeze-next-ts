@@ -17,10 +17,10 @@ const SingleMemoBlockForList: FC<SingleMemoBlockForListProps> = ({
 }) => {
   return (
     <div className='bg-gray-100 shadow-lg mb-5 p-4'>
-      <p className='text-lg font-bold mb-5'>
+      <p className='bg-gray-200 text-lg font-bold mb-5 p-2'>
         <Link href={renderMemoDetailLink}>{memo.title}</Link>
       </p>
-      <p className='mb-5'>{memo.body}</p>
+      <p className='mb-5 whitespace-pre-wrap p-2'>{memo.body}</p>
       <p className='text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-pink-600 bg-pink-200 last:mr-0 mr-1'>
         <Link href={renderMemoListByCategoryLink}>{memo.category_name}</Link>
       </p>
