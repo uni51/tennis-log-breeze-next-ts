@@ -55,7 +55,7 @@ const Post: NextPage = () => {
       // }
       const responseCategories = await apiClient.get('api/memos/categories')
       let objectResponseCategories = responseCategories.data.data
-      console.log(objectResponseCategories)
+      // console.log(objectResponseCategories)
       const arrayResponseCategories = Object.keys(objectResponseCategories).map(function (key) {
         return objectResponseCategories[key]
       })
@@ -124,9 +124,10 @@ const Post: NextPage = () => {
         <title>Dashboard - メモの登録</title>
       </Head>
       <div className='w-4/5 mx-auto'>
-        <div className='mx-auto mt-16 border-2 px-12 py-16 rounded-2xl'>
-          <div className='mb-5'>
-            <div className='flex justify-start my-2'>
+        {/* <div className='mx-auto mt-4 sm:mt-16 border-2 px-6 sm:px-12 py-4 sm:py-16 rounded-2xl'> */}
+        <div className='mx-auto mt-4 sm:mt-4 w-full py-4 rounded-2xl'>
+          <div className='mb-2 sm:mb-4'>
+            <div className='flex justify-start my-1 sm:my-2'>
               <p>タイトル</p>
               <RequiredMark />
             </div>
@@ -149,7 +150,7 @@ const Post: NextPage = () => {
             <textarea
               className='p-2 border rounded-md w-full outline-none'
               cols={30}
-              rows={4}
+              rows={12}
               {...register('body', { required: '必須入力です。' })}
             />
             <ErrorMessage
@@ -161,6 +162,7 @@ const Post: NextPage = () => {
           </div>
           <p>カテゴリー</p>
           <select
+            className='mb-5'
             {...register('category_id', {
               validate: (value) => {
                 return !!category.find((item) => item.id === Number(value)) ? true : '不正な値です'
@@ -181,6 +183,7 @@ const Post: NextPage = () => {
           {validation.category_id && <p className='py-3 text-red-500'>{validation.category_id}</p>}
           <p>ステータス</p>
           <select
+            className='sm:mb-5'
             {...register('status_id', {
               validate: (value) => {
                 return !!status.find((item) => item.id == value) ? true : '不正な値です'
