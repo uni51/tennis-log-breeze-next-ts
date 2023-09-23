@@ -28,10 +28,6 @@ const DashboardTop = () => {
   }, [])
 
   if (isLoading) return <Loading />
-  // if (!user) {
-  //   router.push('/login')
-  //   return
-  // }
   if (!user) return null
 
   return (
@@ -39,7 +35,7 @@ const DashboardTop = () => {
       header={<h2 className='font-semibold text-xl text-gray-800 leading-tight'>Dashboard</h2>}
     >
       <Head>
-        <title>Laravel - Dashboard</title>
+        <title>テニスノート - Dashboard</title>
       </Head>
 
       <div className='py-12'>
@@ -48,7 +44,7 @@ const DashboardTop = () => {
             <div className='p-6 bg-gray-100 border-b border-gray-200'>Youre logged in!</div>
           </div>
           <div className='mt-10'>
-            <Link href='/dashboard/memos'>{user?.data?.name}さんのメモ一覧ページへ</Link>
+            <Link href='/dashboard/memos'>{user?.data?.nickname}さんのメモ一覧ページへ</Link>
           </div>
         </div>
       </div>
