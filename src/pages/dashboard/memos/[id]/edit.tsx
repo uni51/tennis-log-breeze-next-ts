@@ -1,25 +1,24 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { use, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
-import { RequiredMark } from '@/components/RequiredMark'
 import { useAuth } from '@/hooks/auth'
 import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
 import MemoEdit from '@/features/memos/dashboard/components/MemoEdit'
-import { stat } from 'fs'
 import { Loading } from '@/components/Loading'
 import { Category } from '@/types/Category'
 import { useGetMemoCategories } from '@/hooks/memos/getMemoCategories'
 import { useGetMemoStatuses } from '@/hooks/memos/getMemoStatuses'
+import { Status } from '@/types/Status'
 
 const DashboardMemoDetailEdit: NextPage = () => {
   // ルーター定義
   const router = useRouter()
   const { user } = useAuth({ middleware: 'auth' })
   const [category, setCategory] = useState<Category[]>([])
-  const [status, setStatus] = useState<any[]>([])
+  const [status, setStatus] = useState<Status[]>([])
   const [memo, setMemo] = useState<Memo>()
   const [isLoading, setIsLoading] = useState(true)
 
