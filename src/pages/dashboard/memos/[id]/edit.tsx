@@ -1,29 +1,20 @@
-import { ErrorMessage } from '@hookform/error-message'
-import { AxiosError, AxiosResponse } from 'axios'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { use, useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { RequiredMark } from '@/components/RequiredMark'
 import { useAuth } from '@/hooks/auth'
 import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
-import DashboardMemoEdit from '@/features/memos/dashboard/components/DashboardMemoEdit'
+import MemoEdit from '@/features/memos/dashboard/components/MemoEdit'
 import { stat } from 'fs'
 import { Loading } from '@/components/Loading'
 import { Category } from '@/types/Category'
+import { useGetMemoCategories } from '@/hooks/memos/getMemoCategories'
+import { useGetMemoStatuses } from '@/hooks/memos/getMemoStatuses'
 
-// POSTデータの型
-type MemoForm = {
-  title: string
-  body: string
-  category_id: number
-  status_id: number
-}
-
-const EditMemo: NextPage = () => {
+const DashboardMemoDetailEdit: NextPage = () => {
   // ルーター定義
   const router = useRouter()
   const { user } = useAuth({ middleware: 'auth' })
@@ -48,23 +39,13 @@ const EditMemo: NextPage = () => {
       try {
         const memo = await apiClient.get(`api/dashboard/memos/${router.query.id}`)
         setMemo(memo.data.data)
+        if (!memo) {
+          router.push('/dashboard/memos')
+          return
+        }
 
-        const responseCategories = await apiClient.get('api/memos/categories')
-        let objectResponseCategories = responseCategories.data.data
-        // console.log(objectResponseCategories)
-        const arrayResponseCategories = Object.keys(objectResponseCategories).map(function (key) {
-          return objectResponseCategories[key]
-        })
-        setCategory(arrayResponseCategories)
-        // console.log(category)
-        const responseStatuses = await apiClient.get('api/memos/status')
-        let objectResponseStatuses = Object.entries(responseStatuses.data)
-        // console.log(objectResponseStatuses)
-        const arrayResponseStatuses = objectResponseStatuses.map((item: [string, unknown]) => {
-          return Object.assign({ id: item[0], name: item[1] })
-        })
-        setStatus(arrayResponseStatuses)
-        // console.log(arrayResponseStatuses)
+        setCategory(await useGetMemoCategories())
+        setStatus(await useGetMemoStatuses())
       } catch (err) {
         // TODO：エラー処理
         console.log(err)
@@ -89,9 +70,9 @@ const EditMemo: NextPage = () => {
       <Head>
         <title>Dashboard - メモの編集</title>
       </Head>
-      <DashboardMemoEdit memo={memo} status={status} category={category} />
+      <MemoEdit memo={memo!} status={status} category={category} />
     </AppLayout>
   )
 }
 
-export default EditMemo
+export default DashboardMemoDetailEdit

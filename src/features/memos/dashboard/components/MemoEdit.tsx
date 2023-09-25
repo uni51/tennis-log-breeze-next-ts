@@ -6,6 +6,8 @@ import { apiClient } from '@/lib/utils/apiClient'
 import { AxiosError, AxiosResponse } from 'axios'
 import { ErrorMessage } from '@hookform/error-message'
 import { RequiredMark } from '@/components/RequiredMark'
+import { Status } from '@/types/Status'
+import { Category } from '@/types/Category'
 
 // POSTデータの型
 type MemoForm = {
@@ -24,18 +26,15 @@ type Validation = {
 }
 
 type Props = {
-  memo: any
-  status: any[]
-  category: any[]
+  memo: Memo
+  status: Status[]
+  category: Category[]
 }
 
-const DashboardMemoEdit: React.FC<Props> = ({ memo, status, category }) => {
-  console.log(memo)
-
+const MemoEdit: React.FC<Props> = ({ memo, status, category }) => {
   // ルーター定義
   const router = useRouter()
   const [validation, setValidation] = useState<Validation>({})
-  const [body, setBody] = useState<string>(memo.body)
 
   // React-Hook-Form
   const {
@@ -183,4 +182,4 @@ const DashboardMemoEdit: React.FC<Props> = ({ memo, status, category }) => {
   )
 }
 
-export default DashboardMemoEdit
+export default MemoEdit
