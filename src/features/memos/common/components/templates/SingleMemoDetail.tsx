@@ -1,6 +1,9 @@
+import { AxiosError, AxiosResponse } from 'axios'
 import { NextPage } from 'next'
 import Link from 'next/link'
-import { Dispatch, SetStateAction, useEffect } from 'react'
+import router from 'next/router'
+import { Dispatch, SetStateAction } from 'react'
+import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
 import { LoginUser } from '@/types/loginUser'
 
@@ -10,6 +13,28 @@ type Props = {
   setTitleText?: Dispatch<SetStateAction<string>>
 }
 const SingleMemoDetail: NextPage<Props> = ({ memo, loginUser }) => {
+  const memoDelete = () => {
+    apiClient
+      // CSRF保護の初期化
+      .get('/auth/sanctum/csrf-cookie')
+      .then((res) => {
+        // APIへのリクエスト
+        apiClient
+          .post(`/api/dashboard/memos/${memo?.id}/delete`)
+          .then((response: AxiosResponse) => {
+            router.push('/dashboard/memos')
+          })
+          .catch((err: AxiosError) => {
+            // バリデーションエラー
+            if (err.response?.status === 422) {
+            }
+            if (err.response?.status === 500) {
+              alert('システムエラーです！！')
+            }
+          })
+      })
+  }
+
   return (
     <div className='mx-auto mt-10 sm:mt-20'>
       <div className='grid w-4/5 mx-auto gap-4'>
@@ -32,9 +57,14 @@ const SingleMemoDetail: NextPage<Props> = ({ memo, loginUser }) => {
           <p className='text-sm leading-6 text-gray-500 mt-2'>作成日時：{memo.created_at}</p>
           <p className='text-sm leading-6 text-gray-500 mt-2'>更新日時：{memo.updated_at}</p>
           {loginUser && memo.user_id === loginUser.id && (
-            <Link href={`/dashboard/memos/${memo.id}/edit`}>
-              <p className='text-sm leading-6 font-bold text-blue-700 mt-2'>編集する</p>
-            </Link>
+            <>
+              <Link href={`/dashboard/memos/${memo.id}/edit`}>
+                <p className='text-sm leading-6 font-bold text-blue-700 mt-2'>編集する</p>
+              </Link>
+              <p className='text-sm leading-6 font-bold text-blue-700 mt-2' onClick={memoDelete}>
+                この記事を削除
+              </p>
+            </>
           )}
         </div>
       </div>
