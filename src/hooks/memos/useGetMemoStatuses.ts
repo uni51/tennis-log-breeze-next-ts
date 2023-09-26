@@ -1,7 +1,7 @@
 import { apiClient } from '@/lib/utils/apiClient'
 import { Status } from '@/types/Status'
 
-export const useGetMemoStatuses = async (): Promise<Status[]> => {
+export const UseGetMemoStatuses = async (): Promise<Status[]> => {
   const responseStatuses = await apiClient.get('api/memos/status')
   let objectResponseStatuses = Object.entries(responseStatuses.data)
 

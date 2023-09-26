@@ -3,14 +3,14 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
-import { useAuth } from '@/hooks/auth'
-import { apiClient } from '@/lib/utils/apiClient'
-import { Memo } from '@/types/Memo'
-import MemoEdit from '@/features/memos/dashboard/components/MemoEdit'
 import { Loading } from '@/components/Loading'
+import MemoEdit from '@/features/memos/dashboard/components/MemoEdit'
+import { useAuth } from '@/hooks/auth'
+import { UseGetMemoCategories } from '@/hooks/memos/useGetMemoCategories'
+import { UseGetMemoStatuses } from '@/hooks/memos/useGetMemoStatuses'
+import { apiClient } from '@/lib/utils/apiClient'
 import { Category } from '@/types/Category'
-import { useGetMemoCategories } from '@/hooks/memos/getMemoCategories'
-import { useGetMemoStatuses } from '@/hooks/memos/getMemoStatuses'
+import { Memo } from '@/types/Memo'
 import { Status } from '@/types/Status'
 
 const DashboardMemoDetailEdit: NextPage = () => {
@@ -43,8 +43,8 @@ const DashboardMemoDetailEdit: NextPage = () => {
           return
         }
 
-        setCategory(await useGetMemoCategories())
-        setStatus(await useGetMemoStatuses())
+        setCategory(await UseGetMemoCategories())
+        setStatus(await UseGetMemoStatuses())
       } catch (err) {
         // TODO：エラー処理
         console.log(err)

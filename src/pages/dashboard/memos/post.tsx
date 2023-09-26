@@ -3,12 +3,12 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
+import MemoPost from '@/features/memos/dashboard/components/MemoPost'
 import { useAuth } from '@/hooks/auth'
+import { UseGetMemoCategories } from '@/hooks/memos/useGetMemoCategories'
+import { UseGetMemoStatuses } from '@/hooks/memos/useGetMemoStatuses'
 import { Category } from '@/types/Category'
 import { Status } from '@/types/Status'
-import { useGetMemoCategories } from '@/hooks/memos/getMemoCategories'
-import { useGetMemoStatuses } from '@/hooks/memos/getMemoStatuses'
-import MemoPost from '@/features/memos/dashboard/components/MemoPost'
 
 const DashboardMemoPost: NextPage = () => {
   // ルーター定義
@@ -25,8 +25,8 @@ const DashboardMemoPost: NextPage = () => {
         return
       }
 
-      setCategory(await useGetMemoCategories())
-      setStatus(await useGetMemoStatuses())
+      setCategory(await UseGetMemoCategories())
+      setStatus(await UseGetMemoStatuses())
     }
     init()
   }, [])
