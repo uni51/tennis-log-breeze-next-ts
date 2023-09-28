@@ -3,6 +3,7 @@ import { NextPage } from 'next'
 import Link from 'next/link'
 import router from 'next/router'
 import { Dispatch, SetStateAction, useState } from 'react'
+import { toast } from 'react-toastify'
 import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
 import { LoginUser } from '@/types/loginUser'
@@ -24,10 +25,8 @@ const SingleMemoDetail: NextPage<Props> = ({ memo, loginUser }) => {
   }
 
   const memoDelete = () => {
-    router.push({
-      pathname: '/dashboard/memos',
-      query: { message: '削除しました。' },
-    })
+    toast.success('記事を削除しました')
+    router.push('/dashboard/memos')
     // apiClient
     //   // CSRF保護の初期化
     //   .get('/auth/sanctum/csrf-cookie')

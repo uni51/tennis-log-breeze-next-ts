@@ -1,9 +1,11 @@
 import 'tailwindcss/tailwind.css'
 import 'nprogress/nprogress.css'
+import 'react-toastify/dist/ReactToastify.css'
 import type { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
 import NProgress from 'nprogress'
 import React, { useEffect } from 'react'
+import { ToastContainer } from 'react-toastify'
 // eslint-disable-next-line
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary' // build時に、FallbackProps not found in 'react-error-boundary' のエラーが出る
 import { ErrorDisplay } from '@/components/Layouts/Error/ErrorDisplay'
@@ -36,8 +38,17 @@ function App({ Component, pageProps }: AppProps) {
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback} onError={onError}>
-      <Component {...pageProps} />
+      <ToastContainer
+        position='top-center'
+        autoClose={1000}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover={false}
+      />
       <AlertModalManager />
+      <Component {...pageProps} />
     </ErrorBoundary>
   )
   // return <Component {...pageProps} />
