@@ -2,10 +2,11 @@ import { AxiosError, AxiosResponse } from 'axios'
 import { NextPage } from 'next'
 import Link from 'next/link'
 import router from 'next/router'
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
 import { LoginUser } from '@/types/loginUser'
+import { showAlertModal } from '@/components/AlertModalManager'
 
 type Props = {
   memo: Memo
@@ -13,26 +14,42 @@ type Props = {
   setTitleText?: Dispatch<SetStateAction<string>>
 }
 const SingleMemoDetail: NextPage<Props> = ({ memo, loginUser }) => {
+  const showAlert = () => {
+    showAlertModal({
+      message: '本当にこの記事を削除しますか？',
+      onOk: () => {
+        memoDelete()
+      },
+    })
+  }
+
   const memoDelete = () => {
-    apiClient
-      // CSRF保護の初期化
-      .get('/auth/sanctum/csrf-cookie')
-      .then((res) => {
-        // APIへのリクエスト
-        apiClient
-          .post(`/api/dashboard/memos/${memo?.id}/delete`)
-          .then((response: AxiosResponse) => {
-            router.push('/dashboard/memos')
-          })
-          .catch((err: AxiosError) => {
-            // バリデーションエラー
-            if (err.response?.status === 422) {
-            }
-            if (err.response?.status === 500) {
-              alert('システムエラーです！！')
-            }
-          })
-      })
+    router.push({
+      pathname: '/dashboard/memos',
+      query: { message: '削除しました。' },
+    })
+    // apiClient
+    //   // CSRF保護の初期化
+    //   .get('/auth/sanctum/csrf-cookie')
+    //   .then((res) => {
+    //     // APIへのリクエスト
+    //     apiClient
+    //       .post(`/api/dashboard/memos/${memo?.id}/delete`)
+    //       .then((response: AxiosResponse) => {
+    //         router.push({
+    //           pathname: '/dashboard/memos',
+    //           query: { page: 1 },
+    //         })
+    //       })
+    //       .catch((err: AxiosError) => {
+    //         // バリデーションエラー
+    //         if (err.response?.status === 422) {
+    //         }
+    //         if (err.response?.status === 500) {
+    //           alert('システムエラーです！！')
+    //         }
+    //       })
+    // })
   }
 
   return (
@@ -61,7 +78,7 @@ const SingleMemoDetail: NextPage<Props> = ({ memo, loginUser }) => {
               <Link href={`/dashboard/memos/${memo.id}/edit`}>
                 <p className='text-sm leading-6 font-bold text-blue-700 mt-2'>編集する</p>
               </Link>
-              <p className='text-sm leading-6 font-bold text-blue-700 mt-2' onClick={memoDelete}>
+              <p className='text-sm leading-6 font-bold text-blue-700 mt-2' onClick={showAlert}>
                 この記事を削除
               </p>
             </>

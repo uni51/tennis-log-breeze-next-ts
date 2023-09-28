@@ -7,6 +7,7 @@ import React, { useEffect } from 'react'
 // eslint-disable-next-line
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary' // build時に、FallbackProps not found in 'react-error-boundary' のエラーが出る
 import { ErrorDisplay } from '@/components/Layouts/Error/ErrorDisplay'
+import { AlertModalManager } from '@/components/AlertModalManager'
 
 function App({ Component, pageProps }: AppProps) {
   // See) https://github.com/vercel/next.js/tree/canary/examples/with-loading
@@ -33,12 +34,13 @@ function App({ Component, pageProps }: AppProps) {
     }
   }, [router])
 
-  // return <Component {...pageProps} />
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback} onError={onError}>
       <Component {...pageProps} />
+      <AlertModalManager />
     </ErrorBoundary>
   )
+  // return <Component {...pageProps} />
 }
 
 const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
