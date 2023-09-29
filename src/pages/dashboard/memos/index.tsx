@@ -37,8 +37,8 @@ const DashboardMemoIndex: NextPage = () => {
   }, [router, pageNumber, categoryNumber])
   // }, [router, pageNumber, categoryNumber, cache])
 
-  const headLine = user?.data?.name
-    ? `${user.data.name}さんのメモ一覧${getMemosListByCategoryHeadLineTitle(categoryNumber)}`
+  const headLine = user?.data?.nickname
+    ? `${user.data.nickname}さんのメモ一覧${getMemosListByCategoryHeadLineTitle(categoryNumber)}`
     : ' あなたが作成したメモ一覧'
 
   if (!user) return null
