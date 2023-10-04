@@ -4,7 +4,7 @@ import MemoListPaginationLong from '@/components/Pagination/MemoListPaginationLo
 import MemoListPaginationShort from '@/components/Pagination/MemoListPaginationShort'
 import SingleMemoBlockForList from '@/features/memos/common/components/templates/SingleMemoBlockForList'
 import AddMemoButton from '@/features/memos/dashboard/components/AddMemoButton'
-import { useGetMemoList } from '@/hooks/memos/useGetMemoList'
+import { useMemoList } from '@/hooks/memos/useMemoList'
 import { getMemosListByCategoryPageLink } from '@/lib/pagination-helper'
 import { Memo } from '@/types/Memo'
 
@@ -17,7 +17,7 @@ const DashboardMemoList = ({ pageIndex, categoryNumber }: Props) => {
   const { showBoundary } = useErrorBoundary()
 
   const preApiUrl = '/api/dashboard/memos'
-  const { data: memos, error } = useGetMemoList({ preApiUrl, pageIndex, categoryNumber })
+  const { data: memos, error } = useMemoList({ preApiUrl, pageIndex, categoryNumber })
 
   if (error) showBoundary(error)
 

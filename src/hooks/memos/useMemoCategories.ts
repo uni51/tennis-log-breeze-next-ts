@@ -1,7 +1,7 @@
 import { apiClient } from '@/lib/utils/apiClient'
 import { Category } from '@/types/Category'
 
-export const UseGetMemoCategories = async (): Promise<Category[]> => {
+export const UseMemoCategories = async (): Promise<Category[]> => {
   const responseCategories = await apiClient.get('api/memos/categories')
   let objectResponseCategories = responseCategories.data.data
 

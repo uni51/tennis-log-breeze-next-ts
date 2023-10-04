@@ -5,8 +5,8 @@ import { useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
 import MemoPost from '@/features/memos/dashboard/components/MemoPost'
 import { useAuth } from '@/hooks/auth'
-import { UseGetMemoCategories } from '@/hooks/memos/useGetMemoCategories'
-import { UseGetMemoStatuses } from '@/hooks/memos/useGetMemoStatuses'
+import { UseMemoCategories } from '@/hooks/memos/UseMemoCategories'
+import { UseMemoStatuses } from '@/hooks/memos/UseMemoStatuses'
 import { Category } from '@/types/Category'
 import { Status } from '@/types/Status'
 
@@ -25,8 +25,8 @@ const DashboardMemoPost: NextPage = () => {
         return
       }
 
-      setCategory(await UseGetMemoCategories())
-      setStatus(await UseGetMemoStatuses())
+      setCategory(await UseMemoCategories())
+      setStatus(await UseMemoStatuses())
     }
     init()
   }, [])

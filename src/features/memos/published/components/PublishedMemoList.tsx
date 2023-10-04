@@ -3,7 +3,7 @@ import ClipLoader from 'react-spinners/ClipLoader'
 import MemoListPaginationLong from '@/components/Pagination/MemoListPaginationLong'
 import MemoListPaginationShort from '@/components/Pagination/MemoListPaginationShort'
 import SingleMemoBlockForList from '@/features/memos/common/components/templates/SingleMemoBlockForList'
-import { useGetMemoList } from '@/hooks/memos/useGetMemoList'
+import { useMemoList } from '@/hooks/memos/useMemoList'
 import { getMemosListByCategoryPageLink } from '@/lib/pagination-helper'
 import { Memo } from '@/types/Memo'
 
@@ -16,7 +16,7 @@ const PublishedMemoList = ({ pageIndex, categoryNumber }: Props) => {
   const { showBoundary } = useErrorBoundary()
 
   const preApiUrl = '/api/public/memos'
-  const { data: memos, error } = useGetMemoList({ preApiUrl, pageIndex, categoryNumber })
+  const { data: memos, error } = useMemoList({ preApiUrl, pageIndex, categoryNumber })
 
   // console.log(memos)
 

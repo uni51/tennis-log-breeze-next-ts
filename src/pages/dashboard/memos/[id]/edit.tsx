@@ -6,8 +6,8 @@ import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import MemoEdit from '@/features/memos/dashboard/components/MemoEdit'
 import { useAuth } from '@/hooks/auth'
-import { UseGetMemoCategories } from '@/hooks/memos/useGetMemoCategories'
-import { UseGetMemoStatuses } from '@/hooks/memos/useGetMemoStatuses'
+import { UseMemoCategories } from '@/hooks/memos/UseMemoCategories'
+import { UseMemoStatuses } from '@/hooks/memos/UseMemoStatuses'
 import { apiClient } from '@/lib/utils/apiClient'
 import { Category } from '@/types/Category'
 import { Memo } from '@/types/Memo'
@@ -43,8 +43,8 @@ const DashboardMemoDetailEdit: NextPage = () => {
           return
         }
 
-        setCategory(await UseGetMemoCategories())
-        setStatus(await UseGetMemoStatuses())
+        setCategory(await UseMemoCategories())
+        setStatus(await UseMemoStatuses())
       } catch (err) {
         // TODO：エラー処理
         console.log(err)
