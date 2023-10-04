@@ -40,7 +40,7 @@ export const useAdminAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) 
       }),
   )
 
-  const csrf = () => apiClient.get('/sanctum/csrf-cookie')
+  const csrf = () => apiClient.get('/auth/sanctum/csrf-cookie')
 
   const register = async (args: IApiRequest) => {
     const { setErrors, ...props } = args
