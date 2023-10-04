@@ -1,9 +1,11 @@
+import Link from 'next/link'
 import { useState } from 'react'
 import Dropdown from '@/components/Dropdown'
 import { DropdownButton } from '@/components/DropdownLink'
 import { ResponsiveNavButton } from '@/components/ResponsiveNavLink'
-import { User, useAuth } from '@/hooks/auth'
+import { useAuth } from '@/hooks/auth'
 import { isEmptyObject } from '@/lib/common-helper'
+import { User } from '@/types/User'
 
 const Navigation = (user: User) => {
   // const { logout, renderLogin } = useAuth({ middleware: 'guest' })
@@ -45,7 +47,12 @@ const Navigation = (user: User) => {
               {/* Authentication */}
               {isEmptyObject(user) && <DropdownButton onClick={renderLogin}>Login</DropdownButton>}
               {!isEmptyObject(user) && (
-                <DropdownButton onClick={firebaseLogout}>Logout</DropdownButton>
+                <>
+                  <Link href='/settings/profile'>
+                    <DropdownButton>Profile</DropdownButton>
+                  </Link>
+                  <DropdownButton onClick={firebaseLogout}>Logout</DropdownButton>
+                </>
               )}
             </Dropdown>
           </div>
@@ -115,7 +122,12 @@ const Navigation = (user: User) => {
                 <ResponsiveNavButton onClick={renderLogin}>Login</ResponsiveNavButton>
               )}
               {!isEmptyObject(user) && (
-                <ResponsiveNavButton onClick={firebaseLogout}>Logout</ResponsiveNavButton>
+                <>
+                  <Link href='/settings/profile'>
+                    <ResponsiveNavButton>Profile</ResponsiveNavButton>
+                  </Link>
+                  <ResponsiveNavButton onClick={firebaseLogout}>Logout</ResponsiveNavButton>
+                </>
               )}
             </div>
           </div>

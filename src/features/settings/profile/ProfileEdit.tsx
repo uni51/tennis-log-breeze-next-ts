@@ -15,6 +15,7 @@ type MemoForm = {
   body: string
   category_id: number
   status_id: number
+  career_id: number
 }
 
 // バリデーションメッセージの型
@@ -23,15 +24,17 @@ type Validation = {
   body?: string
   category_id?: string
   status_id?: string
+  career_id?: string
 }
 
 type Props = {
   user: User
   status: Status[]
   category: Category[]
+  career: any[]
 }
 
-const ProfileEdit: React.FC<Props> = ({ user, status, category }) => {
+const ProfileEdit: React.FC<Props> = ({ user, status, category, career }) => {
   // ルーター定義
   const router = useRouter()
   const [validation, setValidation] = useState<Validation>({})
@@ -44,11 +47,11 @@ const ProfileEdit: React.FC<Props> = ({ user, status, category }) => {
     handleSubmit,
     formState: { errors },
   } = useForm<MemoForm>({
-    defaultValues: { title: user.data?.name, category_id: 1, status_id: 1 },
+    defaultValues: { title: user.data?.name, category_id: 1, status_id: 1, career_id: 1 },
   })
 
   // メモの登録
-  const createMemo = (postData: MemoForm) => {
+  const editProfile = (postData: MemoForm) => {
     // バリデーションメッセージの初期化
     setValidation({})
 
@@ -119,16 +122,17 @@ const ProfileEdit: React.FC<Props> = ({ user, status, category }) => {
           />
           {validation.title && <p className='py-3 text-red-500'>{validation.title}</p>}
         </div>
+        {/* テニス歴 */}
         <p>テニス歴</p>
         <select
           className='mb-5'
-          {...register('category_id', {
+          {...register('career_id', {
             validate: (value) => {
-              return !!category.find((item) => item.id === Number(value)) ? true : '不正な値です'
+              return !!career.find((item) => item.id === Number(value)) ? true : '不正な値です'
             },
           })}
         >
-          {category.map((item, i) => (
+          {career.map((item, i) => (
             <option value={item.id} key={item.id}>
               {item.name}
             </option>
@@ -139,7 +143,8 @@ const ProfileEdit: React.FC<Props> = ({ user, status, category }) => {
           name={'category_id'}
           render={({ message }) => <p className='py-3 text-red-500'>{message}</p>}
         />
-        {validation.category_id && <p className='py-3 text-red-500'>{validation.category_id}</p>}
+        {validation.career_id && <p className='py-3 text-red-500'>{validation.career_id}</p>}
+        {/* プレー頻度 */}
         <p>プレー頻度</p>
         <select
           className='mb-5'
@@ -246,7 +251,7 @@ const ProfileEdit: React.FC<Props> = ({ user, status, category }) => {
         <div className='text-center'>
           <button
             className='bg-gray-700 text-gray-50 py-3 sm:px-20 px-10 mt-8 rounded-xl cursor-pointer drop-shadow-md hover:bg-gray-600'
-            onClick={handleSubmit(createMemo)}
+            onClick={handleSubmit(editProfile)}
           >
             登録する
           </button>
