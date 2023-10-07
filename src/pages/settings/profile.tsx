@@ -5,11 +5,15 @@ import { useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
 import ProfileEdit from '@/features/settings/profile/ProfileEdit'
 import { useAuth } from '@/hooks/auth'
-import { UseMemoCategories } from '@/hooks/memos/UseMemoCategories'
-import { UseMemoStatuses } from '@/hooks/memos/UseMemoStatuses'
-import { UseCareer } from '@/hooks/memos/useCareerTypes'
+import { UseMemoCategories } from '@/hooks/memos/useMemoCategories'
+import { UseMemoStatuses } from '@/hooks/memos/useMemoStatuses'
+import { UseCareer } from '@/hooks/memos/useCareer'
+import { Career } from '@/types/Career'
 import { Category } from '@/types/Category'
 import { Status } from '@/types/Status'
+import { Loading } from '@/components/Loading'
+import { PlayFrequency } from '@/types/playFrequency'
+import { UsePlayFrequency } from '@/hooks/memos/usePlayFrequency'
 
 const Profile: NextPage = () => {
   const router = useRouter()
@@ -17,26 +21,29 @@ const Profile: NextPage = () => {
   const { checkLoggedIn, user } = useAuth({ middleware: 'auth' })
   const [category, setCategory] = useState<Category[]>([])
   const [status, setStatus] = useState<Status[]>([])
-  const [career, setCareer] = useState<any[]>([])
+  const [career, setCareer] = useState<Career[]>([])
+  const [frequency, setFrequency] = useState<PlayFrequency[]>([])
 
   // 初回レンダリング時にAPIリクエスト
   useEffect(() => {
     const init = async () => {
-      // ログイン中か判定
       // ログイン中か判定
       const res: boolean = await checkLoggedIn()
       if (!res) {
         router.push('/login')
         return
       }
-      setIsLoading(false)
       setCategory(await UseMemoCategories())
       setStatus(await UseMemoStatuses())
       setCareer(await UseCareer())
+      setFrequency(await UsePlayFrequency())
+      // ローディング終了は、各種APIリクエストが終わってからにしないと、初期値の設定が正しくできない
+      setIsLoading(false)
     }
     init()
   }, [])
 
+  if (isLoading) return <Loading />
   if (!user) return null
 
   return (
@@ -48,7 +55,13 @@ const Profile: NextPage = () => {
       <Head>
         <title>プロフィールの編集</title>
       </Head>
-      <ProfileEdit user={user} status={status} category={category} career={career} />
+      <ProfileEdit
+        user={user}
+        status={status}
+        category={category}
+        career={career}
+        frequency={frequency}
+      />
     </AppLayout>
   )
 }

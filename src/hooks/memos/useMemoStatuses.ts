@@ -6,7 +6,7 @@ export const UseMemoStatuses = async (): Promise<Status[]> => {
   let objectResponseStatuses = Object.entries(responseStatuses.data)
 
   const arrayResponseStatuses = objectResponseStatuses.map((item: [string, unknown]) => {
-    return Object.assign({ id: item[0], name: item[1] })
+    return Object.assign({ id: Number(item[0]), name: item[1] })
   })
 
   return arrayResponseStatuses

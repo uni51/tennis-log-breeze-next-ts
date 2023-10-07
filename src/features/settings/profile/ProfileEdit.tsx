@@ -5,9 +5,11 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { RequiredMark } from '@/components/RequiredMark'
 import { apiClient } from '@/lib/utils/apiClient'
+import { Career } from '@/types/Career'
 import { Category } from '@/types/Category'
 import { Status } from '@/types/Status'
 import { User } from '@/types/User'
+import { PlayFrequency } from '@/types/playFrequency'
 
 // POSTデータの型
 type MemoForm = {
@@ -16,6 +18,7 @@ type MemoForm = {
   category_id: number
   status_id: number
   career_id: number
+  frequency_id: number
 }
 
 // バリデーションメッセージの型
@@ -25,21 +28,31 @@ type Validation = {
   category_id?: string
   status_id?: string
   career_id?: string
+  frequency_id?: string
 }
 
 type Props = {
   user: User
   status: Status[]
   category: Category[]
-  career: any[]
+  career: Career[]
+  frequency: PlayFrequency[]
 }
 
-const ProfileEdit: React.FC<Props> = ({ user, status, category, career }) => {
+const ProfileEdit: React.FC<Props> = ({ user, status, category, career, frequency }) => {
   // ルーター定義
   const router = useRouter()
   const [validation, setValidation] = useState<Validation>({})
 
-  console.log(user)
+  console.log(frequency)
+
+  const defaultValues = {
+    title: user.data?.name,
+    category_id: 3,
+    status_id: 0,
+    career_id: 4,
+    frequency_id: 2,
+  }
 
   // React-Hook-Form
   const {
@@ -47,7 +60,7 @@ const ProfileEdit: React.FC<Props> = ({ user, status, category, career }) => {
     handleSubmit,
     formState: { errors },
   } = useForm<MemoForm>({
-    defaultValues: { title: user.data?.name, category_id: 1, status_id: 1, career_id: 1 },
+    defaultValues,
   })
 
   // メモの登録
@@ -126,6 +139,7 @@ const ProfileEdit: React.FC<Props> = ({ user, status, category, career }) => {
         <p>テニス歴</p>
         <select
           className='mb-5'
+          defaultValue={defaultValues?.career_id}
           {...register('career_id', {
             validate: (value) => {
               return !!career.find((item) => item.id === Number(value)) ? true : '不正な値です'
@@ -140,7 +154,7 @@ const ProfileEdit: React.FC<Props> = ({ user, status, category, career }) => {
         </select>
         <ErrorMessage
           errors={errors}
-          name={'category_id'}
+          name={'career_id'}
           render={({ message }) => <p className='py-3 text-red-500'>{message}</p>}
         />
         {validation.career_id && <p className='py-3 text-red-500'>{validation.career_id}</p>}
@@ -148,13 +162,13 @@ const ProfileEdit: React.FC<Props> = ({ user, status, category, career }) => {
         <p>プレー頻度</p>
         <select
           className='mb-5'
-          {...register('category_id', {
+          {...register('frequency_id', {
             validate: (value) => {
-              return !!category.find((item) => item.id === Number(value)) ? true : '不正な値です'
+              return !!frequency.find((item) => item.id === Number(value)) ? true : '不正な値です'
             },
           })}
         >
-          {category.map((item, i) => (
+          {frequency.map((item, i) => (
             <option value={item.id} key={item.id}>
               {item.name}
             </option>
@@ -162,7 +176,7 @@ const ProfileEdit: React.FC<Props> = ({ user, status, category, career }) => {
         </select>
         <ErrorMessage
           errors={errors}
-          name={'category_id'}
+          name={'frequency_id'}
           render={({ message }) => <p className='py-3 text-red-500'>{message}</p>}
         />
         <p>利き腕</p>
@@ -209,27 +223,7 @@ const ProfileEdit: React.FC<Props> = ({ user, status, category, career }) => {
         <p>プレースタイル</p>
         <select
           className='sm:mb-5'
-          {...register('status_id', {
-            validate: (value) => {
-              return !!status.find((item) => item.id == value) ? true : '不正な値です'
-            },
-          })}
-        >
-          {status.map((item, i) => (
-            <option value={item.id} key={item.id}>
-              {item.name}
-            </option>
-          ))}
-        </select>
-        <ErrorMessage
-          errors={errors}
-          name={'status_id'}
-          render={({ message }) => <p className='py-3 text-red-500'>{message}</p>}
-        />
-        {validation.status_id && <p className='py-3 text-red-500'>{validation.status_id}</p>}
-        <p>生年月日</p>
-        <select
-          className='sm:mb-5'
+          defaultValue={defaultValues?.status_id}
           {...register('status_id', {
             validate: (value) => {
               return !!status.find((item) => item.id == value) ? true : '不正な値です'
