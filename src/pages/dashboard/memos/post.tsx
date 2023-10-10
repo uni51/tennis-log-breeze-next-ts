@@ -13,9 +13,9 @@ const DashboardMemoPost: NextPage = () => {
   // ルーター定義
   const router = useRouter()
   const { user } = useAuth({ middleware: 'auth' })
-  const { status, data: category } = useQueryMemoCategories()
+  const { status, data: categories } = useQueryMemoCategories()
 
-  const [memoStatus, setMemoStatus] = useState<Status[]>([])
+  const [memoStatuses, setMemoStatuses] = useState<Status[]>([])
 
   useEffect(() => {
     const init = async () => {
@@ -26,7 +26,7 @@ const DashboardMemoPost: NextPage = () => {
       }
 
       // setCategory(await useQueryMemoCategories())
-      setMemoStatus(await UseMemoStatuses())
+      setMemoStatuses(await UseMemoStatuses())
     }
     init()
   }, [])
@@ -44,7 +44,7 @@ const DashboardMemoPost: NextPage = () => {
       <Head>
         <title>Dashboard - メモの登録</title>
       </Head>
-      <MemoPost status={memoStatus} category={category!} />
+      <MemoPost statuses={memoStatuses} categories={categories!} />
     </AppLayout>
   )
 }
