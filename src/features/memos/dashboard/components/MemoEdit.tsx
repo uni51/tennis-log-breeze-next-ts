@@ -27,11 +27,11 @@ type Validation = {
 
 type Props = {
   memo: Memo
-  status: Status[]
-  category: Category[]
+  statuses: Status[]
+  categories: Category[]
 }
 
-const MemoEdit: React.FC<Props> = ({ memo, status, category }) => {
+const MemoEdit: React.FC<Props> = ({ memo, statuses, categories }) => {
   // ルーター定義
   const router = useRouter()
   const [validation, setValidation] = useState<Validation>({})
@@ -131,11 +131,11 @@ const MemoEdit: React.FC<Props> = ({ memo, status, category }) => {
           defaultValue={memo?.category_id}
           {...register('category_id', {
             validate: (value) => {
-              return !!category.find((item) => item.id === Number(value)) ? true : '不正な値です'
+              return !!categories.find((item) => item.id === Number(value)) ? true : '不正な値です'
             },
           })}
         >
-          {category.map((item, i) => (
+          {categories.map((item, i) => (
             <option value={item.id} key={item.id}>
               {item.name}
             </option>
@@ -153,11 +153,11 @@ const MemoEdit: React.FC<Props> = ({ memo, status, category }) => {
           defaultValue={memo?.status}
           {...register('status_id', {
             validate: (value) => {
-              return !!status.find((item) => item.id == value) ? true : '不正な値です'
+              return !!statuses.find((item) => item.id == value) ? true : '不正な値です'
             },
           })}
         >
-          {status.map((item, i) => (
+          {statuses.map((item, i) => (
             <option value={item.id} key={item.id}>
               {item.name}
             </option>

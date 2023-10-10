@@ -6,21 +6,24 @@ import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import MemoEdit from '@/features/memos/dashboard/components/MemoEdit'
 import { useAuth } from '@/hooks/auth'
-import { UseMemoCategories } from '@/hooks/memos/UseMemoCategories'
-import { UseMemoStatuses } from '@/hooks/memos/UseMemoStatuses'
+import { UseMemoCategories } from '@/hooks/memos/useMemoCategories'
+import { UseMemoStatuses } from '@/hooks/memos/useMemoStatuses'
 import { apiClient } from '@/lib/utils/apiClient'
 import { Category } from '@/types/Category'
 import { Memo } from '@/types/Memo'
 import { Status } from '@/types/Status'
+import { useQueryMemoCategories } from '@/hooks/memos/useQueryMemoCategories'
 
 const DashboardMemoDetailEdit: NextPage = () => {
   // ルーター定義
   const router = useRouter()
   const { user } = useAuth({ middleware: 'auth' })
-  const [category, setCategory] = useState<Category[]>([])
-  const [status, setStatus] = useState<Status[]>([])
+  // const [categories, setCategories] = useState<Category[]>([])
+  const [memoStatuses, setMemoStatuses] = useState<Status[]>([])
   const [memo, setMemo] = useState<Memo>()
   const [isLoading, setIsLoading] = useState(true)
+
+  const { status, data: categories } = useQueryMemoCategories()
 
   useEffect(() => {
     const init = async () => {
@@ -43,8 +46,7 @@ const DashboardMemoDetailEdit: NextPage = () => {
           return
         }
 
-        setCategory(await UseMemoCategories())
-        setStatus(await UseMemoStatuses())
+        setMemoStatuses(await UseMemoStatuses())
       } catch (err) {
         // TODO：エラー処理
         console.log(err)
@@ -69,7 +71,7 @@ const DashboardMemoDetailEdit: NextPage = () => {
       <Head>
         <title>Dashboard - メモの編集</title>
       </Head>
-      <MemoEdit memo={memo!} status={status} category={category} />
+      <MemoEdit memo={memo!} statuses={memoStatuses} categories={categories!} />
     </AppLayout>
   )
 }
