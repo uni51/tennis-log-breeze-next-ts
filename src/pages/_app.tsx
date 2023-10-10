@@ -10,6 +10,7 @@ import { ToastContainer } from 'react-toastify'
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary' // build時に、FallbackProps not found in 'react-error-boundary' のエラーが出る
 import { ErrorDisplay } from '@/components/Layouts/Error/ErrorDisplay'
 import { AlertModalManager } from '@/components/AlertModalManager'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 const queryClient = new QueryClient({
@@ -61,6 +62,7 @@ function App({ Component, pageProps }: AppProps) {
         <AlertModalManager />
         <Component {...pageProps} />
       </ErrorBoundary>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   )
   // return <Component {...pageProps} />
