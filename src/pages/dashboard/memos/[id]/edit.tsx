@@ -16,11 +16,11 @@ const DashboardMemoDetailEdit: NextPage = () => {
   // ルーター定義
   const router = useRouter()
   const { user } = useAuth({ middleware: 'auth' })
-  const [memoStatuses, setMemoStatuses] = useState<Status[]>([])
+  const [statuses, setStatuses] = useState<Status[]>([])
   const [memo, setMemo] = useState<Memo>()
   const [isLoading, setIsLoading] = useState(true)
 
-  const { status, data: categories } = useQueryMemoCategories()
+  const { status: useQueryStatus, data: categories } = useQueryMemoCategories()
 
   useEffect(() => {
     const init = async () => {
@@ -43,7 +43,7 @@ const DashboardMemoDetailEdit: NextPage = () => {
           return
         }
 
-        setMemoStatuses(await UseMemoStatuses())
+        setStatuses(await UseMemoStatuses())
       } catch (err) {
         // TODO：エラー処理
         console.log(err)
@@ -54,7 +54,7 @@ const DashboardMemoDetailEdit: NextPage = () => {
     init()
   }, [router, router.query.id])
 
-  if (isLoading) return <Loading />
+  if (isLoading || useQueryStatus === 'pending') return <Loading />
   if (!user) return null
 
   return (
@@ -68,7 +68,7 @@ const DashboardMemoDetailEdit: NextPage = () => {
       <Head>
         <title>Dashboard - メモの編集</title>
       </Head>
-      <MemoEdit memo={memo!} statuses={memoStatuses} categories={categories!} />
+      <MemoEdit memo={memo!} statuses={statuses} categories={categories!} />
     </AppLayout>
   )
 }

@@ -3,6 +3,7 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
+import { Loading } from '@/components/Loading'
 import MemoPost from '@/features/memos/dashboard/components/MemoPost'
 import { useAuth } from '@/hooks/auth'
 import { useQueryMemoCategories } from '@/hooks/memos/useQueryMemoCategories'
@@ -13,9 +14,10 @@ const DashboardMemoPost: NextPage = () => {
   // ルーター定義
   const router = useRouter()
   const { user } = useAuth({ middleware: 'auth' })
-  const { status, data: categories } = useQueryMemoCategories()
+  const [isLoading, setIsLoading] = useState(true)
+  const { status: useQueryStatus, data: categories } = useQueryMemoCategories()
 
-  const [memoStatuses, setMemoStatuses] = useState<Status[]>([])
+  const [statuses, setStatuses] = useState<Status[]>([])
 
   useEffect(() => {
     const init = async () => {
@@ -26,11 +28,13 @@ const DashboardMemoPost: NextPage = () => {
       }
 
       // setCategory(await useQueryMemoCategories())
-      setMemoStatuses(await UseMemoStatuses())
+      setStatuses(await UseMemoStatuses())
+      setIsLoading(false)
     }
     init()
   }, [])
 
+  if (isLoading || useQueryStatus === 'pending') return <Loading />
   if (!user) return null
 
   return (
@@ -44,7 +48,7 @@ const DashboardMemoPost: NextPage = () => {
       <Head>
         <title>Dashboard - メモの登録</title>
       </Head>
-      <MemoPost statuses={memoStatuses} categories={categories!} />
+      <MemoPost statuses={statuses} categories={categories!} />
     </AppLayout>
   )
 }

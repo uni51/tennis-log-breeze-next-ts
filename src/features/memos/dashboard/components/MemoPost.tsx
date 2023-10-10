@@ -39,7 +39,7 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<MemoForm>({ defaultValues: { category_id: 1, status_id: 1 } })
+  } = useForm<MemoForm>({ defaultValues: { category_id: 1, status_id: 0 } })
 
   // メモの登録
   const createMemo = (postData: MemoForm) => {
