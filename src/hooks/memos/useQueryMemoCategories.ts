@@ -2,7 +2,7 @@ import { apiClient } from '@/lib/utils/apiClient'
 import { useQuery } from '@tanstack/react-query'
 import { Category } from '@/types/Category'
 
-const getCatgeories = async () => {
+const getCatgeories = async (): Promise<Category[]> => {
   const responseCategories = await apiClient.get('api/memos/categories')
   let objectResponseCategories = responseCategories.data.data
 

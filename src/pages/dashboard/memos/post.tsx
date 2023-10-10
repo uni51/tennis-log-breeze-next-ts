@@ -7,17 +7,16 @@ import { Loading } from '@/components/Loading'
 import MemoPost from '@/features/memos/dashboard/components/MemoPost'
 import { useAuth } from '@/hooks/auth'
 import { useQueryMemoCategories } from '@/hooks/memos/useQueryMemoCategories'
-import { UseMemoStatuses } from '@/hooks/memos/useMemoStatuses'
-import { Status } from '@/types/Status'
+import { useQueryMemoStatuses } from '@/hooks/memos/useQueryMemoStatuses'
 
 const DashboardMemoPost: NextPage = () => {
   // ルーター定義
   const router = useRouter()
   const { user } = useAuth({ middleware: 'auth' })
   const [isLoading, setIsLoading] = useState(true)
-  const { status: useQueryStatus, data: categories } = useQueryMemoCategories()
 
-  const [statuses, setStatuses] = useState<Status[]>([])
+  const { status: queryMemoCategoriesStatus, data: categories } = useQueryMemoCategories()
+  const { status: queryMemoStatusesStatus, data: statuses } = useQueryMemoStatuses()
 
   useEffect(() => {
     const init = async () => {
@@ -27,14 +26,13 @@ const DashboardMemoPost: NextPage = () => {
         return
       }
 
-      // setCategory(await useQueryMemoCategories())
-      setStatuses(await UseMemoStatuses())
       setIsLoading(false)
     }
     init()
   }, [])
 
-  if (isLoading || useQueryStatus === 'pending') return <Loading />
+  if (isLoading || queryMemoCategoriesStatus === 'pending' || queryMemoStatusesStatus === 'pending')
+    return <Loading />
   if (!user) return null
 
   return (
@@ -48,7 +46,7 @@ const DashboardMemoPost: NextPage = () => {
       <Head>
         <title>Dashboard - メモの登録</title>
       </Head>
-      <MemoPost statuses={statuses} categories={categories!} />
+      <MemoPost statuses={statuses!} categories={categories!} />
     </AppLayout>
   )
 }

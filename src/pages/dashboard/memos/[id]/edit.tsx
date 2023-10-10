@@ -6,21 +6,21 @@ import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import MemoEdit from '@/features/memos/dashboard/components/MemoEdit'
 import { useAuth } from '@/hooks/auth'
-import { UseMemoStatuses } from '@/hooks/memos/useMemoStatuses'
+import { useQueryMemoCategories } from '@/hooks/memos/useQueryMemoCategories'
+import { useQueryMemoStatuses } from '@/hooks/memos/useQueryMemoStatuses'
 import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
-import { Status } from '@/types/Status'
-import { useQueryMemoCategories } from '@/hooks/memos/useQueryMemoCategories'
 
 const DashboardMemoDetailEdit: NextPage = () => {
   // ルーター定義
   const router = useRouter()
   const { user } = useAuth({ middleware: 'auth' })
-  const [statuses, setStatuses] = useState<Status[]>([])
+  // const [statuses, setStatuses] = useState<Status[]>([])
   const [memo, setMemo] = useState<Memo>()
   const [isLoading, setIsLoading] = useState(true)
 
-  const { status: useQueryStatus, data: categories } = useQueryMemoCategories()
+  const { status: queryMemoCategoriesStatus, data: categories } = useQueryMemoCategories()
+  const { status: queryMemoStatusesStatus, data: statuses } = useQueryMemoStatuses()
 
   useEffect(() => {
     const init = async () => {
@@ -42,8 +42,6 @@ const DashboardMemoDetailEdit: NextPage = () => {
           router.push('/dashboard/memos')
           return
         }
-
-        setStatuses(await UseMemoStatuses())
       } catch (err) {
         // TODO：エラー処理
         console.log(err)
@@ -54,7 +52,8 @@ const DashboardMemoDetailEdit: NextPage = () => {
     init()
   }, [router, router.query.id])
 
-  if (isLoading || useQueryStatus === 'pending') return <Loading />
+  if (isLoading || queryMemoCategoriesStatus === 'pending' || queryMemoStatusesStatus === 'pending')
+    return <Loading />
   if (!user) return null
 
   return (
@@ -68,7 +67,7 @@ const DashboardMemoDetailEdit: NextPage = () => {
       <Head>
         <title>Dashboard - メモの編集</title>
       </Head>
-      <MemoEdit memo={memo!} statuses={statuses} categories={categories!} />
+      <MemoEdit memo={memo!} statuses={statuses!} categories={categories!} />
     </AppLayout>
   )
 }
