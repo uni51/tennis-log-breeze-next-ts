@@ -10,6 +10,16 @@ import { ToastContainer } from 'react-toastify'
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary' // build時に、FallbackProps not found in 'react-error-boundary' のエラーが出る
 import { ErrorDisplay } from '@/components/Layouts/Error/ErrorDisplay'
 import { AlertModalManager } from '@/components/AlertModalManager'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+      refetchOnWindowFocus: false,
+    },
+  },
+})
 
 function App({ Component, pageProps }: AppProps) {
   // See) https://github.com/vercel/next.js/tree/canary/examples/with-loading
@@ -37,19 +47,21 @@ function App({ Component, pageProps }: AppProps) {
   }, [router])
 
   return (
-    <ErrorBoundary FallbackComponent={ErrorFallback} onError={onError}>
-      <ToastContainer
-        position='top-center'
-        autoClose={1000}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover={false}
-      />
-      <AlertModalManager />
-      <Component {...pageProps} />
-    </ErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <ErrorBoundary FallbackComponent={ErrorFallback} onError={onError}>
+        <ToastContainer
+          position='top-center'
+          autoClose={1000}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover={false}
+        />
+        <AlertModalManager />
+        <Component {...pageProps} />
+      </ErrorBoundary>
+    </QueryClientProvider>
   )
   // return <Component {...pageProps} />
 }

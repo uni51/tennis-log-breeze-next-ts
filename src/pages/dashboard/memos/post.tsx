@@ -5,17 +5,17 @@ import { useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
 import MemoPost from '@/features/memos/dashboard/components/MemoPost'
 import { useAuth } from '@/hooks/auth'
-import { UseMemoCategories } from '@/hooks/memos/UseMemoCategories'
-import { UseMemoStatuses } from '@/hooks/memos/UseMemoStatuses'
-import { Category } from '@/types/Category'
+import { useQueryMemoCategories } from '@/hooks/memos/useQueryMemoCategories'
+import { UseMemoStatuses } from '@/hooks/memos/useMemoStatuses'
 import { Status } from '@/types/Status'
 
 const DashboardMemoPost: NextPage = () => {
   // ルーター定義
   const router = useRouter()
   const { user } = useAuth({ middleware: 'auth' })
-  const [category, setCategory] = useState<Category[]>([])
-  const [status, setStatus] = useState<Status[]>([])
+  const { status, data: category } = useQueryMemoCategories()
+
+  const [memoStatus, setMemoStatus] = useState<Status[]>([])
 
   useEffect(() => {
     const init = async () => {
@@ -25,8 +25,8 @@ const DashboardMemoPost: NextPage = () => {
         return
       }
 
-      setCategory(await UseMemoCategories())
-      setStatus(await UseMemoStatuses())
+      // setCategory(await useQueryMemoCategories())
+      setMemoStatus(await UseMemoStatuses())
     }
     init()
   }, [])
@@ -44,7 +44,7 @@ const DashboardMemoPost: NextPage = () => {
       <Head>
         <title>Dashboard - メモの登録</title>
       </Head>
-      <MemoPost status={status} category={category} />
+      <MemoPost status={memoStatus} category={category!} />
     </AppLayout>
   )
 }
