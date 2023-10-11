@@ -1,4 +1,3 @@
-import { ErrorMessage } from '@hookform/error-message'
 import { AxiosError, AxiosResponse } from 'axios'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
@@ -65,8 +64,7 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
 
   // メモの登録
   const createMemo = (postData: MemoForm) => {
-    console.log('createMemo')
-    // バリデーションメッセージの初期化
+    // バリデーションメッセージ（Laravel側）の初期化
     setValidation({})
 
     apiClient
@@ -115,6 +113,8 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
             {...register('title', { required: true })}
           />
           {errors.title?.message && <p className='py-3 text-red-500'>{errors.title?.message}</p>}
+          {/* 以下は、Laravel側でバリデーションエラーが発生した際のメッセージ */}
+          {validation.title && <p className='py-3 text-red-500'>{validation.title}</p>}
         </div>
         {/* 内容 */}
         <div className='mb-5'>
@@ -129,6 +129,8 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
             {...register('body', { required: true })}
           />
           {errors.body?.message && <p className='py-3 text-red-500'>{errors.body?.message}</p>}
+          {/* 以下は、Laravel側でバリデーションエラーが発生した際のメッセージ */}
+          {validation.body && <p className='py-3 text-red-500'>{validation.body}</p>}
         </div>
         {/* カテゴリー */}
         <div className='mb-5'>
@@ -136,7 +138,10 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
             <p>カテゴリー</p>
             <RequiredMark />
           </div>
-          <select defaultValue={defaultValues?.category_id} {...register('category_id')}>
+          <select
+            defaultValue={defaultValues?.category_id}
+            {...register('category_id', { required: true })}
+          >
             {categories.map((item, i) => (
               <option value={item.id} key={item.id}>
                 {item.name}
@@ -146,6 +151,8 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
           {errors.category_id?.message && (
             <p className='py-3 text-red-500'>{errors.category_id?.message}</p>
           )}
+          {/* 以下は、Laravel側でバリデーションエラーが発生した際のメッセージ */}
+          {validation.category_id && <p className='py-3 text-red-500'>{validation.category_id}</p>}
         </div>
         {/* ステータス */}
         <div className='mb-5'>
@@ -153,7 +160,10 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
             <p>ステータス</p>
             <RequiredMark />
           </div>
-          <select defaultValue={defaultValues?.status_id} {...register('status_id')}>
+          <select
+            defaultValue={defaultValues?.status_id}
+            {...register('status_id', { required: true })}
+          >
             {statuses.map((item, i) => (
               <option value={item.id} key={item.id}>
                 {item.name}
@@ -163,6 +173,8 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
           {errors.status_id?.message && (
             <p className='py-3 text-red-500'>{errors.status_id?.message}</p>
           )}
+          {/* 以下は、Laravel側でバリデーションエラーが発生した際のメッセージ */}
+          {validation.status_id && <p className='py-3 text-red-500'>{validation.status_id}</p>}
         </div>
         {/* 登録するボタン */}
         <div className='text-center'>
