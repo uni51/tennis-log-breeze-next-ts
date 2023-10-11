@@ -3,19 +3,17 @@ import { AxiosError, AxiosResponse } from 'axios'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import * as z from 'zod'
 import { RequiredMark } from '@/components/RequiredMark'
 import { apiClient } from '@/lib/utils/apiClient'
 import { Category } from '@/types/Category'
 import { Status } from '@/types/Status'
-import { zodResolver } from '@hookform/resolvers/zod'
 
 // POSTデータの型
 type MemoForm = {
   title: string
   body: string
-  category_id: string
-  status_id: string
+  category_id: number
+  status_id: number
 }
 
 // バリデーションメッセージの型
@@ -31,41 +29,20 @@ type Props = {
   categories: Category[]
 }
 
-const schema = z.object({
-  title: z.string().min(1, { message: '必須入力です。' }),
-  body: z.string().min(1, { message: '必須入力です。' }),
-  category_id: z
-    .string()
-    .min(1, { message: 'Query parameter is required' })
-    .transform((val) => parseInt(val))
-    .refine((val) => !isNaN(val), { message: '不正な値です' }),
-  status_id: z
-    .string()
-    .min(1, { message: 'Query parameter is required' })
-    .transform((val) => parseInt(val))
-    .refine((val) => !isNaN(val), { message: '不正な値です' }),
-})
-
 const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
   // ルーター定義
   const router = useRouter()
   const [validation, setValidation] = useState<Validation>({})
-
-  const defaultValues = {
-    category_id: '1', // カテゴリーは、フォアハンドをデフォルト値にする
-    status_id: '0', // ステータスは、下書きをデフォルト値にする
-  }
 
   // React-Hook-Form
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<MemoForm>({ defaultValues, resolver: zodResolver(schema) })
+  } = useForm<MemoForm>({ defaultValues: { category_id: 1, status_id: 0 } })
 
   // メモの登録
   const createMemo = (postData: MemoForm) => {
-    console.log('createMemo')
     // バリデーションメッセージの初期化
     setValidation({})
 
@@ -102,9 +79,9 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
   }
 
   return (
-    <div className='mx-auto w-4/5 mt-4 sm:mt-4 py-4 rounded-2xl'>
-      <form onSubmit={handleSubmit(createMemo)}>
-        {/* タイトル */}
+    <div className='w-4/5 mx-auto'>
+      {/* <div className='mx-auto mt-4 sm:mt-16 border-2 px-6 sm:px-12 py-4 sm:py-16 rounded-2xl'> */}
+      <div className='mx-auto mt-4 sm:mt-4 w-full py-4 rounded-2xl'>
         <div className='mb-2 sm:mb-4'>
           <div className='flex justify-start my-1 sm:my-2'>
             <p>タイトル</p>
@@ -112,11 +89,15 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
           </div>
           <input
             className='p-2 border rounded-md w-full outline-none'
-            {...register('title', { required: true })}
+            {...register('title', { required: '必須入力です。' })}
           />
-          {errors.title?.message && <p className='py-3 text-red-500'>{errors.title?.message}</p>}
+          <ErrorMessage
+            errors={errors}
+            name={'title'}
+            render={({ message }) => <p className='py-3 text-red-500'>{message}</p>}
+          />
+          {validation.title && <p className='py-3 text-red-500'>{validation.title}</p>}
         </div>
-        {/* 内容 */}
         <div className='mb-5'>
           <div className='flex justify-start my-2'>
             <p>内容</p>
@@ -126,54 +107,66 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
             className='p-2 border rounded-md w-full outline-none'
             cols={30}
             rows={12}
-            {...register('body', { required: true })}
+            {...register('body', { required: '必須入力です。' })}
           />
-          {errors.body?.message && <p className='py-3 text-red-500'>{errors.body?.message}</p>}
+          <ErrorMessage
+            errors={errors}
+            name={'body'}
+            render={({ message }) => <p className='py-3 text-red-500'>{message}</p>}
+          />
+          {validation.body && <p className='py-3 text-red-500'>{validation.body}</p>}
         </div>
-        {/* カテゴリー */}
-        <div className='mb-5'>
-          <div className='flex justify-start my-2'>
-            <p>カテゴリー</p>
-            <RequiredMark />
-          </div>
-          <select defaultValue={defaultValues?.category_id} {...register('category_id')}>
-            {categories.map((item, i) => (
-              <option value={item.id} key={item.id}>
-                {item.name}
-              </option>
-            ))}
-          </select>
-          {errors.category_id?.message && (
-            <p className='py-3 text-red-500'>{errors.category_id?.message}</p>
-          )}
-        </div>
-        {/* ステータス */}
-        <div className='mb-5'>
-          <div className='flex justify-start my-2'>
-            <p>ステータス</p>
-            <RequiredMark />
-          </div>
-          <select defaultValue={defaultValues?.status_id} {...register('status_id')}>
-            {statuses.map((item, i) => (
-              <option value={item.id} key={item.id}>
-                {item.name}
-              </option>
-            ))}
-          </select>
-          {errors.status_id?.message && (
-            <p className='py-3 text-red-500'>{errors.status_id?.message}</p>
-          )}
-        </div>
-        {/* 登録するボタン */}
+        <p>カテゴリー</p>
+        <select
+          className='mb-5'
+          {...register('category_id', {
+            validate: (value) => {
+              return !!categories.find((item) => item.id === Number(value)) ? true : '不正な値です'
+            },
+          })}
+        >
+          {categories.map((item, i) => (
+            <option value={item.id} key={item.id}>
+              {item.name}
+            </option>
+          ))}
+        </select>
+        <ErrorMessage
+          errors={errors}
+          name={'category_id'}
+          render={({ message }) => <p className='py-3 text-red-500'>{message}</p>}
+        />
+        {validation.category_id && <p className='py-3 text-red-500'>{validation.category_id}</p>}
+        <p>ステータス</p>
+        <select
+          className='sm:mb-5'
+          {...register('status_id', {
+            validate: (value) => {
+              return !!statuses.find((item) => item.id == value) ? true : '不正な値です'
+            },
+          })}
+        >
+          {statuses.map((item, i) => (
+            <option value={item.id} key={item.id}>
+              {item.name}
+            </option>
+          ))}
+        </select>
+        <ErrorMessage
+          errors={errors}
+          name={'status_id'}
+          render={({ message }) => <p className='py-3 text-red-500'>{message}</p>}
+        />
+        {validation.status_id && <p className='py-3 text-red-500'>{validation.status_id}</p>}
         <div className='text-center'>
           <button
             className='bg-gray-700 text-gray-50 py-3 sm:px-20 px-10 mt-8 rounded-xl cursor-pointer drop-shadow-md hover:bg-gray-600'
-            type='submit'
+            onClick={handleSubmit(createMemo)}
           >
             登録する
           </button>
         </div>
-      </form>
+      </div>
     </div>
   )
 }
