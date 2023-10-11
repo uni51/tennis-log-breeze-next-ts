@@ -4,10 +4,9 @@ import Link from 'next/link'
 import router from 'next/router'
 import { Dispatch, SetStateAction, useState } from 'react'
 import { toast } from 'react-toastify'
-import { apiClient } from '@/lib/utils/apiClient'
+import { showAlertModal } from '@/components/AlertModalManager'
 import { Memo } from '@/types/Memo'
 import { LoginUser } from '@/types/loginUser'
-import { showAlertModal } from '@/components/AlertModalManager'
 
 type Props = {
   memo: Memo

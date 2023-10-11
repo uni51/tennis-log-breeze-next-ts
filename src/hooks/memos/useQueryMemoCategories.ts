@@ -1,5 +1,5 @@
-import { apiClient } from '@/lib/utils/apiClient'
 import { useQuery } from '@tanstack/react-query'
+import { apiClient } from '@/lib/utils/apiClient'
 import { Category } from '@/types/Category'
 
 const getCatgeories = async (): Promise<Category[]> => {

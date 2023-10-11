@@ -1,5 +1,5 @@
-import { apiClient } from '@/lib/utils/apiClient'
 import { useQuery } from '@tanstack/react-query'
+import { apiClient } from '@/lib/utils/apiClient'
 import { Status } from '@/types/Status'
 
 const getStatuses = async (): Promise<Status[]> => {

@@ -1,6 +1,8 @@
 import 'tailwindcss/tailwind.css'
 import 'nprogress/nprogress.css'
 import 'react-toastify/dist/ReactToastify.css'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import type { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
 import NProgress from 'nprogress'
@@ -8,10 +10,8 @@ import React, { useEffect } from 'react'
 import { ToastContainer } from 'react-toastify'
 // eslint-disable-next-line
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary' // build時に、FallbackProps not found in 'react-error-boundary' のエラーが出る
-import { ErrorDisplay } from '@/components/Layouts/Error/ErrorDisplay'
 import { AlertModalManager } from '@/components/AlertModalManager'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ErrorDisplay } from '@/components/Layouts/Error/ErrorDisplay'
 
 const queryClient = new QueryClient({
   defaultOptions: {

@@ -6,8 +6,8 @@ import useSWR from 'swr'
 import { firebaseConfig } from '@/lib/firebase-helpers'
 import { fetchWithParams } from '@/lib/user'
 import { apiClient } from '@/lib/utils/apiClient'
-import { LoginError } from '@/types/authError'
 import { User } from '@/types/User'
+import { LoginError } from '@/types/authError'
 
 declare type AuthMiddleware = 'auth' | 'guest'
 
