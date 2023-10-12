@@ -1,7 +1,7 @@
-import { apiClient } from '@/lib/utils/apiClient'
 import { AxiosError, AxiosResponse } from 'axios'
 import router from 'next/router'
 import { useState } from 'react'
+import { apiClient } from '@/lib/utils/apiClient'
 
 // POSTデータの型
 export type ProfileForm = {

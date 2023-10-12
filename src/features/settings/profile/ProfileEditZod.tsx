@@ -2,9 +2,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { RequiredMark } from '@/components/RequiredMark'
-import { User } from '@/types/User'
-import { Career } from '@/types/Career'
 import { ProfileForm, editProfile } from '@/features/memos/dashboard/lib/editProfile'
+import { Career } from '@/types/Career'
+import { User } from '@/types/User'
 
 type Props = {
   user: User

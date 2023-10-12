@@ -6,8 +6,8 @@ import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import ProfileEditZod from '@/features/settings/profile/ProfileEditZod'
 import { useAuth } from '@/hooks/auth'
-import { Career } from '@/types/Career'
 import { UseCareer } from '@/hooks/memos/useCareer'
+import { Career } from '@/types/Career'
 
 const Profile: NextPage = () => {
   const router = useRouter()
