@@ -1,29 +1,11 @@
 import { apiClient } from '@/lib/utils/apiClient'
+import { MemoForm, MemoFormValidation } from '@/types/MemoForm'
 import { AxiosError, AxiosResponse } from 'axios'
 import router from 'next/router'
-import { useState } from 'react'
+import { UseFormSetError } from 'react-hook-form'
 
-// POSTデータの型
-export type ProfileForm = {
-  name: string
-  nickname: string
-  career_id: string
-}
-
-// バリデーションメッセージの型
-type Validation = {
-  name?: string
-  nickname?: string
-  career_id?: string
-}
-
-// プロフィールの編集
-export const editProfile = (postData: ProfileForm) => {
-  const [validation, setValidation] = useState<Validation>({})
-
-  // バリデーションメッセージの初期化
-  // setValidation({})
-
+// メモの登録
+export const createMemo = (postData: MemoForm, setError: UseFormSetError<MemoForm>) => {
   apiClient
     // CSRF保護の初期化
     .get('/auth/sanctum/csrf-cookie')
@@ -42,12 +24,10 @@ export const editProfile = (postData: ProfileForm) => {
             // state更新用のオブジェクトを別で定義
             const validationMessages: {
               [index: string]: string
-            } = {} as Validation
+            } = {} as MemoFormValidation
             Object.keys(errors).map((key: string) => {
-              validationMessages[key] = errors[key][0]
+              setError(key as keyof MemoForm, { message: errors[key][0] })
             })
-            // state更新用オブジェクトに更新
-            setValidation({ ...validation, ...validationMessages })
           }
           if (err.response?.status === 500) {
             alert('システムエラーです！！')

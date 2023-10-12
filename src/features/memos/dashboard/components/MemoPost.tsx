@@ -1,36 +1,18 @@
-import { AxiosError, AxiosResponse } from 'axios'
-import { useRouter } from 'next/router'
-import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { RequiredMark } from '@/components/RequiredMark'
-import { apiClient } from '@/lib/utils/apiClient'
 import { Category } from '@/types/Category'
 import { Status } from '@/types/Status'
 import { zodResolver } from '@hookform/resolvers/zod'
-
-// POSTデータの型
-type MemoForm = {
-  title: string
-  body: string
-  category_id: string
-  status_id: string
-}
-
-// バリデーションメッセージの型
-type Validation = {
-  title?: string
-  body?: string
-  category_id?: string
-  status_id?: string
-}
+import { createMemo } from '../lib/createMemo'
+import { MemoForm } from '@/types/MemoForm'
 
 type Props = {
   statuses: Status[]
   categories: Category[]
 }
 
-const schema = z.object({
+const MemoPostSchema = z.object({
   title: z.string().min(1, { message: '必須入力です。' }),
   body: z.string().min(1, { message: '必須入力です。' }),
   category_id: z
@@ -46,10 +28,6 @@ const schema = z.object({
 })
 
 const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
-  // ルーター定義
-  const router = useRouter()
-  const [validation, setValidation] = useState<Validation>({})
-
   const defaultValues = {
     category_id: '1', // カテゴリーは、フォアハンドをデフォルト値にする
     status_id: '0', // ステータスは、下書きをデフォルト値にする
@@ -59,49 +37,16 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
-  } = useForm<MemoForm>({ defaultValues, resolver: zodResolver(schema) })
-
-  // メモの登録
-  const createMemo = (postData: MemoForm) => {
-    // バリデーションメッセージ（Laravel側）の初期化
-    setValidation({})
-
-    apiClient
-      // CSRF保護の初期化
-      .get('/auth/sanctum/csrf-cookie')
-      .then((res) => {
-        // APIへのリクエスト
-        apiClient
-          .post('/api/dashboard/memos', postData)
-          .then((response: AxiosResponse) => {
-            console.log(response.data)
-            router.push('/dashboard/memos')
-          })
-          .catch((err: AxiosError) => {
-            // バリデーションエラー
-            if (err.response?.status === 422) {
-              const errors = err.response?.data.errors
-              // state更新用のオブジェクトを別で定義
-              const validationMessages: {
-                [index: string]: string
-              } = {} as Validation
-              Object.keys(errors).map((key: string) => {
-                validationMessages[key] = errors[key][0]
-              })
-              // state更新用オブジェクトに更新
-              setValidation({ ...validation, ...validationMessages })
-            }
-            if (err.response?.status === 500) {
-              alert('システムエラーです！！')
-            }
-          })
-      })
-  }
+  } = useForm<MemoForm>({
+    defaultValues,
+    resolver: zodResolver(MemoPostSchema),
+  })
 
   return (
     <div className='mx-auto w-4/5 mt-4 sm:mt-4 py-4 rounded-2xl'>
-      <form onSubmit={handleSubmit(createMemo)}>
+      <form onSubmit={handleSubmit((data) => createMemo(data, setError))}>
         {/* タイトル */}
         <div className='mb-2 sm:mb-4'>
           <div className='flex justify-start my-1 sm:my-2'>
@@ -113,8 +58,6 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
             {...register('title', { required: true })}
           />
           {errors.title?.message && <p className='py-3 text-red-500'>{errors.title?.message}</p>}
-          {/* 以下は、Laravel側でバリデーションエラーが発生した際のメッセージ */}
-          {validation.title && <p className='py-3 text-red-500'>{validation.title}</p>}
         </div>
         {/* 内容 */}
         <div className='mb-5'>
@@ -129,8 +72,6 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
             {...register('body', { required: true })}
           />
           {errors.body?.message && <p className='py-3 text-red-500'>{errors.body?.message}</p>}
-          {/* 以下は、Laravel側でバリデーションエラーが発生した際のメッセージ */}
-          {validation.body && <p className='py-3 text-red-500'>{validation.body}</p>}
         </div>
         {/* カテゴリー */}
         <div className='mb-5'>
@@ -151,8 +92,6 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
           {errors.category_id?.message && (
             <p className='py-3 text-red-500'>{errors.category_id?.message}</p>
           )}
-          {/* 以下は、Laravel側でバリデーションエラーが発生した際のメッセージ */}
-          {validation.category_id && <p className='py-3 text-red-500'>{validation.category_id}</p>}
         </div>
         {/* ステータス */}
         <div className='mb-5'>
@@ -173,8 +112,6 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
           {errors.status_id?.message && (
             <p className='py-3 text-red-500'>{errors.status_id?.message}</p>
           )}
-          {/* 以下は、Laravel側でバリデーションエラーが発生した際のメッセージ */}
-          {validation.status_id && <p className='py-3 text-red-500'>{validation.status_id}</p>}
         </div>
         {/* 登録するボタン */}
         <div className='text-center'>
