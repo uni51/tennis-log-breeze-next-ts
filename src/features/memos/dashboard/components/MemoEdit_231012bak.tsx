@@ -1,11 +1,9 @@
-import { zodResolver } from '@hookform/resolvers/zod'
 import { ErrorMessage } from '@hookform/error-message'
 import { AxiosError, AxiosResponse } from 'axios'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { RequiredMark } from '@/components/RequiredMark'
-import { MemoPostSchema } from '@/features/memos/dashboard/lib/schema/MemoPostSchema'
 import { apiClient } from '@/lib/utils/apiClient'
 import { Category } from '@/types/Category'
 import { Memo } from '@/types/Memo'
@@ -38,22 +36,18 @@ const MemoEdit: React.FC<Props> = ({ memo, statuses, categories }) => {
   const router = useRouter()
   const [validation, setValidation] = useState<Validation>({})
 
-  const defaultValues = {
-    title: memo.title,
-    body: memo.body,
-    category_id: memo.category_id,
-    status_id: memo.status,
-  }
-
   // React-Hook-Form
   const {
     register,
     handleSubmit,
-    setError,
     formState: { errors },
   } = useForm<MemoForm>({
-    defaultValues,
-    resolver: zodResolver(MemoPostSchema),
+    defaultValues: {
+      title: memo.title,
+      body: memo.body,
+      category_id: memo.category_id,
+      status_id: memo.status,
+    },
   })
 
   // メモの編集
