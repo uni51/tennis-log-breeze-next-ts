@@ -1,5 +1,5 @@
-import { RequiredMark } from '@/components/RequiredMark'
 import { useFormContext } from 'react-hook-form'
+import { RequiredMark } from '@/components/RequiredMark'
 
 type Props = {
   target: string

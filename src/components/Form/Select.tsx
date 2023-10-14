@@ -1,10 +1,11 @@
 import { useFormContext } from 'react-hook-form'
 import { RequiredMark } from '@/components/RequiredMark'
+import { Career } from '@/types/Career'
 import { Category } from '@/types/Category'
 import { Status } from '@/types/Status'
 
 type Props = {
-  target: Category[] | Status[]
+  target: Category[] | Status[] | Career[]
   target_id: string
   label: string
   required: boolean
