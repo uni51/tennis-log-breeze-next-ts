@@ -15,7 +15,6 @@ const DashboardMemoDetailEdit: NextPage = () => {
   // ルーター定義
   const router = useRouter()
   const { user } = useAuth({ middleware: 'auth' })
-  // const [statuses, setStatuses] = useState<Status[]>([])
   const [memo, setMemo] = useState<Memo>()
   const [isLoading, setIsLoading] = useState(true)
 
