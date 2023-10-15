@@ -6,6 +6,7 @@ import useSWR from 'swr'
 import { firebaseConfig } from '@/lib/firebase-helpers'
 import { fetchWithParams } from '@/lib/user'
 import { apiClient } from '@/lib/utils/apiClient'
+import { User } from '@/types/User'
 import { LoginError } from '@/types/authError'
 
 declare type AuthMiddleware = 'auth' | 'guest'
@@ -25,19 +26,6 @@ interface IApiRequestLogin {
   setErrors: (errors: LoginError) => void
   setStatus: React.Dispatch<React.SetStateAction<any | null>>
   [key: string]: any
-}
-
-export interface User {
-  data?: {
-    id?: number
-    name?: string
-    nickname?: string
-    email?: string
-    email_verified_at?: string
-    must_verify_email?: boolean // this is custom attribute
-    created_at?: string
-    updated_at?: string
-  }
 }
 
 const auth = getAuth(initializeApp(firebaseConfig))

@@ -6,21 +6,20 @@ import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import MemoEdit from '@/features/memos/dashboard/components/MemoEdit'
 import { useAuth } from '@/hooks/auth'
-import { UseGetMemoCategories } from '@/hooks/memos/useGetMemoCategories'
-import { UseGetMemoStatuses } from '@/hooks/memos/useGetMemoStatuses'
+import { useQueryMemoCategories } from '@/hooks/memos/useQueryMemoCategories'
+import { useQueryMemoStatuses } from '@/hooks/memos/useQueryMemoStatuses'
 import { apiClient } from '@/lib/utils/apiClient'
-import { Category } from '@/types/Category'
 import { Memo } from '@/types/Memo'
-import { Status } from '@/types/Status'
 
 const DashboardMemoDetailEdit: NextPage = () => {
   // ルーター定義
   const router = useRouter()
   const { user } = useAuth({ middleware: 'auth' })
-  const [category, setCategory] = useState<Category[]>([])
-  const [status, setStatus] = useState<Status[]>([])
   const [memo, setMemo] = useState<Memo>()
   const [isLoading, setIsLoading] = useState(true)
+
+  const { status: queryMemoCategoriesStatus, data: categories } = useQueryMemoCategories()
+  const { status: queryMemoStatusesStatus, data: statuses } = useQueryMemoStatuses()
 
   useEffect(() => {
     const init = async () => {
@@ -42,9 +41,6 @@ const DashboardMemoDetailEdit: NextPage = () => {
           router.push('/dashboard/memos')
           return
         }
-
-        setCategory(await UseGetMemoCategories())
-        setStatus(await UseGetMemoStatuses())
       } catch (err) {
         // TODO：エラー処理
         console.log(err)
@@ -55,7 +51,8 @@ const DashboardMemoDetailEdit: NextPage = () => {
     init()
   }, [router, router.query.id])
 
-  if (isLoading) return <Loading />
+  if (isLoading || queryMemoCategoriesStatus === 'pending' || queryMemoStatusesStatus === 'pending')
+    return <Loading />
   if (!user) return null
 
   return (
@@ -69,7 +66,7 @@ const DashboardMemoDetailEdit: NextPage = () => {
       <Head>
         <title>Dashboard - メモの編集</title>
       </Head>
-      <MemoEdit memo={memo!} status={status} category={category} />
+      <MemoEdit memo={memo!} statuses={statuses!} categories={categories!} />
     </AppLayout>
   )
 }

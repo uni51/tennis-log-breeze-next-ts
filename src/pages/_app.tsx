@@ -1,12 +1,26 @@
 import 'tailwindcss/tailwind.css'
 import 'nprogress/nprogress.css'
+import 'react-toastify/dist/ReactToastify.css'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import type { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
 import NProgress from 'nprogress'
 import React, { useEffect } from 'react'
+import { ToastContainer } from 'react-toastify'
 // eslint-disable-next-line
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary' // build時に、FallbackProps not found in 'react-error-boundary' のエラーが出る
+import { AlertModalManager } from '@/components/AlertModalManager'
 import { ErrorDisplay } from '@/components/Layouts/Error/ErrorDisplay'
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+      refetchOnWindowFocus: false,
+    },
+  },
+})
 
 function App({ Component, pageProps }: AppProps) {
   // See) https://github.com/vercel/next.js/tree/canary/examples/with-loading
@@ -33,12 +47,25 @@ function App({ Component, pageProps }: AppProps) {
     }
   }, [router])
 
-  // return <Component {...pageProps} />
   return (
-    <ErrorBoundary FallbackComponent={ErrorFallback} onError={onError}>
-      <Component {...pageProps} />
-    </ErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <ErrorBoundary FallbackComponent={ErrorFallback} onError={onError}>
+        <ToastContainer
+          position='top-center'
+          autoClose={1000}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover={false}
+        />
+        <AlertModalManager />
+        <Component {...pageProps} />
+      </ErrorBoundary>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   )
+  // return <Component {...pageProps} />
 }
 
 const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {

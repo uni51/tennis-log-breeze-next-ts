@@ -9,7 +9,7 @@ type Props = {
   categoryNumber: number | null
 }
 
-export const useGetMemoList = ({ preApiUrl, pageIndex, categoryNumber }: Props) => {
+export const useMemoList = ({ preApiUrl, pageIndex, categoryNumber }: Props) => {
   // const { cache } = useSWRConfig()
 
   const apiUrl = getMemoListApiUrl({ preApiUrl, pageIndex, categoryNumber })
