@@ -6,34 +6,31 @@ import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import ProfileEdit from '@/features/settings/profile/ProfileEdit'
 import { useAuth } from '@/hooks/auth'
-import { UseCareer } from '@/hooks/memos/useCareer'
-import { Career } from '@/types/Career'
+import { useQueryProfileCareers } from '@/hooks/memos/useQueryProfileCareer'
 
 const Profile: NextPage = () => {
   const router = useRouter()
+  const { user } = useAuth({ middleware: 'auth' })
   const [isLoading, setIsLoading] = useState(true)
-  const { checkLoggedIn, user } = useAuth({ middleware: 'auth' })
 
-  const [career, setCareer] = useState<Career[]>([])
+  const { status: queryProfileCareers, data: careers } = useQueryProfileCareers()
 
   // 初回レンダリング時にAPIリクエスト
   useEffect(() => {
     const init = async () => {
       // ログイン中か判定
-      const res: boolean = await checkLoggedIn()
-      if (!res) {
+      if (!user) {
         router.push('/login')
         return
       }
 
-      setCareer(await UseCareer())
       // ローディング終了は、各種APIリクエストが終わってからにしないと、初期値の設定が正しくできない
       setIsLoading(false)
     }
     init()
   }, [])
 
-  if (isLoading) return <Loading />
+  if (isLoading || queryProfileCareers === 'pending') return <Loading />
   if (!user) return null
 
   return (
@@ -45,7 +42,7 @@ const Profile: NextPage = () => {
       <Head>
         <title>プロフィールの編集</title>
       </Head>
-      <ProfileEdit user={user} career={career} />
+      <ProfileEdit user={user} careers={careers!} />
     </AppLayout>
   )
 }

@@ -4,17 +4,16 @@ import * as z from 'zod'
 import { LargeSubmitButton } from '@/components/Form/LargeSubmitButton'
 import { Select } from '@/components/Form/Select'
 import { TextInput } from '@/components/Form/TextInput'
-import { RequiredMark } from '@/components/RequiredMark'
 import { ProfileForm, editProfile } from '@/features/memos/dashboard/lib/editProfile'
 import { Career } from '@/types/Career'
 import { User } from '@/types/User'
 
 type Props = {
   user: User
-  career: Career[]
+  careers: Career[]
 }
 
-const schema = z.object({
+const ProfileSchema = z.object({
   name: z.string().min(1, { message: '1文字以上入力する必要があります。' }),
   nickname: z.string().min(1, { message: '1文字以上入力する必要があります。' }),
   career_id: z
@@ -25,7 +24,7 @@ const schema = z.object({
   // career_id: z.number(),
 })
 
-const ProfileEdit: React.FC<Props> = ({ user, career }) => {
+const ProfileEdit: React.FC<Props> = ({ user, careers }) => {
   const defaultValues = {
     name: user.data?.name,
     nickname: user.data?.nickname,
@@ -35,7 +34,7 @@ const ProfileEdit: React.FC<Props> = ({ user, career }) => {
   // React-Hook-Form
   const useFormMethods = useForm<ProfileForm>({
     defaultValues,
-    resolver: zodResolver(schema),
+    resolver: zodResolver(ProfileSchema),
   })
 
   const { handleSubmit, setError } = useFormMethods
@@ -50,7 +49,7 @@ const ProfileEdit: React.FC<Props> = ({ user, career }) => {
           <TextInput target={'nickname'} required={true} label={'ニックネーム'} />
           {/* テニス歴 */}
           <Select
-            target={career}
+            target={careers}
             target_id={'career_id'}
             required={true}
             label={'テニス歴'}
