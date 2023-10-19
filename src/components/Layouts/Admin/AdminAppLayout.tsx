@@ -1,6 +1,7 @@
 import { PropsWithChildren, ReactNode } from 'react'
 import AdminNavigation from '@/components/Layouts/Admin/AdminNavigation'
-import { useAdminAuth } from '@/hooks/adminAuth'
+import { useAdminAuth } from '@/hooks/adminAuthQuery'
+import { Admin } from '@/hooks/adminAuth'
 
 interface Props {
   header: ReactNode
@@ -11,7 +12,7 @@ const AdminAppLayout = ({ header, children }: PropsWithChildren<Props>) => {
 
   return (
     <div className='min-h-screen bg-gray-100'>
-      <AdminNavigation {...admin} />
+      <AdminNavigation admin={admin} />
 
       {/* Page Heading */}
       <header className='bg-white shadow'>

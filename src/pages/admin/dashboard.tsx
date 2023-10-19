@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import AdminAppLayout from '@/components/Layouts/Admin/AdminAppLayout'
 
-const Dashboard = () => {
+const AdminDashboard = () => {
   return (
     <AdminAppLayout
       header={
@@ -25,4 +25,4 @@ const Dashboard = () => {
   )
 }
 
-export default Dashboard
+export default AdminDashboard

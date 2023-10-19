@@ -8,7 +8,9 @@ import NavLink from '@/components/NavLink'
 import ResponsiveNavLink, { ResponsiveNavButton } from '@/components/ResponsiveNavLink'
 import { useAdminAuth, Admin } from '@/hooks/adminAuth'
 
-const AdminNavigation = (admin?: Admin) => {
+type Props = { admin?: Admin }
+
+const AdminNavigation: React.FC<Props> = ({ admin }) => {
   const router = useRouter()
 
   const { logout } = useAdminAuth({ middleware: 'adminAuth' })

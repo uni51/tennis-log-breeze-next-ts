@@ -3,7 +3,7 @@ import 'nprogress/nprogress.css'
 import 'react-toastify/dist/ReactToastify.css'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import type { AppProps } from 'next/app'
+import type { AppProps, NextWebVitalsMetric } from 'next/app'
 import { useRouter } from 'next/router'
 import NProgress from 'nprogress'
 import React, { useEffect } from 'react'
@@ -13,6 +13,30 @@ import { ErrorBoundary, FallbackProps } from 'react-error-boundary' // build時�
 import { AlertModalManager } from '@/components/AlertModalManager'
 import { ErrorDisplay } from '@/components/Layouts/Error/ErrorDisplay'
 
+// export function reportWebVitals(metric: NextWebVitalsMetric) {
+//   switch (metric.name) {
+//     case 'FCP':
+//       console.log(`FCP: ${Math.round(metric.value * 10) / 10}`)
+//       break
+//     case 'LCP':
+//       console.log(`LCP: ${Math.round(metric.value * 10) / 10}`)
+//       break
+//     case 'TTFB':
+//       console.log(`TTFB: ${Math.round(metric.value * 10) / 10}`)
+//       break
+//     case 'Next.js-hydration':
+//       console.log(
+//         `Hydration: ${Math.round(metric.startTime * 10) / 10} -> ${
+//           Math.round((metric.startTime + metric.value) * 10) / 10
+//         }`,
+//       )
+//       break
+//     default:
+//       break
+//   }
+// }
+
+// プロジェクト全体でのReactQueryの設定
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
