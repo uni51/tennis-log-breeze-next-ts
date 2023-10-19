@@ -1,7 +1,7 @@
 import { PropsWithChildren, ReactNode } from 'react'
 import AdminNavigation from '@/components/Layouts/Admin/AdminNavigation'
-import { useAdminAuth } from '@/hooks/adminAuthQuery'
 import { Admin } from '@/hooks/adminAuth'
+import { useAdminAuth } from '@/hooks/adminAuthQuery'
 
 interface Props {
   header: ReactNode

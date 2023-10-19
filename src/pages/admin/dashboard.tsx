@@ -1,7 +1,30 @@
 import Head from 'next/head'
+import router from 'next/router'
+import { useEffect, useState } from 'react'
 import AdminAppLayout from '@/components/Layouts/Admin/AdminAppLayout'
+import { Loading } from '@/components/Loading'
+import { useAdminAuth } from '@/hooks/adminAuth'
 
 const AdminDashboard = () => {
+  const { admin } = useAdminAuth({ middleware: 'adminAuth' })
+  const [isLoading, setIsLoading] = useState(true)
+
+  // 初回レンダリング時にログインチェック
+  useEffect(() => {
+    const init = async () => {
+      // ログイン中か判定
+      if (!admin) {
+        router.push('/admin/login')
+        return
+      }
+      setIsLoading(false)
+    }
+    init()
+  }, [])
+
+  if (isLoading) return <Loading />
+  if (!admin) return null
+
   return (
     <AdminAppLayout
       header={

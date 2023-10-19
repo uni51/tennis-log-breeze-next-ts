@@ -1,6 +1,6 @@
-import { apiClient } from '@/lib/utils/apiClient'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/router'
+import { apiClient } from '@/lib/utils/apiClient'
 
 declare type AdminAuthMiddleware = 'adminAuth' | 'guest'
 
