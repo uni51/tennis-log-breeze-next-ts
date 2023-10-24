@@ -83,15 +83,7 @@ export const useAdminAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) 
     mutationKey: ['logout'],
   })
 
-  const handleLogin = async ({
-    email,
-    password,
-    remember,
-  }: {
-    email: string
-    password: string
-    remember: boolean
-  }) => {
+  const handleLogin = async ({ email, password }: { email: string; password: string }) => {
     const setErrors = (errors: string[]) => {
       // do something with errors
     }
