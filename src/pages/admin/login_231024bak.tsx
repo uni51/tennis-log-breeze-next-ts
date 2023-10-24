@@ -1,5 +1,5 @@
+import { AxiosError } from 'axios'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import { ReactNode, useState } from 'react'
 import ApplicationLogo from '@/components/ApplicationLogo'
 import AuthCard from '@/components/AuthCard'
@@ -7,8 +7,7 @@ import Button from '@/components/Button'
 import Input from '@/components/Input'
 import Label from '@/components/Label'
 import GuestLayout from '@/components/Layouts/GuestLayout'
-import { useAdminAuth } from '@/hooks/adminAuthQuery'
-import { AxiosError } from 'axios'
+import { useAdminAuthQuery } from '@/hooks/adminAuthQuery'
 
 interface ErrorData {
   email?: { message: string }[]
@@ -29,7 +28,7 @@ const getErrorMessages = (errors: { message: string }[] = []): ReactNode => {
 }
 
 const AdminLogin_231024bak = () => {
-  const { login } = useAdminAuth({
+  const { login } = useAdminAuthQuery({
     middleware: 'guest',
     redirectIfAuthenticated: '/admin/dashboard',
   })

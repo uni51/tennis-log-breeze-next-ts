@@ -1,17 +1,17 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
+import { FormProvider, UseFormSetError, useForm } from 'react-hook-form'
 import ApplicationLogo from '@/components/ApplicationLogo'
 import AuthCard from '@/components/AuthCard'
 import Button from '@/components/Button'
-import GuestLayout from '@/components/Layouts/GuestLayout'
-import { useAdminAuthQuery } from '@/hooks/adminAuthQuery'
-import { FormProvider, UseFormSetError, useForm } from 'react-hook-form'
-import { AdminLogin } from '@/types/AdminLogin'
-import { AdminLoginSchema } from '@/features/memos/dashboard/lib/schema/AdminLoginSchema'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { TextInput } from '@/components/Form/TextInput'
+import GuestLayout from '@/components/Layouts/GuestLayout'
+import { AdminLoginSchema } from '@/features/memos/dashboard/lib/schema/AdminLoginSchema'
+import { useAdminAuthQuery } from '@/hooks/adminAuthQuery'
 import { isAxiosError } from '@/lib/utils/axiosUtils'
-import { use, useEffect } from 'react'
-import { useRouter } from 'next/router'
+import { AdminLogin } from '@/types/AdminLogin'
 
 const AdminLogin = () => {
   const { login, admin } = useAdminAuthQuery({
@@ -67,14 +67,14 @@ const AdminLogin = () => {
         >
           {/* Session Status */}
           <form onSubmit={handleSubmit((data) => submitForm(data, setError))}>
-            {/* Email Address */}
+            {/* Email */}
             <div>
-              {/* Email */}
               <TextInput target={'email'} required={true} label={'Email'} />
             </div>
 
             {/* Password */}
             <div className='mt-4'>
+              {/* TODO: パスワード入力に変更 */}
               <TextInput target={'password'} required={true} label={'Password'} />
             </div>
 

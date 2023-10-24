@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { FormEventHandler, useEffect, useState } from 'react'
+import { FormEventHandler, SetStateAction, useEffect, useState } from 'react'
 import ApplicationLogo from '@/components/ApplicationLogo'
 import AuthCard from '@/components/AuthCard'
 import AuthSessionStatus from '@/components/AuthSessionStatus'
@@ -9,7 +9,7 @@ import Input from '@/components/Input'
 import InputError from '@/components/InputError'
 import Label from '@/components/Label'
 import GuestLayout from '@/components/Layouts/GuestLayout'
-import { useAdminAuth } from '@/hooks/adminAuthQuery'
+import { useAdminAuth } from '@/hooks/adminAuth'
 
 const AdminLogin_23109bak = () => {
   const { query } = useRouter()
@@ -40,7 +40,13 @@ const AdminLogin_23109bak = () => {
     login({
       email,
       password,
-      // remember: shouldRemember,
+      remember: shouldRemember,
+      setErrors: function (value: SetStateAction<never[]>): void {
+        throw new Error('Function not implemented.')
+      },
+      setStatus: function (value: any): void {
+        throw new Error('Function not implemented.')
+      },
     })
   }
 
