@@ -1,33 +1,15 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { FormEventHandler, ReactNode, useEffect, useState } from 'react'
+import { FormEventHandler, useEffect, useState } from 'react'
 import ApplicationLogo from '@/components/ApplicationLogo'
 import AuthCard from '@/components/AuthCard'
 import AuthSessionStatus from '@/components/AuthSessionStatus'
 import Button from '@/components/Button'
 import Input from '@/components/Input'
+import InputError from '@/components/InputError'
 import Label from '@/components/Label'
 import GuestLayout from '@/components/Layouts/GuestLayout'
 import { useAdminAuth } from '@/hooks/adminAuthQuery'
-import { AxiosError } from 'axios'
-
-interface ErrorData {
-  email?: { message: string }[]
-  password?: { message: string }[]
-}
-const getErrorMessages = (errors: { message: string }[] = []): ReactNode => {
-  if (errors.length === 0) {
-    return null
-  }
-
-  return (
-    <ul className='mt-1 text-sm text-red-600'>
-      {errors.map((error, index) => (
-        <li key={index}>{error.message}</li>
-      ))}
-    </ul>
-  )
-}
 
 const AdminLogin = () => {
   const { query } = useRouter()
@@ -40,37 +22,26 @@ const AdminLogin = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [shouldRemember, setShouldRemember] = useState(false)
-  const [errors, setErrors] = useState<ErrorData>({})
+  const [errors, setErrors]: [any, React.Dispatch<React.SetStateAction<never[]>>] = useState([])
   const [status, setStatus] = useState<string | null>(null)
 
-  const getErrorData = (
-    error: AxiosError<any>,
-    setErrors: React.Dispatch<React.SetStateAction<ErrorData>>,
-  ) => {
-    if (error.response?.status === 422) {
-      const errors = error.response?.data?.errors
-      Object.keys(errors).map((key: string) => {
-        setErrors((prevState) => ({
-          ...prevState,
-          [key]: [{ message: errors[key][0] }],
-        }))
-      })
+  useEffect(() => {
+    const reset = query && query.reset ? (query.reset as string) : ''
+    if (reset.length > 0 && errors.length === 0) {
+      setStatus(atob(reset))
+    } else {
+      setStatus(null)
     }
-  }
+  })
 
-  const submitForm = async (event: React.FormEvent<HTMLFormElement>) => {
+  const submitForm: FormEventHandler = async (event) => {
     event.preventDefault()
 
-    try {
-      // バックエンドへのリクエストを行う
-      await login({ email, password, remember: shouldRemember })
-
-      // リクエストが成功した場合の処理
-    } catch (error: unknown) {
-      // リクエストが失敗した場合の処理
-      console.log(`error: ${error}`)
-      const errorData = getErrorData(error as AxiosError<any>, setErrors)
-    }
+    login({
+      email,
+      password,
+      remember: shouldRemember,
+    })
   }
 
   return (
@@ -101,9 +72,8 @@ const AdminLogin = () => {
               required
               autoFocus
             />
-            <div className='flex items-center justify-start mt-4'>
-              {getErrorMessages(errors.email)}
-            </div>
+
+            <InputError messages={errors.email} className='mt-2' />
           </div>
 
           {/* Password */}
@@ -121,10 +91,8 @@ const AdminLogin = () => {
               required
               autoComplete='current-password'
             />
-            <div className='flex items-center justify-start mt-4'>
-              {getErrorMessages(errors.password)}
-            </div>
-            {/* <InputError messages={errors.password} className='mt-2' /> */}
+
+            <InputError messages={errors.password} className='mt-2' />
           </div>
 
           {/* Remember Me */}

@@ -46,18 +46,18 @@ export const useAdminAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) 
       await csrf()
       setErrors([])
       setStatus(null)
-      try {
-        await apiClient.post('/admin/login', { email, password })
-      } catch (error: any) {
-        if (error.response.status !== 422) throw error
-        setErrors(error.response.data.errors)
-      }
+      // try {
+      await apiClient.post('/admin/login', { email, password })
+      // } catch (error: any) {
+      //   if (error.response.status !== 422) throw error
+      //   setErrors(error.response.data.errors)
+      // }
     },
     onSuccess: async () => {
       await getAdmin.refetch()
       router.push('/admin/dashboard')
     },
-    onError: () => {
+    onError: (error) => {
       // do something on error
     },
     onSettled: () => {
