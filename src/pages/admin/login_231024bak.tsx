@@ -28,7 +28,7 @@ const getErrorMessages = (errors: { message: string }[] = []): ReactNode => {
   )
 }
 
-const AdminLogin = () => {
+const AdminLogin_231024bak = () => {
   const { login } = useAdminAuth({
     middleware: 'guest',
     redirectIfAuthenticated: '/admin/dashboard',
@@ -153,4 +153,4 @@ const AdminLogin = () => {
   )
 }
 
-export default AdminLogin
+export default AdminLogin_231024bak

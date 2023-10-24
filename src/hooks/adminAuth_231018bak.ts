@@ -26,7 +26,7 @@ export interface Admin {
   updated_at?: string
 }
 
-export const useAdminAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
+export const useAdminAuth_231018bak = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
   const router = useRouter()
 
   const { data: admin, error, mutate } = useSWR<Admin>('/api/admin', () =>

@@ -11,7 +11,7 @@ import Label from '@/components/Label'
 import GuestLayout from '@/components/Layouts/GuestLayout'
 import { useAdminAuth } from '@/hooks/adminAuthQuery'
 
-const AdminLogin = () => {
+const AdminLogin_23109bak = () => {
   const { query } = useRouter()
 
   const { login } = useAdminAuth({
@@ -40,7 +40,7 @@ const AdminLogin = () => {
     login({
       email,
       password,
-      remember: shouldRemember,
+      // remember: shouldRemember,
     })
   }
 
@@ -126,4 +126,4 @@ const AdminLogin = () => {
   )
 }
 
-export default AdminLogin
+export default AdminLogin_23109bak
