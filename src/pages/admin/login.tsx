@@ -3,19 +3,29 @@ import ApplicationLogo from '@/components/ApplicationLogo'
 import AuthCard from '@/components/AuthCard'
 import Button from '@/components/Button'
 import GuestLayout from '@/components/Layouts/GuestLayout'
-import { useAdminAuth } from '@/hooks/adminAuthQuery'
+import { useAdminAuthQuery } from '@/hooks/adminAuthQuery'
 import { FormProvider, UseFormSetError, useForm } from 'react-hook-form'
 import { AdminLogin } from '@/types/AdminLogin'
 import { AdminLoginSchema } from '@/features/memos/dashboard/lib/schema/AdminLoginSchema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { TextInput } from '@/components/Form/TextInput'
 import { isAxiosError } from '@/lib/utils/axiosUtils'
+import { use, useEffect } from 'react'
+import { useRouter } from 'next/router'
 
 const AdminLogin = () => {
-  const { login } = useAdminAuth({
+  const { login, admin } = useAdminAuthQuery({
     middleware: 'guest',
     redirectIfAuthenticated: '/admin/dashboard',
   })
+
+  const router = useRouter()
+
+  useEffect(() => {
+    if (admin) {
+      router.push('/admin/dashboard')
+    }
+  }, [admin])
 
   const useFormMethods = useForm<AdminLogin>({
     resolver: zodResolver(AdminLoginSchema),

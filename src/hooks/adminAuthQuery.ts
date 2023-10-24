@@ -26,7 +26,7 @@ type IApiRequest = {
   setStatus: (status: string | null) => void
 }
 
-export const useAdminAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
+export const useAdminAuthQuery = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
   const router = useRouter()
 
   const csrf = async () => {
@@ -54,7 +54,7 @@ export const useAdminAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) 
       // }
     },
     onSuccess: async () => {
-      await getAdmin.refetch()
+      // await getAdmin.refetch()
       router.push('/admin/dashboard')
     },
     onError: (error) => {
@@ -71,7 +71,6 @@ export const useAdminAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) 
       await apiClient.post('/admin/logout')
     },
     onSuccess: async () => {
-      await getAdmin.refetch()
       router.push('/admin/login')
     },
     onError: () => {
