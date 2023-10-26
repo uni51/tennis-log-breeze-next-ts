@@ -1,6 +1,7 @@
-import { useQuery, useMutation } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/router'
 import { apiClient } from '@/lib/utils/apiClient'
+import { useEffect, useState } from 'react'
 
 declare type AdminAuthMiddleware = 'adminAuth' | 'guest'
 
@@ -28,6 +29,7 @@ type IApiRequest = {
 
 export const useAdminAuthQuery = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
   const router = useRouter()
+  const queryClient = useQueryClient()
 
   const csrf = async () => {
     await apiClient.get('/auth/sanctum/csrf-cookie')
@@ -39,6 +41,7 @@ export const useAdminAuthQuery = ({ middleware, redirectIfAuthenticated }: IUseA
       const response = await apiClient.get('/api/admin')
       return response.data
     },
+    staleTime: Infinity,
   })
 
   const loginMutation = useMutation<void, Error, IApiRequest, unknown>({
@@ -46,15 +49,14 @@ export const useAdminAuthQuery = ({ middleware, redirectIfAuthenticated }: IUseA
       await csrf()
       setErrors([])
       setStatus(null)
-      // try {
-      await apiClient.post('/admin/login', { email, password })
-      // } catch (error: any) {
-      //   if (error.response.status !== 422) throw error
-      //   setErrors(error.response.data.errors)
-      // }
+      try {
+        await apiClient.post('/admin/login', { email, password })
+      } catch (error: any) {
+        if (error.response.status !== 422) throw error
+        setErrors(error.response.data.errors)
+      }
     },
     onSuccess: async () => {
-      // await getAdmin.refetch()
       router.push('/admin/dashboard')
     },
     onError: (error) => {
@@ -96,7 +98,21 @@ export const useAdminAuthQuery = ({ middleware, redirectIfAuthenticated }: IUseA
     await logoutMutation.mutateAsync()
   }
 
-  const admin = getAdmin.data
+  const admin = queryClient.getQueryData<Admin>(['admin'])
 
-  return { admin, login: handleLogin, logout: handleLogout }
+  const isAdmin = (user: any): user is Admin => {
+    return (
+      user &&
+      user.hasOwnProperty('id') &&
+      user.hasOwnProperty('name') &&
+      user.hasOwnProperty('email')
+    )
+  }
+
+  useEffect(() => {
+    if (middleware === 'guest' && redirectIfAuthenticated && admin)
+      router.push(redirectIfAuthenticated)
+  }, [admin])
+
+  return { admin, login: handleLogin, logout: handleLogout, isAdmin }
 }

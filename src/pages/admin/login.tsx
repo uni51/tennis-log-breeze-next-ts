@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { FormProvider, UseFormSetError, useForm } from 'react-hook-form'
 import ApplicationLogo from '@/components/ApplicationLogo'
 import AuthCard from '@/components/AuthCard'
@@ -12,19 +12,22 @@ import { AdminLoginSchema } from '@/features/memos/dashboard/lib/schema/AdminLog
 import { useAdminAuthQuery } from '@/hooks/adminAuthQuery'
 import { isAxiosError } from '@/lib/utils/axiosUtils'
 import { AdminLogin } from '@/types/AdminLogin'
+import { Loading } from '@/components/Loading'
 
 const AdminLogin = () => {
-  const { login, admin } = useAdminAuthQuery({
+  const { login, admin, isAdmin } = useAdminAuthQuery({
     middleware: 'guest',
     redirectIfAuthenticated: '/admin/dashboard',
   })
+  const [isLoading, setIsLoading] = useState(true)
 
   const router = useRouter()
 
   useEffect(() => {
-    if (admin) {
+    if (isAdmin(admin)) {
       router.push('/admin/dashboard')
     }
+    setIsLoading(false)
   }, [admin])
 
   const useFormMethods = useForm<AdminLogin>({
@@ -35,6 +38,7 @@ const AdminLogin = () => {
 
   const submitForm = async (postData: AdminLogin, setError: UseFormSetError<AdminLogin>) => {
     try {
+      setIsLoading(true) // リクエスト開始時にisLoadingをtrueに設定
       // バックエンドへのリクエストを行う
       await login(postData)
 
@@ -52,8 +56,12 @@ const AdminLogin = () => {
           alert('システムエラーです！！')
         }
       }
+    } finally {
+      setIsLoading(false) // リクエスト完了時にisLoadingをfalseに設定
     }
   }
+
+  if (isLoading) return <Loading />
 
   return (
     <FormProvider {...useFormMethods}>

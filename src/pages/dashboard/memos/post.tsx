@@ -29,7 +29,7 @@ const DashboardMemoPost: NextPage = () => {
       setIsLoading(false)
     }
     init()
-  }, [])
+  }, [user])
 
   if (isLoading || queryMemoCategoriesStatus === 'pending' || queryMemoStatusesStatus === 'pending')
     return <Loading />
