@@ -9,10 +9,11 @@ export type ProfileForm = {
   nickname: string
   career_id: string
   gender_id: string
+  ageRange_id: string
 }
 
 // プロフィールの編集
-export const editProfile = (postData: ProfileForm, setError: UseFormSetError<ProfileForm>) => {
+export const postEditProfile = (postData: ProfileForm, setError: UseFormSetError<ProfileForm>) => {
   apiClient
     // CSRF保護の初期化
     .get('/auth/sanctum/csrf-cookie')
