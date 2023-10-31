@@ -5,7 +5,7 @@ import { apiClient } from '@/lib/utils/apiClient'
 import { MemoForm } from '@/types/MemoForm'
 
 // メモの編集
-export const editMemo = (
+export const postEditMemo = (
   postData: MemoForm,
   setError: UseFormSetError<MemoForm>,
   memoId: number,
