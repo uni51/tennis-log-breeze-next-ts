@@ -1,3 +1,4 @@
+import { PlayFrequency } from './../../../../types/playFrequency'
 import { AxiosError, AxiosResponse } from 'axios'
 import router from 'next/router'
 import { UseFormSetError } from 'react-hook-form'
@@ -11,6 +12,7 @@ export type ProfileForm = {
   gender_id: string
   ageRange_id: string
   dominantHand_id: string
+  playFrequency_id: string
 }
 
 // プロフィールの編集

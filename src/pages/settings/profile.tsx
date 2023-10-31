@@ -10,6 +10,7 @@ import { useQueryAgeRanges } from '@/hooks/profile/useQueryAgeRanges'
 import { useQueryCareers } from '@/hooks/profile/useQueryCareers'
 import { useQueryDominantHands } from '@/hooks/profile/useQueryDominantHands'
 import { useQueryGenders } from '@/hooks/profile/useQueryGenders'
+import { useQueryPlayFrequencies } from '@/hooks/profile/useQueryPlayFrequencies'
 
 const Profile: NextPage = () => {
   const router = useRouter()
@@ -24,6 +25,11 @@ const Profile: NextPage = () => {
     data: dominantHands,
     error: dominantHandsError,
   } = useQueryDominantHands()
+  const {
+    status: playFrequenciesStatus,
+    data: palyFrequencies,
+    error: playFrequenciesError,
+  } = useQueryPlayFrequencies()
 
   useEffect(() => {
     const init = async () => {
@@ -40,7 +46,8 @@ const Profile: NextPage = () => {
     careersStatus === 'pending' ||
     gendersStatus === 'pending' ||
     ageRangesStatus === 'pending' ||
-    dominantHandsStatus === 'pending'
+    dominantHandsStatus === 'pending' ||
+    playFrequenciesStatus === 'pending'
 
   if (isLoading || anyPending) return <Loading />
 
@@ -54,6 +61,7 @@ const Profile: NextPage = () => {
   if (gendersError) return renderError(gendersError, 'genders')
   if (ageRangesError) return renderError(ageRangesError, 'ageRanges')
   if (dominantHandsError) return renderError(dominantHandsError, 'dominantHands')
+  if (playFrequenciesError) return renderError(playFrequenciesError, 'playFrequencies')
   if (!user) return null
 
   return (
@@ -71,6 +79,7 @@ const Profile: NextPage = () => {
         genders={genders!}
         ageRanges={ageRanges!}
         dominantHands={dominantHands!}
+        playFrequencies={palyFrequencies!}
       />
     </AppLayout>
   )
