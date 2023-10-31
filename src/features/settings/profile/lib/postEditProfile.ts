@@ -12,6 +12,7 @@ export type ProfileForm = {
   ageRange_id: string
   dominantHand_id: string
   playFrequency_id: string
+  tennisLevel_id: string
 }
 
 // プロフィールの編集

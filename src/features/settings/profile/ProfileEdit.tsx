@@ -15,6 +15,7 @@ type Props = {
   ageRanges: SimpleSelect[]
   dominantHands: SimpleSelect[]
   playFrequencies: SimpleSelect[]
+  tennisLevels: SimpleSelect[]
 }
 
 const ProfileSchema = z.object({
@@ -45,6 +46,11 @@ const ProfileSchema = z.object({
     .min(1, { message: 'Query parameter is required' })
     .transform((val) => parseInt(val))
     .refine((val) => !isNaN(val), { message: '不正な値です' }),
+  tennisLevel_id: z
+    .string()
+    .min(1, { message: 'Query parameter is required' })
+    .transform((val) => parseInt(val))
+    .refine((val) => !isNaN(val), { message: '不正な値です' }),
 })
 
 const ProfileEdit: React.FC<Props> = ({
@@ -54,6 +60,7 @@ const ProfileEdit: React.FC<Props> = ({
   ageRanges,
   dominantHands,
   playFrequencies,
+  tennisLevels,
 }) => {
   const defaultValues = {
     name: user.data?.name,
@@ -63,6 +70,7 @@ const ProfileEdit: React.FC<Props> = ({
     ageRange_id: '0', // 「選択してください」の値
     dominantHand_id: '0', // 「選択してください」の値
     playFrequency_id: '0', // 「選択してください」の値
+    tennisLevel_id: '0', // 「選択してください」の値
   }
 
   // React-Hook-Form
@@ -125,6 +133,14 @@ const ProfileEdit: React.FC<Props> = ({
             required={true}
             label={'プレー頻度'}
             defaultValue={defaultValues?.playFrequency_id}
+          />
+          {/* レベル */}
+          <Select
+            target={tennisLevels}
+            target_id={'tennisLevels_id'}
+            required={true}
+            label={'レベル'}
+            defaultValue={defaultValues?.tennisLevel_id}
           />
           {/* 登録するボタン */}
           <LargeSubmitButton>登録する</LargeSubmitButton>
