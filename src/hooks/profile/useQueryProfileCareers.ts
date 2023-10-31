@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import { apiClient } from '@/lib/utils/apiClient'
-import { Career } from '@/types/profile/Career'
+import { SimpleSelect } from '@/types/form/SimpleSelect'
 
-const getCareers = async (): Promise<Career[]> => {
+const getCareers = async (): Promise<SimpleSelect[]> => {
   const responseCareers = await apiClient.get('api/career')
   let objectResponseCareers = Object.entries(responseCareers.data)
 
@@ -14,7 +14,7 @@ const getCareers = async (): Promise<Career[]> => {
 }
 
 export const useQueryProfileCareers = () => {
-  return useQuery<Career[], Error>({
+  return useQuery<SimpleSelect[], Error>({
     queryKey: ['careers'],
     queryFn: getCareers,
     staleTime: Infinity, // キャッシュは常に新しいものとみなされるため、バックグラウンドでのfetchが自動的に行われない

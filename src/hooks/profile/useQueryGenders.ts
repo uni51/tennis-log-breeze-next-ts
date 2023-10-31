@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import { apiClient } from '@/lib/utils/apiClient'
-import { Gender } from '@/types/profile/Gender'
+import { SimpleSelect } from '@/types/form/SimpleSelect'
 
-const getGenders = async (): Promise<Gender[]> => {
+const getGenders = async (): Promise<SimpleSelect[]> => {
   const responseGenders = await apiClient.get('api/gender')
   let objectResponseGenders = Object.entries(responseGenders.data)
 
@@ -14,7 +14,7 @@ const getGenders = async (): Promise<Gender[]> => {
 }
 
 export const useQueryGenders = () => {
-  return useQuery<Gender[], Error>({
+  return useQuery<SimpleSelect[], Error>({
     queryKey: ['genders'],
     queryFn: getGenders,
     staleTime: Infinity, // キャッシュは常に新しいものとみなされるため、バックグラウンドでのfetchが自動的に行われない
