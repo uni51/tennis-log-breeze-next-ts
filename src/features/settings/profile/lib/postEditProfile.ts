@@ -10,6 +10,7 @@ export type ProfileForm = {
   career_id: string
   gender_id: string
   ageRange_id: string
+  dominantHand_id: string
 }
 
 // プロフィールの編集

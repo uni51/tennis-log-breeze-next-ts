@@ -3,7 +3,7 @@ import { apiClient } from '@/lib/utils/apiClient'
 import { SimpleSelect } from '@/types/form/SimpleSelect'
 
 const getGenders = async (): Promise<SimpleSelect[]> => {
-  const responseGenders = await apiClient.get('api/gender')
+  const responseGenders = await apiClient.get('api/profile/gender')
   let objectResponseGenders = Object.entries(responseGenders.data)
 
   const arrayResponseGenders = objectResponseGenders.map((item: [string, unknown]) => {

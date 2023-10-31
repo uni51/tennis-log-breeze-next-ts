@@ -3,7 +3,7 @@ import { apiClient } from '@/lib/utils/apiClient'
 import { SimpleSelect } from '@/types/form/SimpleSelect'
 
 const getAgeRanges = async (): Promise<SimpleSelect[]> => {
-  const responseAgeRanges = await apiClient.get('api/age_range')
+  const responseAgeRanges = await apiClient.get('api/profile/age_range')
   let objectResponseAgeRanges = Object.entries(responseAgeRanges.data)
 
   const arrayResponseAgeRanges = objectResponseAgeRanges.map((item: [string, unknown]) => {

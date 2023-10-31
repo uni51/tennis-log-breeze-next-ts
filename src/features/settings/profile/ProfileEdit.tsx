@@ -13,6 +13,7 @@ type Props = {
   careers: SimpleSelect[]
   genders: SimpleSelect[]
   ageRanges: SimpleSelect[]
+  dominantHands: SimpleSelect[]
 }
 
 const ProfileSchema = z.object({
@@ -33,15 +34,21 @@ const ProfileSchema = z.object({
     .min(1, { message: 'Query parameter is required' })
     .transform((val) => parseInt(val))
     .refine((val) => !isNaN(val), { message: '不正な値です' }),
+  dominantHand_id: z
+    .string()
+    .min(1, { message: 'Query parameter is required' })
+    .transform((val) => parseInt(val))
+    .refine((val) => !isNaN(val), { message: '不正な値です' }),
 })
 
-const ProfileEdit: React.FC<Props> = ({ user, careers, genders, ageRanges }) => {
+const ProfileEdit: React.FC<Props> = ({ user, careers, genders, ageRanges, dominantHands }) => {
   const defaultValues = {
     name: user.data?.name,
     nickname: user.data?.nickname,
     career_id: '0', // 「選択してください」の値
     gender_id: '0', // 「選択してください」の値
     ageRange_id: '0', // 「選択してください」の値
+    dominantHand_id: '0', // 「選択してください」の値
   }
 
   // React-Hook-Form
@@ -88,6 +95,14 @@ const ProfileEdit: React.FC<Props> = ({ user, careers, genders, ageRanges }) => 
             required={true}
             label={'年代'}
             defaultValue={defaultValues?.ageRange_id}
+          />
+          {/* 利き腕 */}
+          <Select
+            target={dominantHands}
+            target_id={'dominantHand_id'}
+            required={true}
+            label={'利き腕'}
+            defaultValue={defaultValues?.dominantHand_id}
           />
           {/* 登録するボタン */}
           <LargeSubmitButton>登録する</LargeSubmitButton>

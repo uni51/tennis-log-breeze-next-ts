@@ -8,16 +8,18 @@ import ProfileEdit from '@/features/settings/profile/ProfileEdit'
 import { useAuth } from '@/hooks/auth'
 import { useQueryAgeRanges } from '@/hooks/profile/useQueryAgeRanges'
 import { useQueryGenders } from '@/hooks/profile/useQueryGenders'
-import { useQueryProfileCareers } from '@/hooks/profile/useQueryProfileCareers'
+import { useQueryCareers } from '@/hooks/profile/useQueryCareers'
+import { useQueryDominantHands } from '@/hooks/profile/useQueryDominantHands'
 
 const Profile: NextPage = () => {
   const router = useRouter()
   const { user } = useAuth({ middleware: 'auth' })
   const [isLoading, setIsLoading] = useState(true)
 
-  const { status: queryProfileCareers, data: careers } = useQueryProfileCareers() // テニス歴
+  const { status: queryProfileCareers, data: careers } = useQueryCareers() // テニス歴
   const { status: queryGenders, data: genders } = useQueryGenders() // 性別
   const { status: queryAgeRanges, data: ageRanges } = useQueryAgeRanges() // 性別
+  const { status: queryDominantHands, data: dominantHands } = useQueryDominantHands() // 利き腕
 
   // 初回レンダリング時にAPIリクエスト
   useEffect(() => {
@@ -38,7 +40,8 @@ const Profile: NextPage = () => {
     isLoading ||
     queryProfileCareers === 'pending' ||
     queryGenders === 'pending' ||
-    queryAgeRanges === 'pending'
+    queryAgeRanges === 'pending' ||
+    queryDominantHands === 'pending'
   )
     return <Loading />
   if (!user) return null
@@ -52,7 +55,13 @@ const Profile: NextPage = () => {
       <Head>
         <title>プロフィールの編集</title>
       </Head>
-      <ProfileEdit user={user} careers={careers!} genders={genders!} ageRanges={ageRanges!} />
+      <ProfileEdit
+        user={user}
+        careers={careers!}
+        genders={genders!}
+        ageRanges={ageRanges!}
+        dominantHands={dominantHands}
+      />
     </AppLayout>
   )
 }

@@ -3,7 +3,7 @@ import { apiClient } from '@/lib/utils/apiClient'
 import { SimpleSelect } from '@/types/form/SimpleSelect'
 
 const getCareers = async (): Promise<SimpleSelect[]> => {
-  const responseCareers = await apiClient.get('api/career')
+  const responseCareers = await apiClient.get('api/profile/career')
   let objectResponseCareers = Object.entries(responseCareers.data)
 
   const arrayResponseCareers = objectResponseCareers.map((item: [string, unknown]) => {
@@ -13,7 +13,7 @@ const getCareers = async (): Promise<SimpleSelect[]> => {
   return arrayResponseCareers
 }
 
-export const useQueryProfileCareers = () => {
+export const useQueryCareers = () => {
   return useQuery<SimpleSelect[], Error>({
     queryKey: ['careers'],
     queryFn: getCareers,
