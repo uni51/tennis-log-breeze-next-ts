@@ -6,14 +6,14 @@ import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import ProfileEdit from '@/features/settings/profile/ProfileEdit'
 import { useAuth } from '@/hooks/auth'
-import { useQueryProfileCareers } from '@/hooks/profile/useQueryProfileCareer'
+import { useQueryCareers } from '@/hooks/profile/useQueryCareers'
 
 const PlayStyle: NextPage = () => {
   const router = useRouter()
   const { user } = useAuth({ middleware: 'auth' })
   const [isLoading, setIsLoading] = useState(true)
 
-  const { status: queryProfileCareers, data: careers } = useQueryProfileCareers()
+  const { status: queryProfileCareers, data: careers } = useQueryCareers()
 
   // 初回レンダリング時にAPIリクエスト
   useEffect(() => {}, [])
@@ -30,7 +30,7 @@ const PlayStyle: NextPage = () => {
       <Head>
         <title></title>
       </Head>
-      <ProfileEdit user={user} careers={careers!} />
+      {/* <ProfileEdit user={user} careers={careers!} /> */}
     </AppLayout>
   )
 }

@@ -1,4 +1,3 @@
-import { PlayFrequency } from './../../../../types/playFrequency'
 import { AxiosError, AxiosResponse } from 'axios'
 import router from 'next/router'
 import { UseFormSetError } from 'react-hook-form'
