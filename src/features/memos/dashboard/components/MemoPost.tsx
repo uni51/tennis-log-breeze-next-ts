@@ -4,7 +4,7 @@ import { LargeSubmitButton } from '@/components/Form/LargeSubmitButton'
 import { Select } from '@/components/Form/Select'
 import { TextArea } from '@/components/Form/TextArea'
 import { TextInput } from '@/components/Form/TextInput'
-import { createMemo } from '@/features/memos/dashboard/lib/createMemo'
+import { postCreateMemo } from '@/features/memos/dashboard/lib/postCreateMemo'
 import { MemoPostSchema } from '@/features/memos/dashboard/lib/schema/MemoPostSchema'
 import { Category } from '@/types/Category'
 import { MemoForm } from '@/types/MemoForm'
@@ -31,7 +31,7 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
   return (
     <FormProvider {...useFormMethods}>
       <div className='mx-auto w-4/5 mt-4 sm:mt-4 py-4 rounded-2xl'>
-        <form onSubmit={handleSubmit((data) => createMemo(data, setError))}>
+        <form onSubmit={handleSubmit((data) => postCreateMemo(data, setError))}>
           {/* タイトル */}
           <TextInput target={'title'} required={true} label={'タイトル'} />
           {/* 内容 */}
