@@ -2,21 +2,22 @@ import { useQuery } from '@tanstack/react-query'
 import { apiClient } from '@/lib/utils/apiClient'
 import { SimpleSelect } from '@/types/form/SimpleSelect'
 
-const getAgeRanges = async (): Promise<SimpleSelect[]> => {
-  const responseAgeRanges = await apiClient.get('api/profile/age_range')
-  let objectResponseAgeRanges = Object.entries(responseAgeRanges.data)
+const fetchAgeRanges = async (): Promise<SimpleSelect[]> => {
+  const response = await apiClient.get('api/profile/age_range')
+  const data = response.data
 
-  const arrayResponseAgeRanges = objectResponseAgeRanges.map((item: [string, unknown]) => {
-    return Object.assign({ id: Number(item[0]), name: item[1] })
-  })
+  const ageRanges = Object.entries(data).map(([id, name]) => ({
+    id: Number(id),
+    name: name as string,
+  }))
 
-  return arrayResponseAgeRanges
+  return ageRanges
 }
 
 export const useQueryAgeRanges = () => {
   return useQuery<SimpleSelect[], Error>({
     queryKey: ['ageRanges'],
-    queryFn: getAgeRanges,
+    queryFn: fetchAgeRanges,
     staleTime: Infinity, // キャッシュは常に新しいものとみなされるため、バックグラウンドでのfetchが自動的に行われない
   })
 }
