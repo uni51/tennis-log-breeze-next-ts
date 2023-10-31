@@ -6,9 +6,9 @@ import { Select } from '@/components/Form/Select'
 import { TextInput } from '@/components/Form/TextInput'
 import { ProfileForm, postEditProfile } from '@/features/memos/dashboard/lib/postEditProfile'
 import { User } from '@/types/User'
+import { AgeRange } from '@/types/profile/AgreRange'
 import { Career } from '@/types/profile/Career'
 import { Gender } from '@/types/profile/Gender'
-import { AgeRange } from '@/types/profile/AgreRange'
 
 type Props = {
   user: User

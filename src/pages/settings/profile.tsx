@@ -6,9 +6,9 @@ import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import ProfileEdit from '@/features/settings/profile/ProfileEdit'
 import { useAuth } from '@/hooks/auth'
+import { useQueryAgeRanges } from '@/hooks/profile/useQueryAgeRanges'
 import { useQueryGenders } from '@/hooks/profile/useQueryGenders'
 import { useQueryProfileCareers } from '@/hooks/profile/useQueryProfileCareers'
-import { useQueryAgeRanges } from '@/hooks/profile/useQueryAgeRanges'
 
 const Profile: NextPage = () => {
   const router = useRouter()
