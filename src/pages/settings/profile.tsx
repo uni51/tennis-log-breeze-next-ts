@@ -7,43 +7,53 @@ import { Loading } from '@/components/Loading'
 import ProfileEdit from '@/features/settings/profile/ProfileEdit'
 import { useAuth } from '@/hooks/auth'
 import { useQueryAgeRanges } from '@/hooks/profile/useQueryAgeRanges'
-import { useQueryGenders } from '@/hooks/profile/useQueryGenders'
 import { useQueryCareers } from '@/hooks/profile/useQueryCareers'
 import { useQueryDominantHands } from '@/hooks/profile/useQueryDominantHands'
+import { useQueryGenders } from '@/hooks/profile/useQueryGenders'
 
 const Profile: NextPage = () => {
   const router = useRouter()
   const { user } = useAuth({ middleware: 'auth' })
   const [isLoading, setIsLoading] = useState(true)
 
-  const { status: queryProfileCareers, data: careers } = useQueryCareers() // テニス歴
-  const { status: queryGenders, data: genders } = useQueryGenders() // 性別
-  const { status: queryAgeRanges, data: ageRanges } = useQueryAgeRanges() // 性別
-  const { status: queryDominantHands, data: dominantHands } = useQueryDominantHands() // 利き腕
+  const { status: careersStatus, data: careers, error: careersError } = useQueryCareers()
+  const { status: gendersStatus, data: genders, error: gendersError } = useQueryGenders()
+  const { status: ageRangesStatus, data: ageRanges, error: ageRangesError } = useQueryAgeRanges()
+  const {
+    status: dominantHandsStatus,
+    data: dominantHands,
+    error: dominantHandsError,
+  } = useQueryDominantHands()
 
-  // 初回レンダリング時にAPIリクエスト
   useEffect(() => {
     const init = async () => {
-      // ログイン中か判定
       if (!user) {
         router.push('/login')
         return
       }
-
-      // ローディング終了は、各種APIリクエストが終わってからにしないと、初期値の設定が正しくできない
       setIsLoading(false)
     }
     init()
-  }, [])
+  }, [user, router])
 
-  if (
-    isLoading ||
-    queryProfileCareers === 'pending' ||
-    queryGenders === 'pending' ||
-    queryAgeRanges === 'pending' ||
-    queryDominantHands === 'pending'
+  const anyPending =
+    careersStatus === 'pending' ||
+    gendersStatus === 'pending' ||
+    ageRangesStatus === 'pending' ||
+    dominantHandsStatus === 'pending'
+
+  if (isLoading || anyPending) return <Loading />
+
+  const renderError = (error: Error, dataType: string) => (
+    <div>
+      Error fetching {dataType} data: {error.message}
+    </div>
   )
-    return <Loading />
+
+  if (careersError) return renderError(careersError, 'careers')
+  if (gendersError) return renderError(gendersError, 'genders')
+  if (ageRangesError) return renderError(ageRangesError, 'ageRanges')
+  if (dominantHandsError) return renderError(dominantHandsError, 'dominantHands')
   if (!user) return null
 
   return (
@@ -60,7 +70,7 @@ const Profile: NextPage = () => {
         careers={careers!}
         genders={genders!}
         ageRanges={ageRanges!}
-        dominantHands={dominantHands}
+        dominantHands={dominantHands!}
       />
     </AppLayout>
   )
