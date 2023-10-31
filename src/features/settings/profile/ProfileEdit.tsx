@@ -5,12 +5,14 @@ import { LargeSubmitButton } from '@/components/Form/LargeSubmitButton'
 import { Select } from '@/components/Form/Select'
 import { TextInput } from '@/components/Form/TextInput'
 import { ProfileForm, editProfile } from '@/features/memos/dashboard/lib/editProfile'
-import { Career } from '@/types/Career'
+import { Career } from '@/types/profile/Career'
 import { User } from '@/types/User'
+import { Gender } from '@/types/profile/Gender'
 
 type Props = {
   user: User
   careers: Career[]
+  genders: Gender[]
 }
 
 const ProfileSchema = z.object({
@@ -21,14 +23,19 @@ const ProfileSchema = z.object({
     .min(1, { message: 'Query parameter is required' })
     .transform((val) => parseInt(val))
     .refine((val) => !isNaN(val), { message: '不正な値です' }),
-  // career_id: z.number(),
+  gender_id: z
+    .string()
+    .min(1, { message: 'Query parameter is required' })
+    .transform((val) => parseInt(val))
+    .refine((val) => !isNaN(val), { message: '不正な値です' }),
 })
 
-const ProfileEdit: React.FC<Props> = ({ user, careers }) => {
+const ProfileEdit: React.FC<Props> = ({ user, careers, genders }) => {
   const defaultValues = {
     name: user.data?.name,
     nickname: user.data?.nickname,
-    career_id: '4',
+    career_id: '0', // 「選択してください」の値
+    gender_id: '0',
   }
 
   // React-Hook-Form
@@ -44,7 +51,12 @@ const ProfileEdit: React.FC<Props> = ({ user, careers }) => {
       <div className='mx-auto w-4/5 mt-4 sm:mt-4 py-4 rounded-2xl'>
         <form onSubmit={handleSubmit((data) => editProfile(data, setError))}>
           {/* 名前 */}
-          <TextInput target={'name'} required={true} label={'名前'} />
+          <TextInput
+            target={'name'}
+            required={true}
+            label={'名前'}
+            subText={'表示されることはありません'}
+          />
           {/* ニックネーム */}
           <TextInput target={'nickname'} required={true} label={'ニックネーム'} />
           {/* テニス歴 */}
@@ -54,6 +66,14 @@ const ProfileEdit: React.FC<Props> = ({ user, careers }) => {
             required={true}
             label={'テニス歴'}
             defaultValue={defaultValues?.career_id}
+          />
+          {/* 性別 */}
+          <Select
+            target={genders}
+            target_id={'gender_id'}
+            required={true}
+            label={'性別'}
+            defaultValue={defaultValues?.gender_id}
           />
           {/* 登録するボタン */}
           <LargeSubmitButton>登録する</LargeSubmitButton>

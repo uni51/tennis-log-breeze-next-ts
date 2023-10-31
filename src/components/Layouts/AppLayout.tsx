@@ -64,9 +64,10 @@ const navigation = [
     name: 'Documents',
     icon: InboxIcon,
     current: false,
+    href: '/settings/profile',
     children: [
       { name: 'Overview', href: '#' },
-      { name: 'Members', href: '#' },
+      { name: 'テニススタイル', href: '/settings/play-style' },
       { name: 'Calendar', href: '#' },
       { name: 'Settings', href: '#' },
     ],

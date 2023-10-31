@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { apiClient } from '@/lib/utils/apiClient'
-import { Career } from '@/types/Career'
+import { Career } from '@/types/profile/Career'
 
 const getCareers = async (): Promise<Career[]> => {
   const responseCareers = await apiClient.get('api/career')

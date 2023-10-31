@@ -6,7 +6,8 @@ import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import ProfileEdit from '@/features/settings/profile/ProfileEdit'
 import { useAuth } from '@/hooks/auth'
-import { useQueryProfileCareers } from '@/hooks/memos/useQueryProfileCareer'
+import { useQueryProfileCareers } from '@/hooks/profile/useQueryProfileCareer'
+import { useQueryGenders } from '@/hooks/profile/useQueryGender'
 
 const Profile: NextPage = () => {
   const router = useRouter()
@@ -14,6 +15,7 @@ const Profile: NextPage = () => {
   const [isLoading, setIsLoading] = useState(true)
 
   const { status: queryProfileCareers, data: careers } = useQueryProfileCareers()
+  const { status: queryGenders, data: genders } = useQueryGenders()
 
   // 初回レンダリング時にAPIリクエスト
   useEffect(() => {
@@ -30,7 +32,8 @@ const Profile: NextPage = () => {
     init()
   }, [])
 
-  if (isLoading || queryProfileCareers === 'pending') return <Loading />
+  if (isLoading || queryProfileCareers === 'pending' || queryGenders === 'pending')
+    return <Loading />
   if (!user) return null
 
   return (
@@ -42,7 +45,7 @@ const Profile: NextPage = () => {
       <Head>
         <title>プロフィールの編集</title>
       </Head>
-      <ProfileEdit user={user} careers={careers!} />
+      <ProfileEdit user={user} careers={careers!} genders={genders!} />
     </AppLayout>
   )
 }

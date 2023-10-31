@@ -8,6 +8,7 @@ export type ProfileForm = {
   name: string
   nickname: string
   career_id: string
+  gender_id: string
 }
 
 // プロフィールの編集

@@ -1,5 +1,5 @@
 import { apiClient } from '@/lib/utils/apiClient'
-import { Career } from '@/types/Career'
+import { Career } from '@/types/profile/Career'
 
 export const UseCareer = async (): Promise<Career[]> => {
   const responseCareers = await apiClient.get('api/career')

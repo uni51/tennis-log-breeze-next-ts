@@ -1,6 +1,6 @@
 import { useFormContext } from 'react-hook-form'
 import { RequiredMark } from '@/components/RequiredMark'
-import { Career } from '@/types/Career'
+import { Career } from '@/types/profile/Career'
 import { Category } from '@/types/Category'
 import { Status } from '@/types/Status'
 
