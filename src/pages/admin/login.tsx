@@ -8,11 +8,11 @@ import AuthCard from '@/components/AuthCard'
 import Button from '@/components/Button'
 import { TextInput } from '@/components/Form/TextInput'
 import GuestLayout from '@/components/Layouts/GuestLayout'
+import { Loading } from '@/components/Loading'
 import { AdminLoginSchema } from '@/features/memos/dashboard/lib/schema/AdminLoginSchema'
 import { useAdminAuthQuery } from '@/hooks/adminAuthQuery'
 import { isAxiosError } from '@/lib/utils/axiosUtils'
 import { AdminLogin } from '@/types/AdminLogin'
-import { Loading } from '@/components/Loading'
 
 const AdminLogin = () => {
   const { login, admin, isAdmin } = useAdminAuthQuery({

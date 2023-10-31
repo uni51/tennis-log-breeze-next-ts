@@ -6,8 +6,8 @@ import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import ProfileEdit from '@/features/settings/profile/ProfileEdit'
 import { useAuth } from '@/hooks/auth'
-import { useQueryProfileCareers } from '@/hooks/profile/useQueryProfileCareer'
 import { useQueryGenders } from '@/hooks/profile/useQueryGender'
+import { useQueryProfileCareers } from '@/hooks/profile/useQueryProfileCareer'
 
 const Profile: NextPage = () => {
   const router = useRouter()

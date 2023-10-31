@@ -5,8 +5,8 @@ import { LargeSubmitButton } from '@/components/Form/LargeSubmitButton'
 import { Select } from '@/components/Form/Select'
 import { TextInput } from '@/components/Form/TextInput'
 import { ProfileForm, editProfile } from '@/features/memos/dashboard/lib/editProfile'
-import { Career } from '@/types/profile/Career'
 import { User } from '@/types/User'
+import { Career } from '@/types/profile/Career'
 import { Gender } from '@/types/profile/Gender'
 
 type Props = {
