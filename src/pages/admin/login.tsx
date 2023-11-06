@@ -15,24 +15,32 @@ import { isAxiosError } from '@/lib/utils/axiosUtils'
 import { AdminLogin } from '@/types/AdminLogin'
 
 const AdminLogin = () => {
-  const { login, admin, isAdmin, getAdmin } = useAdminAuthQuery({
+  const { login, getAdmin } = useAdminAuthQuery({
     middleware: 'guest',
-    // redirectIfAuthenticated: '/admin/dashboard',
+    redirectIfAuthenticated: '/admin/dashboard',
   })
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
   const router = useRouter()
 
-  // useEffect(() => {
-  //   if (isAdmin(admin)) {
-  //     router.push('/admin/dashboard')
-  //   }
-  //   setIsLoading(false)
-  // }, [admin])
+  useEffect(() => {
+    const init = async () => {
+      // // ログイン中か判定
+      const res = await getAdmin.refetch()
+      if (res.data) {
+        router.push('/admin/dashboard')
+        return
+      }
+      setIsLoading(false)
+    }
+    init()
+  }, [])
 
   const useFormMethods = useForm<AdminLogin>({
     resolver: zodResolver(AdminLoginSchema),
   })
+
+  if (isLoading) return <Loading />
 
   const { handleSubmit, setError } = useFormMethods
 
@@ -66,8 +74,6 @@ const AdminLogin = () => {
     //   setIsLoading(false) // リクエスト完了時にisLoadingをfalseに設定
     // }
   }
-
-  if (isLoading) return <Loading />
 
   return (
     <FormProvider {...useFormMethods}>

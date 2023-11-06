@@ -100,19 +100,19 @@ export const useAdminAuthQuery = ({ middleware, redirectIfAuthenticated }: IUseA
 
   const admin = queryClient.getQueryData<Admin>(['admin'])
 
-  const isAdmin = (user: any): user is Admin => {
-    return (
-      user &&
-      user.hasOwnProperty('id') &&
-      user.hasOwnProperty('name') &&
-      user.hasOwnProperty('email')
-    )
-  }
+  // const isAdmin = (user: any): user is Admin => {
+  //   return (
+  //     user &&
+  //     user.hasOwnProperty('id') &&
+  //     user.hasOwnProperty('name') &&
+  //     user.hasOwnProperty('email')
+  //   )
+  // }
 
   useEffect(() => {
     if (middleware === 'guest' && redirectIfAuthenticated && admin)
       router.push(redirectIfAuthenticated)
   }, [admin])
 
-  return { admin, login: handleLogin, logout: handleLogout, isAdmin, getAdmin }
+  return { admin, login: handleLogin, logout: handleLogout, getAdmin }
 }
