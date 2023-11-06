@@ -15,20 +15,20 @@ import { isAxiosError } from '@/lib/utils/axiosUtils'
 import { AdminLogin } from '@/types/AdminLogin'
 
 const AdminLogin = () => {
-  const { login, admin, isAdmin } = useAdminAuthQuery({
+  const { login, admin, isAdmin, getAdmin } = useAdminAuthQuery({
     middleware: 'guest',
-    redirectIfAuthenticated: '/admin/dashboard',
+    // redirectIfAuthenticated: '/admin/dashboard',
   })
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
 
   const router = useRouter()
 
-  useEffect(() => {
-    if (isAdmin(admin)) {
-      router.push('/admin/dashboard')
-    }
-    setIsLoading(false)
-  }, [admin])
+  // useEffect(() => {
+  //   if (isAdmin(admin)) {
+  //     router.push('/admin/dashboard')
+  //   }
+  //   setIsLoading(false)
+  // }, [admin])
 
   const useFormMethods = useForm<AdminLogin>({
     resolver: zodResolver(AdminLoginSchema),
@@ -41,8 +41,12 @@ const AdminLogin = () => {
       setIsLoading(true) // リクエスト開始時にisLoadingをtrueに設定
       // バックエンドへのリクエストを行う
       await login(postData)
-
       // リクエストが成功した場合の処理
+      const res = await getAdmin.refetch()
+      console.log(res)
+      if (res.data) {
+        router.push('/admin/dashboard')
+      }
     } catch (err: any) {
       if (isAxiosError(err)) {
         // バリデーションエラー
@@ -56,9 +60,11 @@ const AdminLogin = () => {
           alert('システムエラーです！！')
         }
       }
-    } finally {
       setIsLoading(false) // リクエスト完了時にisLoadingをfalseに設定
     }
+    // } finally {
+    //   setIsLoading(false) // リクエスト完了時にisLoadingをfalseに設定
+    // }
   }
 
   if (isLoading) return <Loading />
@@ -77,6 +83,7 @@ const AdminLogin = () => {
           <form onSubmit={handleSubmit((data) => submitForm(data, setError))}>
             {/* Email */}
             <div>
+              <p>aaaa</p>
               <TextInput target={'email'} required={true} label={'Email'} />
             </div>
 

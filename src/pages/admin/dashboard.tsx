@@ -7,20 +7,20 @@ import { useAdminAuth } from '@/hooks/adminAuth'
 
 const AdminDashboard = () => {
   const { admin } = useAdminAuth({ middleware: 'adminAuth' })
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
 
   // 初回レンダリング時にログインチェック
-  useEffect(() => {
-    const init = async () => {
-      // ログイン中か判定
-      if (!admin) {
-        router.push('/admin/login')
-        return
-      }
-      setIsLoading(false)
-    }
-    init()
-  }, [])
+  // useEffect(() => {
+  //   const init = async () => {
+  //     // ログイン中か判定
+  //     if (!admin) {
+  //       router.push('/admin/login')
+  //       return
+  //     }
+  //     setIsLoading(false)
+  //   }
+  //   init()
+  // }, [])
 
   if (isLoading) return <Loading />
   if (!admin) return null

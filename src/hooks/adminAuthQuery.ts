@@ -57,7 +57,7 @@ export const useAdminAuthQuery = ({ middleware, redirectIfAuthenticated }: IUseA
       }
     },
     onSuccess: async () => {
-      router.push('/admin/dashboard')
+      // router.push('/admin/dashboard')
     },
     onError: (error) => {
       // do something on error
@@ -114,5 +114,5 @@ export const useAdminAuthQuery = ({ middleware, redirectIfAuthenticated }: IUseA
       router.push(redirectIfAuthenticated)
   }, [admin])
 
-  return { admin, login: handleLogin, logout: handleLogout, isAdmin }
+  return { admin, login: handleLogin, logout: handleLogout, isAdmin, getAdmin }
 }
