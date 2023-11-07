@@ -23,13 +23,13 @@ interface Props {
 }
 
 const navigation = [
-  { name: 'Dashboard', icon: HomeIcon, current: true, href: '/dashboard' },
+  { name: 'Dashboard', icon: HomeIcon, current: true, href: '/admin/dashboard' },
   {
     name: 'Memos',
     icon: UsersIcon,
     current: false,
     children: [
-      { name: 'メモ一覧', href: '/memos' },
+      { name: 'メモ一覧', href: '/admin/dashboard' },
       { name: 'フォアハンド', href: '#' },
       { name: 'バックハンド', href: '#' },
       { name: 'サーブ', href: '#' },
@@ -40,35 +40,35 @@ const navigation = [
       { name: 'その他', href: '#' },
     ],
   },
+  // {
+  //   name: 'Projects',
+  //   icon: FolderIcon,
+  //   current: false,
+  //   children: [
+  //     { name: 'Overview', href: '#' },
+  //     { name: 'Members', href: '#' },
+  //     { name: 'Calendar', href: '#' },
+  //     { name: 'Settings', href: '#' },
+  //   ],
+  // },
+  // {
+  //   name: 'Calendar',
+  //   icon: CalendarIcon,
+  //   current: false,
+  //   children: [
+  //     { name: 'Overview', href: '#' },
+  //     { name: 'Members', href: '#' },
+  //     { name: 'Calendar', href: '#' },
+  //     { name: 'Settings', href: '#' },
+  //   ],
+  // },
   {
-    name: 'Projects',
-    icon: FolderIcon,
-    current: false,
-    children: [
-      { name: 'Overview', href: '#' },
-      { name: 'Members', href: '#' },
-      { name: 'Calendar', href: '#' },
-      { name: 'Settings', href: '#' },
-    ],
-  },
-  {
-    name: 'Calendar',
-    icon: CalendarIcon,
-    current: false,
-    children: [
-      { name: 'Overview', href: '#' },
-      { name: 'Members', href: '#' },
-      { name: 'Calendar', href: '#' },
-      { name: 'Settings', href: '#' },
-    ],
-  },
-  {
-    name: 'Documents',
+    name: 'Users',
     icon: InboxIcon,
     current: false,
-    href: '/settings/profile',
+    href: '/admin/users',
     children: [
-      { name: 'Overview', href: '#' },
+      { name: 'Overview', href: '/admin/users' },
       { name: 'テニススタイル', href: '/settings/play-style' },
       { name: 'Calendar', href: '#' },
       { name: 'Settings', href: '#' },
