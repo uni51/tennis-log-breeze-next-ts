@@ -19,7 +19,10 @@ const Profile: NextPage = () => {
   const [isLoading, setIsLoading] = useState(true)
 
   const { status: careersStatus, data: careers, error: careersError } = useQueryCareers()
+
   const { status: gendersStatus, data: genders, error: gendersError } = useQueryGenders()
+  // プルダウンの「選択してください」をフロント側で設定する場合は、ここでoption（デフォルト値）を追加する
+
   const { status: ageRangesStatus, data: ageRanges, error: ageRangesError } = useQueryAgeRanges()
   const {
     status: dominantHandsStatus,
