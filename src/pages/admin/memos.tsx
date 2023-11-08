@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import AdminAppLayout from '@/components/Layouts/Admin/AdminAppLayout'
 import { Loading } from '@/components/Loading'
 import { useAdminAuthQuery } from '@/hooks/adminAuthQuery'
-import UserList from '@/features/admin/users/components/UserList'
+import MemoList from '@/features/admin/memos/components/MemoList'
 
 const AdminUsers = () => {
   const { admin, getAdmin } = useAdminAuthQuery({ middleware: 'adminAuth' })
@@ -25,7 +25,6 @@ const AdminUsers = () => {
   }, [])
 
   if (isLoading) return <Loading />
-  // if (!admin) return null
 
   return (
     <AdminAppLayout
@@ -37,7 +36,7 @@ const AdminUsers = () => {
         <title>Laravel - Dashboard</title>
       </Head>
 
-      <UserList />
+      <MemoList />
     </AdminAppLayout>
   )
 }

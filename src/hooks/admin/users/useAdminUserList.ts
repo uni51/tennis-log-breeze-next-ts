@@ -11,9 +11,9 @@ const getUsers = async (): Promise<simpleUser[]> => {
   return arrayResponseUsers
 }
 
-export const useUserList = () => {
+export const useAdminUserList = () => {
   return useQuery<simpleUser[], Error>({
-    queryKey: ['users'],
+    queryKey: ['adminUsers'],
     queryFn: getUsers,
     staleTime: 0,
   })

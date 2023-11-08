@@ -29,7 +29,7 @@ const navigation = [
     icon: UsersIcon,
     current: false,
     children: [
-      { name: 'メモ一覧', href: '/admin/dashboard' },
+      { name: 'メモ一覧', href: '/admin/memos' },
       { name: 'フォアハンド', href: '#' },
       { name: 'バックハンド', href: '#' },
       { name: 'サーブ', href: '#' },
