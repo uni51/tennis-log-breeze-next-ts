@@ -15,8 +15,7 @@ import { useQueryTennisLevels } from '@/hooks/profile/useQueryTennisLevels'
 
 const Profile: NextPage = () => {
   const router = useRouter()
-  const { user } = useAuth({ middleware: 'auth' })
-  const [isLoading, setIsLoading] = useState(true)
+  const { user, isLoading } = useAuth({ middleware: 'auth' })
 
   const { status: careersStatus, data: careers, error: careersError } = useQueryCareers()
 
@@ -42,14 +41,13 @@ const Profile: NextPage = () => {
 
   useEffect(() => {
     const init = async () => {
-      if (!user) {
-        router.push('/login')
-        return
+      // ログイン中か判定
+      if (!isLoading && !user) {
+        await router.push('/login')
       }
-      setIsLoading(false)
     }
     init()
-  }, [user, router])
+  }, [user, isLoading])
 
   const anyPending =
     careersStatus === 'pending' ||
