@@ -65,7 +65,7 @@ export const useAdminAuthQuery = ({ middleware, redirectIfAuthenticated }: IUseA
     onSettled: () => {
       // do something on settled
     },
-    mutationKey: ['login'],
+    mutationKey: ['adminLogin'],
   })
 
   const logoutMutation = useMutation<void, Error, void, unknown>({
@@ -81,7 +81,7 @@ export const useAdminAuthQuery = ({ middleware, redirectIfAuthenticated }: IUseA
     onSettled: () => {
       // do something on settled
     },
-    mutationKey: ['logout'],
+    mutationKey: ['adminLogout'],
   })
 
   const handleLogin = async ({ email, password }: { email: string; password: string }) => {
