@@ -33,7 +33,7 @@ const auth = getAuth(initializeApp(firebaseConfig))
 export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
   const router = useRouter()
 
-  const { data: user, error, mutate } = useSWR<User>(
+  const { data: user, error, mutate, isLoading } = useSWR<User>(
     {
       url: '/api/user',
     },
@@ -240,5 +240,6 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
     firebaseLogout,
     renderLogin,
     checkLoggedIn,
+    isLoading,
   }
 }
