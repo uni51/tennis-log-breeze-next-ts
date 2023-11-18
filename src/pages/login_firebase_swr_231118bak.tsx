@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react'
+// import { apiClient } from '@/lib/utils/apiClient'
 import { initializeApp } from '@firebase/app'
 import { getAuth, GoogleAuthProvider } from '@firebase/auth'
+import { useEffect, useState } from 'react'
 import { useAuthWithFirebase } from '@/hooks/useAuthWithFirebase'
 import { firebaseConfig } from '@/lib/firebase-helpers'
 
-const initializeFirebaseAuth = () => getAuth(initializeApp(firebaseConfig))
+const auth = getAuth(initializeApp(firebaseConfig))
 
-const Login = () => {
-  const auth = initializeFirebaseAuth()
+const Login_Firebase_SWR_231118bak = () => {
   const { status, dispatch, credential, errors } = useAuthWithFirebase(auth)
   const [checkToken, setCheckToken] = useState<string | null>(null)
 
@@ -19,34 +19,30 @@ const Login = () => {
   }, [dispatch])
 
   useEffect(() => {
-    const updateSessionToken = () => {
+    if (credential) {
+      // console.log(credential)
       const token = GoogleAuthProvider.credentialFromResult(credential)?.idToken
+      token && sessionStorage.setItem('token', token)
       if (token && checkToken !== token) {
         setCheckToken(credential._tokenResponse.oauthIdToken)
-        sessionStorage.setItem('token', token)
         dispatch({ type: 'login', payload: { token } })
       }
-    }
-
-    if (credential) {
-      updateSessionToken()
     } else {
       sessionStorage.removeItem('token')
     }
-  }, [credential, checkToken, dispatch])
+  }, [credential])
 
   const handleLogin = () => dispatch({ type: 'login' })
   const handleLogout = () => dispatch({ type: 'logout' })
-
   return (
     <div>
       <button onClick={handleLogin}>ログイン</button>
       <button onClick={handleLogout}>ログアウト</button>
       <div>User: {credential?.user.displayName}</div>
       <div>State: {status}</div>
-      <div>Error: {errors ? errors.toString() : 'No errors'}</div>
+      <div>Error: {String(errors)}</div>
     </div>
   )
 }
 
-export default Login
+export default Login_Firebase_SWR_231118bak

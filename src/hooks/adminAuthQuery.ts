@@ -114,5 +114,5 @@ export const useAdminAuthQuery = ({ middleware, redirectIfAuthenticated }: IUseA
       router.push(redirectIfAuthenticated)
   }, [admin])
 
-  return { admin, login: handleLogin, logout: handleLogout, getAdmin }
+  return { admin, getAdmin, login: handleLogin, logout: handleLogout }
 }

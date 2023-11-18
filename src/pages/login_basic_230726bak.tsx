@@ -13,7 +13,7 @@ import PrimaryButton from '@/components/PrimaryButton'
 import { useAuth } from '@/hooks/auth'
 import { LoginError } from '@/types/authError'
 
-const Login0726 = () => {
+const Login_Basic_230726 = () => {
   const { query } = useRouter()
 
   const { login } = useAuth({
@@ -122,4 +122,4 @@ const Login0726 = () => {
   )
 }
 
-export default Login0726
+export default Login_Basic_230726
