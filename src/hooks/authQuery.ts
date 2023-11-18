@@ -110,6 +110,11 @@ export const useAuthQuery = ({ middleware, redirectIfAuthenticated }: IUseAuth) 
     await loginMutation.mutateAsync({ idToken, setErrors, setStatus })
   }
 
+  useEffect(() => {
+    if (middleware === 'guest' && redirectIfAuthenticated && user)
+      router.push(redirectIfAuthenticated)
+  }, [user])
+
   // Return the necessary values and functions
   return {
     user,

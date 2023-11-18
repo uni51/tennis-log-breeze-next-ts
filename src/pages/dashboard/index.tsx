@@ -5,19 +5,21 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
-import { useAuth } from '@/hooks/auth'
+import { useAuthQuery } from '@/hooks/authQuery'
+import useCheckLoggedIn from '@/hooks/checkLoggedIn'
 
 /* dashboard（マイページ）のTOPページ */
 const DashboardTop = () => {
+  const { user, getUser } = useAuthQuery({ middleware: 'auth' })
+  const checkLoggedIn = useCheckLoggedIn()
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(true)
-  const { checkLoggedIn, user } = useAuth({ middleware: 'auth' })
 
   // 初回レンダリング時にログインチェック
   useEffect(() => {
     const init = async () => {
       // ログイン中か判定
-      const res: boolean = await checkLoggedIn()
+      const res: boolean = checkLoggedIn()
       if (!res) {
         router.push('/login')
         return
