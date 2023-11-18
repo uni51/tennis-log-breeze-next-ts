@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
 import { initializeApp } from '@firebase/app'
 import { getAuth, GoogleAuthProvider } from '@firebase/auth'
+import { useEffect, useState } from 'react'
 import { useAuthWithFirebase } from '@/hooks/useAuthWithFirebase'
 import { firebaseConfig } from '@/lib/firebase-helpers'
 

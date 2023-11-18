@@ -3,8 +3,8 @@ import router from 'next/router'
 import { useEffect, useState } from 'react'
 import AdminAppLayout from '@/components/Layouts/Admin/AdminAppLayout'
 import { Loading } from '@/components/Loading'
-import { useAdminAuthQuery } from '@/hooks/adminAuthQuery'
 import MemoList from '@/features/admin/memos/components/MemoList'
+import { useAdminAuthQuery } from '@/hooks/adminAuthQuery'
 
 const AdminUsers = () => {
   const { admin, getAdmin } = useAdminAuthQuery({ middleware: 'adminAuth' })

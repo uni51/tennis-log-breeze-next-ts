@@ -3,6 +3,8 @@ import {
   signInWithPopup,
   signInWithCredential,
   signOut,
+  // Auth not found in '@firebase/auth' のエラーが出るので
+  // eslint-disable-next-line
   Auth,
 } from '@firebase/auth'
 import { useCallback, useState } from 'react'

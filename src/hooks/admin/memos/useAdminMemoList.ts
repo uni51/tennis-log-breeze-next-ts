@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { apiClient } from '@/lib/utils/apiClient'
-import { simpleUser } from '@/types/User'
 import { Memo } from '@/types/Memo'
+import { simpleUser } from '@/types/User'
 
 const getMemos = async (): Promise<Memo[]> => {
   const responseMemos = await apiClient.get('/api/admin/memos')
