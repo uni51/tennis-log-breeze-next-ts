@@ -8,9 +8,9 @@ import AppLayout from '@/components/Layouts/AppLayout'
 import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
 import DashboardMemoList from '@/features/memos/dashboard/components/DashboardMemoList'
 import { useAuthQuery } from '@/hooks/authQuery'
+import useCheckLoggedIn from '@/hooks/checkLoggedIn'
 import { onError } from '@/lib/error-helper'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
-import useCheckLoggedIn from '@/hooks/checkLoggedIn'
 
 const DashboardMemoIndex: NextPage = () => {
   const router = useRouter()

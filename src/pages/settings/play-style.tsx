@@ -5,8 +5,8 @@ import { useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import { useAuthQuery } from '@/hooks/authQuery'
-import { useQueryCareers } from '@/hooks/profile/useQueryCareers'
 import useCheckLoggedIn from '@/hooks/checkLoggedIn'
+import { useQueryCareers } from '@/hooks/profile/useQueryCareers'
 
 const PlayStyle: NextPage = () => {
   const router = useRouter()

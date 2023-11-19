@@ -4,13 +4,13 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import AppLayout from '@/components/Layouts/AppLayout'
+import { Loading } from '@/components/Loading'
 import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
 import DashboardMemoDetail from '@/features/memos/dashboard/components/DashBoardMemoDetail'
 import { useAuthQuery } from '@/hooks/authQuery'
+import useCheckLoggedIn from '@/hooks/checkLoggedIn'
 import { onError } from '@/lib/error-helper'
 import { Memo } from '@/types/Memo'
-import useCheckLoggedIn from '@/hooks/checkLoggedIn'
-import { Loading } from '@/components/Loading'
 
 const DashboardMemoDetailIndex: NextPage<Memo> = () => {
   const { user } = useAuthQuery({ middleware: 'auth' })

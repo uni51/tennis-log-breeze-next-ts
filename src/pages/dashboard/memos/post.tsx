@@ -6,9 +6,9 @@ import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import MemoPost from '@/features/memos/dashboard/components/MemoPost'
 import { useAuthQuery } from '@/hooks/authQuery'
+import useCheckLoggedIn from '@/hooks/checkLoggedIn'
 import { useQueryMemoCategories } from '@/hooks/memos/useQueryMemoCategories'
 import { useQueryMemoStatuses } from '@/hooks/memos/useQueryMemoStatuses'
-import useCheckLoggedIn from '@/hooks/checkLoggedIn'
 
 const DashboardMemoPost: NextPage = () => {
   const router = useRouter()

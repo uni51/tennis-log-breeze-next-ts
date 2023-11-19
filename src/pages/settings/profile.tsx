@@ -6,13 +6,13 @@ import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import ProfileEdit from '@/features/settings/profile/ProfileEdit'
 import { useAuthQuery } from '@/hooks/authQuery'
+import useCheckLoggedIn from '@/hooks/checkLoggedIn'
 import { useQueryAgeRanges } from '@/hooks/profile/useQueryAgeRanges'
 import { useQueryCareers } from '@/hooks/profile/useQueryCareers'
 import { useQueryDominantHands } from '@/hooks/profile/useQueryDominantHands'
 import { useQueryGenders } from '@/hooks/profile/useQueryGenders'
 import { useQueryPlayFrequencies } from '@/hooks/profile/useQueryPlayFrequencies'
 import { useQueryTennisLevels } from '@/hooks/profile/useQueryTennisLevels'
-import useCheckLoggedIn from '@/hooks/checkLoggedIn'
 
 const Profile: NextPage = () => {
   const router = useRouter()
