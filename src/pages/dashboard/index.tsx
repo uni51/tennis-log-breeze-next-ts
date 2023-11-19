@@ -10,7 +10,7 @@ import useCheckLoggedIn from '@/hooks/checkLoggedIn'
 
 /* dashboard（マイページ）のTOPページ */
 const DashboardTop = () => {
-  const { user, getUser } = useAuthQuery({ middleware: 'auth' })
+  const { user } = useAuthQuery({ middleware: 'auth' })
   const checkLoggedIn = useCheckLoggedIn()
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(true)
