@@ -1,9 +1,9 @@
-'use client'
+// 'use client' の行は不要なので削除
 import { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
-import { ErrorBoundary } from 'react-error-boundary' // build時に、FallbackProps not found in 'react-error-boundary' のエラーが出る
+import { ErrorBoundary } from 'react-error-boundary'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
 import DashboardMemoList from '@/features/memos/dashboard/components/DashboardMemoList'
@@ -23,21 +23,18 @@ const DashboardMemoIndex: NextPage = () => {
 
   // Fetch用URL組み立て
   useEffect(() => {
-    // ログイン中か判定
     const init = async () => {
-      // ログイン中か判定
-      const res: boolean = await checkLoggedIn()
-      if (!res) {
+      const isLoggedIn = await checkLoggedIn()
+      if (!isLoggedIn) {
         router.push('/login')
-        return
       }
     }
     init()
-  }, [router, pageNumber, categoryNumber])
+  }, [router, pageNumber, categoryNumber, checkLoggedIn])
 
   const headLine = user?.data?.nickname
     ? `${user.data.nickname}さんのメモ一覧${getMemosListByCategoryHeadLineTitle(categoryNumber)}`
-    : ' あなたが作成したメモ一覧'
+    : 'あなたが作成したメモ一覧'
 
   if (!user) return null
 
