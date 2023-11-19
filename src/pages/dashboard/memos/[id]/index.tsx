@@ -6,37 +6,47 @@ import { ErrorBoundary } from 'react-error-boundary'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
 import DashboardMemoDetail from '@/features/memos/dashboard/components/DashBoardMemoDetail'
-import { useAuth } from '@/hooks/auth'
+import { useAuthQuery } from '@/hooks/authQuery'
 import { onError } from '@/lib/error-helper'
 import { Memo } from '@/types/Memo'
+import useCheckLoggedIn from '@/hooks/checkLoggedIn'
+import { Loading } from '@/components/Loading'
 
-/* Dashboard（マイページ）のメモ詳細ページ */
 const DashboardMemoDetailIndex: NextPage<Memo> = () => {
-  const { checkLoggedIn, user } = useAuth({ middleware: 'auth' })
+  const { user } = useAuthQuery({ middleware: 'auth' })
+  const checkLoggedIn = useCheckLoggedIn()
   const [apiUrl, setApiUrl] = useState('')
   const [titleText, setTitleText] = useState('')
+  const [isLoading, setIsLoading] = useState(true)
 
   const router = useRouter()
-  let loginUser = user?.data
+  const loginUser = user?.data
+
+  const fetchMemoData = async () => {
+    // ログイン中か判定
+    const isLoggedIn = checkLoggedIn()
+    if (!isLoggedIn) {
+      router.push('/login')
+      return
+    }
+
+    // Fetch用URL組み立て
+    if (router.isReady) {
+      const apiUri = `api/dashboard/memos/${router.query.id}`
+      setApiUrl(apiUri)
+    }
+
+    setIsLoading(false)
+  }
 
   useEffect(() => {
-    const init = async () => {
-      // ログイン中か判定
-      const res: boolean = await checkLoggedIn()
-      if (!res) {
-        router.push('/login')
-        return
-      }
-      // Fetch用URL組み立て
-      if (router.isReady) {
-        const apiUri = `api/dashboard/memos/${router.query.id}`
-        setApiUrl(apiUri)
-      }
-    }
-    init()
-  }, [router, apiUrl])
+    fetchMemoData()
+  }, [router.isReady])
 
-  const headLine = `${user?.data?.name}さんのメモ詳細`
+  if (isLoading) return <Loading />
+  if (!user) return null
+
+  const headline = `${user?.data?.name}さんのメモ詳細`
 
   return (
     <>
@@ -44,7 +54,7 @@ const DashboardMemoDetailIndex: NextPage<Memo> = () => {
         <title>{titleText}</title>
       </Head>
       <AppLayout
-        header={<h2 className='font-semibold text-xl text-gray-800 leading-tight'>{headLine}</h2>}
+        header={<h2 className='font-semibold text-xl text-gray-800 leading-tight'>{headline}</h2>}
       >
         <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
           <DashboardMemoDetail apiUrl={apiUrl} loginUser={loginUser} setTitleText={setTitleText} />
