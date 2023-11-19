@@ -29,7 +29,7 @@ const DashboardMemoPost: NextPage = () => {
     }
 
     init()
-  }, [checkLoggedIn, router])
+  }, [router, checkLoggedIn])
 
   if (
     isLoading ||

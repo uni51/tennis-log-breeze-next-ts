@@ -23,7 +23,7 @@ const DashboardTop = () => {
       setIsLoading(false)
     }
     init()
-  }, [checkLoggedIn, router])
+  }, [router, checkLoggedIn])
 
   if (isLoading) return <Loading />
   if (!user) return null
