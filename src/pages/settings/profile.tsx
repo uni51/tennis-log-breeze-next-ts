@@ -5,18 +5,20 @@ import { useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import ProfileEdit from '@/features/settings/profile/ProfileEdit'
-import { useAuth } from '@/hooks/auth'
+import { useAuthQuery } from '@/hooks/authQuery'
 import { useQueryAgeRanges } from '@/hooks/profile/useQueryAgeRanges'
 import { useQueryCareers } from '@/hooks/profile/useQueryCareers'
 import { useQueryDominantHands } from '@/hooks/profile/useQueryDominantHands'
 import { useQueryGenders } from '@/hooks/profile/useQueryGenders'
 import { useQueryPlayFrequencies } from '@/hooks/profile/useQueryPlayFrequencies'
 import { useQueryTennisLevels } from '@/hooks/profile/useQueryTennisLevels'
+import useCheckLoggedIn from '@/hooks/checkLoggedIn'
 
 const Profile: NextPage = () => {
   const router = useRouter()
-  const { user, isLoading } = useAuth({ middleware: 'auth' })
-
+  const { user } = useAuthQuery({ middleware: 'auth' })
+  const checkLoggedIn = useCheckLoggedIn()
+  const [isLoading, setIsLoading] = useState(true)
   const { status: careersStatus, data: careers, error: careersError } = useQueryCareers()
 
   const { status: gendersStatus, data: genders, error: gendersError } = useQueryGenders()
@@ -40,14 +42,13 @@ const Profile: NextPage = () => {
   } = useQueryTennisLevels()
 
   useEffect(() => {
-    const init = async () => {
-      // ログイン中か判定
-      if (!isLoading && !user) {
-        await router.push('/login')
-      }
+    const res: boolean = checkLoggedIn()
+    if (!res) {
+      router.push('/login')
+      return
     }
-    init()
-  }, [user, isLoading])
+    setIsLoading(false)
+  }, [])
 
   const anyPending =
     careersStatus === 'pending' ||
