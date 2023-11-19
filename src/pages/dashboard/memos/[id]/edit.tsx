@@ -1,21 +1,22 @@
-import type { NextPage } from 'next'
+import { useEffect, useState } from 'react'
+import { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import MemoEdit from '@/features/memos/dashboard/components/MemoEdit'
-import { useAuth } from '@/hooks/auth'
+import { useAuthQuery } from '@/hooks/authQuery'
 import { useQueryMemoCategories } from '@/hooks/memos/useQueryMemoCategories'
 import { useQueryMemoStatuses } from '@/hooks/memos/useQueryMemoStatuses'
 import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
+import useCheckLoggedIn from '@/hooks/checkLoggedIn'
 
 const DashboardMemoDetailEdit: NextPage = () => {
-  // ルーター定義
   const router = useRouter()
-  const { user } = useAuth({ middleware: 'auth' })
-  const [memo, setMemo] = useState<Memo>()
+  const { user } = useAuthQuery({ middleware: 'auth' })
+  const checkLoggedIn = useCheckLoggedIn()
+  const [memo, setMemo] = useState<Memo | undefined>()
   const [isLoading, setIsLoading] = useState(true)
 
   const { status: queryMemoCategoriesStatus, data: categories } = useQueryMemoCategories()
@@ -23,8 +24,9 @@ const DashboardMemoDetailEdit: NextPage = () => {
 
   useEffect(() => {
     const init = async () => {
-      // ログイン中か判定
-      if (!user) {
+      const isLoggedIn = await checkLoggedIn()
+
+      if (!isLoggedIn) {
         router.push('/login')
         return
       }
@@ -35,25 +37,36 @@ const DashboardMemoDetailEdit: NextPage = () => {
       }
 
       try {
-        const memo = await apiClient.get(`api/dashboard/memos/${router.query.id}`)
-        setMemo(memo.data.data)
-        if (!memo) {
+        const memoResponse = await apiClient.get(`api/dashboard/memos/${router.query.id}`)
+        const memoData = memoResponse.data.data
+
+        if (!memoData) {
           router.push('/dashboard/memos')
           return
         }
+
+        setMemo(memoData)
       } catch (err) {
-        // TODO：エラー処理
-        console.log(err)
+        console.error(err) // エラー処理は適切に行う
       } finally {
         setIsLoading(false)
       }
     }
-    init()
-  }, [router, router.query.id])
 
-  if (isLoading || queryMemoCategoriesStatus === 'pending' || queryMemoStatusesStatus === 'pending')
+    init()
+  }, [router, router.query.id, checkLoggedIn])
+
+  if (
+    isLoading ||
+    queryMemoCategoriesStatus === 'pending' ||
+    queryMemoStatusesStatus === 'pending'
+  ) {
     return <Loading />
-  if (!user) return null
+  }
+
+  if (!user) {
+    return null
+  }
 
   return (
     <AppLayout
