@@ -4,21 +4,29 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
-import ProfileEdit from '@/features/settings/profile/ProfileEdit'
-import { useAuth } from '@/hooks/auth'
+import { useAuthQuery } from '@/hooks/authQuery'
 import { useQueryCareers } from '@/hooks/profile/useQueryCareers'
+import useCheckLoggedIn from '@/hooks/checkLoggedIn'
 
 const PlayStyle: NextPage = () => {
   const router = useRouter()
-  const { user } = useAuth({ middleware: 'auth' })
+  const { user } = useAuthQuery({ middleware: 'auth' })
+  const checkLoggedIn = useCheckLoggedIn()
   const [isLoading, setIsLoading] = useState(true)
 
   const { status: queryProfileCareers, data: careers } = useQueryCareers()
 
-  // 初回レンダリング時にAPIリクエスト
-  useEffect(() => {}, [])
+  // 認証ガード
+  useEffect(() => {
+    const res: boolean = checkLoggedIn()
+    if (!res) {
+      router.push('/login')
+      return
+    }
+    setIsLoading(false)
+  }, [])
 
-  if (queryProfileCareers === 'pending') return <Loading />
+  if (isLoading || queryProfileCareers === 'pending') return <Loading />
   if (!user) return null
 
   return (
