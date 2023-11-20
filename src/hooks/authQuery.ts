@@ -78,7 +78,7 @@ export const useAuthQuery = ({ middleware, redirectIfAuthenticated }: IUseAuth) 
       await apiClient.post('/auth/logout')
     },
     onSuccess: async () => {
-      // Redirect to login page after successful logout
+      sessionStorage.removeItem('token')
       router.push('/login')
     },
     onError: () => {
@@ -110,16 +110,25 @@ export const useAuthQuery = ({ middleware, redirectIfAuthenticated }: IUseAuth) 
     await loginMutation.mutateAsync({ idToken, setErrors, setStatus })
   }
 
-  useEffect(() => {
-    if (middleware === 'guest' && redirectIfAuthenticated && user)
-      router.push(redirectIfAuthenticated)
-  }, [user])
+  // useEffect(() => {
+  //   if (middleware === 'guest' && redirectIfAuthenticated && user)
+  //     router.push(redirectIfAuthenticated)
+  // }, [middleware, redirectIfAuthenticated, router, user])
+
+  const renderLogin = () => {
+    window.location.pathname = '/login'
+  }
+
+  const handleLogout = async () => {
+    await logoutMutation.mutateAsync()
+  }
 
   // Return the necessary values and functions
   return {
     user,
     getUser,
+    renderLogin,
     firebaseLogin: handleLogin,
-    firebaseLogout: logoutMutation.mutate,
+    firebaseLogout: handleLogout,
   }
 }

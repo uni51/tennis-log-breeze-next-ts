@@ -3,13 +3,15 @@ import { useState } from 'react'
 import Dropdown from '@/components/Dropdown'
 import { DropdownButton } from '@/components/DropdownLink'
 import { ResponsiveNavButton } from '@/components/ResponsiveNavLink'
-import { useAuth } from '@/hooks/auth'
+// import { useAuth } from '@/hooks/auth'
+import { useAuthQuery } from '@/hooks/authQuery'
 import { isEmptyObject } from '@/lib/common-helper'
 import { User } from '@/types/User'
 
 const Navigation = (user: User) => {
   // const { logout, renderLogin } = useAuth({ middleware: 'guest' })
-  const { firebaseLogout, renderLogin } = useAuth({ middleware: 'guest' })
+  // const { firebaseLogout, renderLogin } = useAuth({ middleware: 'guest' })
+  const { firebaseLogout, renderLogin } = useAuthQuery({ middleware: 'guest' })
 
   const [open, setOpen] = useState(false)
   // console.log(isEmptyObject(user))
