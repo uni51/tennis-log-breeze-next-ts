@@ -12,6 +12,7 @@ import { ToastContainer } from 'react-toastify'
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary' // build時に、FallbackProps not found in 'react-error-boundary' のエラーが出る
 import { AlertModalManager } from '@/components/AlertModalManager'
 import { ErrorDisplay } from '@/components/Layouts/Error/ErrorDisplay'
+import { AuthProvider } from '@/provider/authContext'
 
 // export function reportWebVitals(metric: NextWebVitalsMetric) {
 //   switch (metric.name) {
@@ -72,22 +73,24 @@ function App({ Component, pageProps }: AppProps) {
   }, [router])
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ErrorBoundary FallbackComponent={ErrorFallback} onError={onError}>
-        <ToastContainer
-          position='top-center'
-          autoClose={1000}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover={false}
-        />
-        <AlertModalManager />
-        <Component {...pageProps} />
-      </ErrorBoundary>
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+    <AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <ErrorBoundary FallbackComponent={ErrorFallback} onError={onError}>
+          <ToastContainer
+            position='top-center'
+            autoClose={1000}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover={false}
+          />
+          <AlertModalManager />
+          <Component {...pageProps} />
+        </ErrorBoundary>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+    </AuthProvider>
   )
   // return <Component {...pageProps} />
 }

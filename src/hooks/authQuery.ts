@@ -115,12 +115,12 @@ export const useAuthQuery = ({ middleware, redirectIfAuthenticated }: IUseAuth) 
   //     router.push(redirectIfAuthenticated)
   // }, [middleware, redirectIfAuthenticated, router, user])
 
-  const renderLogin = () => {
-    window.location.pathname = '/login'
-  }
-
   const handleLogout = async () => {
     await logoutMutation.mutateAsync()
+  }
+
+  const renderLogin = () => {
+    window.location.pathname = '/login'
   }
 
   // Return the necessary values and functions
