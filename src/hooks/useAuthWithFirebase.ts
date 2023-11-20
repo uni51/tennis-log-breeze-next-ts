@@ -8,7 +8,6 @@ import {
   Auth,
 } from '@firebase/auth'
 import { useCallback, useState } from 'react'
-// import { useAuth } from '@/hooks/auth'
 import { useAuthQuery } from '@/hooks/authQuery'
 
 export const useAuthWithFirebase = (auth: Auth) => {

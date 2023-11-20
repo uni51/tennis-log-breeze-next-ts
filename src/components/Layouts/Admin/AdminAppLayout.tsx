@@ -16,7 +16,6 @@ import React, { PropsWithChildren, Fragment, ReactNode, useState } from 'react'
 import AdminNavigation from './AdminNavigation'
 import Navigation from '@/components/Layouts/Navigation'
 import { useAdminAuthQuery } from '@/hooks/adminAuthQuery'
-import { useAuth } from '@/hooks/auth'
 
 interface Props {
   header: ReactNode
