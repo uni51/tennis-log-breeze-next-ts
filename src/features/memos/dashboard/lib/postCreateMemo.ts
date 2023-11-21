@@ -14,7 +14,7 @@ export const postCreateMemo = (postData: MemoForm, setError: UseFormSetError<Mem
       apiClient
         .post('/api/dashboard/memos', postData)
         .then((response: AxiosResponse) => {
-          console.log(response.data)
+          // console.log(response.data)
           router.push('/dashboard/memos')
         })
         .catch((err: AxiosError) => {

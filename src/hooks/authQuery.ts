@@ -81,14 +81,8 @@ export const useAuthQuery = ({ middleware, redirectIfAuthenticated }: IUseAuth) 
       sessionStorage.removeItem('token')
       router.push('/login')
     },
-    onError: () => {
-      // Handle error
-      // do something on error
-    },
-    onSettled: () => {
-      // Handle settled
-      // do something on settled
-    },
+    onError: () => {},
+    onSettled: () => {},
     mutationKey: ['logout'],
   })
 
@@ -97,23 +91,12 @@ export const useAuthQuery = ({ middleware, redirectIfAuthenticated }: IUseAuth) 
 
   // Function to handle login
   const handleLogin = async (idToken: string) => {
-    const setErrors = (errors: string[]) => {
-      // Handle errors
-      // do something with errors
-    }
-    const setStatus = (status: string | null) => {
-      // Handle status
-      // do something with status
-    }
+    const setErrors = (errors: string[]) => {}
+    const setStatus = (status: string | null) => {}
 
     // Call the login mutation
     await loginMutation.mutateAsync({ idToken, setErrors, setStatus })
   }
-
-  // useEffect(() => {
-  //   if (middleware === 'guest' && redirectIfAuthenticated && user)
-  //     router.push(redirectIfAuthenticated)
-  // }, [middleware, redirectIfAuthenticated, router, user])
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync()

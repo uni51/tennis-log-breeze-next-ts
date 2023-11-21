@@ -18,7 +18,7 @@ export const postEditMemo = (
       apiClient
         .post(`/api/dashboard/memos/${memoId}`, postData)
         .then((response: AxiosResponse) => {
-          console.log(response.data)
+          // console.log(response.data)
           router.push('/dashboard/memos')
         })
         .catch((err: AxiosError) => {
