@@ -10,6 +10,7 @@ import { Category } from '@/types/Category'
 import { Memo } from '@/types/Memo'
 import { MemoForm } from '@/types/MemoForm'
 import { Status } from '@/types/Status'
+import { Loading } from '@/components/Loading'
 
 type Props = {
   memo: Memo

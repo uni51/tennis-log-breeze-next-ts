@@ -25,18 +25,23 @@ const DashboardMemoDetailEdit: NextPage = () => {
   useEffect(() => {
     const init = async () => {
       const isLoggedIn = await checkLoggedIn()
-
       if (!isLoggedIn) {
         router.push('/login')
-        return
       }
+      setIsLoading(false)
+    }
 
-      if (!router.query.id) {
-        router.push('/dashboard/memos')
-        return
-      }
+    init()
+  }, [router])
 
-      try {
+  useEffect(() => {
+    const init = async () => {
+      if (router.isReady) {
+        if (!router.query.id) {
+          router.push('/dashboard/memos')
+          return
+        }
+
         const memoResponse = await apiClient.get(`api/dashboard/memos/${router.query.id}`)
         const memoData = memoResponse.data.data
 
@@ -44,20 +49,17 @@ const DashboardMemoDetailEdit: NextPage = () => {
           router.push('/dashboard/memos')
           return
         }
-
+        console.log(memoData)
         setMemo(memoData)
-      } catch (err) {
-        console.error(err) // エラー処理は適切に行う
-      } finally {
-        setIsLoading(false)
       }
+      setIsLoading(false)
     }
-
     init()
-  }, [router, router.query.id, checkLoggedIn])
+  }, [router.isReady])
 
   if (
     isLoading ||
+    memo === undefined ||
     queryMemoCategoriesStatus === 'pending' ||
     queryMemoStatusesStatus === 'pending'
   ) {
