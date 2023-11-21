@@ -5,7 +5,7 @@ import { DropdownButton } from '@/components/DropdownLink'
 import { ResponsiveNavButton } from '@/components/ResponsiveNavLink'
 import { isEmptyObject } from '@/lib/common-helper'
 import { User } from '@/types/User'
-import { useAuth } from '@/provider/authContext'
+import { useAuth } from '@/features/auth/provider/authProvider'
 import { useAuthWithFirebase } from '@/hooks/useAuthWithFirebase'
 import { useAuthQuery } from '@/hooks/authQuery'
 

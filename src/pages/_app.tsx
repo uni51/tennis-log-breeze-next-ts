@@ -12,10 +12,10 @@ import { ToastContainer } from 'react-toastify'
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary' // build時に、FallbackProps not found in 'react-error-boundary' のエラーが出る
 import { AlertModalManager } from '@/components/AlertModalManager'
 import { ErrorDisplay } from '@/components/Layouts/Error/ErrorDisplay'
-import { AuthProvider } from '@/provider/authContext'
+import { AuthProvider } from '@/features/auth/provider/authProvider'
 
 // export function reportWebVitals(metric: NextWebVitalsMetric) {
-//   switch (metric.name) {
+//   switch (metric.name) {1
 //     case 'FCP':
 //       console.log(`FCP: ${Math.round(metric.value * 10) / 10}`)
 //       break
