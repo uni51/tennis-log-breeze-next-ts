@@ -14,6 +14,6 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>
 }
 
-export const useAuth = (): Auth | null => {
+export const useAuthContext = (): Auth | null => {
   return useContext(AuthContext)
 }

@@ -5,12 +5,12 @@ import { DropdownButton } from '@/components/DropdownLink'
 import { ResponsiveNavButton } from '@/components/ResponsiveNavLink'
 import { isEmptyObject } from '@/lib/common-helper'
 import { User } from '@/types/User'
-import { useAuth } from '@/features/auth/provider/authProvider'
+import { useAuthContext } from '@/features/auth/provider/AuthProvider'
 import { useAuthWithFirebase } from '@/hooks/useAuthWithFirebase'
 import { useAuthQuery } from '@/hooks/authQuery'
 
 const Navigation = (user: User) => {
-  const auth = useAuth()
+  const auth = useAuthContext()
   if (!auth) {
     // handle the case when auth is null
     return null
