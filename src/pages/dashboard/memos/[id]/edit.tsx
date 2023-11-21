@@ -11,28 +11,16 @@ import { useQueryMemoCategories } from '@/hooks/memos/useQueryMemoCategories'
 import { useQueryMemoStatuses } from '@/hooks/memos/useQueryMemoStatuses'
 import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
+import { AuthGuard } from '@/features/auth/components/AuthGuard'
 
 const DashboardMemoDetailEdit: NextPage = () => {
   const router = useRouter()
   const { user } = useAuthQuery({ middleware: 'auth' })
-  const checkLoggedIn = useCheckLoggedIn()
   const [memo, setMemo] = useState<Memo | undefined>()
   const [isLoading, setIsLoading] = useState(true)
 
   const { status: queryMemoCategoriesStatus, data: categories } = useQueryMemoCategories()
   const { status: queryMemoStatusesStatus, data: statuses } = useQueryMemoStatuses()
-
-  useEffect(() => {
-    const init = async () => {
-      const isLoggedIn = await checkLoggedIn()
-      if (!isLoggedIn) {
-        router.push('/login')
-      }
-      setIsLoading(false)
-    }
-
-    init()
-  }, [router])
 
   useEffect(() => {
     const init = async () => {
@@ -71,18 +59,20 @@ const DashboardMemoDetailEdit: NextPage = () => {
   }
 
   return (
-    <AppLayout
-      header={
-        <h2 className='font-semibold text-xl text-gray-800 leading-tight'>
-          Dashboard - メモの編集
-        </h2>
-      }
-    >
-      <Head>
-        <title>Dashboard - メモの編集</title>
-      </Head>
-      <MemoEdit memo={memo!} statuses={statuses!} categories={categories!} />
-    </AppLayout>
+    <AuthGuard>
+      <AppLayout
+        header={
+          <h2 className='font-semibold text-xl text-gray-800 leading-tight'>
+            Dashboard - メモの編集
+          </h2>
+        }
+      >
+        <Head>
+          <title>Dashboard - メモの編集</title>
+        </Head>
+        <MemoEdit memo={memo!} statuses={statuses!} categories={categories!} />
+      </AppLayout>
+    </AuthGuard>
   )
 }
 

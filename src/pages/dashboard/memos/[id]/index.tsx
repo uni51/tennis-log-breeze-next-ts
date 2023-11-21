@@ -11,6 +11,7 @@ import { useAuthQuery } from '@/hooks/authQuery'
 import useCheckLoggedIn from '@/hooks/checkLoggedIn'
 import { onError } from '@/lib/error-helper'
 import { Memo } from '@/types/Memo'
+import { AuthGuard } from '@/features/auth/components/AuthGuard'
 
 const DashboardMemoDetailIndex: NextPage<Memo> = () => {
   const { user } = useAuthQuery({ middleware: 'auth' })
@@ -22,14 +23,7 @@ const DashboardMemoDetailIndex: NextPage<Memo> = () => {
   const router = useRouter()
   const loginUser = user?.data
 
-  const fetchMemoData = async () => {
-    // ログイン中か判定
-    const isLoggedIn = checkLoggedIn()
-    if (!isLoggedIn) {
-      router.push('/login')
-      return
-    }
-
+  useEffect(() => {
     // Fetch用URL組み立て
     if (router.isReady) {
       const apiUri = `api/dashboard/memos/${router.query.id}`
@@ -37,10 +31,6 @@ const DashboardMemoDetailIndex: NextPage<Memo> = () => {
     }
 
     setIsLoading(false)
-  }
-
-  useEffect(() => {
-    fetchMemoData()
   }, [router.isReady])
 
   if (isLoading) return <Loading />
@@ -49,7 +39,7 @@ const DashboardMemoDetailIndex: NextPage<Memo> = () => {
   const headline = `${user?.data?.name}さんのメモ詳細`
 
   return (
-    <>
+    <AuthGuard>
       <Head>
         <title>{titleText}</title>
       </Head>
@@ -60,7 +50,7 @@ const DashboardMemoDetailIndex: NextPage<Memo> = () => {
           <DashboardMemoDetail apiUrl={apiUrl} loginUser={loginUser} setTitleText={setTitleText} />
         </ErrorBoundary>
       </AppLayout>
-    </>
+    </AuthGuard>
   )
 }
 
