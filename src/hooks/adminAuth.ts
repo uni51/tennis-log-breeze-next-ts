@@ -40,24 +40,7 @@ export const useAdminAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) 
       }),
   )
 
-  const csrf = () => apiClient.get('/sanctum/csrf-cookie')
-
-  const register = async (args: IApiRequest) => {
-    const { setErrors, ...props } = args
-
-    await csrf()
-
-    setErrors([])
-
-    apiClient
-      .post('/admin/register', props)
-      .then(() => mutate()) // データを更新
-      .catch((error) => {
-        if (error.response.status !== 422) throw error
-
-        setErrors(error.response.data.errors)
-      })
-  }
+  const csrf = () => apiClient.get('/auth/sanctum/csrf-cookie')
 
   const login = async (args: IApiRequest) => {
     const { setErrors, setStatus, ...props } = args
@@ -74,48 +57,6 @@ export const useAdminAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) 
         if (error.response.status !== 422) throw error
         setErrors(error.response.data.errors)
       })
-  }
-
-  const forgotPassword = async (args: IApiRequest) => {
-    const { setErrors, setStatus, email } = args
-
-    await csrf()
-
-    setErrors([])
-    setStatus(null)
-
-    apiClient
-      .post('/admin/forgot-password', { email })
-      .then((response) => setStatus(response.data.status))
-      .catch((error) => {
-        if (error.response.status !== 422) throw error
-
-        setErrors(error.response.data.errors)
-      })
-  }
-
-  const resetPassword = async (args: IApiRequest) => {
-    const { setErrors, setStatus, ...props } = args
-    await csrf()
-
-    setErrors([])
-    setStatus(null)
-
-    apiClient
-      .post('/admin/reset-password', { token: router.query.token, ...props })
-      .then((response) => router.push('/admin/login?reset=' + btoa(response.data.status)))
-      .catch((error) => {
-        if (error.response.status !== 422) throw error
-        setErrors(error.response.data.errors)
-      })
-  }
-
-  const resendEmailVerification = (args: IApiRequest) => {
-    const { setStatus } = args
-
-    apiClient
-      .post('/admin/email/verification-notification')
-      .then((response) => setStatus(response.data.status))
   }
 
   const logout = async () => {
@@ -145,11 +86,7 @@ export const useAdminAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) 
 
   return {
     admin,
-    register,
     login,
-    forgotPassword,
-    resetPassword,
-    resendEmailVerification,
     logout,
   }
 }

@@ -1,37 +1,47 @@
-import type { NextPage } from 'next'
+import { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
+import { Loading } from '@/components/Loading'
 import MemoPost from '@/features/memos/dashboard/components/MemoPost'
-import { useAuth } from '@/hooks/auth'
-import { UseGetMemoCategories } from '@/hooks/memos/useGetMemoCategories'
-import { UseGetMemoStatuses } from '@/hooks/memos/useGetMemoStatuses'
-import { Category } from '@/types/Category'
-import { Status } from '@/types/Status'
+import { useAuthQuery } from '@/hooks/authQuery'
+import useCheckLoggedIn from '@/hooks/checkLoggedIn'
+import { useQueryMemoCategories } from '@/hooks/memos/useQueryMemoCategories'
+import { useQueryMemoStatuses } from '@/hooks/memos/useQueryMemoStatuses'
 
 const DashboardMemoPost: NextPage = () => {
-  // ルーター定義
   const router = useRouter()
-  const { user } = useAuth({ middleware: 'auth' })
-  const [category, setCategory] = useState<Category[]>([])
-  const [status, setStatus] = useState<Status[]>([])
+  const { user } = useAuthQuery({ middleware: 'auth' })
+  const checkLoggedIn = useCheckLoggedIn()
+  const [isLoading, setIsLoading] = useState(true)
+
+  const { status: queryMemoCategoriesStatus, data: categories } = useQueryMemoCategories()
+  const { status: queryMemoStatusesStatus, data: statuses } = useQueryMemoStatuses()
 
   useEffect(() => {
     const init = async () => {
-      // ログイン中か判定
-      if (!user) {
+      const isLoggedIn = await checkLoggedIn()
+      if (!isLoggedIn) {
         router.push('/login')
-        return
       }
-
-      setCategory(await UseGetMemoCategories())
-      setStatus(await UseGetMemoStatuses())
+      setIsLoading(false)
     }
-    init()
-  }, [])
 
-  if (!user) return null
+    init()
+  }, [router, checkLoggedIn])
+
+  if (
+    isLoading ||
+    queryMemoCategoriesStatus === 'pending' ||
+    queryMemoStatusesStatus === 'pending'
+  ) {
+    return <Loading />
+  }
+
+  if (!user) {
+    return null
+  }
 
   return (
     <AppLayout
@@ -44,7 +54,7 @@ const DashboardMemoPost: NextPage = () => {
       <Head>
         <title>Dashboard - メモの登録</title>
       </Head>
-      <MemoPost status={status} category={category} />
+      <MemoPost statuses={statuses!} categories={categories!} />
     </AppLayout>
   )
 }

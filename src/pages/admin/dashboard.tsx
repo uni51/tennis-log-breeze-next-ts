@@ -1,7 +1,31 @@
 import Head from 'next/head'
+import router from 'next/router'
+import { useEffect, useState } from 'react'
 import AdminAppLayout from '@/components/Layouts/Admin/AdminAppLayout'
+import { Loading } from '@/components/Loading'
+import { useAdminAuthQuery } from '@/hooks/adminAuthQuery'
 
-const Dashboard = () => {
+const AdminDashboard = () => {
+  const { admin, getAdmin } = useAdminAuthQuery({ middleware: 'adminAuth' })
+  const [isLoading, setIsLoading] = useState(false)
+
+  // 初回レンダリング時にログインチェック
+  useEffect(() => {
+    const init = async () => {
+      // // ログイン中か判定
+      const res = await getAdmin.refetch()
+      if (!res.data) {
+        router.push('/admin/login')
+        return
+      }
+      setIsLoading(false)
+    }
+    init()
+  }, [])
+
+  if (isLoading) return <Loading />
+  // if (!admin) return null
+
   return (
     <AdminAppLayout
       header={
@@ -25,4 +49,4 @@ const Dashboard = () => {
   )
 }
 
-export default Dashboard
+export default AdminDashboard
