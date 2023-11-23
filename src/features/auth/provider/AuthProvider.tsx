@@ -1,6 +1,7 @@
-import React, { createContext, useContext, ReactNode, FC } from 'react'
 import { initializeApp } from '@firebase/app'
-import { getAuth, Auth } from '@firebase/auth'
+// eslint-disable-next-line
+import { getAuth, Auth } from '@firebase/auth' // build時に、Auth not found in '@firebase/auth' のエラーが出る
+import React, { createContext, useContext, ReactNode, FC } from 'react'
 import { firebaseConfig } from '@/lib/firebase-helpers'
 
 type AuthProviderProps = {

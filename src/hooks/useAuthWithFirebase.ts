@@ -3,8 +3,9 @@ import {
   signInWithPopup,
   signInWithCredential,
   signOut,
+  // eslint-disable-next-line
   Auth,
-} from '@firebase/auth'
+} from '@firebase/auth' // build時に、Auth not found in '@firebase/auth' のエラーが出る
 import { useCallback, useState } from 'react'
 import { useAuthQuery } from '@/hooks/authQuery'
 

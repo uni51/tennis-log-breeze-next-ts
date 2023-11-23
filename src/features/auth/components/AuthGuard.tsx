@@ -1,8 +1,8 @@
 // PrivateRoute.jsx
-import React, { ReactNode, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import useCheckLoggedIn from '@/hooks/checkLoggedIn'
+import React, { ReactNode, useEffect, useState } from 'react'
 import { Loading } from '@/components/Loading'
+import useCheckLoggedIn from '@/hooks/checkLoggedIn'
 
 type Props = {
   children: ReactNode

@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
+import { AuthGuard } from '@/features/auth/components/AuthGuard'
 import MemoEdit from '@/features/memos/dashboard/components/MemoEdit'
 import { useAuthQuery } from '@/hooks/authQuery'
 import useCheckLoggedIn from '@/hooks/checkLoggedIn'
@@ -11,7 +12,6 @@ import { useQueryMemoCategories } from '@/hooks/memos/useQueryMemoCategories'
 import { useQueryMemoStatuses } from '@/hooks/memos/useQueryMemoStatuses'
 import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
-import { AuthGuard } from '@/features/auth/components/AuthGuard'
 
 const DashboardMemoDetailEdit: NextPage = () => {
   const router = useRouter()

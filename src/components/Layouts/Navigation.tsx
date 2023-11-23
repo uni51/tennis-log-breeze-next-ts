@@ -3,24 +3,23 @@ import { useState } from 'react'
 import Dropdown from '@/components/Dropdown'
 import { DropdownButton } from '@/components/DropdownLink'
 import { ResponsiveNavButton } from '@/components/ResponsiveNavLink'
+import { useAuthContext } from '@/features/auth/provider/AuthProvider'
+import { useAuthQuery } from '@/hooks/authQuery'
+import { useAuthWithFirebase } from '@/hooks/useAuthWithFirebase'
 import { isEmptyObject } from '@/lib/common-helper'
 import { User } from '@/types/User'
-import { useAuthContext } from '@/features/auth/provider/AuthProvider'
-import { useAuthWithFirebase } from '@/hooks/useAuthWithFirebase'
-import { useAuthQuery } from '@/hooks/authQuery'
 
 const Navigation = (user: User) => {
+  const { renderLogin } = useAuthQuery({ middleware: 'guest' })
+  const [open, setOpen] = useState(false)
   const auth = useAuthContext()
   if (!auth) {
     // handle the case when auth is null
     return null
   }
-  const { renderLogin } = useAuthQuery({ middleware: 'guest' })
+  // eslint-disable-next-line
   const { dispatch } = useAuthWithFirebase(auth)
   const handleLogout = () => dispatch({ type: 'logout' })
-
-  const [open, setOpen] = useState(false)
-  // console.log(isEmptyObject(user))
 
   return (
     <nav className='bg-white border-b border-gray-100'>
