@@ -6,7 +6,7 @@ on:
       - develop
 
 jobs:
-  deploy_to_backend:
+  deploy_to_staging_frontend:
     runs-on: ubuntu-latest
 
     steps:
