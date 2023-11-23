@@ -1,0 +1,27 @@
+name: Deploy Frontend to ConoHa VPS Prod01 Server
+
+on:
+  pull_request:
+    types: [labeled]
+
+jobs:
+  deploy_to_prod01_frontend:
+    runs-on: ubuntu-latest
+    if: |
+      ((github.event.action == 'labeled') &&
+        (github.event.label.name == 'deploy_prod01'))
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install SSH Key for Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          key: ${{ secrets.TENNISLOG_SSH_PRIVATE_KEY }}
+          host: ${{ secrets.PROD01_HOST_IP }}
+          username: ${{ secrets.PROD01_SSH_USER }}
+          port: ${{ secrets.PROD01_SSH_PORT }}
+          script: |
+            cd ./tennis_log_front
+            git pull origin master
+            npm ci
+            npm run build
+            pm2 restart tennis-log
