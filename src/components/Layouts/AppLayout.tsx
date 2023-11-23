@@ -14,7 +14,8 @@ import {
 import Link from 'next/link'
 import React, { PropsWithChildren, Fragment, ReactNode, useState } from 'react'
 import Navigation from '@/components/Layouts/Navigation'
-import { useAuth } from '@/hooks/auth'
+// import { useAuth } from '@/hooks/auth'
+import { useAuthQuery } from '@/hooks/authQuery'
 
 interface Props {
   header: ReactNode
@@ -64,9 +65,10 @@ const navigation = [
     name: 'Documents',
     icon: InboxIcon,
     current: false,
+    href: '/settings/profile',
     children: [
       { name: 'Overview', href: '#' },
-      { name: 'Members', href: '#' },
+      { name: 'テニススタイル', href: '/settings/play-style' },
       { name: 'Calendar', href: '#' },
       { name: 'Settings', href: '#' },
     ],
@@ -96,7 +98,7 @@ function classNames(...classes: string[]) {
 
 const AppLayout = ({ header, children }: PropsWithChildren<Props>) => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const { user } = useAuth({ middleware: 'guest' })
+  const { user } = useAuthQuery({ middleware: 'guest' })
 
   return (
     <>

@@ -1,51 +1,72 @@
+import { AxiosError } from 'axios'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
-import { FormEventHandler, useEffect, useState } from 'react'
+import { ReactNode, useState } from 'react'
 import ApplicationLogo from '@/components/ApplicationLogo'
 import AuthCard from '@/components/AuthCard'
-import AuthSessionStatus from '@/components/AuthSessionStatus'
 import Button from '@/components/Button'
 import Input from '@/components/Input'
-import InputError from '@/components/InputError'
 import Label from '@/components/Label'
 import GuestLayout from '@/components/Layouts/GuestLayout'
-import { useAuth } from '@/hooks/auth'
-import { LoginError } from '@/types/authError'
+import { useAdminAuthQuery } from '@/hooks/adminAuthQuery'
 
-const Login = () => {
-  const { query } = useRouter()
+interface ErrorData {
+  email?: { message: string }[]
+  password?: { message: string }[]
+}
+const getErrorMessages = (errors: { message: string }[] = []): ReactNode => {
+  if (errors.length === 0) {
+    return null
+  }
 
-  const { login } = useAuth({
+  return (
+    <ul className='mt-1 text-sm text-red-600'>
+      {errors.map((error, index) => (
+        <li key={index}>{error.message}</li>
+      ))}
+    </ul>
+  )
+}
+
+const AdminLogin_231024bak = () => {
+  const { login } = useAdminAuthQuery({
     middleware: 'guest',
-    redirectIfAuthenticated: '/dashboard',
+    redirectIfAuthenticated: '/admin/dashboard',
   })
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [shouldRemember, setShouldRemember] = useState(false)
-  // const [errors, setErrors]: [any, React.Dispatch<React.SetStateAction<never[]>>] = useState([])
-  const [errors, setErrors] = useState<LoginError | null>(null)
-  const [status, setStatus] = useState<string | null>(null)
+  const [errors, setErrors] = useState<ErrorData>({})
 
-  useEffect(() => {
-    const reset = query && query.reset ? (query.reset as string) : ''
-    if (reset.length > 0 && errors?.email === undefined && errors?.password === undefined) {
-      setStatus(atob(reset))
-    } else {
-      setStatus(null)
+  const getErrorData = (
+    error: AxiosError<any>,
+    setErrors: React.Dispatch<React.SetStateAction<ErrorData>>,
+  ) => {
+    if (error.response?.status === 422) {
+      const errors = error.response?.data?.errors
+      Object.keys(errors).map((key: string) => {
+        setErrors((prevState) => ({
+          ...prevState,
+          [key]: [{ message: errors[key][0] }],
+        }))
+      })
     }
-  })
+  }
 
-  const submitForm: FormEventHandler = async (event) => {
+  const submitForm = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
-    login({
-      email,
-      password,
-      remember: shouldRemember,
-      setErrors,
-      setStatus,
-    })
+    try {
+      // バックエンドへのリクエストを行う
+      // await login({ email, password, remember: shouldRemember })
+      await login({ email, password })
+
+      // リクエストが成功した場合の処理
+    } catch (error: unknown) {
+      // リクエストが失敗した場合の処理
+      console.log(`error: ${error}`)
+      const errorData = getErrorData(error as AxiosError<any>, setErrors)
+    }
   }
 
   return (
@@ -58,8 +79,6 @@ const Login = () => {
         }
       >
         {/* Session Status */}
-        <AuthSessionStatus className='mb-4' status={status} />
-
         <form onSubmit={submitForm}>
           {/* Email Address */}
           <div>
@@ -76,8 +95,9 @@ const Login = () => {
               required
               autoFocus
             />
-
-            <InputError messages={errors?.email} className='mt-2' />
+            <div className='flex items-center justify-start mt-4'>
+              {getErrorMessages(errors.email)}
+            </div>
           </div>
 
           {/* Password */}
@@ -95,8 +115,10 @@ const Login = () => {
               required
               autoComplete='current-password'
             />
-
-            <InputError messages={errors?.password} className='mt-2' />
+            <div className='flex items-center justify-start mt-4'>
+              {getErrorMessages(errors.password)}
+            </div>
+            {/* <InputError messages={errors.password} className='mt-2' /> */}
           </div>
 
           {/* Remember Me */}
@@ -112,22 +134,6 @@ const Login = () => {
 
               <span className='ml-2 text-sm text-gray-600'>Remember me</span>
             </label>
-          </div>
-
-          <div className='flex items-center justify-end mt-4 gap-3'>
-            <Link
-              href={`${process.env.NEXT_PUBLIC_BACKEND_URL}/login/github`}
-              className='underline text-sm >text-gray-600 hover:text-gray-900'
-            >
-              Github
-            </Link>
-
-            <Link
-              href={`${process.env.NEXT_PUBLIC_BACKEND_URL}/login/google`}
-              className='underline text-sm text-gray-600 hover:text-gray-900'
-            >
-              Google
-            </Link>
           </div>
 
           <div className='flex items-center justify-end mt-4'>
@@ -146,4 +152,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default AdminLogin_231024bak

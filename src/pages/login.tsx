@@ -1,14 +1,14 @@
-// import { apiClient } from '@/lib/utils/apiClient'
 import { initializeApp } from '@firebase/app'
 import { getAuth, GoogleAuthProvider } from '@firebase/auth'
 import { useEffect, useState } from 'react'
 import { useAuthWithFirebase } from '@/hooks/useAuthWithFirebase'
 import { firebaseConfig } from '@/lib/firebase-helpers'
 
-const auth = getAuth(initializeApp(firebaseConfig))
+const initializeFirebaseAuth = () => getAuth(initializeApp(firebaseConfig))
 
-const Page = () => {
-  const { state, dispatch, credential, error } = useAuthWithFirebase(auth)
+const Login = () => {
+  const auth = initializeFirebaseAuth()
+  const { status, dispatch, credential, errors } = useAuthWithFirebase(auth)
   const [checkToken, setCheckToken] = useState<string | null>(null)
 
   useEffect(() => {
@@ -19,30 +19,34 @@ const Page = () => {
   }, [dispatch])
 
   useEffect(() => {
-    if (credential) {
-      // console.log(credential)
+    const updateSessionToken = () => {
       const token = GoogleAuthProvider.credentialFromResult(credential)?.idToken
-      token && sessionStorage.setItem('token', token)
       if (token && checkToken !== token) {
         setCheckToken(credential._tokenResponse.oauthIdToken)
+        sessionStorage.setItem('token', token)
         dispatch({ type: 'login', payload: { token } })
       }
+    }
+
+    if (credential) {
+      updateSessionToken()
     } else {
       sessionStorage.removeItem('token')
     }
-  }, [credential])
+  }, [credential, checkToken, dispatch])
 
   const handleLogin = () => dispatch({ type: 'login' })
   const handleLogout = () => dispatch({ type: 'logout' })
+
   return (
     <div>
       <button onClick={handleLogin}>ログイン</button>
       <button onClick={handleLogout}>ログアウト</button>
       <div>User: {credential?.user.displayName}</div>
-      <div>State: {state}</div>
-      <div>Error: {String(error)}</div>
+      <div>State: {status}</div>
+      <div>Error: {errors ? errors.toString() : 'No errors'}</div>
     </div>
   )
 }
 
-export default Page
+export default Login

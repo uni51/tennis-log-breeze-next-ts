@@ -18,6 +18,6 @@ export const useQueryMemoStatuses = () => {
     queryKey: ['statuses'],
     queryFn: getStatuses,
     // staleTime: 60000, // 60秒
-    staleTime: Infinity,
+    staleTime: Infinity, // キャッシュは常に新しいものとみなされるため、バックグラウンドでのfetchが自動的に行われない
   })
 }

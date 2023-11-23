@@ -4,7 +4,8 @@ import { LargeSubmitButton } from '@/components/Form/LargeSubmitButton'
 import { Select } from '@/components/Form/Select'
 import { TextArea } from '@/components/Form/TextArea'
 import { TextInput } from '@/components/Form/TextInput'
-import { editMemo } from '@/features/memos/dashboard/lib/editMemo'
+import { Loading } from '@/components/Loading'
+import { postEditMemo } from '@/features/memos/dashboard/lib/postEditMemo'
 import { MemoPostSchema } from '@/features/memos/dashboard/lib/schema/MemoPostSchema'
 import { Category } from '@/types/Category'
 import { Memo } from '@/types/Memo'
@@ -36,7 +37,7 @@ const MemoEdit: React.FC<Props> = ({ memo, statuses, categories }) => {
   return (
     <FormProvider {...useFormMethods}>
       <div className='mx-auto w-4/5 mt-4 sm:mt-4 py-4 rounded-2xl'>
-        <form onSubmit={handleSubmit((data) => editMemo(data, setError, memo.id))}>
+        <form onSubmit={handleSubmit((data) => postEditMemo(data, setError, memo.id))}>
           {/* タイトル */}
           <TextInput target={'title'} required={true} label={'タイトル'} />
           {/* 内容 */}

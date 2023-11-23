@@ -2,21 +2,28 @@ import { AxiosError, AxiosResponse } from 'axios'
 import router from 'next/router'
 import { UseFormSetError } from 'react-hook-form'
 import { apiClient } from '@/lib/utils/apiClient'
-import { MemoForm } from '@/types/MemoForm'
 
-// メモの編集
-export const editMemo = (
-  postData: MemoForm,
-  setError: UseFormSetError<MemoForm>,
-  memoId: number,
-) => {
+// POSTデータの型
+export type ProfileForm = {
+  name: string
+  nickname: string
+  career_id: string
+  gender_id: string
+  ageRange_id: string
+  dominantHand_id: string
+  playFrequency_id: string
+  tennisLevel_id: string
+}
+
+// プロフィールの編集
+export const postEditProfile = (postData: ProfileForm, setError: UseFormSetError<ProfileForm>) => {
   apiClient
     // CSRF保護の初期化
     .get('/auth/sanctum/csrf-cookie')
     .then((res) => {
       // APIへのリクエスト
       apiClient
-        .post(`/api/dashboard/memos/${memoId}`, postData)
+        .post('/api/dashboard/memos', postData)
         .then((response: AxiosResponse) => {
           console.log(response.data)
           router.push('/dashboard/memos')
@@ -26,7 +33,7 @@ export const editMemo = (
           if (err.response?.status === 422) {
             const errors = err.response?.data.errors
             Object.keys(errors).map((key: string) => {
-              setError(key as keyof MemoForm, { message: errors[key][0] })
+              setError(key as keyof ProfileForm, { message: errors[key][0] })
             })
           }
           if (err.response?.status === 500) {

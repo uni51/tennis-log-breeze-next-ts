@@ -3,16 +3,23 @@ import { useState } from 'react'
 import Dropdown from '@/components/Dropdown'
 import { DropdownButton } from '@/components/DropdownLink'
 import { ResponsiveNavButton } from '@/components/ResponsiveNavLink'
-import { useAuth } from '@/hooks/auth'
+import { useAuthContext } from '@/features/auth/provider/AuthProvider'
+import { useAuthQuery } from '@/hooks/authQuery'
+import { useAuthWithFirebase } from '@/hooks/useAuthWithFirebase'
 import { isEmptyObject } from '@/lib/common-helper'
 import { User } from '@/types/User'
 
 const Navigation = (user: User) => {
-  // const { logout, renderLogin } = useAuth({ middleware: 'guest' })
-  const { firebaseLogout, renderLogin } = useAuth({ middleware: 'guest' })
-
+  const { renderLogin } = useAuthQuery({ middleware: 'guest' })
   const [open, setOpen] = useState(false)
-  // console.log(isEmptyObject(user))
+  const auth = useAuthContext()
+  if (!auth) {
+    // handle the case when auth is null
+    return null
+  }
+  // eslint-disable-next-line
+  const { dispatch } = useAuthWithFirebase(auth)
+  const handleLogout = () => dispatch({ type: 'logout' })
 
   return (
     <nav className='bg-white border-b border-gray-100'>
@@ -51,7 +58,7 @@ const Navigation = (user: User) => {
                   <Link href='/settings/profile'>
                     <DropdownButton>Profile</DropdownButton>
                   </Link>
-                  <DropdownButton onClick={firebaseLogout}>Logout</DropdownButton>
+                  <DropdownButton onClick={handleLogout}>Logout</DropdownButton>
                 </>
               )}
             </Dropdown>
@@ -126,7 +133,7 @@ const Navigation = (user: User) => {
                   <Link href='/settings/profile'>
                     <ResponsiveNavButton>Profile</ResponsiveNavButton>
                   </Link>
-                  <ResponsiveNavButton onClick={firebaseLogout}>Logout</ResponsiveNavButton>
+                  <ResponsiveNavButton onClick={handleLogout}>Logout</ResponsiveNavButton>
                 </>
               )}
             </div>

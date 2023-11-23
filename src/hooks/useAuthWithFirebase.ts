@@ -1,96 +1,104 @@
-// import { apiClient } from '@/lib/utils/apiClient'
 import {
   GoogleAuthProvider,
   signInWithPopup,
   signInWithCredential,
   signOut,
-  // Auth not found in '@firebase/auth' のエラーが出るので
   // eslint-disable-next-line
   Auth,
-} from '@firebase/auth'
+} from '@firebase/auth' // build時に、Auth not found in '@firebase/auth' のエラーが出る
 import { useCallback, useState } from 'react'
-import { useAuth } from '@/hooks/auth'
-import { LoginError } from '@/types/authError'
+import { useAuthQuery } from '@/hooks/authQuery'
+
+// ユーザーステータスの定数
+const UserStatus = {
+  IDLE: 'idle',
+  PROGRESS: 'progress',
+  LOGGED: 'logged',
+  LOGGED_OUT: 'loggedOut',
+  DISABLED: 'disabled',
+  ERROR: 'error',
+}
 
 export const useAuthWithFirebase = (auth: Auth) => {
-  const { firebaseLogin, firebaseLogout } = useAuth({
+  const { firebaseLogin, firebaseLogout } = useAuthQuery({
     middleware: 'guest',
     redirectIfAuthenticated: '/dashboard',
   })
+
   const provider = new GoogleAuthProvider()
-  const [, setErrors] = useState<LoginError | null>(null)
-  const [, setStatus] = useState<string | null>(null)
-  //------------------
-  const [state, setState] = useState<
-    'idel' | 'progress' | 'logined' | 'logouted' | 'disabled' | 'error'
-  >('idel')
-  const [error, setError] = useState<unknown>('')
+
+  // ステートの初期化
+  const [status, setStatus] = useState(UserStatus.IDLE)
+  const [errors, setErrors] = useState<unknown>('')
   const [credential, setCredential] = useState<any>()
   const [result, setResult] = useState<any>()
 
+  // ログイン処理
+  const handleLogin = async (token: string | undefined) => {
+    try {
+      const result = token
+        ? await signInWithCredential(auth, GoogleAuthProvider.credential(token))
+        : await signInWithPopup(auth, provider)
+
+      setCredential(result)
+      setStatus(UserStatus.LOGGED)
+
+      if (token) {
+        const idToken = await auth.currentUser?.getIdToken(true)
+        await firebaseLogin(idToken!)
+      }
+    } catch (e) {
+      handleAuthError(e)
+    }
+  }
+
+  // ログアウト処理
+  const handleLogout = async () => {
+    try {
+      await signOut(auth)
+      setCredential(undefined)
+      setStatus(UserStatus.LOGGED_OUT)
+      await firebaseLogout()
+    } catch (e) {
+      handleAuthError(e)
+    }
+  }
+
+  // 認証エラー処理
+  const handleAuthError = (e: any) => {
+    if (typeof e === 'object' && e !== null && 'code' in e) {
+      if (e.code === 'auth/invalid-credential' || e.code === 'auth/user-disabled') {
+        setCredential(undefined)
+        setStatus(UserStatus.LOGGED_OUT)
+      } else {
+        setErrors(e)
+        setStatus(UserStatus.ERROR)
+      }
+    }
+  }
+
+  // ディスパッチ関数
   const dispatch = useCallback(
-    (action: { type: 'login'; payload?: { token: string } } | { type: 'logout' }) => {
-      setError('')
-      switch (action.type) {
-        case 'login':
-          setState('progress')
-          const token = action.payload?.token
-          if (token) {
-            signInWithCredential(auth, GoogleAuthProvider.credential(token))
-              .then(async (result) => {
-                setCredential(result)
-                setState('logined')
-                setResult(result)
-                firebaseLogin({
-                  idToken: await auth.currentUser?.getIdToken(true),
-                  // idToken: await auth.currentUser?.getIdToken(true),
-                  setErrors,
-                  setStatus,
-                })
-              })
-              .catch((e) => {
-                // console.log(e.code)
-                // console.log(e.message)
-                // FirebaseのTokenが期限切れの場合や、Firebaseのアカウントが無効化された場合は、ログアウト状態にする
-                if (e.code === 'auth/invalid-credential') {
-                  setCredential(undefined)
-                  setState('logouted')
-                } else if (e.code === 'auth/user-disabled') {
-                  setCredential(undefined)
-                  setState('disabled')
-                } else {
-                  setError(e)
-                  setState('error')
-                }
-              })
-          } else {
-            signInWithPopup(auth, provider)
-              .then((result) => {
-                setCredential(result)
-                setState('logined')
-              })
-              .catch((e) => {
-                setError(e)
-                setState('error')
-              })
-          }
-          break
-        case 'logout':
-          setState('progress')
-          signOut(auth)
-            .then(() => {
-              setCredential(undefined)
-              setState('logouted')
-              firebaseLogout()
-            })
-            .catch((e) => {
-              setError(e)
-              setState('error')
-            })
-          break
+    async (action: { type: 'login'; payload?: { token: string } } | { type: 'logout' }) => {
+      setErrors('')
+      setStatus(UserStatus.PROGRESS)
+
+      try {
+        switch (action.type) {
+          case 'login':
+            await handleLogin(action.payload?.token)
+            break
+
+          case 'logout':
+            await handleLogout()
+            break
+        }
+      } catch (e) {
+        handleAuthError(e)
       }
     },
     [auth],
   )
-  return { state, error, credential, result, dispatch }
+
+  return { status, errors, credential, result, dispatch }
 }

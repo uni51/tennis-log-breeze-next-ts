@@ -22,6 +22,22 @@ const AdminNavigation: React.FC<Props> = ({ admin }) => {
       {/* Primary Navigation Menu */}
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
         <div className='flex justify-between h-16'>
+          <div className='flex'>
+            {/* Logo */}
+            <div className='flex-shrink-0 flex items-center'>
+              <Link href='/admin/dashboard'>
+                <ApplicationLogo className='block h-10 w-auto fill-current text-gray-600' />
+              </Link>
+            </div>
+
+            {/* Navigation Links */}
+            <div className='hidden space-x-8 sm:-my-px sm:ml-10 sm:flex'>
+              <NavLink href='/dashboard' active={router.pathname === '/admin/dashboard'}>
+                管理者画面Dashboard
+              </NavLink>
+            </div>
+          </div>
+
           {/* Settings Dropdown */}
           <div className='hidden sm:flex sm:items-center sm:ml-6'>
             <Dropdown
@@ -84,7 +100,7 @@ const AdminNavigation: React.FC<Props> = ({ admin }) => {
 
       {/* Responsive Navigation Menu */}
       {open && (
-        <div className='block sm:hidden text-right'>
+        <div className='block sm:hidden'>
           <div className='pt-2 pb-3 space-y-1'>
             <ResponsiveNavLink href='/dashboard' active={router.pathname === '/admin/dashboard'}>
               Dashboard

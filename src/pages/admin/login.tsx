@@ -1,131 +1,112 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { FormEventHandler, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
+import { FormProvider, UseFormSetError, useForm } from 'react-hook-form'
 import ApplicationLogo from '@/components/ApplicationLogo'
 import AuthCard from '@/components/AuthCard'
-import AuthSessionStatus from '@/components/AuthSessionStatus'
 import Button from '@/components/Button'
-import Input from '@/components/Input'
-import InputError from '@/components/InputError'
-import Label from '@/components/Label'
+import { TextInput } from '@/components/Form/TextInput'
 import GuestLayout from '@/components/Layouts/GuestLayout'
-import { useAdminAuth } from '@/hooks/adminAuth'
+import { Loading } from '@/components/Loading'
+import { AdminLoginSchema } from '@/features/admin/lib/schema/AdminLoginSchema'
+import { useAdminAuthQuery } from '@/hooks/adminAuthQuery'
+import { isAxiosError } from '@/lib/utils/axiosUtils'
+import { AdminLogin } from '@/types/AdminLogin'
 
-const Login = () => {
-  const { query } = useRouter()
-
-  const { login } = useAdminAuth({
+const AdminLogin = () => {
+  const { login, getAdmin } = useAdminAuthQuery({
     middleware: 'guest',
     redirectIfAuthenticated: '/admin/dashboard',
   })
+  const [isLoading, setIsLoading] = useState(true)
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [shouldRemember, setShouldRemember] = useState(false)
-  const [errors, setErrors]: [any, React.Dispatch<React.SetStateAction<never[]>>] = useState([])
-  const [status, setStatus] = useState<string | null>(null)
+  const router = useRouter()
 
   useEffect(() => {
-    const reset = query && query.reset ? (query.reset as string) : ''
-    if (reset.length > 0 && errors.length === 0) {
-      setStatus(atob(reset))
-    } else {
-      setStatus(null)
+    const init = async () => {
+      // // ログイン中か判定
+      const res = await getAdmin.refetch()
+      if (res.data) {
+        router.push('/admin/dashboard')
+        return
+      }
+      setIsLoading(false)
     }
+    init()
+  }, [])
+
+  const useFormMethods = useForm<AdminLogin>({
+    resolver: zodResolver(AdminLoginSchema),
   })
 
-  const submitForm: FormEventHandler = async (event) => {
-    event.preventDefault()
+  if (isLoading) return <Loading />
 
-    login({
-      email,
-      password,
-      remember: shouldRemember,
-      setErrors,
-      setStatus,
-    })
+  const { handleSubmit, setError } = useFormMethods
+
+  const submitForm = async (postData: AdminLogin, setError: UseFormSetError<AdminLogin>) => {
+    try {
+      setIsLoading(true) // リクエスト開始時にisLoadingをtrueに設定
+      // バックエンドへのリクエストを行う
+      await login(postData)
+      // リクエストが成功した場合の処理
+      const res = await getAdmin.refetch()
+      console.log(res)
+      if (res.data) {
+        router.push('/admin/dashboard')
+      }
+    } catch (err: any) {
+      if (isAxiosError(err)) {
+        // バリデーションエラー
+        if (err.response?.status === 422) {
+          const errors = err.response?.data.errors
+          Object.keys(errors).map((key: string) => {
+            setError(key as keyof AdminLogin, { message: errors[key][0] })
+          })
+        }
+        if (err.response?.status === 500) {
+          alert('システムエラーです！！')
+        }
+      }
+      setIsLoading(false) // リクエスト完了時にisLoadingをfalseに設定
+    }
+    // } finally {
+    //   setIsLoading(false) // リクエスト完了時にisLoadingをfalseに設定
+    // }
   }
 
   return (
-    <GuestLayout>
-      <AuthCard
-        logo={
-          <Link href='/'>
-            <ApplicationLogo className='w-20 h-20 fill-current text-gray-500' />
-          </Link>
-        }
-      >
-        {/* Session Status */}
-        <AuthSessionStatus className='mb-4' status={status} />
-
-        <form onSubmit={submitForm}>
-          {/* Email Address */}
-          <div>
-            <Label htmlFor='email' className={undefined}>
-              Email
-            </Label>
-
-            <Input
-              id='email'
-              type='email'
-              value={email}
-              className='block mt-1 w-full'
-              onChange={(event) => setEmail(event.target.value)}
-              required
-              autoFocus
-            />
-
-            <InputError messages={errors.email} className='mt-2' />
-          </div>
-
-          {/* Password */}
-          <div className='mt-4'>
-            <Label htmlFor='password' className={undefined}>
-              Password
-            </Label>
-
-            <Input
-              id='password'
-              type='password'
-              value={password}
-              className='block mt-1 w-full'
-              onChange={(event) => setPassword(event.target.value)}
-              required
-              autoComplete='current-password'
-            />
-
-            <InputError messages={errors.password} className='mt-2' />
-          </div>
-
-          {/* Remember Me */}
-          <div className='block mt-4'>
-            <label htmlFor='remember_me' className='inline-flex items-center'>
-              <input
-                id='remember_me'
-                type='checkbox'
-                name='remember'
-                className='rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50'
-                onChange={(event) => setShouldRemember(event.target.checked)}
-              />
-
-              <span className='ml-2 text-sm text-gray-600'>Remember me</span>
-            </label>
-          </div>
-
-          <div className='flex items-center justify-end mt-4'>
-            <Link
-              href='/forgot-password'
-              className='underline text-sm text-gray-600 hover:text-gray-900'
-            >
-              Forgot your password?
+    <FormProvider {...useFormMethods}>
+      <GuestLayout>
+        <AuthCard
+          logo={
+            <Link href='/'>
+              <ApplicationLogo className='w-20 h-20 fill-current text-gray-500' />
             </Link>
+          }
+        >
+          {/* Session Status */}
+          <form onSubmit={handleSubmit((data) => submitForm(data, setError))}>
+            {/* Email */}
+            <div>
+              <p>aaaa</p>
+              <TextInput target={'email'} required={true} label={'Email'} />
+            </div>
 
-            <Button className='ml-3'>Login</Button>
-          </div>
-        </form>
-      </AuthCard>
-    </GuestLayout>
+            {/* Password */}
+            <div className='mt-4'>
+              {/* TODO: パスワード入力に変更 */}
+              <TextInput target={'password'} required={true} label={'Password'} />
+            </div>
+
+            <div className='flex items-center justify-end mt-4'>
+              <Button className='ml-3'>Login</Button>
+            </div>
+          </form>
+        </AuthCard>
+      </GuestLayout>
+    </FormProvider>
   )
 }
 
-export default Login
+export default AdminLogin
