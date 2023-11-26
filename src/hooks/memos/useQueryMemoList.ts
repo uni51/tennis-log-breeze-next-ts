@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import { apiClient } from '@/lib/utils/apiClient'
 import { getMemoListApiUrl } from '@/lib/pagination-helper'
+import { apiClient } from '@/lib/utils/apiClient'
 import { MemoListReturnType } from '@/types/memoList'
 
 type Props = {
