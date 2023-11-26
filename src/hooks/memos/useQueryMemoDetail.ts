@@ -11,6 +11,7 @@ export const useQueryMemoDetail = (apiUrl: string) => {
   return useQuery<Memo, Error>({
     queryKey: ['memoDetail', apiUrl],
     queryFn: () => fetchMemoDetail(apiUrl),
+    staleTime: Infinity,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   })
