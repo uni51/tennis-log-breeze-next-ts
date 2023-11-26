@@ -15,7 +15,6 @@ const MemoByNickNameDetail: NextPage<Memo> = () => {
   // Fetch用URL組み立て
   useEffect(() => {
     const init = async () => {
-      // ログイン中か判定
       if (router.isReady) {
         const apiUri = `api/public/${nickname}/memos/${id}`
         setApiUrl(apiUri)
