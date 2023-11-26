@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import { ErrorBoundary } from 'react-error-boundary'
-import { SWRConfig } from 'swr'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { ErrorDisplay } from '@/components/Layouts/Error/ErrorDisplay'
 import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
@@ -11,7 +11,9 @@ import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
 import { getMemoListApiUrl } from '@/lib/pagination-helper'
 import { MemoListReturnType } from '@/types/memoList'
 
-//サーバーサイドレンダリング
+const queryClient = new QueryClient()
+
+// サーバーサイドレンダリング
 export async function getServerSideProps(context: { query: { category?: string; page?: string } }) {
   const { category, page } = context.query
 
@@ -67,14 +69,14 @@ const PublishedMemoIndex = ({ pageIndex, categoryNumber, headline, fallback, ssr
         }
       >
         <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
-          <SWRConfig value={{ fallback }}>
+          <QueryClientProvider client={queryClient}>
             <PublishedMemoList pageIndex={pageIndex} categoryNumber={categoryNumber} />
             {/* キャッシュ作成用に、次のページを事前にロードしておく */}
             {/* TODO: 最後のページの場合は、このロジックをくぐらないようにする */}
             <div style={{ display: 'none' }}>
               <PublishedMemoList pageIndex={pageIndex + 1} categoryNumber={categoryNumber} />
             </div>
-          </SWRConfig>
+          </QueryClientProvider>
         </ErrorBoundary>
       </AppLayout>
     </>
