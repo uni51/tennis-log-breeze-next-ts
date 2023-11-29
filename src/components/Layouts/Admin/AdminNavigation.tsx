@@ -1,19 +1,17 @@
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
-import ApplicationLogo from '@/components/ApplicationLogo'
 import Dropdown from '@/components/Dropdown'
 import { DropdownButton } from '@/components/DropdownLink'
-import NavLink from '@/components/NavLink'
 import ResponsiveNavLink, { ResponsiveNavButton } from '@/components/ResponsiveNavLink'
-import { useAdminAuth, Admin } from '@/hooks/adminAuth'
+import { useAdminAuthQuery } from '@/hooks/adminAuthQuery'
+import { Admin } from '@/types/Admin'
 
 type Props = { admin?: Admin }
 
 const AdminNavigation: React.FC<Props> = ({ admin }) => {
   const router = useRouter()
 
-  const { logout } = useAdminAuth({ middleware: 'adminAuth' })
+  const { logout } = useAdminAuthQuery({ middleware: 'adminAuth' })
 
   const [open, setOpen] = useState(false)
 
