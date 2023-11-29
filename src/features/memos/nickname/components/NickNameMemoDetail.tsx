@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction } from 'react'
 import { useErrorBoundary } from 'react-error-boundary'
 import ClipLoader from 'react-spinners/ClipLoader'
 import SingleMemoDetail from '@/features/memos/common/components/templates/SingleMemoDetail'
-import { useMemoDetail } from '@/hooks/memos/useMemoDetail'
+import { useQueryMemoDetail } from '@/hooks/memos/useQueryMemoDetail'
 
 type Props = {
   apiUrl: string
@@ -12,7 +12,7 @@ type Props = {
 const NickNameMemoDetail = ({ apiUrl }: Props) => {
   const { showBoundary } = useErrorBoundary()
 
-  const { data: memo, error } = useMemoDetail(apiUrl)
+  const { data: memo, error } = useQueryMemoDetail(apiUrl)
   if (error) showBoundary(error)
   if (!memo)
     return (
