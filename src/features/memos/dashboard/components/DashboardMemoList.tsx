@@ -1,3 +1,4 @@
+import React from 'react'
 import { useErrorBoundary } from 'react-error-boundary'
 import ClipLoader from 'react-spinners/ClipLoader'
 import { Loading } from '@/components/Loading'
@@ -14,12 +15,10 @@ type Props = {
   categoryNumber: number | null
 }
 
-const DashboardMemoList = ({ pageIndex, categoryNumber }: Props) => {
+const DashboardMemoList: React.FC<Props> = ({ pageIndex, categoryNumber }: Props) => {
   const { showBoundary } = useErrorBoundary()
-
   const preApiUrl = '/api/dashboard/memos'
   const { data: memos, error, isLoading } = useQueryMemoList({
-    // const { data: memos, error, isLoading } = useMemoList({
     preApiUrl,
     pageIndex,
     categoryNumber,
@@ -27,10 +26,15 @@ const DashboardMemoList = ({ pageIndex, categoryNumber }: Props) => {
 
   console.log('memos', memos)
 
-  if (error) showBoundary(error)
-  if (isLoading) return <Loading />
+  if (error) {
+    showBoundary(error)
+  }
 
-  if (!memos)
+  if (isLoading) {
+    return <Loading />
+  }
+
+  if (!memos) {
     return (
       <div className='mx-auto mt-20'>
         <div className='w-1/2 mx-auto text-center'>
@@ -38,39 +42,39 @@ const DashboardMemoList = ({ pageIndex, categoryNumber }: Props) => {
         </div>
       </div>
     )
+  }
+
+  const renderMemoList = () => {
+    return memos.data.map((memo: Memo, index: number) => (
+      <SingleMemoBlockForList
+        memo={memo}
+        renderMemoDetailLink={`/dashboard/memos/${memo.id}`}
+        renderMemoListByCategoryLink={`/dashboard/memos?category=${memo.category_id}`}
+        renderMemoListByNickNameLink='/dashboard/memos/'
+        key={index}
+      />
+    ))
+  }
 
   return (
     <div className='mx-auto mt-20'>
       <AddMemoButton />
       <div className='mt-3'>
-        {/* DBから取得したメモデータの一覧表示 */}
-        <div className='grid w-4/5 mx-auto gap-16 lg:grid-cols-2'>
-          {memos?.data?.map((memo: Memo, index: number) => {
-            return (
-              <SingleMemoBlockForList
-                memo={memo}
-                renderMemoDetailLink={`/dashboard/memos/${memo.id}`}
-                renderMemoListByCategoryLink={`/dashboard/memos?category=${memo.category_id}`}
-                renderMemoListByNickNameLink={`/dashboard/memos/`}
-                key={index}
-              />
-            )
-          })}
-        </div>
+        <div className='grid w-4/5 mx-auto gap-16 lg:grid-cols-2'>{renderMemoList()}</div>
         <div className='md:hidden'>
           <MemoListPaginationShort
             baseUrl='/dashboard/memos/'
-            totalItems={Number(memos?.meta?.total)}
-            currentPage={Number(memos?.meta?.current_page)}
+            totalItems={Number(memos.meta.total)}
+            currentPage={Number(memos.meta.current_page)}
             renderPagerLinkFunc={getMemosListByCategoryPageLink}
             category={categoryNumber}
           />
         </div>
-        <div className='hidden sm:hidden md:block lg:block  xl:block'>
+        <div className='hidden sm:hidden md:block lg:block xl:block'>
           <MemoListPaginationLong
             baseUrl='/dashboard/memos/'
-            totalItems={Number(memos?.meta?.total)}
-            currentPage={Number(memos?.meta?.current_page)}
+            totalItems={Number(memos.meta.total)}
+            currentPage={Number(memos.meta.current_page)}
             renderPagerLinkFunc={getMemosListByCategoryPageLink}
             category={categoryNumber}
           />
