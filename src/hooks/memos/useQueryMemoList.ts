@@ -30,7 +30,7 @@ export const useQueryMemoList = ({ preApiUrl, pageIndex, categoryNumber }: Props
   return useQuery<MemoListReturnType, Error>({
     queryKey: ['memoList', apiUrl], // データの重複取得を避けるためにqueryKeyに依存変数を含める
     queryFn: () => fetchMemoList(apiUrl),
-    staleTime: Infinity, // 0に設定すると、常に最新のデータを取得するようにする
+    staleTime: Infinity,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     // 非同期操作が完了する前にコンポーネントがアンマウントされた場合のキャンセル

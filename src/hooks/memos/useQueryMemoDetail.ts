@@ -11,7 +11,7 @@ export const useQueryMemoDetail = (apiUrl: string) => {
   return useQuery<Memo, Error>({
     queryKey: ['memoDetail', apiUrl],
     queryFn: () => fetchMemoDetail(apiUrl),
-    staleTime: Infinity,
+    staleTime: 0, // 0に設定すると、常に最新のデータを取得するようにする
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   })

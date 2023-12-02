@@ -9,13 +9,11 @@ import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBac
 import { AuthGuard } from '@/features/auth/components/AuthGuard'
 import DashboardMemoDetail from '@/features/memos/dashboard/components/DashBoardMemoDetail'
 import { useAuthQuery } from '@/hooks/authQuery'
-import useCheckLoggedIn from '@/hooks/checkLoggedIn'
 import { onError } from '@/lib/error-helper'
 import { Memo } from '@/types/Memo'
 
 const DashboardMemoDetailIndex: NextPage<Memo> = () => {
   const { user } = useAuthQuery({ middleware: 'auth' })
-  const checkLoggedIn = useCheckLoggedIn()
   const [apiUrl, setApiUrl] = useState('')
   const [titleText, setTitleText] = useState('')
   const [isLoading, setIsLoading] = useState(true)

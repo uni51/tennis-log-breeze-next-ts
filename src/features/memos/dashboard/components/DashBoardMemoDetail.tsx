@@ -16,8 +16,18 @@ const DashboardMemoDetail = ({ apiUrl, loginUser, setTitleText }: Props) => {
   const { showBoundary } = useErrorBoundary()
 
   const { data: memo, error } = useQueryMemoDetail(apiUrl)
-  if (error) showBoundary(error)
-  if (!memo)
+
+  useEffect(() => {
+    if (error) {
+      showBoundary(error)
+    }
+
+    if (memo && setTitleText) {
+      setTitleText(memo.title)
+    }
+  }, [error, memo, setTitleText])
+
+  if (!memo) {
     return (
       <div className='mx-auto mt-20'>
         <div className='w-1/2 mx-auto text-center'>
@@ -25,8 +35,6 @@ const DashboardMemoDetail = ({ apiUrl, loginUser, setTitleText }: Props) => {
         </div>
       </div>
     )
-  if (setTitleText) {
-    setTitleText(memo.title)
   }
 
   return (
