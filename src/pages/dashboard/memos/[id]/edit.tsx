@@ -21,32 +21,34 @@ const DashboardMemoDetailEdit: NextPage = () => {
   const { status: queryMemoCategoriesStatus, data: categories } = useQueryMemoCategories()
   const { status: queryMemoStatusesStatus, data: statuses } = useQueryMemoStatuses()
 
-  useEffect(() => {
-    const init = async () => {
-      if (router.isReady) {
-        if (!router.query.id) {
-          router.push('/dashboard/memos')
-          return
-        }
+  const fetchMemoData = async () => {
+    try {
+      const memoResponse = await apiClient.get(`api/dashboard/memos/${router.query.id}`)
+      const memoData = memoResponse.data.data
 
-        const memoResponse = await apiClient.get(`api/dashboard/memos/${router.query.id}`)
-        const memoData = memoResponse.data.data
-
-        if (!memoData) {
-          router.push('/dashboard/memos')
-          return
-        }
-        console.log(memoData)
-        setMemo(memoData)
+      if (!memoData) {
+        router.push('/dashboard/memos')
+        return
       }
+
+      setMemo(memoData)
+    } catch (error) {
+      console.error('Error fetching memo data:', error)
+      router.push('/dashboard/memos')
+    } finally {
       setIsLoading(false)
     }
-    init()
-  }, [router.isReady])
+  }
+
+  useEffect(() => {
+    if (router.isReady && router.query.id) {
+      fetchMemoData()
+    }
+  }, [router.isReady, router.query.id])
 
   if (
     isLoading ||
-    memo === undefined ||
+    !memo ||
     queryMemoCategoriesStatus === 'pending' ||
     queryMemoStatusesStatus === 'pending'
   ) {
@@ -69,7 +71,7 @@ const DashboardMemoDetailEdit: NextPage = () => {
         <Head>
           <title>Dashboard - メモの編集</title>
         </Head>
-        <MemoEdit memo={memo!} statuses={statuses!} categories={categories!} />
+        <MemoEdit memo={memo} statuses={statuses!} categories={categories!} />
       </AppLayout>
     </AuthGuard>
   )
