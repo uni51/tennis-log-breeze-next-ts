@@ -14,5 +14,6 @@ export const useQueryMemoDetail = (apiUrl: string) => {
     staleTime: 0, // 0に設定すると、常に最新のデータを取得するようにする
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
+    enabled: !!apiUrl, // apiUrlが存在する場合にのみクエリを有効にする
   })
 }
