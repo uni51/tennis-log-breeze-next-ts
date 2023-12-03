@@ -8,7 +8,7 @@ import MemoPost from '@/features/memos/dashboard/components/MemoPost'
 import { useAuthQuery } from '@/hooks/authQuery'
 import useCheckLoggedIn from '@/hooks/checkLoggedIn'
 import { useMemoCategories } from '@/hooks/memos/useMemoCategories'
-import { useQueryMemoStatuses } from '@/hooks/memos/useQueryMemoStatuses'
+import { useMemoStatuses } from '@/hooks/memos/useMemoStatuses'
 
 const DashboardMemoPost: NextPage = () => {
   const router = useRouter()
@@ -17,7 +17,7 @@ const DashboardMemoPost: NextPage = () => {
   const [isLoading, setIsLoading] = useState(true)
 
   const { status: queryMemoCategoriesStatus, data: categories } = useMemoCategories()
-  const { status: queryMemoStatusesStatus, data: statuses } = useQueryMemoStatuses()
+  const { status: queryMemoStatusesStatus, data: statuses } = useMemoStatuses()
 
   useEffect(() => {
     const init = async () => {
