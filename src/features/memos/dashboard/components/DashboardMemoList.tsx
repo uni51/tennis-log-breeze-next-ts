@@ -6,7 +6,7 @@ import MemoListPaginationLong from '@/components/Pagination/MemoListPaginationLo
 import MemoListPaginationShort from '@/components/Pagination/MemoListPaginationShort'
 import SingleMemoBlockForList from '@/features/memos/common/components/templates/SingleMemoBlockForList'
 import AddMemoButton from '@/features/memos/dashboard/components/AddMemoButton'
-import { useQueryMemoList } from '@/hooks/memos/useQueryMemoList'
+import { useMemoList } from '@/hooks/memos/useMemoList'
 import { getMemosListByCategoryPageLink } from '@/lib/pagination-helper'
 import { Memo } from '@/types/Memo'
 
@@ -18,7 +18,7 @@ type Props = {
 const DashboardMemoList: React.FC<Props> = ({ pageIndex, categoryNumber }: Props) => {
   const { showBoundary } = useErrorBoundary()
   const preApiUrl = '/api/dashboard/memos'
-  const { data: memos, error, isLoading } = useQueryMemoList({
+  const { data: memos, error, isLoading } = useMemoList({
     preApiUrl,
     pageIndex,
     categoryNumber,
