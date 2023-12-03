@@ -89,7 +89,6 @@ const AdminLogin = () => {
           <form onSubmit={handleSubmit((data) => submitForm(data, setError))}>
             {/* Email */}
             <div>
-              <p>aaaa</p>
               <TextInput target={'email'} required={true} label={'Email'} />
             </div>
 

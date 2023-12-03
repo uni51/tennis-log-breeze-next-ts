@@ -1,9 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
-import { simpleUser } from '@/types/User'
 
-const getMemos = async (): Promise<Memo[]> => {
+const getMemoList = async (): Promise<Memo[]> => {
   const responseMemos = await apiClient.get('/api/admin/memos')
   const objectResponseMemos = responseMemos.data.data
 
@@ -14,8 +13,8 @@ const getMemos = async (): Promise<Memo[]> => {
 
 export const useAdminMemoList = () => {
   return useQuery<Memo[], Error>({
-    queryKey: ['adminMemos'],
-    queryFn: getMemos,
+    queryKey: ['adminMemoList'],
+    queryFn: getMemoList,
     staleTime: 0,
   })
 }
