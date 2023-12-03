@@ -1,19 +1,19 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, UseQueryOptions } from '@tanstack/react-query'
 import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
 
 const fetchMemoDetail = async (apiUrl: string): Promise<Memo> => {
-  const res = await apiClient.get(apiUrl)
-  return res.data.data
+  const { data } = await apiClient.get(apiUrl)
+  return data.data
 }
 
 export const useMemoDetail = (apiUrl: string) => {
   return useQuery<Memo, Error>({
     queryKey: ['memoDetail', apiUrl],
     queryFn: () => fetchMemoDetail(apiUrl),
-    staleTime: 0, // 0に設定すると、常に最新のデータを取得するようにする
+    staleTime: 0,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
-    enabled: !!apiUrl, // apiUrlが存在する場合にのみクエリを有効にする
+    enabled: !!apiUrl,
   })
 }
