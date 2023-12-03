@@ -2,21 +2,19 @@ import { useQuery } from '@tanstack/react-query'
 import { apiClient } from '@/lib/utils/apiClient'
 import { Category } from '@/types/Category'
 
-const getCatgeories = async (): Promise<Category[]> => {
-  const responseCategories = await apiClient.get('api/memos/categories')
-  let objectResponseCategories = responseCategories.data.data
+const getCategories = async (): Promise<Category[]> => {
+  const response = await apiClient.get('api/memos/categories')
+  const categoriesObject = response.data.data
 
-  const arrayResponseCategories = Object.keys(objectResponseCategories).map(function (key) {
-    return objectResponseCategories[key]
-  })
+  const categoriesArray = Object.values(categoriesObject) as Category[]
 
-  return arrayResponseCategories
+  return categoriesArray
 }
 
 export const useMemoCategories = () => {
   return useQuery<Category[], Error>({
     queryKey: ['categories'],
-    queryFn: getCatgeories,
-    staleTime: Infinity, // キャッシュは常に新しいものとみなされるため、バックグラウンドでのfetchが自動的に行われない
+    queryFn: getCategories,
+    staleTime: Infinity,
   })
 }
