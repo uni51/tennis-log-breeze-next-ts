@@ -13,7 +13,7 @@ const getCatgeories = async (): Promise<Category[]> => {
   return arrayResponseCategories
 }
 
-export const useQueryMemoCategories = () => {
+export const useMemoCategories = () => {
   return useQuery<Category[], Error>({
     queryKey: ['categories'],
     queryFn: getCatgeories,

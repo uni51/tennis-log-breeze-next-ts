@@ -7,7 +7,7 @@ import { Loading } from '@/components/Loading'
 import { AuthGuard } from '@/features/auth/components/AuthGuard'
 import MemoEdit from '@/features/memos/dashboard/components/MemoEdit'
 import { useAuthQuery } from '@/hooks/authQuery'
-import { useQueryMemoCategories } from '@/hooks/memos/useQueryMemoCategories'
+import { useMemoCategories } from '@/hooks/memos/useMemoCategories'
 import { useQueryMemoStatuses } from '@/hooks/memos/useQueryMemoStatuses'
 import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
@@ -18,7 +18,7 @@ const DashboardMemoDetailEdit: NextPage = () => {
   const [memo, setMemo] = useState<Memo | undefined>()
   const [isLoading, setIsLoading] = useState(true)
 
-  const { status: queryMemoCategoriesStatus, data: categories } = useQueryMemoCategories()
+  const { status: queryMemoCategoriesStatus, data: categories } = useMemoCategories()
   const { status: queryMemoStatusesStatus, data: statuses } = useQueryMemoStatuses()
 
   const fetchMemoData = async () => {

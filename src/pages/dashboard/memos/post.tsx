@@ -7,7 +7,7 @@ import { Loading } from '@/components/Loading'
 import MemoPost from '@/features/memos/dashboard/components/MemoPost'
 import { useAuthQuery } from '@/hooks/authQuery'
 import useCheckLoggedIn from '@/hooks/checkLoggedIn'
-import { useQueryMemoCategories } from '@/hooks/memos/useQueryMemoCategories'
+import { useMemoCategories } from '@/hooks/memos/useMemoCategories'
 import { useQueryMemoStatuses } from '@/hooks/memos/useQueryMemoStatuses'
 
 const DashboardMemoPost: NextPage = () => {
@@ -16,7 +16,7 @@ const DashboardMemoPost: NextPage = () => {
   const checkLoggedIn = useCheckLoggedIn()
   const [isLoading, setIsLoading] = useState(true)
 
-  const { status: queryMemoCategoriesStatus, data: categories } = useQueryMemoCategories()
+  const { status: queryMemoCategoriesStatus, data: categories } = useMemoCategories()
   const { status: queryMemoStatusesStatus, data: statuses } = useQueryMemoStatuses()
 
   useEffect(() => {
