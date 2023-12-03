@@ -1,11 +1,11 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import AppLayout from '@/components/Layouts/AppLayout'
-import { useAuthQuery } from '@/hooks/authQuery'
+import { useAuth } from '@/hooks/auth'
 import { AuthGuard } from '@/features/auth/components/AuthGuard'
 
 const DashboardTop = () => {
-  const { user } = useAuthQuery({ middleware: 'auth' })
+  const { user } = useAuth({ middleware: 'auth' })
   if (!user) return null
 
   return (

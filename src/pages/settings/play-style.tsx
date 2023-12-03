@@ -4,13 +4,13 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
-import { useAuthQuery } from '@/hooks/authQuery'
+import { useAuth } from '@/hooks/auth'
 import useCheckLoggedIn from '@/hooks/checkLoggedIn'
 import { useQueryCareers } from '@/hooks/profile/useQueryCareers'
 
 const PlayStyle: NextPage = () => {
   const router = useRouter()
-  const { user } = useAuthQuery({ middleware: 'auth' })
+  const { user } = useAuth({ middleware: 'auth' })
   const checkLoggedIn = useCheckLoggedIn()
   const [isLoading, setIsLoading] = useState(true)
 

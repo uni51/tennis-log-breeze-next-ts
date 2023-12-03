@@ -5,7 +5,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
 import DashboardMemoList from '@/features/memos/dashboard/components/DashboardMemoList'
-import { useAuthQuery } from '@/hooks/authQuery'
+import { useAuth } from '@/hooks/auth'
 import { onError } from '@/lib/error-helper'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
 import { AuthGuard } from '@/features/auth/components/AuthGuard'
@@ -18,7 +18,7 @@ type DashboardMemoIndexProps = {
 const DashboardMemoIndex: NextPage<DashboardMemoIndexProps> = ({ pageIndex, categoryNumber }) => {
   const router = useRouter()
   const { page, category } = router.query
-  const { user } = useAuthQuery({ middleware: 'auth' })
+  const { user } = useAuth({ middleware: 'auth' })
 
   const pageNumber = page === undefined ? 1 : Number(page)
   const categoryNumberFromQuery = category === undefined ? null : Number(category)

@@ -5,14 +5,14 @@ import { useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import MemoPost from '@/features/memos/dashboard/components/MemoPost'
-import { useAuthQuery } from '@/hooks/authQuery'
+import { useAuth } from '@/hooks/auth'
 import useCheckLoggedIn from '@/hooks/checkLoggedIn'
 import { useMemoCategories } from '@/hooks/memos/useMemoCategories'
 import { useMemoStatuses } from '@/hooks/memos/useMemoStatuses'
 
 const DashboardMemoPost: NextPage = () => {
   const router = useRouter()
-  const { user } = useAuthQuery({ middleware: 'auth' })
+  const { user } = useAuth({ middleware: 'auth' })
   const checkLoggedIn = useCheckLoggedIn()
   const [isLoading, setIsLoading] = useState(true)
 

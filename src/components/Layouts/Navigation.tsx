@@ -4,13 +4,13 @@ import Dropdown from '@/components/Dropdown'
 import { DropdownButton } from '@/components/DropdownLink'
 import { ResponsiveNavButton } from '@/components/ResponsiveNavLink'
 import { useAuthContext } from '@/features/auth/provider/AuthProvider'
-import { useAuthQuery } from '@/hooks/authQuery'
+import { useAuth } from '@/hooks/auth'
 import { useAuthWithFirebase } from '@/hooks/useAuthWithFirebase'
 import { isEmptyObject } from '@/lib/common-helper'
 import { User } from '@/types/User'
 
 const Navigation = (user: User) => {
-  const { renderLogin } = useAuthQuery({ middleware: 'guest' })
+  const { renderLogin } = useAuth({ middleware: 'guest' })
   const [open, setOpen] = useState(false)
   const auth = useAuthContext()
   if (!auth) {

@@ -3,7 +3,7 @@ import Head from 'next/head'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import ProfileEdit from '@/features/settings/profile/ProfileEdit'
-import { useAuthQuery } from '@/hooks/authQuery'
+import { useAuth } from '@/hooks/auth'
 import { useQueryAgeRanges } from '@/hooks/profile/useQueryAgeRanges'
 import { useQueryCareers } from '@/hooks/profile/useQueryCareers'
 import { useQueryDominantHands } from '@/hooks/profile/useQueryDominantHands'
@@ -13,7 +13,7 @@ import { useQueryTennisLevels } from '@/hooks/profile/useQueryTennisLevels'
 import { AuthGuard } from '@/features/auth/components/AuthGuard'
 
 const Profile: NextPage = () => {
-  const { user } = useAuthQuery({ middleware: 'auth' })
+  const { user } = useAuth({ middleware: 'auth' })
 
   // Custom Hooksを使用してローディングステータスを管理
   const careersQuery = useQueryCareers()

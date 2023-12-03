@@ -8,12 +8,12 @@ import { Loading } from '@/components/Loading'
 import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
 import { AuthGuard } from '@/features/auth/components/AuthGuard'
 import DashboardMemoDetail from '@/features/memos/dashboard/components/DashBoardMemoDetail'
-import { useAuthQuery } from '@/hooks/authQuery'
+import { useAuth } from '@/hooks/auth'
 import { onError } from '@/lib/error-helper'
 import { Memo } from '@/types/Memo'
 
 const DashboardMemoDetailIndex: NextPage<Memo> = () => {
-  const { user } = useAuthQuery({ middleware: 'auth' })
+  const { user } = useAuth({ middleware: 'auth' })
   const [apiUrl, setApiUrl] = useState('')
   const [titleText, setTitleText] = useState('')
   const [isLoading, setIsLoading] = useState(true)

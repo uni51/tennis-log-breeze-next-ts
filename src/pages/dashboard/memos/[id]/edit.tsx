@@ -6,7 +6,7 @@ import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import { AuthGuard } from '@/features/auth/components/AuthGuard'
 import MemoEdit from '@/features/memos/dashboard/components/MemoEdit'
-import { useAuthQuery } from '@/hooks/authQuery'
+import { useAuth } from '@/hooks/auth'
 import { useMemoCategories } from '@/hooks/memos/useMemoCategories'
 import { useMemoStatuses } from '@/hooks/memos/useMemoStatuses'
 import { apiClient } from '@/lib/utils/apiClient'
@@ -14,7 +14,7 @@ import { Memo } from '@/types/Memo'
 
 const DashboardMemoDetailEdit: NextPage = () => {
   const router = useRouter()
-  const { user } = useAuthQuery({ middleware: 'auth' })
+  const { user } = useAuth({ middleware: 'auth' })
   const [memo, setMemo] = useState<Memo | undefined>()
   const [isLoading, setIsLoading] = useState(true)
 

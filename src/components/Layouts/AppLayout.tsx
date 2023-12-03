@@ -15,7 +15,7 @@ import Link from 'next/link'
 import React, { PropsWithChildren, Fragment, ReactNode, useState } from 'react'
 import Navigation from '@/components/Layouts/Navigation'
 // import { useAuth } from '@/hooks/auth'
-import { useAuthQuery } from '@/hooks/authQuery'
+import { useAuth } from '@/hooks/auth'
 
 interface Props {
   header: ReactNode
@@ -98,7 +98,7 @@ function classNames(...classes: string[]) {
 
 const AppLayout = ({ header, children }: PropsWithChildren<Props>) => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const { user } = useAuthQuery({ middleware: 'guest' })
+  const { user } = useAuth({ middleware: 'guest' })
 
   return (
     <>

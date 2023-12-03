@@ -10,7 +10,7 @@ import { User } from '@/types/User'
 // Type for authentication middleware
 type AuthMiddleware = 'auth' | 'guest'
 
-// Interface for useAuthQuery hook
+// Interface for useAuth hook
 interface IUseAuth {
   middleware: AuthMiddleware
   redirectIfAuthenticated?: string
@@ -27,7 +27,7 @@ interface IApiRequest {
 const auth = getAuth(initializeApp(firebaseConfig))
 
 // Custom hook for authentication queries
-export const useAuthQuery = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
+export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
   const router = useRouter()
   const queryClient = useQueryClient()
 
