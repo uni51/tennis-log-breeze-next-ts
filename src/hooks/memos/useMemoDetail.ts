@@ -7,7 +7,7 @@ const fetchMemoDetail = async (apiUrl: string): Promise<Memo> => {
   return res.data.data
 }
 
-export const useQueryMemoDetail = (apiUrl: string) => {
+export const useMemoDetail = (apiUrl: string) => {
   return useQuery<Memo, Error>({
     queryKey: ['memoDetail', apiUrl],
     queryFn: () => fetchMemoDetail(apiUrl),
