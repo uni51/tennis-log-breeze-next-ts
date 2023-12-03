@@ -4,9 +4,9 @@ import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import ProfileEdit from '@/features/settings/profile/ProfileEdit'
 import { useAuth } from '@/hooks/auth'
-import { useQueryAgeRanges } from '@/hooks/profile/useQueryAgeRanges'
-import { useQueryCareers } from '@/hooks/profile/useQueryCareers'
-import { useQueryDominantHands } from '@/hooks/profile/useQueryDominantHands'
+import { useAgeRanges } from '@/hooks/profile/useAgeRanges'
+import { useCareers } from '@/hooks/profile/useCareers'
+import { useDominantHands } from '@/hooks/profile/useDominantHands'
 import { useQueryGenders } from '@/hooks/profile/useQueryGenders'
 import { useQueryPlayFrequencies } from '@/hooks/profile/useQueryPlayFrequencies'
 import { useQueryTennisLevels } from '@/hooks/profile/useQueryTennisLevels'
@@ -16,19 +16,19 @@ const Profile: NextPage = () => {
   const { user } = useAuth({ middleware: 'auth' })
 
   // Custom Hooksを使用してローディングステータスを管理
-  const careersQuery = useQueryCareers()
+  const fetchCareers = useCareers()
   const gendersQuery = useQueryGenders()
-  const ageRangesQuery = useQueryAgeRanges()
-  const dominantHandsQuery = useQueryDominantHands()
+  const fetchAgeRanges = useAgeRanges()
+  const fetchDomainHands = useDominantHands()
   const playFrequenciesQuery = useQueryPlayFrequencies()
   const tennisLevelsQuery = useQueryTennisLevels()
 
   // ローディングステータスを配列にまとめ、someでいずれかがpendingかどうかを判定
   const anyPending = [
-    careersQuery,
+    fetchCareers,
     gendersQuery,
-    ageRangesQuery,
-    dominantHandsQuery,
+    fetchAgeRanges,
+    fetchDomainHands,
     playFrequenciesQuery,
     tennisLevelsQuery,
   ].some((query) => query.status === 'pending')
@@ -43,10 +43,10 @@ const Profile: NextPage = () => {
   )
 
   // エラーがあれば該当する関数を呼び出してエラーメッセージを表示
-  if (careersQuery.error) return renderError(careersQuery.error, 'careers')
+  if (fetchCareers.error) return renderError(fetchCareers.error, 'careers')
   if (gendersQuery.error) return renderError(gendersQuery.error, 'genders')
-  if (ageRangesQuery.error) return renderError(ageRangesQuery.error, 'ageRanges')
-  if (dominantHandsQuery.error) return renderError(dominantHandsQuery.error, 'dominantHands')
+  if (fetchAgeRanges.error) return renderError(fetchAgeRanges.error, 'ageRanges')
+  if (fetchDomainHands.error) return renderError(fetchDomainHands.error, 'dominantHands')
   if (playFrequenciesQuery.error) return renderError(playFrequenciesQuery.error, 'playFrequencies')
   if (tennisLevelsQuery.error) return renderError(tennisLevelsQuery.error, 'tennisLevels')
   if (!user) return null
@@ -63,10 +63,10 @@ const Profile: NextPage = () => {
         </Head>
         <ProfileEdit
           user={user}
-          careers={careersQuery.data!}
+          careers={fetchCareers.data!}
           genders={gendersQuery.data!}
-          ageRanges={ageRangesQuery.data!}
-          dominantHands={dominantHandsQuery.data!}
+          ageRanges={fetchAgeRanges.data!}
+          dominantHands={fetchDomainHands.data!}
           playFrequencies={playFrequenciesQuery.data!}
           tennisLevels={tennisLevelsQuery.data!}
         />
