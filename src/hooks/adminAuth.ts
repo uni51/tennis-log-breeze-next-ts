@@ -27,7 +27,7 @@ type IApiRequest = {
   setStatus: (status: string | null) => void
 }
 
-export const useAdminAuthQuery = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
+export const useAdminAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
   const router = useRouter()
   const queryClient = useQueryClient()
 

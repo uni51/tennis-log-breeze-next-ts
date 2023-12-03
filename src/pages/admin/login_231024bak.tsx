@@ -7,7 +7,7 @@ import Button from '@/components/Button'
 import Input from '@/components/Input'
 import Label from '@/components/Label'
 import GuestLayout from '@/components/Layouts/GuestLayout'
-import { useAdminAuthQuery } from '@/hooks/adminAuthQuery'
+import { useAdminAuth } from '@/hooks/adminAuth'
 
 interface ErrorData {
   email?: { message: string }[]
@@ -28,7 +28,7 @@ const getErrorMessages = (errors: { message: string }[] = []): ReactNode => {
 }
 
 const AdminLogin_231024bak = () => {
-  const { login } = useAdminAuthQuery({
+  const { login } = useAdminAuth({
     middleware: 'guest',
     redirectIfAuthenticated: '/admin/dashboard',
   })

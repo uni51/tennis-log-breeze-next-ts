@@ -4,10 +4,10 @@ import { useEffect, useState } from 'react'
 import AdminAppLayout from '@/components/Layouts/Admin/AdminAppLayout'
 import { Loading } from '@/components/Loading'
 import MemoList from '@/features/admin/memos/components/MemoList'
-import { useAdminAuthQuery } from '@/hooks/adminAuthQuery'
+import { useAdminAuth } from '@/hooks/adminAuth'
 
 const AdminUsers = () => {
-  const { admin, getAdmin } = useAdminAuthQuery({ middleware: 'adminAuth' })
+  const { admin, getAdmin } = useAdminAuth({ middleware: 'adminAuth' })
   const [isLoading, setIsLoading] = useState(false)
 
   // 初回レンダリング時にログインチェック

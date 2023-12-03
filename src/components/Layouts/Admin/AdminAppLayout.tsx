@@ -15,7 +15,7 @@ import Link from 'next/link'
 import React, { PropsWithChildren, Fragment, ReactNode, useState } from 'react'
 import AdminNavigation from './AdminNavigation'
 import Navigation from '@/components/Layouts/Navigation'
-import { useAdminAuthQuery } from '@/hooks/adminAuthQuery'
+import { useAdminAuth } from '@/hooks/adminAuth'
 
 interface Props {
   header: ReactNode
@@ -98,7 +98,7 @@ function classNames(...classes: string[]) {
 
 const AppLayout = ({ header, children }: PropsWithChildren<Props>) => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const { admin } = useAdminAuthQuery({ middleware: 'guest' })
+  const { admin } = useAdminAuth({ middleware: 'guest' })
 
   return (
     <>

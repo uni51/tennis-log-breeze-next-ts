@@ -10,12 +10,12 @@ import { TextInput } from '@/components/Form/TextInput'
 import GuestLayout from '@/components/Layouts/GuestLayout'
 import { Loading } from '@/components/Loading'
 import { AdminLoginSchema } from '@/features/admin/lib/schema/AdminLoginSchema'
-import { useAdminAuthQuery } from '@/hooks/adminAuthQuery'
+import { useAdminAuth } from '@/hooks/adminAuth'
 import { isAxiosError } from '@/lib/utils/axiosUtils'
 import { AdminLogin } from '@/types/AdminLogin'
 
 const AdminLogin = () => {
-  const { login, getAdmin } = useAdminAuthQuery({
+  const { login, getAdmin } = useAdminAuth({
     middleware: 'guest',
     redirectIfAuthenticated: '/admin/dashboard',
   })

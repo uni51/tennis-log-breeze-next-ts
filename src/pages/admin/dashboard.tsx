@@ -3,10 +3,10 @@ import router from 'next/router'
 import { useEffect, useState } from 'react'
 import AdminAppLayout from '@/components/Layouts/Admin/AdminAppLayout'
 import { Loading } from '@/components/Loading'
-import { useAdminAuthQuery } from '@/hooks/adminAuthQuery'
+import { useAdminAuth } from '@/hooks/adminAuth'
 
 const AdminDashboard = () => {
-  const { admin, getAdmin } = useAdminAuthQuery({ middleware: 'adminAuth' })
+  const { admin, getAdmin } = useAdminAuth({ middleware: 'adminAuth' })
   const [isLoading, setIsLoading] = useState(false)
 
   // 初回レンダリング時にログインチェック
