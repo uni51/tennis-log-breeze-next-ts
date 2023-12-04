@@ -10,23 +10,16 @@ import { onError } from '@/lib/error-helper'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
 import { AuthGuard } from '@/features/auth/components/AuthGuard'
 
-type DashboardMemoIndexProps = {
-  pageIndex: number
-  categoryNumber: number | null
-}
-
-const DashboardMemoIndex: NextPage<DashboardMemoIndexProps> = ({ pageIndex, categoryNumber }) => {
+const DashboardMemoIndex: NextPage = () => {
   const router = useRouter()
   const { page, category } = router.query
   const { user } = useAuth({ middleware: 'auth' })
 
   const pageNumber = page === undefined ? 1 : Number(page)
-  const categoryNumberFromQuery = category === undefined ? null : Number(category)
+  const categoryNumber = category === undefined ? null : Number(category)
 
   const headLine = user?.data?.nickname
-    ? `${user.data.nickname}さんのメモ一覧${getMemosListByCategoryHeadLineTitle(
-        categoryNumberFromQuery,
-      )}`
+    ? `${user.data.nickname}さんのメモ一覧${getMemosListByCategoryHeadLineTitle(categoryNumber)}`
     : 'あなたが作成したメモ一覧'
 
   if (!user) return null
@@ -40,14 +33,11 @@ const DashboardMemoIndex: NextPage<DashboardMemoIndexProps> = ({ pageIndex, cate
         header={<h2 className='font-semibold text-xl text-gray-800 leading-tight'>{headLine}</h2>}
       >
         <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
-          <DashboardMemoList pageIndex={pageNumber} categoryNumber={categoryNumberFromQuery} />
+          <DashboardMemoList pageIndex={pageNumber} categoryNumber={categoryNumber} />
           {/* キャッシュ作成用に、次のページを事前にロードしておく */}
           {/* TODO: 最後のページの場合は、このロジックをくぐらないようにさせる？ */}
           <div style={{ display: 'none' }}>
-            <DashboardMemoList
-              pageIndex={pageNumber + 1}
-              categoryNumber={categoryNumberFromQuery}
-            />
+            <DashboardMemoList pageIndex={pageNumber + 1} categoryNumber={categoryNumber} />
           </div>
         </ErrorBoundary>
       </AppLayout>
