@@ -73,6 +73,7 @@ export const useAdminAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) 
       await apiClient.post('/admin/logout')
     },
     onSuccess: async () => {
+      queryClient.removeQueries({ queryKey: ['admin'] })
       router.push('/admin/login')
     },
     onError: () => {
