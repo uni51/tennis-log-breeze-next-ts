@@ -1,4 +1,4 @@
-import MemoListPaginationLong from '@/components/Pagination/MemoListPaginationLong'
+import AdminMemoListPaginationLong from '@/components/admin/Pagination/AdminMemoListPaginationLong'
 import { useAdminMemoList } from '@/hooks/admin/memos/useAdminMemoList'
 import { getMemosListByCategoryPageLink } from '@/lib/pagination-helper'
 import { useErrorBoundary } from 'react-error-boundary'
@@ -139,7 +139,7 @@ const AdminMemoList: React.FC<Props> = ({ pageIndex, categoryNumber }: Props) =>
             </table>
           </div>
           <div className='hidden sm:hidden md:block lg:block xl:block'>
-            <MemoListPaginationLong
+            <AdminMemoListPaginationLong
               baseUrl='/admin/memos/'
               totalItems={Number(memos.meta.total)}
               currentPage={Number(memos.meta.current_page)}

@@ -31,7 +31,7 @@ export const useAdminMemoList = ({ preApiUrl, pageIndex, categoryNumber }: Props
   return useQuery<MemoListReturnType, Error>({
     queryKey: ['adminMemoList', apiUrl], // データの重複取得を避けるためにqueryKeyに依存変数を含める
     queryFn: () => fetchAdminMemoList(apiUrl),
-    staleTime: Infinity,
+    staleTime: 0,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     // 非同期操作が完了する前にコンポーネントがアンマウントされた場合のキャンセル
