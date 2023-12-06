@@ -1,6 +1,7 @@
 import AdminMemoListPaginationLong from '@/components/admin/Pagination/AdminMemoListPaginationLong'
 import { useAdminMemoList } from '@/hooks/admin/memos/useAdminMemoList'
 import { getMemosListByCategoryPageLink } from '@/lib/pagination-helper'
+import Link from 'next/link'
 import { useErrorBoundary } from 'react-error-boundary'
 import ClipLoader from 'react-spinners/ClipLoader'
 
@@ -129,9 +130,12 @@ const AdminMemoList: React.FC<Props> = ({ pageIndex, categoryNumber }: Props) =>
                         {memo.updated_at}
                       </td>
                       <td className='relative whitespace-nowrap py-2 pl-3 pr-4 text-right text-sm font-medium sm:pr-0'>
-                        <a href='#' className='text-indigo-600 hover:text-indigo-900'>
-                          Edit<span className='sr-only'>, {memo.id}</span>
-                        </a>
+                        <Link
+                          href={`/admin/memos/${memo.id}`}
+                          className='text-indigo-600 hover:text-indigo-900'
+                        >
+                          詳細
+                        </Link>
                       </td>
                     </tr>
                   ))}

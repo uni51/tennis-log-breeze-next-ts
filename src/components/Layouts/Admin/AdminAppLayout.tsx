@@ -96,7 +96,7 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-const AppLayout = ({ header, children }: PropsWithChildren<Props>) => {
+const AdminAppLayout = ({ header, children }: PropsWithChildren<Props>) => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const { admin } = useAdminAuth({ middleware: 'guest' })
 
@@ -305,4 +305,4 @@ const AppLayout = ({ header, children }: PropsWithChildren<Props>) => {
   )
 }
 
-export default AppLayout
+export default AdminAppLayout
