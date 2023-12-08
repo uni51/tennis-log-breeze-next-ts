@@ -1,30 +1,34 @@
 import { useQuery } from '@tanstack/react-query'
 import { apiClient } from '@/lib/utils/apiClient'
-import { Category } from '@/types/Category'
+import { SimpleSelect } from '@/types/form/SimpleSelect'
 
-const fetchMemoCategories = async (): Promise<Category[]> => {
+const convertToSimpleSelectArray = (data: Record<string, unknown>): SimpleSelect[] => {
+  return Object.entries(data).map(([id, name]) => ({
+    id: Number(id),
+    name: name as string,
+  }))
+}
+
+const fetchMemoCategories = async (): Promise<SimpleSelect[]> => {
   try {
     const response = await apiClient.get('api/memos/categories')
-    const categoriesObject = response.data.data
-
-    const categoriesArray = Object.values(categoriesObject) as Category[]
-
-    return categoriesArray
+    const data = response.data
+    return convertToSimpleSelectArray(data)
   } catch (error) {
     if (error instanceof Error) {
       // エラーハンドリング: エラーが発生した場合は適切に処理する
-      throw new Error(`Failed to fetch memo categories: ${error.message}`)
+      throw new Error(`Failed to fetch play frequencies: ${error.message}`)
     } else {
       // error is not an instance of Error
-      throw new Error(`Failed to fetch memo categories: ${String(error)}`)
+      throw new Error(`Failed to fetch play frequencies: ${String(error)}`)
     }
   }
 }
 
 export const useMemoCategories = () => {
-  return useQuery<Category[], Error>({
+  return useQuery<SimpleSelect[], Error>({
     queryKey: ['categories'],
     queryFn: fetchMemoCategories,
-    staleTime: Infinity,
+    staleTime: Infinity, // キャッシュは常に新しいものとみなされるため、バックグラウンドでの fetch が自動的に行われない
   })
 }
