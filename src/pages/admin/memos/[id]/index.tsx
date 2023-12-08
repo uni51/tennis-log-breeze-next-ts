@@ -3,28 +3,27 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
-import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
-import { AuthGuard } from '@/features/auth/components/AuthGuard'
-import DashboardMemoDetail from '@/features/memos/dashboard/components/DashBoardMemoDetail'
 import { useAuth } from '@/hooks/auth'
 import { onError } from '@/lib/error-helper'
 import { Memo } from '@/types/Memo'
+import AdminMemoDetail from '@/features/admin/memos/components/AdminMemoDetail'
+import AdminAppLayout from '@/components/Layouts/Admin/AdminAppLayout'
+import { AdminAuthGuard } from '@/features/admin/auth/components/AdminAuthGuard'
+import { useMemoDetail } from '@/hooks/memos/useMemoDetail'
 
-const DashboardMemoDetailIndex: NextPage<Memo> = () => {
-  const { user } = useAuth({ middleware: 'auth' })
+const AdminMemoDetailIndex: NextPage<Memo> = () => {
   const [apiUrl, setApiUrl] = useState('')
-  const [titleText, setTitleText] = useState('')
+  const [headLine, setHeadLine] = useState('')
   const [isLoading, setIsLoading] = useState(true)
 
   const router = useRouter()
-  const loginUser = user?.data
 
   useEffect(() => {
     // Fetch用URL組み立て
     if (router.isReady) {
-      const apiUri = `api/dashboard/memos/${router.query.id}`
+      const apiUri = `api/admin/memos/${router.query.id}`
       setApiUrl(apiUri)
     }
 
@@ -32,24 +31,21 @@ const DashboardMemoDetailIndex: NextPage<Memo> = () => {
   }, [router.isReady])
 
   if (isLoading) return <Loading />
-  if (!user) return null
-
-  const headline = `${user?.data?.name}さんのメモ詳細`
 
   return (
-    <AuthGuard>
+    <AdminAuthGuard>
       <Head>
-        <title>{titleText}</title>
+        <title>管理者ページ：メモ詳細</title>
       </Head>
-      <AppLayout
-        header={<h2 className='font-semibold text-xl text-gray-800 leading-tight'>{headline}</h2>}
+      <AdminAppLayout
+        header={<h2 className='font-semibold text-xl text-gray-800 leading-tight'>{headLine}</h2>}
       >
         <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
-          <DashboardMemoDetail apiUrl={apiUrl} loginUser={loginUser} setTitleText={setTitleText} />
+          <AdminMemoDetail apiUrl={apiUrl} setHeadLine={setHeadLine} />
         </ErrorBoundary>
-      </AppLayout>
-    </AuthGuard>
+      </AdminAppLayout>
+    </AdminAuthGuard>
   )
 }
 
-export default DashboardMemoDetailIndex
+export default AdminMemoDetailIndex

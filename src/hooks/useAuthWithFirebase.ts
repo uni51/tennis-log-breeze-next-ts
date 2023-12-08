@@ -7,7 +7,7 @@ import {
   Auth,
 } from '@firebase/auth' // build時に、Auth not found in '@firebase/auth' のエラーが出る
 import { useCallback, useState } from 'react'
-import { useAuthQuery } from '@/hooks/authQuery'
+import { useAuth } from '@/hooks/auth'
 
 // ユーザーステータスの定数
 const UserStatus = {
@@ -20,7 +20,7 @@ const UserStatus = {
 }
 
 export const useAuthWithFirebase = (auth: Auth) => {
-  const { firebaseLogin, firebaseLogout } = useAuthQuery({
+  const { firebaseLogin, firebaseLogout } = useAuth({
     middleware: 'guest',
     redirectIfAuthenticated: '/dashboard',
   })

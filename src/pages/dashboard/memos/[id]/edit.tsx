@@ -6,48 +6,49 @@ import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import { AuthGuard } from '@/features/auth/components/AuthGuard'
 import MemoEdit from '@/features/memos/dashboard/components/MemoEdit'
-import { useAuthQuery } from '@/hooks/authQuery'
-import useCheckLoggedIn from '@/hooks/checkLoggedIn'
-import { useQueryMemoCategories } from '@/hooks/memos/useQueryMemoCategories'
-import { useQueryMemoStatuses } from '@/hooks/memos/useQueryMemoStatuses'
+import { useAuth } from '@/hooks/auth'
+import { useMemoCategories } from '@/hooks/memos/useMemoCategories'
+import { useMemoStatuses } from '@/hooks/memos/useMemoStatuses'
 import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
 
 const DashboardMemoDetailEdit: NextPage = () => {
   const router = useRouter()
-  const { user } = useAuthQuery({ middleware: 'auth' })
+  const { user } = useAuth({ middleware: 'auth' })
   const [memo, setMemo] = useState<Memo | undefined>()
   const [isLoading, setIsLoading] = useState(true)
 
-  const { status: queryMemoCategoriesStatus, data: categories } = useQueryMemoCategories()
-  const { status: queryMemoStatusesStatus, data: statuses } = useQueryMemoStatuses()
+  const { status: queryMemoCategoriesStatus, data: categories } = useMemoCategories()
+  const { status: queryMemoStatusesStatus, data: statuses } = useMemoStatuses()
 
-  useEffect(() => {
-    const init = async () => {
-      if (router.isReady) {
-        if (!router.query.id) {
-          router.push('/dashboard/memos')
-          return
-        }
+  const fetchMemoData = async () => {
+    try {
+      const memoResponse = await apiClient.get(`api/dashboard/memos/${router.query.id}`)
+      const memoData = memoResponse.data.data
 
-        const memoResponse = await apiClient.get(`api/dashboard/memos/${router.query.id}`)
-        const memoData = memoResponse.data.data
-
-        if (!memoData) {
-          router.push('/dashboard/memos')
-          return
-        }
-        console.log(memoData)
-        setMemo(memoData)
+      if (!memoData) {
+        router.push('/dashboard/memos')
+        return
       }
+
+      setMemo(memoData)
+    } catch (error) {
+      console.error('Error fetching memo data:', error)
+      router.push('/dashboard/memos')
+    } finally {
       setIsLoading(false)
     }
-    init()
-  }, [router.isReady])
+  }
+
+  useEffect(() => {
+    if (router.isReady && router.query.id) {
+      fetchMemoData()
+    }
+  }, [router.isReady, router.query.id])
 
   if (
     isLoading ||
-    memo === undefined ||
+    !memo ||
     queryMemoCategoriesStatus === 'pending' ||
     queryMemoStatusesStatus === 'pending'
   ) {
@@ -70,7 +71,7 @@ const DashboardMemoDetailEdit: NextPage = () => {
         <Head>
           <title>Dashboard - メモの編集</title>
         </Head>
-        <MemoEdit memo={memo!} statuses={statuses!} categories={categories!} />
+        <MemoEdit memo={memo} statuses={statuses!} categories={categories!} />
       </AppLayout>
     </AuthGuard>
   )

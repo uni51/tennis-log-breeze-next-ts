@@ -3,12 +3,14 @@ import router from 'next/router'
 import { UseFormSetError } from 'react-hook-form'
 import { apiClient } from '@/lib/utils/apiClient'
 import { MemoForm } from '@/types/MemoForm'
+import { useQueryClient } from '@tanstack/react-query'
 
 // メモの編集
 export const postEditMemo = (
   postData: MemoForm,
   setError: UseFormSetError<MemoForm>,
   memoId: number,
+  queryClient: ReturnType<typeof useQueryClient>,
 ) => {
   apiClient
     // CSRF保護の初期化
@@ -20,6 +22,8 @@ export const postEditMemo = (
         .then((response: AxiosResponse) => {
           // console.log(response.data)
           router.push('/dashboard/memos')
+          // Refetch memoList after successful update
+          queryClient.invalidateQueries({ queryKey: ['memoList'] })
         })
         .catch((err: AxiosError) => {
           // バリデーションエラー

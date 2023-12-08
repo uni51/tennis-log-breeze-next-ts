@@ -24,14 +24,11 @@ const fetchMemoList = async (apiUrl: string): Promise<MemoListReturnType> => {
   }
 }
 
-export const useQueryMemoList = ({ preApiUrl, pageIndex, categoryNumber }: Props) => {
+export const useMemoList = ({ preApiUrl, pageIndex, categoryNumber }: Props) => {
   const apiUrl = getMemoListApiUrl({ preApiUrl, pageIndex, categoryNumber })
 
-  // データの重複取得を避けるためにqueryKeyに依存変数を含める
-  const queryKey = ['memoList', apiUrl]
-
   return useQuery<MemoListReturnType, Error>({
-    queryKey,
+    queryKey: ['memoList', apiUrl], // データの重複取得を避けるためにqueryKeyに依存変数を含める
     queryFn: () => fetchMemoList(apiUrl),
     staleTime: Infinity,
     refetchOnWindowFocus: false,

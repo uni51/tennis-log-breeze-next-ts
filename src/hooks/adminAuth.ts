@@ -27,7 +27,7 @@ type IApiRequest = {
   setStatus: (status: string | null) => void
 }
 
-export const useAdminAuthQuery = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
+export const useAdminAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
   const router = useRouter()
   const queryClient = useQueryClient()
 
@@ -73,6 +73,7 @@ export const useAdminAuthQuery = ({ middleware, redirectIfAuthenticated }: IUseA
       await apiClient.post('/admin/logout')
     },
     onSuccess: async () => {
+      queryClient.removeQueries({ queryKey: ['admin'] })
       router.push('/admin/login')
     },
     onError: () => {
