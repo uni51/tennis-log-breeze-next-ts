@@ -6,7 +6,7 @@ export type Memo = {
   title: string
   body: string
   category_id: number
-  // category_name: string
+  category_name: string
   // tag_list: ['tags', 'normalized']
   status: number
   created_at: string

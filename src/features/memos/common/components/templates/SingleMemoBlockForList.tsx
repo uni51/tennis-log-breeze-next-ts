@@ -23,16 +23,7 @@ const SingleMemoBlockForList: FC<SingleMemoBlockForListProps> = ({
       <div className='border-b-2 border-gray-300 mb-4'></div>
       <p className='mb-5 whitespace-pre-wrap'>{memo.body}</p>
       <p className='text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-pink-600 bg-pink-200 last:mr-0 mr-1'>
-        <Link href={renderMemoListByCategoryLink}>
-          {memo.category_id === 1 && 'フォアハンド'}
-          {memo.category_id === 2 && 'バックハンド'}
-          {memo.category_id === 3 && 'サーブ'}
-          {memo.category_id === 4 && 'リターン'}
-          {memo.category_id === 5 && 'ボレー'}
-          {memo.category_id === 6 && 'スマッシュ'}
-          {memo.category_id === 7 && 'ゲーム'}
-          {memo.category_id === 99 && 'その他'}
-        </Link>
+        <Link href={renderMemoListByCategoryLink}>{memo.category_name}</Link>
       </p>
       <p className='text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blue-600 bg-blue-200 last:mr-0 mr-1'>
         {memo.status === 0 && '下書き'}
