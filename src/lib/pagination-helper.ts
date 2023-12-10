@@ -8,8 +8,8 @@ export const getRenderPagerLinkUrl = (
   category?: number | null,
 ) => {
   switch (renderPagerLinkFunc) {
-    case getMemosListPageLink:
-      return getMemosListPageLink(baseUrl, pageNumber)
+    // case getMemosListPageLink:
+    //   return getMemosListPageLink(baseUrl, pageNumber)
     case getMemosListByCategoryPageLink:
       return getMemosListByCategoryPageLink(baseUrl, pageNumber, category!)
     default:
