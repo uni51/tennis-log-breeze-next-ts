@@ -15,11 +15,11 @@ export async function getServerSideProps(context: {
 }) {
   const { nickname, category, page } = context.query
 
-  const categoryNumber = category === undefined ? null : Number(category)
+  const categoryId = category === undefined ? null : Number(category)
   const pageNumber = page === undefined ? 1 : Number(page)
 
   const baseUri = `/api/public/${nickname}/memos`
-  const categoryUri = categoryNumber !== null ? `/category/${categoryNumber}` : ''
+  const categoryUri = categoryId !== null ? `/category/${categoryId}` : ''
   const pageUri = `?page=${pageNumber}`
 
   const uri = `${baseUri}${categoryUri}${pageUri}`
@@ -31,7 +31,7 @@ export async function getServerSideProps(context: {
       props: {
         memos: JSON.stringify(response),
         nickname,
-        category: categoryNumber,
+        category: categoryId,
       },
     }
   } catch (error) {

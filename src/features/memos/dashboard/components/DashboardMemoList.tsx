@@ -12,16 +12,16 @@ import { Memo } from '@/types/Memo'
 
 type Props = {
   pageIndex: number
-  categoryNumber: number | null
+  categoryId: number | null
 }
 
-const DashboardMemoList: React.FC<Props> = ({ pageIndex, categoryNumber }: Props) => {
+const DashboardMemoList: React.FC<Props> = ({ pageIndex, categoryId }: Props) => {
   const { showBoundary } = useErrorBoundary()
   const preApiUrl = '/api/dashboard/memos'
   const { data: memos, error, isLoading } = useMemoList({
     preApiUrl,
     pageIndex,
-    categoryNumber,
+    categoryId,
   })
 
   console.log('memos', memos)
@@ -67,7 +67,7 @@ const DashboardMemoList: React.FC<Props> = ({ pageIndex, categoryNumber }: Props
             totalItems={Number(memos.meta.total)}
             currentPage={Number(memos.meta.current_page)}
             renderPagerLinkFunc={getMemosListByCategoryPageLink}
-            category={categoryNumber}
+            category={categoryId}
           />
         </div>
         <div className='hidden sm:hidden md:block lg:block xl:block'>
@@ -76,7 +76,7 @@ const DashboardMemoList: React.FC<Props> = ({ pageIndex, categoryNumber }: Props
             totalItems={Number(memos.meta.total)}
             currentPage={Number(memos.meta.current_page)}
             renderPagerLinkFunc={getMemosListByCategoryPageLink}
-            category={categoryNumber}
+            category={categoryId}
           />
         </div>
       </div>

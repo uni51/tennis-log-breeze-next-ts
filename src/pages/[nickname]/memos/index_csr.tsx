@@ -22,7 +22,7 @@ const PublicMemoListByNickname_CSR: NextPage = () => {
   const { nickname, category, page } = router.query
 
   const nickNameTypeCasted = nickname as string | undefined
-  const categoryNumber = category === undefined ? undefined : Number(category)
+  const categoryId = category === undefined ? undefined : Number(category)
   const pageNumber = page === undefined ? 1 : Number(page)
 
   // state定義
@@ -33,7 +33,7 @@ const PublicMemoListByNickname_CSR: NextPage = () => {
   useEffect(() => {
     if (router.isReady) {
       if (typeof nickNameTypeCasted === 'undefined') return
-      if (categoryNumber === undefined) {
+      if (categoryId === undefined) {
         apiClient
           .get(`/api/public/${nickNameTypeCasted}/memos?page=${pageNumber}`)
           .then((response: AxiosResponse) => {
@@ -44,9 +44,7 @@ const PublicMemoListByNickname_CSR: NextPage = () => {
           .finally(() => setIsLoading(false))
       } else {
         apiClient
-          .get(
-            `/api/public/${nickNameTypeCasted}/memos/category/${categoryNumber}?page=${pageNumber}`,
-          )
+          .get(`/api/public/${nickNameTypeCasted}/memos/category/${categoryId}?page=${pageNumber}`)
           .then((response: AxiosResponse) => {
             // console.log(response.data)
             setMemos(response.data)
@@ -55,12 +53,12 @@ const PublicMemoListByNickname_CSR: NextPage = () => {
           .finally(() => setIsLoading(false))
       }
     }
-  }, [nickNameTypeCasted, categoryNumber, pageNumber])
+  }, [nickNameTypeCasted, categoryId, pageNumber])
 
   if (isLoading) return <Loading />
 
   const headline = `${nickNameTypeCasted}さんの公開中のメモ一覧${getMemosListByCategoryHeadLineTitle(
-    categoryNumber,
+    categoryId,
   )}`
 
   return (
@@ -91,9 +89,9 @@ const PublicMemoListByNickname_CSR: NextPage = () => {
             totalItems={Number(memos?.meta?.total)}
             currentPage={Number(memos?.meta?.current_page)}
             renderPagerLinkFunc={
-              categoryNumber === undefined ? getMemosListPageLink : getMemosListByCategoryPageLink
+              categoryId === undefined ? getMemosListPageLink : getMemosListByCategoryPageLink
             }
-            category={categoryNumber}
+            category={categoryId}
           />
         </div>
       </div>

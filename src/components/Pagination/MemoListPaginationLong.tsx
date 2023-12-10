@@ -26,7 +26,7 @@ const MemoListPaginationLong = ({
 
   return (
     <div className='flex items-center justify-center my-8'>
-      {currentPage - 1 >= 1 && (
+      {currentPage >= 2 && (
         <Link
           href={getRenderPagerLinkUrl(
             renderPagerLinkFunc,

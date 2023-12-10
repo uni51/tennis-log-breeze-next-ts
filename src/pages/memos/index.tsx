@@ -18,19 +18,19 @@ export async function getServerSideProps(context: { query: { category?: string; 
   const { category, page } = context.query
 
   const pageIndex = page === undefined ? 1 : Number(page)
-  const categoryNumber = category === undefined ? null : Number(category)
+  const categoryId = category === undefined ? null : Number(category)
 
   const preApiUrl = '/api/public/memos'
-  const apiUrl = getMemoListApiUrl({ preApiUrl, pageIndex, categoryNumber })
+  const apiUrl = getMemoListApiUrl({ preApiUrl, pageIndex, categoryId })
 
-  const headline = `みんなの公開中のメモ一覧${getMemosListByCategoryHeadLineTitle(categoryNumber)}`
+  const headline = `みんなの公開中のメモ一覧${getMemosListByCategoryHeadLineTitle(categoryId)}`
 
   try {
     const res = await getInitialPublishedMemoList(apiUrl)
     return {
       props: {
         pageIndex: pageIndex,
-        categoryNumber: categoryNumber,
+        categoryId: categoryId,
         headline: headline,
         fallback: {
           [`${apiUrl}`]: res,
@@ -44,14 +44,14 @@ export async function getServerSideProps(context: { query: { category?: string; 
 
 type Props = {
   pageIndex: number
-  categoryNumber: number | null
+  categoryId: number | null
   headline?: string
   fallback?: MemoListReturnType
   ssrError?: string
 }
 
 /* みんなの公開中のメモ一覧ページ */
-const PublishedMemoIndex = ({ pageIndex, categoryNumber, headline, fallback, ssrError }: Props) => {
+const PublishedMemoIndex = ({ pageIndex, categoryId, headline, fallback, ssrError }: Props) => {
   if (ssrError) {
     const errorObj = JSON.parse(ssrError)
     errorObj.headline = headline
@@ -70,11 +70,11 @@ const PublishedMemoIndex = ({ pageIndex, categoryNumber, headline, fallback, ssr
       >
         <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
           <QueryClientProvider client={queryClient}>
-            <PublishedMemoList pageIndex={pageIndex} categoryNumber={categoryNumber} />
+            <PublishedMemoList pageIndex={pageIndex} categoryId={categoryId} />
             {/* キャッシュ作成用に、次のページを事前にロードしておく */}
             {/* TODO: 最後のページの場合は、このロジックをくぐらないようにする */}
             <div style={{ display: 'none' }}>
-              <PublishedMemoList pageIndex={pageIndex + 1} categoryNumber={categoryNumber} />
+              <PublishedMemoList pageIndex={pageIndex + 1} categoryId={categoryId} />
             </div>
           </QueryClientProvider>
         </ErrorBoundary>

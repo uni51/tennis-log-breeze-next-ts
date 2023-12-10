@@ -16,10 +16,10 @@ const DashboardMemoIndex: NextPage = () => {
   const { user } = useAuth({ middleware: 'auth' })
 
   const pageNumber = page === undefined ? 1 : Number(page)
-  const categoryNumber = category === undefined ? null : Number(category)
+  const categoryId = category === undefined ? null : Number(category)
 
   const headLine = user?.data?.nickname
-    ? `${user.data.nickname}さんのメモ一覧${getMemosListByCategoryHeadLineTitle(categoryNumber)}`
+    ? `${user.data.nickname}さんのメモ一覧${getMemosListByCategoryHeadLineTitle(categoryId)}`
     : 'あなたが作成したメモ一覧'
 
   if (!user) return null
@@ -33,11 +33,11 @@ const DashboardMemoIndex: NextPage = () => {
         header={<h2 className='font-semibold text-xl text-gray-800 leading-tight'>{headLine}</h2>}
       >
         <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
-          <DashboardMemoList pageIndex={pageNumber} categoryNumber={categoryNumber} />
+          <DashboardMemoList pageIndex={pageNumber} categoryId={categoryId} />
           {/* キャッシュ作成用に、次のページを事前にロードしておく */}
           {/* TODO: 最後のページの場合は、このロジックをくぐらないようにさせる？ */}
           <div style={{ display: 'none' }}>
-            <DashboardMemoList pageIndex={pageNumber + 1} categoryNumber={categoryNumber} />
+            <DashboardMemoList pageIndex={pageNumber + 1} categoryId={categoryId} />
           </div>
         </ErrorBoundary>
       </AppLayout>

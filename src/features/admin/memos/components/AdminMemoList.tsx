@@ -7,16 +7,16 @@ import ClipLoader from 'react-spinners/ClipLoader'
 
 type Props = {
   pageIndex: number
-  categoryNumber: number | null
+  categoryId: number | null
 }
 
-const AdminMemoList: React.FC<Props> = ({ pageIndex, categoryNumber }: Props) => {
+const AdminMemoList: React.FC<Props> = ({ pageIndex, categoryId }: Props) => {
   const { showBoundary } = useErrorBoundary()
   const preApiUrl = '/api/admin/memos'
   const { data: memos, error, isLoading } = useAdminMemoList({
     preApiUrl,
     pageIndex,
-    categoryNumber,
+    categoryId,
   })
 
   console.log('memos', memos)
@@ -148,7 +148,7 @@ const AdminMemoList: React.FC<Props> = ({ pageIndex, categoryNumber }: Props) =>
               totalItems={Number(memos.meta.total)}
               currentPage={Number(memos.meta.current_page)}
               renderPagerLinkFunc={getMemosListByCategoryPageLink}
-              category={categoryNumber}
+              category={categoryId}
             />
           </div>
         </div>

@@ -9,9 +9,9 @@ import {
   CATEGORY_NAME_VOLLEY,
 } from '@/constants/CategoryNameConst'
 
-export const getMemosListByCategoryHeadLineTitle = (categoryNumber: number | undefined | null) => {
+export const getMemosListByCategoryHeadLineTitle = (categoryId: number | undefined | null) => {
   const separator = ' : '
-  switch (categoryNumber) {
+  switch (categoryId) {
     case 1:
       return separator + CATEGORY_NAME_FOREHAND
     case 2:

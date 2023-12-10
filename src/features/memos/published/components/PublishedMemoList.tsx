@@ -9,14 +9,14 @@ import { Memo } from '@/types/Memo'
 
 type Props = {
   pageIndex: number
-  categoryNumber: number | null
+  categoryId: number | null
 }
 
-const PublishedMemoList = ({ pageIndex, categoryNumber }: Props) => {
+const PublishedMemoList = ({ pageIndex, categoryId }: Props) => {
   const { showBoundary } = useErrorBoundary()
 
   const preApiUrl = '/api/public/memos'
-  const { data: memos, error } = useMemoList({ preApiUrl, pageIndex, categoryNumber })
+  const { data: memos, error } = useMemoList({ preApiUrl, pageIndex, categoryId })
 
   // console.log(memos)
 
@@ -54,7 +54,7 @@ const PublishedMemoList = ({ pageIndex, categoryNumber }: Props) => {
             totalItems={Number(memos?.meta?.total)}
             currentPage={Number(memos?.meta?.current_page)}
             renderPagerLinkFunc={getMemosListByCategoryPageLink}
-            category={categoryNumber}
+            category={categoryId}
           />
         </div>
         <div className='hidden sm:hidden md:block lg:block  xl:block'>
@@ -63,7 +63,7 @@ const PublishedMemoList = ({ pageIndex, categoryNumber }: Props) => {
             totalItems={Number(memos?.meta?.total)}
             currentPage={Number(memos?.meta?.current_page)}
             renderPagerLinkFunc={getMemosListByCategoryPageLink}
-            category={categoryNumber}
+            category={categoryId}
           />
         </div>
       </div>

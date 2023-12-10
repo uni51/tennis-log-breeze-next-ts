@@ -8,8 +8,8 @@ export const getRenderPagerLinkUrl = (
   category?: number | null,
 ) => {
   switch (renderPagerLinkFunc) {
-    // case getMemosListPageLink:
-    //   return getMemosListPageLink(baseUrl, pageNumber)
+    case getMemosListPageLink:
+      return getMemosListPageLink(baseUrl, pageNumber)
     case getMemosListByCategoryPageLink:
       return getMemosListByCategoryPageLink(baseUrl, pageNumber, category!)
     default:
@@ -55,16 +55,16 @@ export type getMemosListByCategoryPageLinkType = (
 export type MemoListsPaginationProps = {
   preApiUrl: string
   pageIndex: number
-  categoryNumber: number | null
+  categoryId: number | null
 }
 
 export const getMemoListApiUrl = ({
   preApiUrl,
   pageIndex,
-  categoryNumber,
+  categoryId,
 }: MemoListsPaginationProps) => {
-  const apiUrl = categoryNumber
-    ? preApiUrl + `/category/${categoryNumber}?page=${pageIndex}`
+  const apiUrl = categoryId
+    ? preApiUrl + `/category/${categoryId}?page=${pageIndex}`
     : preApiUrl + `?page=${pageIndex}`
 
   return apiUrl
