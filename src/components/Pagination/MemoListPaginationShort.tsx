@@ -26,34 +26,23 @@ const MemoListPaginationShort = ({
 
   return (
     <div className='flex items-center justify-center my-8'>
-      {pages.map((pageNumber, i) => {
-        if (
-          pageNumber === currentPage ||
-          pageNumber === currentPage - 1 ||
-          pageNumber === currentPage + 1
-        ) {
-          return (
-            <Link
-              key={i}
-              href={getRenderPagerLinkUrl(
-                renderPagerLinkFunc,
-                baseUrl,
-                Number(pageNumber),
-                category,
-              )}
-              className={`${
-                pageNumber === currentPage
-                  ? `z-10 inline-flex relative items-center px-4 py-2 text-sm font-semibold focus:z-20`
-                  : `text-gray-900 md:inline-flex relative items-center px-4 py-2 text-sm font-semibold`
-              }`}
-            >
-              {pageNumber === currentPage - 1 && '< 前へ'}
-              {pageNumber === currentPage && `${pageNumber} / ${totalPage}`}
-              {pageNumber === currentPage + 1 && '次へ >'}
-            </Link>
-          )
-        }
-      })}
+      {pages.map((pageNumber, i) => (
+        <Link
+          key={i}
+          href={getRenderPagerLinkUrl(renderPagerLinkFunc, baseUrl, Number(pageNumber), category)}
+          className={`${
+            pageNumber === currentPage
+              ? `z-10 inline-flex relative items-center px-4 py-2 text-sm font-semibold focus:z-20`
+              : `text-gray-900 md:inline-flex relative items-center px-4 py-2 text-sm font-semibold`
+          }`}
+        >
+          {/* {pageNumber === 1 && '最初へ'} */}
+          {pageNumber === currentPage - 1 && '< 前へ'}
+          {pageNumber === currentPage && `${pageNumber} / ${totalPage}`}
+          {pageNumber === currentPage + 1 && '次へ >'}
+          {/* {pageNumber === totalPage && '最後へ'} */}
+        </Link>
+      ))}
     </div>
   )
 }
