@@ -19,35 +19,34 @@ const NicknameMemoList = ({ pageIndex, categoryId, nickname }: Props) => {
   const preApiUrl = `/api/public/${nickname}/memos`
   const { data: memos, error } = useMemoList({ preApiUrl, pageIndex, categoryId })
 
-  // console.log(memos)
+  if (error) {
+    showBoundary(error)
+    return null
+  }
 
-  if (error) showBoundary(error)
+  const isLoading = !memos
 
-  if (!memos)
-    return (
-      <div className='mx-auto mt-20'>
-        <div className='w-1/2 mx-auto text-center'>
-          <ClipLoader />
-        </div>
+  const renderLoadingIndicator = () => (
+    <div className='mx-auto mt-20'>
+      <div className='w-1/2 mx-auto text-center'>
+        <ClipLoader />
       </div>
-    )
+    </div>
+  )
 
-  return (
+  const renderMemoList = () => (
     <div className='mx-auto mt-20'>
       <div className='mt-3'>
-        {/* DBから取得したメモデータの一覧表示 */}
         <div className='grid w-4/5 mx-auto gap-16 lg:grid-cols-2'>
-          {memos?.data?.map((memo: Memo, index: number) => {
-            return (
-              <SingleMemoBlockForList
-                memo={memo}
-                renderMemoDetailLink={`/${nickname}/memos/${memo.id}`}
-                renderMemoListByCategoryLink={`/${nickname}/memos?category=${memo.category_id}`}
-                renderMemoListByNickNameLink={`/${nickname}/memos/`}
-                key={index}
-              />
-            )
-          })}
+          {memos?.data?.map((memo: Memo, index: number) => (
+            <SingleMemoBlockForList
+              memo={memo}
+              renderMemoDetailLink={`/${nickname}/memos/${memo.id}`}
+              renderMemoListByCategoryLink={`/${nickname}/memos?category=${memo.category_id}`}
+              renderMemoListByNickNameLink={`/${nickname}/memos/`}
+              key={index}
+            />
+          ))}
         </div>
         <div className='md:hidden'>
           <MemoListPaginationShort
@@ -58,7 +57,7 @@ const NicknameMemoList = ({ pageIndex, categoryId, nickname }: Props) => {
             category={categoryId}
           />
         </div>
-        <div className='hidden sm:hidden md:block lg:block  xl:block'>
+        <div className='hidden sm:hidden md:block lg:block xl:block'>
           <MemoListPaginationLong
             baseUrl={`/${nickname}/memos/`}
             totalItems={Number(memos?.meta?.total)}
@@ -70,6 +69,8 @@ const NicknameMemoList = ({ pageIndex, categoryId, nickname }: Props) => {
       </div>
     </div>
   )
+
+  return isLoading ? renderLoadingIndicator() : renderMemoList()
 }
 
 export default NicknameMemoList
