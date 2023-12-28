@@ -11,6 +11,7 @@ import { Category } from '@/types/Category'
 import { Memo } from '@/types/Memo'
 import { MemoForm } from '@/types/MemoForm'
 import { Status } from '@/types/Status'
+import { useQueryClient } from '@tanstack/react-query'
 
 type Props = {
   memo: Memo
@@ -33,11 +34,12 @@ const MemoEdit: React.FC<Props> = ({ memo, statuses, categories }) => {
   })
 
   const { handleSubmit, setError } = useFormMethods
+  const queryClient = useQueryClient()
 
   return (
     <FormProvider {...useFormMethods}>
       <div className='mx-auto w-4/5 mt-4 sm:mt-4 py-4 rounded-2xl'>
-        <form onSubmit={handleSubmit((data) => postEditMemo(data, setError, memo.id))}>
+        <form onSubmit={handleSubmit((data) => postEditMemo(data, setError, memo.id, queryClient))}>
           {/* タイトル */}
           <TextInput target={'title'} required={true} label={'タイトル'} />
           {/* 内容 */}

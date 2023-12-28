@@ -1,9 +1,43 @@
+import AdminMemoListPaginationLong from '@/components/admin/Pagination/AdminMemoListPaginationLong'
 import { useAdminMemoList } from '@/hooks/admin/memos/useAdminMemoList'
+import { getMemosListByCategoryPageLink } from '@/lib/pagination-helper'
+import Link from 'next/link'
+import { useErrorBoundary } from 'react-error-boundary'
+import ClipLoader from 'react-spinners/ClipLoader'
 
-const MemoList = () => {
-  const { data: memos, isLoading } = useAdminMemoList()
+type Props = {
+  pageIndex: number
+  categoryNumber: number | null
+}
+
+const AdminMemoList: React.FC<Props> = ({ pageIndex, categoryNumber }: Props) => {
+  const { showBoundary } = useErrorBoundary()
+  const preApiUrl = '/api/admin/memos'
+  const { data: memos, error, isLoading } = useAdminMemoList({
+    preApiUrl,
+    pageIndex,
+    categoryNumber,
+  })
+
+  console.log('memos', memos)
+
+  if (error) {
+    showBoundary(error)
+  }
+
+  // const { data: memos, isLoading } = useAdminMemoList()
 
   if (isLoading) return <div>Loading...</div>
+
+  if (!memos) {
+    return (
+      <div className='mx-auto mt-20'>
+        <div className='w-1/2 mx-auto text-center'>
+          <ClipLoader />
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className='px-4 sm:px-6 lg:px-8'>
@@ -72,7 +106,7 @@ const MemoList = () => {
               </thead>
               <tbody className='divide-y divide-gray-200 bg-white'>
                 {memos &&
-                  memos.map((memo) => (
+                  memos.data.map((memo) => (
                     <tr key={memo.id}>
                       <td className='whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 sm:pl-0'>
                         {memo.id}
@@ -96,14 +130,26 @@ const MemoList = () => {
                         {memo.updated_at}
                       </td>
                       <td className='relative whitespace-nowrap py-2 pl-3 pr-4 text-right text-sm font-medium sm:pr-0'>
-                        <a href='#' className='text-indigo-600 hover:text-indigo-900'>
-                          Edit<span className='sr-only'>, {memo.id}</span>
-                        </a>
+                        <Link
+                          href={`/admin/memos/${memo.id}`}
+                          className='text-indigo-600 hover:text-indigo-900'
+                        >
+                          詳細
+                        </Link>
                       </td>
                     </tr>
                   ))}
               </tbody>
             </table>
+          </div>
+          <div className='hidden sm:hidden md:block lg:block xl:block'>
+            <AdminMemoListPaginationLong
+              baseUrl='/admin/memos/'
+              totalItems={Number(memos.meta.total)}
+              currentPage={Number(memos.meta.current_page)}
+              renderPagerLinkFunc={getMemosListByCategoryPageLink}
+              category={categoryNumber}
+            />
           </div>
         </div>
       </div>
@@ -111,4 +157,4 @@ const MemoList = () => {
   )
 }
 
-export default MemoList
+export default AdminMemoList

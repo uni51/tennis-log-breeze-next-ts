@@ -3,7 +3,7 @@ import { useState } from 'react'
 import Dropdown from '@/components/Dropdown'
 import { DropdownButton } from '@/components/DropdownLink'
 import ResponsiveNavLink, { ResponsiveNavButton } from '@/components/ResponsiveNavLink'
-import { useAdminAuthQuery } from '@/hooks/adminAuthQuery'
+import { useAdminAuth } from '@/hooks/adminAuth'
 import { Admin } from '@/types/Admin'
 
 type Props = { admin?: Admin }
@@ -11,7 +11,7 @@ type Props = { admin?: Admin }
 const AdminNavigation: React.FC<Props> = ({ admin }) => {
   const router = useRouter()
 
-  const { logout } = useAdminAuthQuery({ middleware: 'adminAuth' })
+  const { logout } = useAdminAuth({ middleware: 'adminAuth' })
 
   const [open, setOpen] = useState(false)
 

@@ -1,9 +1,9 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import { useAuthQuery } from '@/hooks/authQuery'
+import { useAuth } from '@/hooks/auth'
 
 export default function Home() {
-  const { user } = useAuthQuery({ middleware: 'guest' })
+  const { user } = useAuth({ middleware: 'guest' })
 
   return (
     <>

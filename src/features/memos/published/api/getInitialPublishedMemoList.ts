@@ -1,11 +1,13 @@
-import { AxiosResponse } from 'axios'
 import { apiServer } from '@/lib/utils/apiServer'
 
-const getInitialPublishedMemoList = (apiUrl: string) => {
-  const data = apiServer.get(apiUrl).then((response: AxiosResponse) => {
+const getInitialPublishedMemoList = async (apiUrl: string) => {
+  try {
+    const response = await apiServer.get(apiUrl)
     return response.data
-  })
-  return data
+  } catch (error) {
+    console.error('Error fetching initial published memo list:', error)
+    throw new Error('Failed to fetch initial published memo list.')
+  }
 }
 
 export default getInitialPublishedMemoList

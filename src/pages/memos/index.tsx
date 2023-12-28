@@ -1,6 +1,6 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import Head from 'next/head'
 import { ErrorBoundary } from 'react-error-boundary'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { ErrorDisplay } from '@/components/Layouts/Error/ErrorDisplay'
 import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
