@@ -6,7 +6,7 @@ import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import { useAuth } from '@/hooks/auth'
 import useCheckLoggedIn from '@/hooks/checkLoggedIn'
-import { useQueryCareers } from '@/hooks/profile/useQueryCareers'
+import { useCareers } from '@/hooks/profile/useCareers'
 
 const PlayStyle: NextPage = () => {
   const router = useRouter()
@@ -14,7 +14,7 @@ const PlayStyle: NextPage = () => {
   const checkLoggedIn = useCheckLoggedIn()
   const [isLoading, setIsLoading] = useState(true)
 
-  const { status: queryProfileCareers, data: careers } = useQueryCareers()
+  const { status: queryProfileCareers, data: careers } = useCareers()
 
   // 認証ガード
   useEffect(() => {

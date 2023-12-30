@@ -2,6 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
+import { AuthGuard } from '@/features/auth/components/AuthGuard'
 import ProfileEdit from '@/features/settings/profile/ProfileEdit'
 import { useAuth } from '@/hooks/auth'
 import { useAgeRanges } from '@/hooks/profile/useAgeRanges'
@@ -10,7 +11,6 @@ import { useDominantHands } from '@/hooks/profile/useDominantHands'
 import { useGenders } from '@/hooks/profile/useGenders'
 import { usePlayFrequencies } from '@/hooks/profile/usePlayFrequencies'
 import { useTennisLevels } from '@/hooks/profile/useTennisLevels'
-import { AuthGuard } from '@/features/auth/components/AuthGuard'
 
 const Profile: NextPage = () => {
   const { user } = useAuth({ middleware: 'auth' })

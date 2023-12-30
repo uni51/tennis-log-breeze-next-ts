@@ -4,11 +4,11 @@ import { useRouter } from 'next/router'
 import { ErrorBoundary } from 'react-error-boundary'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
+import { AuthGuard } from '@/features/auth/components/AuthGuard'
 import DashboardMemoList from '@/features/memos/dashboard/components/DashboardMemoList'
 import { useAuth } from '@/hooks/auth'
 import { onError } from '@/lib/error-helper'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
-import { AuthGuard } from '@/features/auth/components/AuthGuard'
 
 const DashboardMemoIndex: NextPage = () => {
   const router = useRouter()
