@@ -1,8 +1,8 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import AppLayout from '@/components/Layouts/AppLayout'
-import { useAuth } from '@/hooks/auth'
 import { AuthGuard } from '@/features/auth/components/AuthGuard'
+import { useAuth } from '@/hooks/auth'
 
 const DashboardTop = () => {
   const { user } = useAuth({ middleware: 'auth' })
