@@ -1,12 +1,12 @@
 import Head from 'next/head'
 import AppLayout from '@/components/Layouts/AppLayout'
+import MemoListPaginationLong from '@/components/Pagination/MemoListPaginationLong'
 import SingleMemoBlockForList from '@/features/memos/common/components/templates/SingleMemoBlockForList'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
 import { getMemosListByCategoryPageLink } from '@/lib/pagination-helper'
 import { axiosRequest } from '@/lib/utils/axiosUtils'
 import { Memo } from '@/types/Memo'
 import { DataWithPagination } from '@/types/dataWithPagination'
-import MemoListPaginationLong from '@/components/Pagination/MemoListPaginationLong'
 
 type ReturnType = DataWithPagination<Memo[]>
 
