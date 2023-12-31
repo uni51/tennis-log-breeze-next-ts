@@ -18,9 +18,9 @@ export const getMemosListByCategoryHeadLineTitle = (categoryNumber: number | und
     case 1:
       return separator + CATEGORY_FOREHAND
     case 2:
-      return separator + CATEGORY_SINGLE_BACKHAND
-    case 3:
       return separator + CATEGORY_DOUBLE_BACKHAND
+    case 3:
+      return separator + CATEGORY_SINGLE_BACKHAND
     case 4:
       return separator + CATEGORY_SERVE
     case 5:
