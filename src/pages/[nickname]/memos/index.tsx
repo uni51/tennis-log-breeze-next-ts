@@ -1,9 +1,9 @@
 import Head from 'next/head'
 import AppLayout from '@/components/Layouts/AppLayout'
-import MemoListPaginationAdapter from '@/components/Pagination/MemoListPaginationAdapter'
+import MemoListPaginationLong from '@/components/Pagination/MemoListPaginationLong'
 import SingleMemoBlockForList from '@/features/memos/common/components/templates/SingleMemoBlockForList'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
-import { getMemosListByCategoryPageLink, getMemosListPageLink } from '@/lib/pagination-helper'
+import { getMemosListByCategoryPageLink } from '@/lib/pagination-helper'
 import { axiosRequest } from '@/lib/utils/axiosUtils'
 import { Memo } from '@/types/Memo'
 import { DataWithPagination } from '@/types/dataWithPagination'
@@ -58,6 +58,9 @@ export default function PublicMemoListByNickname(props: {
     category,
   )}`
 
+  console.log('category', category)
+  console.log('nickname', nickname)
+
   return (
     <AppLayout
       header={<h2 className='font-semibold text-xl text-gray-800 leading-tight'>{headline}</h2>}
@@ -78,13 +81,11 @@ export default function PublicMemoListByNickname(props: {
               />
             ))}
           </div>
-          <MemoListPaginationAdapter
+          <MemoListPaginationLong
             baseUrl={`/${nickname}/memos`}
             totalItems={Number(memosData?.meta?.total)}
             currentPage={Number(memosData?.meta?.current_page)}
-            renderPagerLinkFunc={
-              category === undefined ? getMemosListPageLink : getMemosListByCategoryPageLink
-            }
+            renderPagerLinkFunc={getMemosListByCategoryPageLink}
             category={category}
           />
         </div>
