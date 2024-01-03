@@ -9,24 +9,55 @@ import { MemoPostSchema } from '@/features/memos/dashboard/lib/schema/MemoPostSc
 import { Category } from '@/types/Category'
 import { MemoForm } from '@/types/MemoForm'
 import { Status } from '@/types/Status'
+import { WithContext as ReactTags } from 'react-tag-input'
+import { useState } from 'react'
 
 type Props = {
   statuses: Status[]
   categories: Category[]
 }
 
+type Tag = {
+  id: string
+  text: string
+}
+
 const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
+  // Add the onChange parameter
   const defaultValues = {
-    category_id: '1', // カテゴリーは、フォアハンドをデフォルト値にする
-    status_id: '0', // ステータスは、下書きをデフォルト値にする
+    category_id: '1',
+    status_id: '0',
   }
+  const [tags, setTags] = useState<Tag[]>([])
 
   const useFormMethods = useForm<MemoForm>({
     defaultValues,
     resolver: zodResolver(MemoPostSchema),
   })
 
-  const { handleSubmit, setError } = useFormMethods
+  const { handleSubmit, setError, setValue } = useFormMethods
+
+  const KeyCodes = {
+    comma: 188,
+    enter: 13,
+  }
+
+  const delimiters = [KeyCodes.comma, KeyCodes.enter]
+
+  const handleDelete = (i: number) => {
+    setTags(tags.filter((tag, index) => index !== i))
+  }
+
+  const handleAddition = (tag: Tag) => {
+    setTags([...tags, tag])
+    console.log([...tags, tag]) // 新しいタグが含まれた配列をログに出力
+
+    // 直接フォームの値を更新
+    setValue(
+      'tags',
+      [...tags, tag].map((tag) => tag.text),
+    )
+  }
 
   return (
     <FormProvider {...useFormMethods}>
@@ -43,6 +74,20 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
             required={true}
             label={'カテゴリー'}
             defaultValue={defaultValues?.category_id}
+          />
+          {/* タグ */}
+          {/* <TextArea target={'tags'} required={false} label={'タグ'} size={{ rows: 1 }} /> */}
+          {/* <TagsInput value={tags} onChange={handleChange} /> */}
+          <ReactTags
+            tags={tags}
+            // suggestions={suggestions}
+            delimiters={delimiters}
+            handleDelete={handleDelete}
+            handleAddition={handleAddition}
+            // handleDrag={handleDrag}
+            // handleTagClick={handleTagClick}
+            inputFieldPosition='bottom'
+            autocomplete
           />
           {/* ステータス */}
           <Select
