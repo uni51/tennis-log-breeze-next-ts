@@ -8,18 +8,15 @@ import { postCreateMemo } from '@/features/memos/dashboard/lib/postCreateMemo'
 import { MemoPostSchema } from '@/features/memos/dashboard/lib/schema/MemoPostSchema'
 import { Category } from '@/types/Category'
 import { MemoForm } from '@/types/MemoForm'
+import { Tag } from '@/types/memo/Tag'
 import { Status } from '@/types/Status'
 import { WithContext as ReactTags } from 'react-tag-input'
 import { useState } from 'react'
+import { Delimiters } from '@/lib/tags-helper'
 
 type Props = {
   statuses: Status[]
   categories: Category[]
-}
-
-type Tag = {
-  id: string
-  text: string
 }
 
 const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
@@ -37,20 +34,21 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
 
   const { handleSubmit, setError, setValue } = useFormMethods
 
-  const KeyCodes = {
-    comma: 188,
-    enter: 13,
-  }
-
-  const delimiters = [KeyCodes.comma, KeyCodes.enter]
+  const delimiters = Delimiters
 
   const handleDelete = (i: number) => {
-    setTags(tags.filter((tag, index) => index !== i))
+    setTags((prevTags) => {
+      const newTags = prevTags.filter((tag, index) => index !== i)
+      setValue(
+        'tags',
+        newTags.map((tag) => tag.text),
+      )
+      return newTags
+    })
   }
 
   const handleAddition = (tag: Tag) => {
     setTags([...tags, tag])
-    console.log([...tags, tag]) // 新しいタグが含まれた配列をログに出力
 
     // 直接フォームの値を更新
     setValue(
@@ -76,8 +74,6 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
             defaultValue={defaultValues?.category_id}
           />
           {/* タグ */}
-          {/* <TextArea target={'tags'} required={false} label={'タグ'} size={{ rows: 1 }} /> */}
-          {/* <TagsInput value={tags} onChange={handleChange} /> */}
           <ReactTags
             tags={tags}
             // suggestions={suggestions}
@@ -86,9 +82,10 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
             handleAddition={handleAddition}
             // handleDrag={handleDrag}
             // handleTagClick={handleTagClick}
-            inputFieldPosition='bottom'
+            inputFieldPosition='inline'
             autocomplete
           />
+
           {/* ステータス */}
           <Select
             target={statuses}
