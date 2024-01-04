@@ -57,20 +57,39 @@ const SingleMemoDetail: NextPage<Props> = ({ memo, loginUser }) => {
           <p className='text-lg font-bold pt-2 pb-1'>{memo.title}</p>
           <div className='border-b-2 border-gray-300 mb-4'></div>
           <p className='mb-3 whitespace-pre-wrap'>{memo.body}</p>
-          <p className='text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-pink-600 bg-pink-200 last:mr-0 mr-1'>
+          <p className='text-xs font-semibold inline-block py-1 px-2 uppercase rounded-lg text-pink-600 bg-pink-200 last:mr-0 mr-1'>
             {memo.category_name}
           </p>
-          <p className='text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blue-600 bg-blue-200 last:mr-0 mr-1 mb-2'>
-            {memo.status === 0 && '下書き'}
-            {memo.status === 1 && '公開中'}
-            {memo.status === 2 && 'シェア'}
-            {memo.status === 3 && '非公開'}
+          <p className='mt-1'>
+            {memo.tag_list.tags.map((tag, index) => (
+              <Link href={`/tags/${memo.tag_list.normalized[index]}`} key={index} className='pr-1'>
+                <span className='text-xs font-semibold py-1 px-2 uppercase rounded-lg text-green-600 bg-green-200 last:mr-0 mr-1'>
+                  {tag}
+                </span>
+              </Link>
+            ))}
           </p>
-          <p className='text-xs font-semibold inline-block py-1 px-2 rounded-full text-green-600 bg-green-200 last:mr-0 mr-1'>
-            <Link href={`/${memo.user_nickname}/memos/page/1`}>{memo.user_nickname}</Link>
+          <p className='mt-1'>
+            <Link href={`/${memo.user_nickname}/memos/page/1`}>
+              <span className='text-xs font-semibold py-1 px-2 uppercase rounded-lg text-blue-600 bg-blue-200 last:mr-0 mr-1'>
+                {memo.user_nickname}
+              </span>
+            </Link>
           </p>
-          <p className='text-sm leading-6 text-gray-500 mt-2'>作成日時：{memo.created_at}</p>
-          <p className='text-sm leading-6 text-gray-500 mt-2'>更新日時：{memo.updated_at}</p>
+          <p className='pt-1'>
+            <span className='text-xs font-semibold py-1 px-2 uppercase rounded-lg text-white bg-black last:mr-0 mr-1'>
+              {memo.status === 0 && '下書き'}
+              {memo.status === 1 && '公開中'}
+              {memo.status === 2 && 'シェア'}
+              {memo.status === 3 && '非公開'}
+            </span>
+          </p>
+          <p className='text-sm leading-6 text-gray-500 mt-2 inline-block'>
+            作成日時：{memo.created_at}
+          </p>
+          <p className='text-sm leading-6 text-gray-500 mt-2 inline-block'>
+            更新日時：{memo.updated_at}
+          </p>
           {loginUser && memo.user_id === loginUser.id && (
             <>
               <Link href={`/dashboard/memos/${memo.id}/edit`}>
