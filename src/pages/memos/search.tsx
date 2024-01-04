@@ -7,7 +7,6 @@ import useSearchStore from '@/stores/searchStore'
 const MemoSearchResult = () => {
   const router = useRouter()
   const responseData = useSearchStore((state) => state.responseData) // Use responseData instead of searchData
-  console.log('responseData', responseData)
 
   useEffect(() => {
     // Fetch data if necessary (you can use responseData to check if data is available)

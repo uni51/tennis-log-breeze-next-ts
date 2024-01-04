@@ -23,8 +23,6 @@ export const Search = () => {
       // Extract JSON data from the response
       const responseData = await response.json()
 
-      console.log('responseData', responseData)
-
       // Set responseData to Zustand store
       setResponseData(responseData)
 
