@@ -1,18 +1,18 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
+import { WithContext as ReactTags } from 'react-tag-input'
 import { LargeSubmitButton } from '@/components/Form/LargeSubmitButton'
 import { Select } from '@/components/Form/Select'
 import { TextArea } from '@/components/Form/TextArea'
 import { TextInput } from '@/components/Form/TextInput'
 import { postCreateMemo } from '@/features/memos/dashboard/lib/postCreateMemo'
 import { MemoPostSchema } from '@/features/memos/dashboard/lib/schema/MemoPostSchema'
+import { Delimiters } from '@/lib/tags-helper'
 import { Category } from '@/types/Category'
 import { MemoForm } from '@/types/MemoForm'
-import { Tag } from '@/types/memo/Tag'
 import { Status } from '@/types/Status'
-import { WithContext as ReactTags } from 'react-tag-input'
-import { useState } from 'react'
-import { Delimiters } from '@/lib/tags-helper'
+import { Tag } from '@/types/memo/Tag'
 
 type Props = {
   statuses: Status[]

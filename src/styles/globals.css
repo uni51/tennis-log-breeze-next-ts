@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 .ReactTags__tags {
   position: relative;
 }
@@ -65,3 +67,5 @@
   background: none;
   color: white;
 }
+
+/* eslint-disable */

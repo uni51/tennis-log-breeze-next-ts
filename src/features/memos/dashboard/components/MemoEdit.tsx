@@ -1,20 +1,20 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useQueryClient } from '@tanstack/react-query'
+import { useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
+import { WithContext as ReactTags } from 'react-tag-input'
 import { LargeSubmitButton } from '@/components/Form/LargeSubmitButton'
 import { Select } from '@/components/Form/Select'
 import { TextArea } from '@/components/Form/TextArea'
 import { TextInput } from '@/components/Form/TextInput'
 import { postEditMemo } from '@/features/memos/dashboard/lib/postEditMemo'
 import { MemoPostSchema } from '@/features/memos/dashboard/lib/schema/MemoPostSchema'
+import { Delimiters } from '@/lib/tags-helper'
 import { Category } from '@/types/Category'
 import { Memo } from '@/types/Memo'
 import { MemoForm } from '@/types/MemoForm'
 import { Status } from '@/types/Status'
-import { WithContext as ReactTags } from 'react-tag-input'
 import { Tag } from '@/types/memo/Tag'
-import { useState } from 'react'
-import { Delimiters } from '@/lib/tags-helper'
 
 type Props = {
   memo: Memo
