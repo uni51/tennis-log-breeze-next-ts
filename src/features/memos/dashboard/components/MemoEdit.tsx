@@ -5,13 +5,16 @@ import { LargeSubmitButton } from '@/components/Form/LargeSubmitButton'
 import { Select } from '@/components/Form/Select'
 import { TextArea } from '@/components/Form/TextArea'
 import { TextInput } from '@/components/Form/TextInput'
-import { Loading } from '@/components/Loading'
 import { postEditMemo } from '@/features/memos/dashboard/lib/postEditMemo'
 import { MemoPostSchema } from '@/features/memos/dashboard/lib/schema/MemoPostSchema'
 import { Category } from '@/types/Category'
 import { Memo } from '@/types/Memo'
 import { MemoForm } from '@/types/MemoForm'
 import { Status } from '@/types/Status'
+import { WithContext as ReactTags } from 'react-tag-input'
+import { Tag } from '@/types/memo/Tag'
+import { useState } from 'react'
+import { Delimiters } from '@/lib/tags-helper'
 
 type Props = {
   memo: Memo
@@ -33,8 +36,41 @@ const MemoEdit: React.FC<Props> = ({ memo, statuses, categories }) => {
     resolver: zodResolver(MemoPostSchema),
   })
 
-  const { handleSubmit, setError } = useFormMethods
+  const defaultTags = memo.tag_list.tags.map((tag) => {
+    return {
+      id: tag,
+      text: tag,
+    }
+  })
+
+  const [tags, setTags] = useState<Tag[]>(defaultTags)
+
+  const { handleSubmit, setError, setValue } = useFormMethods
   const queryClient = useQueryClient()
+
+  const delimiters = Delimiters
+
+  const handleDelete = (i: number) => {
+    setTags((prevTags) => {
+      const newTags = prevTags.filter((tag, index) => index !== i)
+      setValue(
+        'tags',
+        newTags.map((tag) => tag.text),
+      )
+      return newTags
+    })
+  }
+
+  const handleAddition = (tag: Tag) => {
+    setTags([...tags, tag])
+    console.log([...tags, tag]) // 新しいタグが含まれた配列をログに出力
+
+    // 直接フォームの値を更新
+    setValue(
+      'tags',
+      [...tags, tag].map((tag) => tag.text),
+    )
+  }
 
   return (
     <FormProvider {...useFormMethods}>
@@ -51,6 +87,15 @@ const MemoEdit: React.FC<Props> = ({ memo, statuses, categories }) => {
             required={true}
             label={'カテゴリー'}
             defaultValue={defaultValues?.category_id}
+          />
+          {/* タグ */}
+          <ReactTags
+            tags={tags}
+            delimiters={delimiters}
+            handleDelete={handleDelete}
+            handleAddition={handleAddition}
+            inputFieldPosition='inline'
+            autocomplete
           />
           {/* ステータス */}
           <Select

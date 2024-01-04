@@ -13,6 +13,7 @@ import { ErrorBoundary, FallbackProps } from 'react-error-boundary' // buildæ™‚ã
 import { AlertModalManager } from '@/components/AlertModalManager'
 import { ErrorDisplay } from '@/components/Layouts/Error/ErrorDisplay'
 import { AuthProvider } from '@/features/auth/provider/AuthProvider'
+import '@/styles/globals.css'
 
 // export function reportWebVitals(metric: NextWebVitalsMetric) {
 //   switch (metric.name) {1
