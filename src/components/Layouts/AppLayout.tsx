@@ -1,5 +1,4 @@
 import { Dialog, Menu, Transition, Disclosure } from '@headlessui/react'
-import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import {
   Bars3BottomLeftIcon,
   BellIcon,
@@ -16,6 +15,7 @@ import React, { PropsWithChildren, Fragment, ReactNode, useState } from 'react'
 import Navigation from '@/components/Layouts/Navigation'
 // import { useAuth } from '@/hooks/auth'
 import { useAuth } from '@/hooks/auth'
+import { Search } from '@/components/Layouts/Search'
 
 interface Props {
   header: ReactNode
@@ -298,23 +298,7 @@ const AppLayout = ({ header, children }: PropsWithChildren<Props>) => {
             </button>
             <div className='flex flex-1 justify-between px-4'>
               <div className='flex flex-1'>
-                <form className='flex w-full md:ml-0' action='#' method='GET'>
-                  <label htmlFor='search-field' className='sr-only'>
-                    Search
-                  </label>
-                  <div className='relative w-full text-gray-400 focus-within:text-gray-600'>
-                    <div className='pointer-events-none absolute inset-y-0 left-0 flex items-center'>
-                      <MagnifyingGlassIcon className='h-5 w-5' aria-hidden='true' />
-                    </div>
-                    <input
-                      id='search-field'
-                      className='block h-full w-full border-transparent py-2 pl-8 pr-3 text-gray-900 placeholder-gray-500 focus:border-transparent focus:placeholder-gray-400 focus:outline-none focus:ring-0 sm:text-sm'
-                      placeholder='Search'
-                      type='search'
-                      name='search'
-                    />
-                  </div>
-                </form>
+                <Search />
               </div>
               <div className='ml-4 flex items-center md:ml-6'>
                 <button
@@ -337,7 +321,22 @@ const AppLayout = ({ header, children }: PropsWithChildren<Props>) => {
           </header>
 
           {/* Page Content */}
-          <main className='flex-1'>{children}</main>
+          <main className='flex-1'>
+            {/* {React.Children.map(children, (child) => {
+              if (React.isValidElement(child)) {
+                // 子要素の props に searchResults を追加
+                const updatedChild = React.cloneElement(
+                  child as React.ReactElement<
+                    PropsWithChildren<Props & { searchResults?: MemoListReturnType | undefined }>
+                  >,
+                  { searchResults },
+                )
+                return updatedChild
+              }
+              return child
+            })} */}
+            {children}
+          </main>
         </div>
       </div>
     </>
