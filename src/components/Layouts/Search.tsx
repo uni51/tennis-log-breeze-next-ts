@@ -1,9 +1,9 @@
 // SearchComponent.js
 
-import { SetStateAction, useState } from 'react'
-import useSearchStore from '@/stores/searchStore'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/router'
+import { SetStateAction, useState } from 'react'
+import useSearchStore from '@/stores/searchStore'
 
 export const Search = () => {
   const router = useRouter()

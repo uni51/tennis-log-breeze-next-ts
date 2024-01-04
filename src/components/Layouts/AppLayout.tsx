@@ -14,8 +14,8 @@ import Link from 'next/link'
 import React, { PropsWithChildren, Fragment, ReactNode, useState } from 'react'
 import Navigation from '@/components/Layouts/Navigation'
 // import { useAuth } from '@/hooks/auth'
-import { useAuth } from '@/hooks/auth'
 import { Search } from '@/components/Layouts/Search'
+import { useAuth } from '@/hooks/auth'
 
 interface Props {
   header: ReactNode
