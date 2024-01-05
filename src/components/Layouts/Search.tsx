@@ -44,11 +44,12 @@ export const Search = () => {
           pathname: '/dashboard/memos/search',
           query: { q: searchQuery },
         })
+      } else {
+        router.push({
+          pathname: '/memos/search',
+          query: { q: searchQuery },
+        })
       }
-      router.push({
-        pathname: '/memos/search',
-        query: { q: searchQuery },
-      })
     } catch (error) {
       console.error('Error during search:', error)
     }
