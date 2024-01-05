@@ -1,10 +1,10 @@
-// pages/memos/search.tsx
+// pages/dashboard/memos/search.tsx
 
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import useSearchStore from '@/stores/searchStore'
 
-const MemoSearchResult = () => {
+const DashboardMemoSearchResult = () => {
   const router = useRouter()
   const responseData = useSearchStore((state) => state.responseData) // Use responseData instead of searchData
 
@@ -20,11 +20,11 @@ const MemoSearchResult = () => {
 
   return (
     <div>
-      <h1>Public Memos Search Results</h1>
-      <div>Public Memos Search query: {router.query.q}</div>
-      <div>Public Memos Search data: {JSON.stringify(responseData)}</div>
+      <h1>Dashboard Search Results</h1>
+      <div>Dashboard Search query: {router.query.q}</div>
+      <div>Dashboard Search data: {JSON.stringify(responseData)}</div>
     </div>
   )
 }
 
-export default MemoSearchResult
+export default DashboardMemoSearchResult
