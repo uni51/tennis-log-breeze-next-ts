@@ -4,6 +4,8 @@ import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/router'
 import { SetStateAction, useState } from 'react'
 import useSearchStore from '@/stores/searchStore'
+import { apiClient } from '@/lib/utils/apiClient'
+import { MemoListReturnType } from '@/types/memoList'
 
 export const Search = () => {
   const router = useRouter()
@@ -12,20 +14,37 @@ export const Search = () => {
 
   const handleSearch = async () => {
     try {
-      const response = await fetch(
-        `http://local-tennis-log.net/api/public/memos/search?q=${searchQuery}`,
-      )
+      let apiUrl = `/api/public/memos/search?q=${searchQuery}`
+      if (router.pathname.includes('dashboard')) {
+        apiUrl = `/api/dashboard/memos/search?q=${searchQuery}`
+      }
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`)
+      let response: MemoListReturnType | null = null
+      try {
+        response = await apiClient.get(apiUrl)
+      } catch (error) {
+        if (error instanceof Error) {
+          // エラーハンドリング: エラーが発生した場合は適切に処理する
+          throw new Error(`Failed to fetch memo list: ${error.message}`)
+        } else {
+          // error is not an instance of Error
+          throw new Error(`Failed to fetch memo list: ${String(error)}`)
+        }
       }
 
       // Extract JSON data from the response
-      const responseData = await response.json()
+      if (response?.data) {
+        const responseData = JSON.stringify(response.data)
+        // Set responseData to Zustand store
+        setResponseData(responseData)
+      }
 
-      // Set responseData to Zustand store
-      setResponseData(responseData)
-
+      if (router.pathname.includes('dashboard')) {
+        router.push({
+          pathname: '/dashboard/memos/search',
+          query: { q: searchQuery },
+        })
+      }
       router.push({
         pathname: '/memos/search',
         query: { q: searchQuery },
