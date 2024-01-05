@@ -19,9 +19,14 @@ const DashboardMemoIndex: NextPage = () => {
   const categoryNumber = category === undefined ? null : Number(category)
   const tagText = tag === undefined ? null : Array.isArray(tag) ? tag.join('') : tag
 
-  const headLine = user?.data?.nickname
-    ? `${user.data.nickname}さんのメモ一覧${getMemosListByCategoryHeadLineTitle(categoryNumber)}`
+  let headLine = user?.data?.nickname
+    ? `${user.data.nickname}さんのメモ一覧`
     : 'あなたが作成したメモ一覧'
+
+  let categoryText = ''
+  if (categoryNumber) {
+    categoryText = getMemosListByCategoryHeadLineTitle(categoryNumber)
+  }
 
   if (!user) return null
 
@@ -31,7 +36,15 @@ const DashboardMemoIndex: NextPage = () => {
         <title>{headLine}</title>
       </Head>
       <AppLayout
-        header={<h2 className='font-semibold text-xl text-gray-800 leading-tight'>{headLine}</h2>}
+        header={
+          <>
+            <h2 className='font-semibold text-xl text-gray-800 leading-tight inline-block mr-4'>
+              {headLine}
+            </h2>
+            {categoryText && <span className='text-gray-800 font-bold mr-4'>{categoryText}</span>}
+            {tagText && <span className='text-gray-800 font-bold'>#{tagText}</span>}
+          </>
+        }
       >
         <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
           <DashboardMemoList pageIndex={pageNumber} categoryNumber={categoryNumber} tag={tagText} />
