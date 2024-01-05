@@ -13,15 +13,17 @@ import { Memo } from '@/types/Memo'
 type Props = {
   pageIndex: number
   categoryNumber: number | null
+  tag: string | null
 }
 
-const DashboardMemoList: React.FC<Props> = ({ pageIndex, categoryNumber }: Props) => {
+const DashboardMemoList: React.FC<Props> = ({ pageIndex, categoryNumber, tag }: Props) => {
   const { showBoundary } = useErrorBoundary()
   const preApiUrl = '/api/dashboard/memos'
   const { data: memos, error, isLoading } = useMemoList({
     preApiUrl,
     pageIndex,
     categoryNumber,
+    tag,
   })
 
   console.log('memos', memos)
@@ -51,6 +53,11 @@ const DashboardMemoList: React.FC<Props> = ({ pageIndex, categoryNumber }: Props
         renderMemoDetailLink={`/dashboard/memos/${memo.id}`}
         renderMemoListByCategoryLink={`/dashboard/memos?category=${memo.category_id}`}
         renderMemoListByNickNameLink='/dashboard/memos/'
+        renderMemoListByTagLink={
+          categoryNumber
+            ? `/dashboard/memos?category=${memo.category_id}&tag=`
+            : `/dashboard/memos?tag=`
+        }
         key={index}
       />
     ))

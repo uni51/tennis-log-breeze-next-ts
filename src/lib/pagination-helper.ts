@@ -30,16 +30,26 @@ export type MemoListsPaginationProps = {
   preApiUrl: string
   pageIndex: number
   categoryNumber: number | null
+  tag: string | null
 }
 
 export const getMemoListApiUrl = ({
   preApiUrl,
   pageIndex,
   categoryNumber,
+  tag,
 }: MemoListsPaginationProps): string => {
-  const apiUrl = categoryNumber
-    ? `${preApiUrl}/category/${categoryNumber}?page=${pageIndex}`
-    : `${preApiUrl}?page=${pageIndex}`
+  let apiUrl = `${preApiUrl}?page=${pageIndex}` // デフォルトのAPI URL
+
+  if (categoryNumber) {
+    if (tag) {
+      apiUrl = `${preApiUrl}/category/${categoryNumber}/tag/${tag}?page=${pageIndex}`
+    } else {
+      apiUrl = `${preApiUrl}/category/${categoryNumber}?page=${pageIndex}`
+    }
+  } else if (tag) {
+    apiUrl = `${preApiUrl}/tag/${tag}?page=${pageIndex}`
+  }
 
   return apiUrl
 }

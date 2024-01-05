@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
+import { toast } from 'react-toastify'
 import { getMemoListApiUrl } from '@/lib/pagination-helper'
 import { apiClient } from '@/lib/utils/apiClient'
 import { MemoListReturnType } from '@/types/memoList'
@@ -7,25 +8,30 @@ type Props = {
   preApiUrl: string
   pageIndex: number
   categoryNumber: number | null
+  tag: string | null
 }
 
-const fetchMemoList = async (apiUrl: string): Promise<MemoListReturnType> => {
+const handleApiError = (err: any) => {
+  if (err.response) {
+    const errorMessage = err.response.data.message || 'エラーメッセージがありません'
+    toast.error(`エラー: ${errorMessage}`)
+  } else {
+    toast.error('ネットワークエラーが発生しました')
+  }
+}
+
+const fetchMemoList = async (apiUrl: string) => {
   try {
     const res = await apiClient.get(apiUrl)
     return res.data
   } catch (error) {
-    if (error instanceof Error) {
-      // エラーハンドリング: エラーが発生した場合は適切に処理する
-      throw new Error(`Failed to fetch memo list: ${error.message}`)
-    } else {
-      // error is not an instance of Error
-      throw new Error(`Failed to fetch memo list: ${String(error)}`)
-    }
+    handleApiError(error)
   }
 }
 
-export const useMemoList = ({ preApiUrl, pageIndex, categoryNumber }: Props) => {
-  const apiUrl = getMemoListApiUrl({ preApiUrl, pageIndex, categoryNumber })
+export const useMemoList = ({ preApiUrl, pageIndex, categoryNumber, tag }: Props) => {
+  const apiUrl = getMemoListApiUrl({ preApiUrl, pageIndex, categoryNumber, tag })
+  console.log(apiUrl)
 
   return useQuery<MemoListReturnType, Error>({
     queryKey: ['memoList', apiUrl], // データの重複取得を避けるためにqueryKeyに依存変数を含める
