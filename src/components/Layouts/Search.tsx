@@ -3,8 +3,8 @@
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/router'
 import { SetStateAction, useState } from 'react'
-import useSearchStore from '@/stores/searchStore'
 import { apiClient } from '@/lib/utils/apiClient'
+import useSearchStore from '@/stores/searchStore'
 import { MemoListReturnType } from '@/types/memoList'
 
 export const Search = () => {
