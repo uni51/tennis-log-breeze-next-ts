@@ -6,6 +6,7 @@ import { SetStateAction, useState } from 'react'
 import { apiClient } from '@/lib/utils/apiClient'
 import useSearchStore from '@/stores/searchStore'
 import { MemoListReturnType } from '@/types/memoList'
+import { convertFullSpaceToHalfSpace } from '@/lib/utils/utils'
 
 export const Search = () => {
   const router = useRouter()
@@ -14,9 +15,10 @@ export const Search = () => {
 
   const handleSearch = async () => {
     try {
-      let apiUrl = `/api/public/memos/search?q=${searchQuery}`
+      const convertedSearchQuery = convertFullSpaceToHalfSpace(searchQuery.trim())
+      let apiUrl = `/api/public/memos/search?q=${convertedSearchQuery}`
       if (router.pathname.includes('dashboard')) {
-        apiUrl = `/api/dashboard/memos/search?q=${searchQuery}`
+        apiUrl = `/api/dashboard/memos/search?q=${convertedSearchQuery}`
       }
 
       let response: MemoListReturnType | null = null
