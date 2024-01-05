@@ -21,7 +21,7 @@ jobs:
           port: ${{ secrets.PROD02_SSH_PORT }}
           script: |
             cd ./tennis_log_front
-            git pull origin master
+            git pull origin main
             npm ci
             npm run build
             pm2 restart tennis-log
