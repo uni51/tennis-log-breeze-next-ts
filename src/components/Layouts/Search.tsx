@@ -1,68 +1,55 @@
-// SearchComponent.js
-
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/router'
 import { SetStateAction, useState } from 'react'
+import { toast } from 'react-toastify'
 import { apiClient } from '@/lib/utils/apiClient'
-import useSearchStore from '@/stores/searchStore'
-import { MemoListReturnType } from '@/types/memoList'
 import { convertFullSpaceToHalfSpace } from '@/lib/utils/utils'
+import useSearchStore from '@/stores/searchStore'
 
 export const Search = () => {
   const router = useRouter()
   const [searchQuery, setSearchQuery] = useState('')
   const setResponseData = useSearchStore((state) => state.setSearchData)
 
-  const handleSearch = async () => {
-    try {
-      const convertedSearchQuery = convertFullSpaceToHalfSpace(searchQuery.trim())
-      let apiUrl = `/api/public/memos/search?q=${convertedSearchQuery}`
-      if (router.pathname.includes('dashboard')) {
-        apiUrl = `/api/dashboard/memos/search?q=${convertedSearchQuery}`
-      }
-
-      let response: MemoListReturnType | null = null
-      try {
-        response = await apiClient.get(apiUrl)
-      } catch (error) {
-        if (error instanceof Error) {
-          // エラーハンドリング: エラーが発生した場合は適切に処理する
-          throw new Error(`Failed to fetch memo list: ${error.message}`)
-        } else {
-          // error is not an instance of Error
-          throw new Error(`Failed to fetch memo list: ${String(error)}`)
-        }
-      }
-
-      // Extract JSON data from the response
-      if (response?.data) {
-        const responseData = JSON.stringify(response.data)
-        // Set responseData to Zustand store
-        setResponseData(responseData)
-      }
-
-      if (router.pathname.includes('dashboard')) {
-        router.push({
-          pathname: '/dashboard/memos/search',
-          query: { q: searchQuery },
-        })
-      } else {
-        router.push({
-          pathname: '/memos/search',
-          query: { q: searchQuery },
-        })
-      }
-    } catch (error) {
-      console.error('Error during search:', error)
+  const handleApiError = (err: any) => {
+    if (err.response) {
+      const errorMessage = err.response.data.message || 'エラーメッセージがありません'
+      toast.error(`エラー: ${errorMessage}`)
+    } else {
+      toast.error('ネットワークエラーが発生しました')
     }
   }
 
-  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      // Prevent the default behavior of the Enter key
-      event.preventDefault()
+  const handleSearch = async () => {
+    try {
+      const convertedSearchQuery = convertFullSpaceToHalfSpace(searchQuery.trim())
+      const apiUrl = router.pathname.includes('dashboard')
+        ? `/api/dashboard/memos/search?q=${convertedSearchQuery}`
+        : `/api/public/memos/search?q=${convertedSearchQuery}`
 
-      // Execute handleSearch when Enter key is pressed
+      const response = await apiClient.get(apiUrl)
+
+      if (response.data) {
+        const responseData = JSON.stringify(response.data)
+        setResponseData(responseData)
+      }
+
+      const searchPath = router.pathname.includes('dashboard')
+        ? '/dashboard/memos/search'
+        : '/memos/search'
+
+      router.push({
+        pathname: searchPath,
+        query: { q: searchQuery },
+      })
+    } catch (error) {
+      handleApiError(error)
+    }
+  }
+
+  const handleKeyPress = (event: { key: string; preventDefault: () => void }) => {
+    if (event.key === 'Enter') {
+      event.preventDefault()
       handleSearch()
     }
   }
