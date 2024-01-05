@@ -10,6 +10,7 @@ export type PaginationProps = {
   currentPage: number
   itemsPerPage?: number
   category?: number | null
+  tag?: string | null
   renderPagerLinkFunc: RenderPagerLinkFuncType
 }
 
@@ -19,6 +20,7 @@ const MemoListPaginationLong = ({
   currentPage,
   itemsPerPage = ITEMS_PER_PAGE,
   category,
+  tag,
   renderPagerLinkFunc,
 }: PaginationProps) => {
   const pages = usePagination(totalItems, currentPage, itemsPerPage)
@@ -33,6 +35,7 @@ const MemoListPaginationLong = ({
             baseUrl,
             Number(currentPage - 1),
             category,
+            tag,
           )}
         >
           &lt; 前へ
@@ -46,7 +49,13 @@ const MemoListPaginationLong = ({
         ) : (
           <Link
             key={i}
-            href={getRenderPagerLinkUrl(renderPagerLinkFunc, baseUrl, Number(pageNumber), category)}
+            href={getRenderPagerLinkUrl(
+              renderPagerLinkFunc,
+              baseUrl,
+              Number(pageNumber),
+              category,
+              tag,
+            )}
             className={`${
               pageNumber === currentPage
                 ? `z-10 inline-flex bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`
@@ -64,6 +73,7 @@ const MemoListPaginationLong = ({
             baseUrl,
             Number(currentPage + 1),
             category,
+            tag,
           )}
         >
           次へ &gt;

@@ -4,6 +4,7 @@ export type RenderPagerLinkFuncType = (
   baseUrl: string,
   page: number,
   category?: number | null,
+  tag?: string | null,
 ) => PagerLink
 
 export const getRenderPagerLinkUrl = (
@@ -11,20 +12,23 @@ export const getRenderPagerLinkUrl = (
   baseUrl: string,
   pageNumber: number,
   category?: number | null,
-): PagerLink => {
-  return renderPagerLinkFunc(baseUrl, pageNumber, category) || { pathname: '/memos/', query: {} }
-}
+  tag?: string | null,
+): PagerLink =>
+  renderPagerLinkFunc(baseUrl, pageNumber, category, tag) || { pathname: '/memos/', query: {} }
 
 export const getMemosListByCategoryPageLink: RenderPagerLinkFuncType = (
   baseUrl,
   page,
   category,
-): PagerLink => {
-  return {
-    pathname: baseUrl,
-    query: category ? { category: `${category}`, page: `${page}` } : { page: `${page}` },
-  }
-}
+  tag,
+): PagerLink => ({
+  pathname: baseUrl,
+  query: {
+    ...(category && { category: `${category}` }),
+    ...(tag && { tag }),
+    page: `${page}`,
+  },
+})
 
 export type MemoListsPaginationProps = {
   preApiUrl: string
@@ -42,11 +46,7 @@ export const getMemoListApiUrl = ({
   let apiUrl = `${preApiUrl}?page=${pageIndex}` // デフォルトのAPI URL
 
   if (categoryNumber) {
-    if (tag) {
-      apiUrl = `${preApiUrl}/category/${categoryNumber}/tag/${tag}?page=${pageIndex}`
-    } else {
-      apiUrl = `${preApiUrl}/category/${categoryNumber}?page=${pageIndex}`
-    }
+    apiUrl = `${preApiUrl}/category/${categoryNumber}${tag ? `/tag/${tag}` : ''}?page=${pageIndex}`
   } else if (tag) {
     apiUrl = `${preApiUrl}/tag/${tag}?page=${pageIndex}`
   }

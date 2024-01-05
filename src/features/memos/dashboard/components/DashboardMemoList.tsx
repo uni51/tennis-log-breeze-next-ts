@@ -84,6 +84,7 @@ const DashboardMemoList: React.FC<Props> = ({ pageIndex, categoryNumber, tag }: 
             currentPage={Number(memos.meta.current_page)}
             renderPagerLinkFunc={getMemosListByCategoryPageLink}
             category={categoryNumber}
+            tag={tag}
           />
         </div>
       </div>
