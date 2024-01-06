@@ -1,7 +1,18 @@
 import { useAdminUserList } from '@/hooks/admin/users/useAdminUserList'
+import { apiClient } from '@/lib/utils/apiClient'
+import Link from 'next/link'
 
 const UserList = () => {
   const { data: users, isLoading } = useAdminUserList()
+
+  const handleDisable = (userId?: number) => async (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault()
+    // 非同期処理を行う
+    const response = await apiClient.post('/api/admin/users/disable', { userId })
+    if (response.status === 200 && response.data == 1) {
+      // ここに成功時の処理を書く
+    }
+  }
 
   if (isLoading) return <div>Loading...</div>
 
@@ -91,9 +102,12 @@ const UserList = () => {
                       </td>
                       <td className='whitespace-nowrap px-2 py-2 text-sm text-gray-500'>---</td>
                       <td className='relative whitespace-nowrap py-2 pl-3 pr-4 text-right text-sm font-medium sm:pr-0'>
-                        <a href='#' className='text-indigo-600 hover:text-indigo-900'>
-                          Edit<span className='sr-only'>, {user.id}</span>
-                        </a>
+                        <button
+                          className='text-indigo-600 hover:text-indigo-900'
+                          onClick={handleDisable(user.id)}
+                        >
+                          Disable
+                        </button>
                       </td>
                     </tr>
                   ))}

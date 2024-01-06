@@ -31,12 +31,11 @@ const fetchMemoList = async (apiUrl: string) => {
 
 export const useMemoList = ({ preApiUrl, pageIndex, categoryNumber, tag }: Props) => {
   const apiUrl = getMemoListApiUrl({ preApiUrl, pageIndex, categoryNumber, tag })
-  console.log(apiUrl)
 
   return useQuery<MemoListReturnType, Error>({
     queryKey: ['memoList', apiUrl], // データの重複取得を避けるためにqueryKeyに依存変数を含める
     queryFn: () => fetchMemoList(apiUrl),
-    staleTime: Infinity,
+    staleTime: 0,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     // 非同期操作が完了する前にコンポーネントがアンマウントされた場合のキャンセル
