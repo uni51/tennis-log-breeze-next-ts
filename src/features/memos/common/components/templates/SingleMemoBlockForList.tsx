@@ -7,7 +7,7 @@ type SingleMemoBlockForListProps = {
   renderMemoDetailLink: string
   renderMemoListByCategoryLink: string
   renderMemoListByNickNameLink: string
-  renderMemoListByTagLink: string
+  renderMemoListByTagLink?: string
 }
 
 const SingleMemoBlockForList: FC<SingleMemoBlockForListProps> = ({

@@ -17,7 +17,7 @@ const DashboardMemoIndex: NextPage = () => {
 
   const pageNumber = page === undefined ? 1 : Number(page)
   const categoryNumber = category === undefined ? null : Number(category)
-  const tagText = tag === undefined ? null : Array.isArray(tag) ? tag.join('') : tag
+  const tagText = tag === undefined ? undefined : Array.isArray(tag) ? tag.join('') : tag
 
   let headLine = user?.data?.nickname
     ? `${user.data.nickname}さんのメモ一覧`

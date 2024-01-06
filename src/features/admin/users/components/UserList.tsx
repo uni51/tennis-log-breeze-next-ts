@@ -1,8 +1,8 @@
+import { useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
 import { useAdminUserList } from '@/hooks/admin/users/useAdminUserList'
 import { apiClient } from '@/lib/utils/apiClient'
-import { useEffect, useState } from 'react'
 import { simpleUser } from '@/types/User'
-import { toast } from 'react-toastify'
 
 const UserList = () => {
   const [users, setUsers] = useState<simpleUser[]>([])

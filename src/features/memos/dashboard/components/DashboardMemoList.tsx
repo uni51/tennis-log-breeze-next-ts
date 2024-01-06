@@ -13,7 +13,7 @@ import { Memo } from '@/types/Memo'
 type Props = {
   pageIndex: number
   categoryNumber: number | null
-  tag: string | null
+  tag?: string
 }
 
 const DashboardMemoList: React.FC<Props> = ({ pageIndex, categoryNumber, tag }: Props) => {

@@ -8,7 +8,7 @@ type Props = {
   preApiUrl: string
   pageIndex: number
   categoryNumber: number | null
-  tag: string | null
+  tag?: string
 }
 
 const handleApiError = (err: any) => {

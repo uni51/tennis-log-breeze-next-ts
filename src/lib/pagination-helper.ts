@@ -34,7 +34,7 @@ export type MemoListsPaginationProps = {
   preApiUrl: string
   pageIndex: number
   categoryNumber: number | null
-  tag: string | null
+  tag?: string
 }
 
 export const getMemoListApiUrl = ({
