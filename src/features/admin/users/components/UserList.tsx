@@ -1,16 +1,32 @@
 import { useAdminUserList } from '@/hooks/admin/users/useAdminUserList'
 import { apiClient } from '@/lib/utils/apiClient'
-import Link from 'next/link'
+import { useEffect, useState } from 'react'
+import { simpleUser } from '@/types/User'
+import { toast } from 'react-toastify'
 
 const UserList = () => {
-  const { data: users, isLoading } = useAdminUserList()
+  const [users, setUsers] = useState<simpleUser[]>([])
+  const { data: initialUsers, isLoading } = useAdminUserList()
+
+  useEffect(() => {
+    if (initialUsers) {
+      setUsers(initialUsers)
+    }
+  }, [initialUsers])
 
   const handleDisable = (userId?: number) => async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
+
     // 非同期処理を行う
     const response = await apiClient.post('/api/admin/users/disable', { userId })
-    if (response.status === 200 && response.data == 1) {
-      // ここに成功時の処理を書く
+    console.log(`response: ${response}`)
+
+    if (response.status === 200 && response.data === 1) {
+      // ユーザーを削除しましたの後、ユーザー一覧から該当のユーザーを除外
+      const updatedUsers = users.filter((user) => user.id !== userId)
+      // 更新後のユーザー一覧をセットする
+      setUsers(updatedUsers)
+      toast.success('ユーザーを削除しました')
     }
   }
 
