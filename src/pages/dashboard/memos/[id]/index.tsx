@@ -13,13 +13,15 @@ import { onError } from '@/lib/error-helper'
 import { Memo } from '@/types/Memo'
 
 const DashboardMemoDetailIndex: NextPage<Memo> = () => {
+  const router = useRouter()
+  const { category, tag } = router.query
   const { user } = useAuth({ middleware: 'auth' })
   const [apiUrl, setApiUrl] = useState('')
   const [titleText, setTitleText] = useState('')
   const [isLoading, setIsLoading] = useState(true)
 
-  const router = useRouter()
   const loginUser = user?.data
+  const categoryNumber = category === undefined ? null : Number(category)
 
   useEffect(() => {
     // Fetch用URL組み立て
@@ -45,7 +47,12 @@ const DashboardMemoDetailIndex: NextPage<Memo> = () => {
         header={<h2 className='font-semibold text-xl text-gray-800 leading-tight'>{headline}</h2>}
       >
         <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
-          <DashboardMemoDetail apiUrl={apiUrl} loginUser={loginUser} setTitleText={setTitleText} />
+          <DashboardMemoDetail
+            apiUrl={apiUrl}
+            loginUser={loginUser}
+            setTitleText={setTitleText}
+            categoryNumber={categoryNumber}
+          />
         </ErrorBoundary>
       </AppLayout>
     </AuthGuard>

@@ -10,9 +10,10 @@ type Props = {
   apiUrl: string
   loginUser: LoginUser
   setTitleText: Dispatch<SetStateAction<string>>
+  categoryNumber: number | null
 }
 
-const DashboardMemoDetail = ({ apiUrl, loginUser, setTitleText }: Props) => {
+const DashboardMemoDetail = ({ apiUrl, loginUser, setTitleText, categoryNumber }: Props) => {
   const { showBoundary } = useErrorBoundary()
 
   const { data: memo, error } = useMemoDetail(apiUrl)
@@ -40,7 +41,17 @@ const DashboardMemoDetail = ({ apiUrl, loginUser, setTitleText }: Props) => {
   return (
     <>
       {memo && loginUser && memo.user_id === loginUser.id && (
-        <SingleMemoDetail memo={memo} loginUser={loginUser} />
+        <SingleMemoDetail
+          memo={memo}
+          loginUser={loginUser}
+          renderMemoListByCategoryLink={`/dashboard/memos?category=${memo.category_id}`}
+          renderMemoListByNickNameLink='/dashboard/memos/'
+          renderMemoListByTagLink={
+            categoryNumber
+              ? `/dashboard/memos?category=${memo.category_id}&tag=`
+              : `/dashboard/memos?tag=`
+          }
+        />
       )}
       {memo && loginUser && memo.user_id !== loginUser.id && (
         <MemoDetailNoContent message={'閲覧権限がありません'} />
