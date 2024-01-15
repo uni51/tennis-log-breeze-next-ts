@@ -30,7 +30,7 @@ const SingleMemoBlockForList: FC<SingleMemoBlockForListProps> = ({
       <p className='mt-1'>
         {memo.tag_list.normalized.map((normalizedTag, index) => (
           <Link href={`${renderMemoListByTagLink}${normalizedTag}`} key={index} className='pr-1'>
-            <span className='text-xs font-semibold py-1 px-2 uppercase rounded-lg text-blue-600 bg-blue-200 last:mr-0 mr-1'>
+            <span className='inline-block text-xs font-semibold py-1 px-2 uppercase rounded-lg text-blue-600 bg-blue-200 last:mr-0 mt-1 mr-1'>
               {normalizedTag}
             </span>
           </Link>
@@ -38,7 +38,7 @@ const SingleMemoBlockForList: FC<SingleMemoBlockForListProps> = ({
       </p>
       <p className='mt-1'>
         <Link href={renderMemoListByNickNameLink}>
-          <span className='text-xs font-semibold py-1 px-2 uppercase rounded-lg text-green-600 bg-green-200 last:mr-0 mr-1'>
+          <span className='text-xs font-semibold py-1 px-2 uppercase rounded-lg text-green-600 bg-green-200 last:mr-0 mt-1 mr-1'>
             {memo.user_nickname}
           </span>
         </Link>
