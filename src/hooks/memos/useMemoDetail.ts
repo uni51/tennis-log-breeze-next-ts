@@ -4,27 +4,33 @@ import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
 import { toast } from 'react-toastify'
 
-const fetchMemoDetail = async (apiUrl: string): Promise<any> => {
+const handleAxiosError = (error: AxiosError) => {
+  if (error.response) {
+    const { status, data } = error.response
+    switch (status) {
+      case 422:
+        if (data.errors) {
+          Object.values<string[]>(data.errors).forEach((errorMessages) => {
+            errorMessages.forEach((message) => toast.error(message))
+          })
+        }
+        break
+      case 500:
+        alert('システムエラーです！！')
+        break
+    }
+  }
+  return Promise.reject(error)
+}
+
+const fetchMemoDetail = async (apiUrl: string): Promise<Memo> => {
   try {
-    const { data } = await apiClient.get(apiUrl)
+    const { data } = await apiClient.get<{ data: Memo }>(apiUrl)
     return data.data
   } catch (error) {
     if ((error as AxiosError).isAxiosError) {
-      const axiosError = error as AxiosError
-      if (axiosError.response?.status === 422) {
-        const errors = axiosError.response?.data.errors
-        Object.keys(errors).map((key: string) => {
-          toast.error(errors[key][0])
-        })
-      }
-      if (axiosError.response?.status === 500) {
-        alert('システムエラーです！！')
-      }
-      return Promise.reject(error)
-      // エラーハンドリング: エラーが発生した場合は適切に処理する
-      // throw new Error(`Failed to fetch memo detail: ${error.message}`)
+      return handleAxiosError(error as AxiosError)
     } else {
-      // error is not an instance of Error
       throw new Error(`Failed to fetch memo detail: ${String(error)}`)
     }
   }

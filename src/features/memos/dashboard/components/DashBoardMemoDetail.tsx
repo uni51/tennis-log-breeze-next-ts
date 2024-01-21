@@ -23,28 +23,25 @@ const DashboardMemoDetail = ({ apiUrl, loginUser, setTitleText, categoryNumber }
 
   useEffect(() => {
     if (error) {
-      const axiosError = error as AxiosError
-      if (axiosError.response?.status === 422) {
-        router.push('/dashboard/memos')
-        return
-      } else {
-        showBoundary(axiosError)
-      }
+      handleError(error)
     }
 
-    if (memo && setTitleText) {
+    if (memo) {
       setTitleText(memo.title)
     }
   }, [error, memo, setTitleText])
 
+  const handleError = (error: Error) => {
+    const axiosError = error as AxiosError
+    if (axiosError.response?.status === 422) {
+      router.push('/dashboard/memos')
+    } else {
+      showBoundary(axiosError)
+    }
+  }
+
   if (!memo) {
-    return (
-      <div className='mx-auto mt-20'>
-        <div className='w-1/2 mx-auto text-center'>
-          <ClipLoader />
-        </div>
-      </div>
-    )
+    return <LoadingIndicator />
   }
 
   return (
@@ -68,5 +65,13 @@ const DashboardMemoDetail = ({ apiUrl, loginUser, setTitleText, categoryNumber }
     </>
   )
 }
+
+const LoadingIndicator = () => (
+  <div className='mx-auto mt-20'>
+    <div className='w-1/2 mx-auto text-center'>
+      <ClipLoader />
+    </div>
+  </div>
+)
 
 export default DashboardMemoDetail
