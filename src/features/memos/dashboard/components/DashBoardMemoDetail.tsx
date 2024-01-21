@@ -5,6 +5,8 @@ import MemoDetailNoContent from '@/features/memos/common/components/templates/Me
 import SingleMemoDetail from '@/features/memos/common/components/templates/SingleMemoDetail'
 import { useMemoDetail } from '@/hooks/memos/useMemoDetail'
 import { LoginUser } from '@/types/loginUser'
+import { useRouter } from 'next/router'
+import { AxiosError } from 'axios'
 
 type Props = {
   apiUrl: string
@@ -14,13 +16,20 @@ type Props = {
 }
 
 const DashboardMemoDetail = ({ apiUrl, loginUser, setTitleText, categoryNumber }: Props) => {
+  const router = useRouter()
   const { showBoundary } = useErrorBoundary()
 
   const { data: memo, error } = useMemoDetail(apiUrl)
 
   useEffect(() => {
     if (error) {
-      showBoundary(error)
+      const axiosError = error as AxiosError
+      if (axiosError.response?.status === 422) {
+        router.push('/dashboard/memos')
+        return
+      } else {
+        showBoundary(axiosError)
+      }
     }
 
     if (memo && setTitleText) {

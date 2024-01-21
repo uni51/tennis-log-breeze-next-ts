@@ -11,6 +11,8 @@ import { useMemoCategories } from '@/hooks/memos/useMemoCategories'
 import { useMemoStatuses } from '@/hooks/memos/useMemoStatuses'
 import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
+import { AxiosError } from 'axios'
+import { toast } from 'react-toastify'
 
 const DashboardMemoDetailEdit: NextPage = () => {
   const router = useRouter()
@@ -33,8 +35,19 @@ const DashboardMemoDetailEdit: NextPage = () => {
 
       setMemo(memoData)
     } catch (error) {
-      console.error('Error fetching memo data:', error)
-      router.push('/dashboard/memos')
+      if ((error as AxiosError).isAxiosError) {
+        const axiosError = error as AxiosError
+        if (axiosError.response?.status === 422) {
+          const errors = axiosError.response?.data.errors
+          Object.keys(errors).map((key: string) => {
+            toast.error(errors[key][0])
+          })
+        }
+        if (axiosError.response?.status === 500) {
+          alert('システムエラーです！！')
+        }
+        router.push('/dashboard/memos')
+      }
     } finally {
       setIsLoading(false)
     }
