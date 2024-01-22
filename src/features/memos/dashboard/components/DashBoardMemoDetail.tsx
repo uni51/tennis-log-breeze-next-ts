@@ -1,12 +1,10 @@
 import { Dispatch, SetStateAction, useEffect } from 'react'
-import { useErrorBoundary } from 'react-error-boundary'
-import ClipLoader from 'react-spinners/ClipLoader'
 import MemoDetailNoContent from '@/features/memos/common/components/templates/MemoDetailNoContent'
 import SingleMemoDetail from '@/features/memos/common/components/templates/SingleMemoDetail'
 import { useMemoDetail } from '@/hooks/memos/useMemoDetail'
 import { LoginUser } from '@/types/loginUser'
-import { useRouter } from 'next/router'
-import { AxiosError } from 'axios'
+import { handleError } from '@/lib/utils/errorHandling'
+import LoadingIndicator from '@/components/LoadingIndicator'
 
 type Props = {
   apiUrl: string
@@ -16,29 +14,17 @@ type Props = {
 }
 
 const DashboardMemoDetail = ({ apiUrl, loginUser, setTitleText, categoryNumber }: Props) => {
-  const router = useRouter()
-  const { showBoundary } = useErrorBoundary()
-
   const { data: memo, error } = useMemoDetail(apiUrl)
 
   useEffect(() => {
     if (error) {
-      handleError(error)
+      handleError(error, '/dashboard/memos')
     }
 
     if (memo) {
       setTitleText(memo.title)
     }
   }, [error, memo, setTitleText])
-
-  const handleError = (error: Error) => {
-    const axiosError = error as AxiosError
-    if (axiosError.response?.status === 422) {
-      router.push('/dashboard/memos')
-    } else {
-      showBoundary(axiosError)
-    }
-  }
 
   if (!memo) {
     return <LoadingIndicator />
@@ -65,13 +51,5 @@ const DashboardMemoDetail = ({ apiUrl, loginUser, setTitleText, categoryNumber }
     </>
   )
 }
-
-const LoadingIndicator = () => (
-  <div className='mx-auto mt-20'>
-    <div className='w-1/2 mx-auto text-center'>
-      <ClipLoader />
-    </div>
-  </div>
-)
 
 export default DashboardMemoDetail
