@@ -2,20 +2,21 @@ import { AxiosError, AxiosResponse } from 'axios'
 import { NextPage } from 'next'
 import Link from 'next/link'
 import router from 'next/router'
-import { Dispatch, SetStateAction, useState } from 'react'
 import { toast } from 'react-toastify'
 import { showAlertModal } from '@/components/AlertModalManager'
 import { Memo } from '@/types/Memo'
 import { LoginUser } from '@/types/loginUser'
+import { apiClient } from '@/lib/utils/apiClient'
+import { handleAxiosError } from '@/lib/utils/errorHandling'
 
 type Props = {
   memo: Memo
   loginUser?: LoginUser
-  setTitleText?: Dispatch<SetStateAction<string>>
   renderMemoListByCategoryLink: string
   renderMemoListByNickNameLink: string
   renderMemoListByTagLink?: string
 }
+
 const SingleMemoDetail: NextPage<Props> = ({
   memo,
   loginUser,
@@ -26,37 +27,27 @@ const SingleMemoDetail: NextPage<Props> = ({
   const showAlert = () => {
     showAlertModal({
       message: '本当にこの記事を削除しますか？',
-      onOk: () => {
-        memoDelete()
-      },
+      onOk: memoDelete,
     })
   }
 
-  const memoDelete = () => {
-    toast.success('記事を削除しました')
-    router.push('/dashboard/memos')
-    // apiClient
-    //   // CSRF保護の初期化
-    //   .get('/auth/sanctum/csrf-cookie')
-    //   .then((res) => {
-    //     // APIへのリクエスト
-    //     apiClient
-    //       .post(`/api/dashboard/memos/${memo?.id}/delete`)
-    //       .then((response: AxiosResponse) => {
-    //         router.push({
-    //           pathname: '/dashboard/memos',
-    //           query: { page: 1 },
-    //         })
-    //       })
-    //       .catch((err: AxiosError) => {
-    //         // バリデーションエラー
-    //         if (err.response?.status === 422) {
-    //         }
-    //         if (err.response?.status === 500) {
-    //           alert('システムエラーです！！')
-    //         }
-    //       })
-    // })
+  const memoDelete = async () => {
+    try {
+      const response: AxiosResponse = await apiClient.post(
+        `/api/dashboard/memos/${memo?.id}/delete`,
+      )
+      toast.success('記事を削除しました')
+      router.push({
+        pathname: '/dashboard/memos',
+        query: { page: 1 },
+      })
+    } catch (error) {
+      if ((error as AxiosError).isAxiosError) {
+        return handleAxiosError(error as AxiosError)
+      } else {
+        throw new Error(`Failed to fetch memo detail: ${String(error)}`)
+      }
+    }
   }
 
   return (
