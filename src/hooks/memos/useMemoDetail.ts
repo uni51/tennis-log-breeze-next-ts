@@ -1,27 +1,8 @@
 import { AxiosError } from 'axios'
-import { useQuery, UseQueryOptions } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
-import { toast } from 'react-toastify'
-
-const handleAxiosError = (error: AxiosError) => {
-  if (error.response) {
-    const { status, data } = error.response
-    switch (status) {
-      case 422:
-        if (data.errors) {
-          Object.values<string[]>(data.errors).forEach((errorMessages) => {
-            errorMessages.forEach((message) => toast.error(message))
-          })
-        }
-        break
-      case 500:
-        alert('システムエラーです！！')
-        break
-    }
-  }
-  return Promise.reject(error)
-}
+import { handleAxiosError } from '@/lib/utils/errorHandling'
 
 const fetchMemoDetail = async (apiUrl: string): Promise<Memo> => {
   try {
