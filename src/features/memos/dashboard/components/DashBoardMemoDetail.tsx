@@ -3,7 +3,7 @@ import MemoDetailNoContent from '@/features/memos/common/components/templates/Me
 import SingleMemoDetail from '@/features/memos/common/components/templates/SingleMemoDetail'
 import { useMemoDetail } from '@/hooks/memos/useMemoDetail'
 import { LoginUser } from '@/types/loginUser'
-import { handleError } from '@/lib/utils/errorHandling'
+import { useHandleError } from '@/hooks/error/useHandleError'
 import LoadingIndicator from '@/components/LoadingIndicator'
 
 type Props = {
@@ -14,6 +14,7 @@ type Props = {
 }
 
 const DashboardMemoDetail = ({ apiUrl, loginUser, setTitleText, categoryNumber }: Props) => {
+  const handleError = useHandleError()
   const { data: memo, error } = useMemoDetail(apiUrl)
 
   useEffect(() => {
