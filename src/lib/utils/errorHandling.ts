@@ -8,14 +8,14 @@ export const handleAxiosError = (error: AxiosError) => {
       case 403:
         toast.error(data.message)
         break
+      case 404:
+        toast.error(data.message)
+        break
       case 422:
         if (data.errors) {
           Object.values<string[]>(data.errors).forEach((errorMessages) => {
             errorMessages.forEach((message) => toast.error(message))
           })
-        }
-        if (data.message && !data.errors) {
-          toast.error(data.message)
         }
         break
       case 500:
