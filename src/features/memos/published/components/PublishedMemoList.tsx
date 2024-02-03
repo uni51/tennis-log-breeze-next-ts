@@ -6,21 +6,34 @@ import SingleMemoBlockForList from '@/features/memos/common/components/templates
 import { useMemoList } from '@/hooks/memos/useMemoList'
 import { getMemosListByCategoryPageLink } from '@/lib/pagination-helper'
 import { Memo } from '@/types/Memo'
+import { Loading } from '@/components/Loading'
 
 type Props = {
   pageIndex: number
   categoryNumber: number | null
+  tag?: string
 }
 
-const PublishedMemoList = ({ pageIndex, categoryNumber }: Props) => {
+const PublishedMemoList = ({ pageIndex, categoryNumber, tag }: Props) => {
   const { showBoundary } = useErrorBoundary()
 
   const preApiUrl = '/api/public/memos'
-  const { data: memos, error } = useMemoList({ preApiUrl, pageIndex, categoryNumber })
+  const { data: memos, error, isLoading } = useMemoList({
+    preApiUrl,
+    pageIndex,
+    categoryNumber,
+    tag,
+  })
 
-  // console.log(memos)
+  console.log('memos', memos)
 
-  if (error) showBoundary(error)
+  if (error) {
+    showBoundary(error)
+  }
+
+  if (isLoading) {
+    return <Loading />
+  }
 
   if (!memos)
     return (
@@ -43,6 +56,11 @@ const PublishedMemoList = ({ pageIndex, categoryNumber }: Props) => {
                 renderMemoDetailLink={`/${memo.user_nickname}/memos/${memo.id}`}
                 renderMemoListByCategoryLink={`/memos?category=${memo.category_id}`}
                 renderMemoListByNickNameLink={`/${memo.user_nickname}/memos/`}
+                renderMemoListByTagLink={
+                  categoryNumber
+                    ? `/${memo.user_nickname}/memos?category=${memo.category_id}&tag=`
+                    : `/${memo.user_nickname}/memos?tag=`
+                }
                 key={index}
               />
             )
@@ -64,6 +82,7 @@ const PublishedMemoList = ({ pageIndex, categoryNumber }: Props) => {
             currentPage={Number(memos?.meta?.current_page)}
             renderPagerLinkFunc={getMemosListByCategoryPageLink}
             category={categoryNumber}
+            tag={tag}
           />
         </div>
       </div>
