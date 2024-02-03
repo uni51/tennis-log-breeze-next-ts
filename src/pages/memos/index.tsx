@@ -1,26 +1,12 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import Head from 'next/head'
 import { ErrorBoundary } from 'react-error-boundary'
 import AppLayout from '@/components/Layouts/AppLayout'
-import { ErrorDisplay } from '@/components/Layouts/Error/ErrorDisplay'
 import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
-import getInitialPublishedMemoList from '@/features/memos/published/api/getInitialPublishedMemoList'
 import PublishedMemoList from '@/features/memos/published/components/PublishedMemoList'
 import { onError } from '@/lib/error-helper'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
-import { getMemoListApiUrl } from '@/lib/pagination-helper'
-import { MemoListReturnType } from '@/types/memoList'
 import { useRouter } from 'next/router'
 import { NextPage } from 'next'
-import { useAuth } from '@/hooks/auth'
-
-const queryClient = new QueryClient()
-
-type Props = {
-  pageIndex: number
-  categoryNumber: number | null
-  tag?: string
-}
 
 /* みんなの公開中のメモ一覧ページ */
 const PublishedMemoIndex: NextPage = () => {
