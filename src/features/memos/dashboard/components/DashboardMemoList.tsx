@@ -47,7 +47,7 @@ const DashboardMemoList: React.FC<Props> = ({ pageNumber, categoryNumber, tag }:
   }
 
   const renderMemoList = () => {
-    return memos.data.map((memo: Memo, index: number) => (
+    return memos?.data?.map((memo: Memo, index: number) => (
       <SingleMemoBlockForList
         memo={memo}
         renderMemoDetailLink={`/dashboard/memos/${memo.id}`}
@@ -71,17 +71,18 @@ const DashboardMemoList: React.FC<Props> = ({ pageNumber, categoryNumber, tag }:
         <div className='md:hidden'>
           <MemoListPaginationShort
             baseUrl='/dashboard/memos/'
-            totalItems={Number(memos.meta.total)}
-            currentPage={Number(memos.meta.current_page)}
+            totalItems={Number(memos?.meta?.total)}
+            currentPage={Number(memos?.meta?.current_page)}
             renderPagerLinkFunc={getMemosListByCategoryPageLink}
             category={categoryNumber}
+            tag={tag}
           />
         </div>
         <div className='hidden sm:hidden md:block lg:block xl:block'>
           <MemoListPaginationLong
             baseUrl='/dashboard/memos/'
-            totalItems={Number(memos.meta.total)}
-            currentPage={Number(memos.meta.current_page)}
+            totalItems={Number(memos?.meta?.total)}
+            currentPage={Number(memos?.meta?.current_page)}
             renderPagerLinkFunc={getMemosListByCategoryPageLink}
             category={categoryNumber}
             tag={tag}

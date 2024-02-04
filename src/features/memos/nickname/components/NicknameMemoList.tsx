@@ -1,3 +1,4 @@
+import React from 'react'
 import { useErrorBoundary } from 'react-error-boundary'
 import ClipLoader from 'react-spinners/ClipLoader'
 import MemoListPaginationLong from '@/components/Pagination/MemoListPaginationLong'
@@ -15,7 +16,12 @@ type Props = {
   tag?: string
 }
 
-const NicknameMemoList = ({ nickname, pageNumber, categoryNumber, tag }: Props) => {
+const NicknameMemoList: React.FC<Props> = ({
+  nickname,
+  pageNumber,
+  categoryNumber,
+  tag,
+}: Props) => {
   const { showBoundary } = useErrorBoundary()
 
   console.log('nickname', nickname)

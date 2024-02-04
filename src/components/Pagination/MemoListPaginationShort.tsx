@@ -10,6 +10,7 @@ export type PaginationProps = {
   currentPage: number
   itemsPerPage?: number
   category?: number | null
+  tag?: string | null
   renderPagerLinkFunc: RenderPagerLinkFuncType
 }
 
@@ -19,6 +20,7 @@ const MemoListPaginationShort = ({
   currentPage,
   itemsPerPage = ITEMS_PER_PAGE,
   category,
+  tag,
   renderPagerLinkFunc,
 }: PaginationProps) => {
   const pages = usePagination(totalItems, currentPage, itemsPerPage)
@@ -40,6 +42,7 @@ const MemoListPaginationShort = ({
                 baseUrl,
                 Number(pageNumber),
                 category,
+                tag,
               )}
               className={`${
                 pageNumber === currentPage
