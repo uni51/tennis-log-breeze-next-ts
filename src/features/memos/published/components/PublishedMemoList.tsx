@@ -54,9 +54,7 @@ const PublishedMemoList: React.FC<Props> = ({ pageNumber, categoryId, tag }: Pro
         renderMemoListByCategoryLink={`/memos?category=${memo.category_id}`}
         renderMemoListByNickNameLink={`/${memo.user_nickname}/memos/`}
         renderMemoListByTagLink={
-          categoryId
-            ? `/${memo.user_nickname}/memos?category=${memo.category_id}&tag=`
-            : `/${memo.user_nickname}/memos?tag=`
+          categoryId ? `/memos?category=${memo.category_id}&tag=` : `/memos?tag=`
         }
         key={index}
       />

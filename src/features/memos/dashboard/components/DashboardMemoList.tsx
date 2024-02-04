@@ -26,8 +26,6 @@ const DashboardMemoList: React.FC<Props> = ({ pageNumber, categoryId, tag }: Pro
     tag,
   })
 
-  console.log('memos', memos)
-
   if (error) {
     showBoundary(error)
   }
