@@ -33,20 +33,20 @@ export const getMemosListByCategoryPageLink: RenderPagerLinkFuncType = (
 export type MemoListsPaginationProps = {
   preApiUrl: string
   pageNumber: number
-  categoryNumber: number | null
+  categoryId: number | null
   tag?: string
 }
 
 export const getMemoListApiUrl = ({
   preApiUrl,
   pageNumber,
-  categoryNumber,
+  categoryId,
   tag,
 }: MemoListsPaginationProps): string => {
   let apiUrl = `${preApiUrl}?page=${pageNumber}` // デフォルトのAPI URL
 
-  if (categoryNumber) {
-    apiUrl = `${preApiUrl}/category/${categoryNumber}${tag ? `/tag/${tag}` : ''}?page=${pageNumber}`
+  if (categoryId) {
+    apiUrl = `${preApiUrl}/category/${categoryId}${tag ? `/tag/${tag}` : ''}?page=${pageNumber}`
   } else if (tag) {
     apiUrl = `${preApiUrl}/tag/${tag}?page=${pageNumber}`
   }

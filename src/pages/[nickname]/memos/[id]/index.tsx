@@ -18,7 +18,7 @@ const MemoByNickNameDetail: NextPage<Memo> = () => {
   const [titleText, setTitleText] = useState('')
   const [isLoading, setIsLoading] = useState(true)
 
-  const categoryNumber = category === undefined ? null : Number(category)
+  const categoryId = category === undefined ? null : Number(category)
 
   useEffect(() => {
     // Fetch用URL組み立て
@@ -46,7 +46,7 @@ const MemoByNickNameDetail: NextPage<Memo> = () => {
             apiUrl={apiUrl}
             nickname={nickname as string}
             setTitleText={setTitleText}
-            categoryNumber={categoryNumber}
+            categoryId={categoryId}
           />
         </ErrorBoundary>
       </AppLayout>

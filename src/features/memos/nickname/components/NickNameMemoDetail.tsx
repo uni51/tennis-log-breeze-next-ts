@@ -8,10 +8,10 @@ type Props = {
   apiUrl: string
   nickname: string
   setTitleText: Dispatch<SetStateAction<string>>
-  categoryNumber: number | null
+  categoryId: number | null
 }
 
-const NickNameMemoDetail = ({ apiUrl, nickname, setTitleText, categoryNumber }: Props) => {
+const NickNameMemoDetail = ({ apiUrl, nickname, setTitleText, categoryId }: Props) => {
   const handleError = useHandleError()
   const { data: memo, error } = useMemoDetail(apiUrl)
 
@@ -36,7 +36,7 @@ const NickNameMemoDetail = ({ apiUrl, nickname, setTitleText, categoryNumber }: 
         renderMemoListByCategoryLink={`/${nickname}/memos?category=${memo.category_id}`}
         renderMemoListByNickNameLink={`/${nickname}/memos/`}
         renderMemoListByTagLink={
-          categoryNumber
+          categoryId
             ? `/${nickname}/memos?category=${memo.category_id}&tag=`
             : `/${nickname}/memos?tag=`
         }

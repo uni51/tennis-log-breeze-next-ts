@@ -12,17 +12,17 @@ import { Memo } from '@/types/Memo'
 
 type Props = {
   pageNumber: number
-  categoryNumber: number | null
+  categoryId: number | null
   tag?: string
 }
 
-const DashboardMemoList: React.FC<Props> = ({ pageNumber, categoryNumber, tag }: Props) => {
+const DashboardMemoList: React.FC<Props> = ({ pageNumber, categoryId, tag }: Props) => {
   const { showBoundary } = useErrorBoundary()
   const preApiUrl = '/api/dashboard/memos'
   const { data: memos, error, isLoading } = useMemoList({
     preApiUrl,
     pageNumber,
-    categoryNumber,
+    categoryId,
     tag,
   })
 
@@ -54,7 +54,7 @@ const DashboardMemoList: React.FC<Props> = ({ pageNumber, categoryNumber, tag }:
         renderMemoListByCategoryLink={`/dashboard/memos?category=${memo.category_id}`}
         renderMemoListByNickNameLink='/dashboard/memos/'
         renderMemoListByTagLink={
-          categoryNumber
+          categoryId
             ? `/dashboard/memos?category=${memo.category_id}&tag=`
             : `/dashboard/memos?tag=`
         }
@@ -74,7 +74,7 @@ const DashboardMemoList: React.FC<Props> = ({ pageNumber, categoryNumber, tag }:
             totalItems={Number(memos?.meta?.total)}
             currentPage={Number(memos?.meta?.current_page)}
             renderPagerLinkFunc={getMemosListByCategoryPageLink}
-            category={categoryNumber}
+            category={categoryId}
             tag={tag}
           />
         </div>
@@ -84,7 +84,7 @@ const DashboardMemoList: React.FC<Props> = ({ pageNumber, categoryNumber, tag }:
             totalItems={Number(memos?.meta?.total)}
             currentPage={Number(memos?.meta?.current_page)}
             renderPagerLinkFunc={getMemosListByCategoryPageLink}
-            category={categoryNumber}
+            category={categoryId}
             tag={tag}
           />
         </div>

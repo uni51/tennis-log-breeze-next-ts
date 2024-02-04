@@ -7,7 +7,7 @@ import { MemoListReturnType } from '@/types/memoList'
 type Props = {
   preApiUrl: string
   pageIndex: number
-  categoryNumber: number | null
+  categoryId: number | null
 }
 
 const fetchAdminMemoList = async (apiUrl: string): Promise<MemoListReturnType> => {
@@ -25,8 +25,8 @@ const fetchAdminMemoList = async (apiUrl: string): Promise<MemoListReturnType> =
   }
 }
 
-export const useAdminMemoList = ({ preApiUrl, pageIndex, categoryNumber }: Props) => {
-  const apiUrl = getMemoListApiUrl({ preApiUrl, pageIndex, categoryNumber })
+export const useAdminMemoList = ({ preApiUrl, pageIndex, categoryId }: Props) => {
+  const apiUrl = getMemoListApiUrl({ preApiUrl, pageIndex, categoryId })
 
   return useQuery<MemoListReturnType, Error>({
     queryKey: ['adminMemoList', apiUrl], // データの重複取得を避けるためにqueryKeyに依存変数を含める

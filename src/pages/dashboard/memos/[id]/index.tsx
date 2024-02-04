@@ -21,7 +21,7 @@ const DashboardMemoDetailIndex: NextPage<Memo> = () => {
   const [isLoading, setIsLoading] = useState(true)
 
   const loginUser = user?.data
-  const categoryNumber = category === undefined ? null : Number(category)
+  const categoryId = category === undefined ? null : Number(category)
 
   useEffect(() => {
     // Fetch用URL組み立て
@@ -51,7 +51,7 @@ const DashboardMemoDetailIndex: NextPage<Memo> = () => {
             apiUrl={apiUrl}
             loginUser={loginUser}
             setTitleText={setTitleText}
-            categoryNumber={categoryNumber}
+            categoryId={categoryId}
           />
         </ErrorBoundary>
       </AppLayout>

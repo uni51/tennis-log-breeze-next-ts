@@ -11,18 +11,18 @@ import { Loading } from '@/components/Loading'
 
 type Props = {
   pageNumber: number
-  categoryNumber: number | null
+  categoryId: number | null
   tag?: string
 }
 
-const PublishedMemoList: React.FC<Props> = ({ pageNumber, categoryNumber, tag }: Props) => {
+const PublishedMemoList: React.FC<Props> = ({ pageNumber, categoryId, tag }: Props) => {
   const { showBoundary } = useErrorBoundary()
 
   const preApiUrl = '/api/public/memos'
   const { data: memos, error, isLoading } = useMemoList({
     preApiUrl,
     pageNumber,
-    categoryNumber,
+    categoryId,
     tag,
   })
 
@@ -54,7 +54,7 @@ const PublishedMemoList: React.FC<Props> = ({ pageNumber, categoryNumber, tag }:
         renderMemoListByCategoryLink={`/memos?category=${memo.category_id}`}
         renderMemoListByNickNameLink={`/${memo.user_nickname}/memos/`}
         renderMemoListByTagLink={
-          categoryNumber
+          categoryId
             ? `/${memo.user_nickname}/memos?category=${memo.category_id}&tag=`
             : `/${memo.user_nickname}/memos?tag=`
         }
@@ -74,7 +74,7 @@ const PublishedMemoList: React.FC<Props> = ({ pageNumber, categoryNumber, tag }:
             totalItems={Number(memos?.meta?.total)}
             currentPage={Number(memos?.meta?.current_page)}
             renderPagerLinkFunc={getMemosListByCategoryPageLink}
-            category={categoryNumber}
+            category={categoryId}
             tag={tag}
           />
         </div>
@@ -84,7 +84,7 @@ const PublishedMemoList: React.FC<Props> = ({ pageNumber, categoryNumber, tag }:
             totalItems={Number(memos?.meta?.total)}
             currentPage={Number(memos?.meta?.current_page)}
             renderPagerLinkFunc={getMemosListByCategoryPageLink}
-            category={categoryNumber}
+            category={categoryId}
             tag={tag}
           />
         </div>

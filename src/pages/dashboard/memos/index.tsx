@@ -17,7 +17,7 @@ const DashboardMemoIndex: NextPage = () => {
   const { user } = useAuth({ middleware: 'auth' })
 
   const pageNumber = page === undefined ? 1 : Number(page)
-  const categoryNumber = category === undefined ? null : Number(category)
+  const categoryId = category === undefined ? null : Number(category)
   const tagText = tag === undefined ? undefined : Array.isArray(tag) ? tag.join('') : tag
 
   let headLine = user?.data?.nickname
@@ -25,8 +25,8 @@ const DashboardMemoIndex: NextPage = () => {
     : 'あなたが作成したメモ一覧'
 
   let categoryText = ''
-  if (categoryNumber) {
-    categoryText = getMemosListByCategoryHeadLineTitle(categoryNumber)
+  if (categoryId) {
+    categoryText = getMemosListByCategoryHeadLineTitle(categoryId)
   }
 
   if (!user) return null
@@ -48,19 +48,11 @@ const DashboardMemoIndex: NextPage = () => {
         }
       >
         <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
-          <DashboardMemoList
-            pageNumber={pageNumber}
-            categoryNumber={categoryNumber}
-            tag={tagText}
-          />
+          <DashboardMemoList pageNumber={pageNumber} categoryId={categoryId} tag={tagText} />
           {/* キャッシュ作成用に、次のページを事前にロードしておく */}
           {/* TODO: 最後のページの場合は、このロジックをくぐらないようにする */}
           <div style={{ display: 'none' }}>
-            <DashboardMemoList
-              pageNumber={pageNumber + 1}
-              categoryNumber={categoryNumber}
-              tag={tagText}
-            />
+            <DashboardMemoList pageNumber={pageNumber + 1} categoryId={categoryId} tag={tagText} />
           </div>
         </ErrorBoundary>
       </AppLayout>

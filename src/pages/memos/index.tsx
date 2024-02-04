@@ -14,14 +14,14 @@ const PublishedMemoIndex: NextPage = () => {
   const { page, category, tag } = router.query
 
   const pageNumber = page === undefined ? 1 : Number(page)
-  const categoryNumber = category === undefined ? null : Number(category)
+  const categoryId = category === undefined ? null : Number(category)
   const tagText = tag === undefined ? undefined : Array.isArray(tag) ? tag.join('') : tag
 
-  const headLine = `みんなの公開中のメモ一覧${getMemosListByCategoryHeadLineTitle(categoryNumber)}`
+  const headLine = `みんなの公開中のメモ一覧${getMemosListByCategoryHeadLineTitle(categoryId)}`
 
   let categoryText = ''
-  if (categoryNumber) {
-    categoryText = getMemosListByCategoryHeadLineTitle(categoryNumber)
+  if (categoryId) {
+    categoryText = getMemosListByCategoryHeadLineTitle(categoryId)
   }
 
   return (
@@ -41,19 +41,11 @@ const PublishedMemoIndex: NextPage = () => {
         }
       >
         <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
-          <PublishedMemoList
-            pageNumber={pageNumber}
-            categoryNumber={categoryNumber}
-            tag={tagText}
-          />
+          <PublishedMemoList pageNumber={pageNumber} categoryId={categoryId} tag={tagText} />
           {/* キャッシュ作成用に、次のページを事前にロードしておく */}
           {/* TODO: 最後のページの場合は、このロジックをくぐらないようにする */}
           <div style={{ display: 'none' }}>
-            <PublishedMemoList
-              pageNumber={pageNumber + 1}
-              categoryNumber={categoryNumber}
-              tag={tagText}
-            />
+            <PublishedMemoList pageNumber={pageNumber + 1} categoryId={categoryId} tag={tagText} />
           </div>
         </ErrorBoundary>
       </AppLayout>

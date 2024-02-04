@@ -14,14 +14,14 @@ const PublicMemoListByNickname: NextPage = () => {
   const { nickname, page, category, tag } = router.query
 
   const pageNumber = page === undefined ? 1 : Number(page)
-  const categoryNumber = category === undefined ? null : Number(category)
+  const categoryId = category === undefined ? null : Number(category)
   const tagText = tag === undefined ? undefined : Array.isArray(tag) ? tag.join('') : tag
 
-  const headLine = `${nickname}さんのメモ一覧${getMemosListByCategoryHeadLineTitle(categoryNumber)}`
+  const headLine = `${nickname}さんのメモ一覧${getMemosListByCategoryHeadLineTitle(categoryId)}`
 
   let categoryText = ''
-  if (categoryNumber) {
-    categoryText = getMemosListByCategoryHeadLineTitle(categoryNumber)
+  if (categoryId) {
+    categoryText = getMemosListByCategoryHeadLineTitle(categoryId)
   }
 
   return (
@@ -44,7 +44,7 @@ const PublicMemoListByNickname: NextPage = () => {
           <NicknameMemoList
             nickname={nickname as string}
             pageNumber={pageNumber}
-            categoryNumber={categoryNumber}
+            categoryId={categoryId}
             tag={tagText}
           />
           {/* キャッシュ作成用に、次のページを事前にロードしておく */}
@@ -53,7 +53,7 @@ const PublicMemoListByNickname: NextPage = () => {
             <NicknameMemoList
               nickname={nickname as string}
               pageNumber={pageNumber + 1}
-              categoryNumber={categoryNumber}
+              categoryId={categoryId}
               tag={tagText}
             />
           </div>
