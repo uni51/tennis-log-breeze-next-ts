@@ -11,17 +11,17 @@ import { getMemosListByCategoryPageLink } from '@/lib/pagination-helper'
 import { Memo } from '@/types/Memo'
 
 type Props = {
-  pageIndex: number
+  pageNumber: number
   categoryNumber: number | null
   tag?: string
 }
 
-const DashboardMemoList: React.FC<Props> = ({ pageIndex, categoryNumber, tag }: Props) => {
+const DashboardMemoList: React.FC<Props> = ({ pageNumber, categoryNumber, tag }: Props) => {
   const { showBoundary } = useErrorBoundary()
   const preApiUrl = '/api/dashboard/memos'
   const { data: memos, error, isLoading } = useMemoList({
     preApiUrl,
-    pageIndex,
+    pageNumber,
     categoryNumber,
     tag,
   })

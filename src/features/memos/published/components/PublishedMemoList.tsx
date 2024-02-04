@@ -9,18 +9,18 @@ import { Memo } from '@/types/Memo'
 import { Loading } from '@/components/Loading'
 
 type Props = {
-  pageIndex: number
+  pageNumber: number
   categoryNumber: number | null
   tag?: string
 }
 
-const PublishedMemoList = ({ pageIndex, categoryNumber, tag }: Props) => {
+const PublishedMemoList = ({ pageNumber, categoryNumber, tag }: Props) => {
   const { showBoundary } = useErrorBoundary()
 
   const preApiUrl = '/api/public/memos'
   const { data: memos, error, isLoading } = useMemoList({
     preApiUrl,
-    pageIndex,
+    pageNumber,
     categoryNumber,
     tag,
   })

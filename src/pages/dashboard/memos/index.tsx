@@ -10,6 +10,7 @@ import { useAuth } from '@/hooks/auth'
 import { onError } from '@/lib/error-helper'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
 
+/* Dashboard（マイページ）のメモ一覧ページ */
 const DashboardMemoIndex: NextPage = () => {
   const router = useRouter()
   const { page, category, tag } = router.query
@@ -47,12 +48,16 @@ const DashboardMemoIndex: NextPage = () => {
         }
       >
         <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
-          <DashboardMemoList pageIndex={pageNumber} categoryNumber={categoryNumber} tag={tagText} />
+          <DashboardMemoList
+            pageNumber={pageNumber}
+            categoryNumber={categoryNumber}
+            tag={tagText}
+          />
           {/* キャッシュ作成用に、次のページを事前にロードしておく */}
-          {/* TODO: 最後のページの場合は、このロジックをくぐらないようにさせる？ */}
+          {/* TODO: 最後のページの場合は、このロジックをくぐらないようにする */}
           <div style={{ display: 'none' }}>
             <DashboardMemoList
-              pageIndex={pageNumber + 1}
+              pageNumber={pageNumber + 1}
               categoryNumber={categoryNumber}
               tag={tagText}
             />
