@@ -13,7 +13,7 @@ const PublicMemoListByNickname: NextPage = () => {
   const router = useRouter()
   const { nickname, page, category, tag } = router.query
 
-  const pageIndex = page === undefined ? 1 : Number(page)
+  const pageNumber = page === undefined ? 1 : Number(page)
   const categoryNumber = category === undefined ? null : Number(category)
   const tagText = tag === undefined ? undefined : Array.isArray(tag) ? tag.join('') : tag
 
@@ -43,7 +43,7 @@ const PublicMemoListByNickname: NextPage = () => {
         <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
           <NicknameMemoList
             nickname={nickname as string}
-            pageIndex={pageIndex}
+            pageNumber={pageNumber}
             categoryNumber={categoryNumber}
             tag={tagText}
           />
@@ -52,7 +52,7 @@ const PublicMemoListByNickname: NextPage = () => {
           <div style={{ display: 'none' }}>
             <NicknameMemoList
               nickname={nickname as string}
-              pageIndex={pageIndex + 1}
+              pageNumber={pageNumber + 1}
               categoryNumber={categoryNumber}
               tag={tagText}
             />

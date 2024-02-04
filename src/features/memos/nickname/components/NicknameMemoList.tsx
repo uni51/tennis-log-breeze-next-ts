@@ -10,12 +10,12 @@ import { Loading } from '@/components/Loading'
 
 type Props = {
   nickname: string
-  pageIndex: number
+  pageNumber: number
   categoryNumber: number | null
   tag?: string
 }
 
-const NicknameMemoList = ({ nickname, pageIndex, categoryNumber, tag }: Props) => {
+const NicknameMemoList = ({ nickname, pageNumber, categoryNumber, tag }: Props) => {
   const { showBoundary } = useErrorBoundary()
 
   console.log('nickname', nickname)
@@ -23,7 +23,7 @@ const NicknameMemoList = ({ nickname, pageIndex, categoryNumber, tag }: Props) =
   const preApiUrl = `/api/public/${nickname}/memos`
   const { data: memos, error, isLoading } = useMemoList({
     preApiUrl,
-    pageIndex,
+    pageNumber,
     categoryNumber,
     tag,
   })
