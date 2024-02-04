@@ -6,6 +6,9 @@ import AppLayout from '@/components/Layouts/AppLayout'
 import NickNameMemoDetail from '@/features/memos/nickname/components/NickNameMemoDetail'
 import { Memo } from '@/types/Memo'
 import { Loading } from '@/components/Loading'
+import { ErrorBoundary } from 'react-error-boundary'
+import { onError } from '@/lib/error-helper'
+import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
 
 /* ユーザー毎の公開中のメモ詳細ページ */
 const MemoByNickNameDetail: NextPage<Memo> = () => {
@@ -28,7 +31,7 @@ const MemoByNickNameDetail: NextPage<Memo> = () => {
 
   if (isLoading) return <Loading />
 
-  const headline = `${nickname}さんの公開メモ`
+  const headline = `${nickname}さんの公開メモ詳細`
 
   return (
     <>
@@ -38,12 +41,14 @@ const MemoByNickNameDetail: NextPage<Memo> = () => {
       <AppLayout
         header={<h2 className='font-semibold text-xl text-gray-800 leading-tight'>{headline}</h2>}
       >
-        <NickNameMemoDetail
-          apiUrl={apiUrl}
-          nickname={nickname as string}
-          setTitleText={setTitleText}
-          categoryNumber={categoryNumber}
-        />
+        <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
+          <NickNameMemoDetail
+            apiUrl={apiUrl}
+            nickname={nickname as string}
+            setTitleText={setTitleText}
+            categoryNumber={categoryNumber}
+          />
+        </ErrorBoundary>
       </AppLayout>
     </>
   )

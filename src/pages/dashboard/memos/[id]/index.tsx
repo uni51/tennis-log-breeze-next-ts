@@ -14,7 +14,7 @@ import { Memo } from '@/types/Memo'
 
 const DashboardMemoDetailIndex: NextPage<Memo> = () => {
   const router = useRouter()
-  const { category, tag } = router.query
+  const { id, category, tag } = router.query
   const { user } = useAuth({ middleware: 'auth' })
   const [apiUrl, setApiUrl] = useState('')
   const [titleText, setTitleText] = useState('')
@@ -26,7 +26,7 @@ const DashboardMemoDetailIndex: NextPage<Memo> = () => {
   useEffect(() => {
     // Fetch用URL組み立て
     if (router.isReady) {
-      const apiUri = `api/dashboard/memos/${router.query.id}`
+      const apiUri = `api/dashboard/memos/${id}`
       setApiUrl(apiUri)
     }
 
