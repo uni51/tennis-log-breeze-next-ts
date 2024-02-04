@@ -23,9 +23,6 @@ const NicknameMemoList: React.FC<Props> = ({
   tag,
 }: Props) => {
   const { showBoundary } = useErrorBoundary()
-
-  console.log('nickname', nickname)
-
   const preApiUrl = `/api/public/${nickname}/memos`
   const { data: memos, error, isLoading } = useMemoList({
     preApiUrl,
@@ -33,8 +30,6 @@ const NicknameMemoList: React.FC<Props> = ({
     categoryNumber,
     tag,
   })
-
-  console.log('memos', memos)
 
   if (error) {
     showBoundary(error)
@@ -44,7 +39,7 @@ const NicknameMemoList: React.FC<Props> = ({
     return <Loading />
   }
 
-  if (!memos)
+  if (!memos) {
     return (
       <div className='mx-auto mt-20'>
         <div className='w-1/2 mx-auto text-center'>
@@ -52,29 +47,30 @@ const NicknameMemoList: React.FC<Props> = ({
         </div>
       </div>
     )
+  }
+
+  const renderMemoList = () => {
+    return memos?.data?.map((memo: Memo, index: number) => (
+      <SingleMemoBlockForList
+        memo={memo}
+        renderMemoDetailLink={`/${memo.user_nickname}/memos/${memo.id}`}
+        renderMemoListByCategoryLink={`/${memo.user_nickname}/memos?category=${memo.category_id}`}
+        renderMemoListByNickNameLink={`/${memo.user_nickname}/memos/`}
+        renderMemoListByTagLink={
+          categoryNumber
+            ? `/${memo.user_nickname}/memos?category=${memo.category_id}&tag=`
+            : `/${memo.user_nickname}/memos?tag=`
+        }
+        key={index}
+      />
+    ))
+  }
 
   return (
     <div className='mx-auto mt-20'>
       <div className='mt-3'>
         {/* DBから取得したメモデータの一覧表示 */}
-        <div className='grid w-4/5 mx-auto gap-16 lg:grid-cols-2'>
-          {memos?.data?.map((memo: Memo, index: number) => {
-            return (
-              <SingleMemoBlockForList
-                memo={memo}
-                renderMemoDetailLink={`/${memo.user_nickname}/memos/${memo.id}`}
-                renderMemoListByCategoryLink={`/${memo.user_nickname}/memos?category=${memo.category_id}`}
-                renderMemoListByNickNameLink={`/${memo.user_nickname}/memos/`}
-                renderMemoListByTagLink={
-                  categoryNumber
-                    ? `/${memo.user_nickname}/memos?category=${memo.category_id}&tag=`
-                    : `/${memo.user_nickname}/memos?tag=`
-                }
-                key={index}
-              />
-            )
-          })}
-        </div>
+        <div className='grid w-4/5 mx-auto gap-16 lg:grid-cols-2'>{renderMemoList()}</div>
         <div className='md:hidden'>
           <MemoListPaginationShort
             baseUrl='/memos/'
@@ -82,9 +78,10 @@ const NicknameMemoList: React.FC<Props> = ({
             currentPage={Number(memos?.meta?.current_page)}
             renderPagerLinkFunc={getMemosListByCategoryPageLink}
             category={categoryNumber}
+            tag={tag}
           />
         </div>
-        <div className='hidden sm:hidden md:block lg:block  xl:block'>
+        <div className='hidden sm:hidden md:block lg:block xl:block'>
           <MemoListPaginationLong
             baseUrl='/memos/'
             totalItems={Number(memos?.meta?.total)}
