@@ -2,13 +2,13 @@ import { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import AppLayout from '@/components/Layouts/AppLayout'
-import NickNameMemoDetail from '@/features/memos/nickname/components/NickNameMemoDetail'
-import { Memo } from '@/types/Memo'
-import { Loading } from '@/components/Loading'
 import { ErrorBoundary } from 'react-error-boundary'
-import { onError } from '@/lib/error-helper'
+import AppLayout from '@/components/Layouts/AppLayout'
+import { Loading } from '@/components/Loading'
 import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
+import NickNameMemoDetail from '@/features/memos/nickname/components/NickNameMemoDetail'
+import { onError } from '@/lib/error-helper'
+import { Memo } from '@/types/Memo'
 
 /* ユーザー毎の公開中のメモ詳細ページ */
 const MemoByNickNameDetail: NextPage<Memo> = () => {

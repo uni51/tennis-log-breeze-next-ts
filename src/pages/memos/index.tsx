@@ -1,12 +1,12 @@
+import { NextPage } from 'next'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 import { ErrorBoundary } from 'react-error-boundary'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
 import PublishedMemoList from '@/features/memos/published/components/PublishedMemoList'
 import { onError } from '@/lib/error-helper'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
-import { useRouter } from 'next/router'
-import { NextPage } from 'next'
 
 /* みんなの公開中のメモ一覧ページ */
 const PublishedMemoIndex: NextPage = () => {

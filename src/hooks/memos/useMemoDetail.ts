@@ -1,8 +1,8 @@
-import { AxiosError } from 'axios'
 import { useQuery } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
 import { apiClient } from '@/lib/utils/apiClient'
-import { Memo } from '@/types/Memo'
 import { handleAxiosError } from '@/lib/utils/errorHandling'
+import { Memo } from '@/types/Memo'
 
 const fetchMemoDetail = async (apiUrl: string): Promise<Memo> => {
   try {
