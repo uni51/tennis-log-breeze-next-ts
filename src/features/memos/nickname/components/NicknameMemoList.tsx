@@ -6,7 +6,6 @@ import MemoListPaginationLong from '@/components/Pagination/MemoListPaginationLo
 import MemoListPaginationShort from '@/components/Pagination/MemoListPaginationShort'
 import SingleMemoBlockForList from '@/features/memos/common/components/templates/SingleMemoBlockForList'
 import { useMemoList } from '@/hooks/memos/useMemoList'
-import { getMemosListByCategoryPageLink } from '@/lib/pagination-helper'
 import { Memo } from '@/types/Memo'
 import { NicknameMemosQueryParams } from '@/types/memo/MemosQueryParamas'
 
@@ -70,7 +69,6 @@ const NicknameMemoList: React.FC<NicknameMemosQueryParams> = ({
             baseUrl={`/${nickname}/memos/`}
             totalItems={Number(memos?.meta?.total)}
             currentPage={Number(memos?.meta?.current_page)}
-            renderPagerLinkFunc={getMemosListByCategoryPageLink}
             category={category}
             tag={tag}
           />
@@ -80,7 +78,6 @@ const NicknameMemoList: React.FC<NicknameMemosQueryParams> = ({
             baseUrl={`/${nickname}/memos/`}
             totalItems={Number(memos?.meta?.total)}
             currentPage={Number(memos?.meta?.current_page)}
-            renderPagerLinkFunc={getMemosListByCategoryPageLink}
             category={category}
             tag={tag}
           />

@@ -5,15 +5,24 @@ export type BaseQueryParams = {
   tag?: string
 }
 
+// BaseQueryParamsからpageプロパティを除外
+type BaseQueryParamsWithoutPage = Omit<BaseQueryParams, 'page'>
+
 // NicknameMemosQueryParamsはBaseQueryParamsにnicknameを追加
-export type NicknameMemosQueryParams = BaseQueryParams & {
+export type NicknameMemosQueryParams = BaseQueryParamsWithoutPage & {
+  page: number // pageを必須とする
   nickname: string
 }
 
 // MemoQueryParamsはBaseQueryParamsをそのまま使用
-export type MemoQueryParams = BaseQueryParams
+export type MemoQueryParams = BaseQueryParamsWithoutPage & {
+  page: number // pageを必須とする
+}
 
-// PropsはBaseQueryParamsを拡張し、preApiUrlを追加
-export type UseMemoListProps = BaseQueryParams & {
+// UseMemoListHookPropsでpageを必須とする
+export type UseMemoListHookProps = BaseQueryParamsWithoutPage & {
+  page: number // pageを必須とする
   preApiUrl: string
 }
+
+export type MemoListsPaginationProps = UseMemoListHookProps

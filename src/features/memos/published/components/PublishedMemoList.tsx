@@ -6,16 +6,10 @@ import MemoListPaginationLong from '@/components/Pagination/MemoListPaginationLo
 import MemoListPaginationShort from '@/components/Pagination/MemoListPaginationShort'
 import SingleMemoBlockForList from '@/features/memos/common/components/templates/SingleMemoBlockForList'
 import { useMemoList } from '@/hooks/memos/useMemoList'
-import { getMemosListByCategoryPageLink } from '@/lib/pagination-helper'
 import { Memo } from '@/types/Memo'
+import { MemoQueryParams } from '@/types/memo/MemosQueryParamas'
 
-type Props = {
-  page: number
-  category?: number
-  tag?: string
-}
-
-const PublishedMemoList: React.FC<Props> = ({ page, category, tag }: Props) => {
+const PublishedMemoList: React.FC<MemoQueryParams> = ({ page, category, tag }: MemoQueryParams) => {
   const { showBoundary } = useErrorBoundary()
 
   const preApiUrl = '/api/public/memos'
@@ -71,7 +65,6 @@ const PublishedMemoList: React.FC<Props> = ({ page, category, tag }: Props) => {
             baseUrl='/memos/'
             totalItems={Number(memos?.meta?.total)}
             currentPage={Number(memos?.meta?.current_page)}
-            renderPagerLinkFunc={getMemosListByCategoryPageLink}
             category={category}
             tag={tag}
           />
@@ -81,7 +74,6 @@ const PublishedMemoList: React.FC<Props> = ({ page, category, tag }: Props) => {
             baseUrl='/memos/'
             totalItems={Number(memos?.meta?.total)}
             currentPage={Number(memos?.meta?.current_page)}
-            renderPagerLinkFunc={getMemosListByCategoryPageLink}
             category={category}
             tag={tag}
           />

@@ -1,17 +1,19 @@
 import React from 'react'
 import { useErrorBoundary } from 'react-error-boundary'
-import ClipLoader from 'react-spinners/ClipLoader'
 import { Loading } from '@/components/Loading'
 import MemoListPaginationLong from '@/components/Pagination/MemoListPaginationLong'
 import MemoListPaginationShort from '@/components/Pagination/MemoListPaginationShort'
 import SingleMemoBlockForList from '@/features/memos/common/components/templates/SingleMemoBlockForList'
 import AddMemoButton from '@/features/memos/dashboard/components/AddMemoButton'
 import { useMemoList } from '@/hooks/memos/useMemoList'
-import { getMemosListByCategoryPageLink } from '@/lib/pagination-helper'
 import { Memo } from '@/types/Memo'
-import { MemoQueryParams } from '@/types/memo/MemosQueryParamas'
+import { UseMemoListHookProps } from '@/types/memo/MemosQueryParamas'
 
-const DashboardMemoList: React.FC<MemoQueryParams> = ({ page, category, tag }: MemoQueryParams) => {
+const DashboardMemoList: React.FC<UseMemoListHookProps> = ({
+  page,
+  category,
+  tag,
+}: UseMemoListHookProps) => {
   const { showBoundary } = useErrorBoundary()
   const preApiUrl = '/api/dashboard/memos'
   const { data: memos, error, isLoading } = useMemoList({
@@ -62,7 +64,6 @@ const DashboardMemoList: React.FC<MemoQueryParams> = ({ page, category, tag }: M
             baseUrl='/dashboard/memos/'
             totalItems={Number(memos?.meta?.total)}
             currentPage={Number(memos?.meta?.current_page)}
-            renderPagerLinkFunc={getMemosListByCategoryPageLink}
             category={category}
             tag={tag}
           />
@@ -72,7 +73,6 @@ const DashboardMemoList: React.FC<MemoQueryParams> = ({ page, category, tag }: M
             baseUrl='/dashboard/memos/'
             totalItems={Number(memos?.meta?.total)}
             currentPage={Number(memos?.meta?.current_page)}
-            renderPagerLinkFunc={getMemosListByCategoryPageLink}
             category={category}
             tag={tag}
           />

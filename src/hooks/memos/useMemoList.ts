@@ -3,7 +3,7 @@ import { toast } from 'react-toastify'
 import { getMemoListApiUrl } from '@/lib/pagination-helper'
 import { apiClient } from '@/lib/utils/apiClient'
 import { MemoListReturnType } from '@/types/memoList'
-import { UseMemoListProps } from '@/types/memo/MemosQueryParamas'
+import { UseMemoListHookProps } from '@/types/memo/MemosQueryParamas'
 
 const handleApiError = (err: any) => {
   if (err.response) {
@@ -23,7 +23,7 @@ const fetchMemoList = async (apiUrl: string) => {
   }
 }
 
-export const useMemoList = ({ preApiUrl, page, category, tag }: UseMemoListProps) => {
+export const useMemoList = ({ preApiUrl, page, category, tag }: UseMemoListHookProps) => {
   const apiUrl = getMemoListApiUrl({ preApiUrl, page, category, tag })
 
   return useQuery<MemoListReturnType, Error>({
