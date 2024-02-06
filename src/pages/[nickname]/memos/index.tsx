@@ -8,20 +8,15 @@ import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBac
 import NicknameMemoList from '@/features/memos/nickname/components/NicknameMemoList'
 import { onError } from '@/lib/error-helper'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
-
-interface QueryParams {
-  nickname: string
-  page?: number
-  category?: number
-  tag?: string
-}
+import { NicknameMemosQueryParams } from '@/types/memo/MemosQueryParamas'
+import { Loading } from '@/components/Loading'
 
 /* ユーザー毎の公開メモ一覧ページ */
 const PublicMemoListByNickname: NextPage = () => {
   const router = useRouter()
 
   const [isLoading, setIsLoading] = useState(true) // ローディング状態の管理
-  const [queryParams, setQueryParams] = useState<QueryParams>({
+  const [queryParams, setQueryParams] = useState<NicknameMemosQueryParams>({
     nickname: '',
     page: 1,
     category: undefined,
@@ -47,8 +42,9 @@ const PublicMemoListByNickname: NextPage = () => {
   }, [router.isReady, router.query])
 
   if (isLoading) {
-    return <div>ローディング中...</div> // ローディング表示
+    return <Loading />
   }
+
   const headLine = `${queryParams.nickname}さんのメモ一覧${getMemosListByCategoryHeadLineTitle(
     queryParams.category,
   )}`
@@ -78,8 +74,8 @@ const PublicMemoListByNickname: NextPage = () => {
         <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
           <NicknameMemoList
             nickname={queryParams.nickname}
-            pageNumber={queryParams.page as number}
-            categoryId={queryParams.category}
+            page={queryParams.page as number}
+            category={queryParams.category}
             tag={queryParams.tag}
           />
           {/* キャッシュ作成用に、次のページを事前にロードしておく */}
@@ -87,8 +83,8 @@ const PublicMemoListByNickname: NextPage = () => {
           <div style={{ display: 'none' }}>
             <NicknameMemoList
               nickname={queryParams.nickname}
-              pageNumber={queryParams.page as number}
-              categoryId={queryParams.category}
+              page={queryParams.page as number}
+              category={queryParams.category}
               tag={queryParams.tag}
             />
           </div>

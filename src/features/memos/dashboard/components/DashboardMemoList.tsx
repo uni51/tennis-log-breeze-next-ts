@@ -9,20 +9,15 @@ import AddMemoButton from '@/features/memos/dashboard/components/AddMemoButton'
 import { useMemoList } from '@/hooks/memos/useMemoList'
 import { getMemosListByCategoryPageLink } from '@/lib/pagination-helper'
 import { Memo } from '@/types/Memo'
+import { MemoQueryParams } from '@/types/memo/MemosQueryParamas'
 
-type Props = {
-  pageNumber: number
-  categoryId?: number
-  tag?: string
-}
-
-const DashboardMemoList: React.FC<Props> = ({ pageNumber, categoryId, tag }: Props) => {
+const DashboardMemoList: React.FC<MemoQueryParams> = ({ page, category, tag }: MemoQueryParams) => {
   const { showBoundary } = useErrorBoundary()
   const preApiUrl = '/api/dashboard/memos'
   const { data: memos, error, isLoading } = useMemoList({
     preApiUrl,
-    pageNumber,
-    categoryId,
+    page,
+    category,
     tag,
   })
 
@@ -37,9 +32,7 @@ const DashboardMemoList: React.FC<Props> = ({ pageNumber, categoryId, tag }: Pro
   if (!memos) {
     return (
       <div className='mx-auto mt-20'>
-        <div className='w-1/2 mx-auto text-center'>
-          <ClipLoader />
-        </div>
+        <div className='w-1/2 mx-auto text-center'>メモがありません</div>
       </div>
     )
   }
@@ -52,9 +45,7 @@ const DashboardMemoList: React.FC<Props> = ({ pageNumber, categoryId, tag }: Pro
         renderMemoListByCategoryLink={`/dashboard/memos?category=${memo.category_id}`}
         renderMemoListByNickNameLink='/dashboard/memos/'
         renderMemoListByTagLink={
-          categoryId
-            ? `/dashboard/memos?category=${memo.category_id}&tag=`
-            : `/dashboard/memos?tag=`
+          category ? `/dashboard/memos?category=${memo.category_id}&tag=` : `/dashboard/memos?tag=`
         }
         key={index}
       />
@@ -72,7 +63,7 @@ const DashboardMemoList: React.FC<Props> = ({ pageNumber, categoryId, tag }: Pro
             totalItems={Number(memos?.meta?.total)}
             currentPage={Number(memos?.meta?.current_page)}
             renderPagerLinkFunc={getMemosListByCategoryPageLink}
-            category={categoryId}
+            category={category}
             tag={tag}
           />
         </div>
@@ -82,7 +73,7 @@ const DashboardMemoList: React.FC<Props> = ({ pageNumber, categoryId, tag }: Pro
             totalItems={Number(memos?.meta?.total)}
             currentPage={Number(memos?.meta?.current_page)}
             renderPagerLinkFunc={getMemosListByCategoryPageLink}
-            category={categoryId}
+            category={category}
             tag={tag}
           />
         </div>

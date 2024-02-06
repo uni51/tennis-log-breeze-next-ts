@@ -10,19 +10,19 @@ import { getMemosListByCategoryPageLink } from '@/lib/pagination-helper'
 import { Memo } from '@/types/Memo'
 
 type Props = {
-  pageNumber: number
-  categoryId: number | null
+  page: number
+  category?: number
   tag?: string
 }
 
-const PublishedMemoList: React.FC<Props> = ({ pageNumber, categoryId, tag }: Props) => {
+const PublishedMemoList: React.FC<Props> = ({ page, category, tag }: Props) => {
   const { showBoundary } = useErrorBoundary()
 
   const preApiUrl = '/api/public/memos'
   const { data: memos, error, isLoading } = useMemoList({
     preApiUrl,
-    pageNumber,
-    categoryId,
+    page,
+    category,
     tag,
   })
 
@@ -54,7 +54,7 @@ const PublishedMemoList: React.FC<Props> = ({ pageNumber, categoryId, tag }: Pro
         renderMemoListByCategoryLink={`/memos?category=${memo.category_id}`}
         renderMemoListByNickNameLink={`/${memo.user_nickname}/memos/`}
         renderMemoListByTagLink={
-          categoryId ? `/memos?category=${memo.category_id}&tag=` : `/memos?tag=`
+          category ? `/memos?category=${memo.category_id}&tag=` : `/memos?tag=`
         }
         key={index}
       />
@@ -72,7 +72,7 @@ const PublishedMemoList: React.FC<Props> = ({ pageNumber, categoryId, tag }: Pro
             totalItems={Number(memos?.meta?.total)}
             currentPage={Number(memos?.meta?.current_page)}
             renderPagerLinkFunc={getMemosListByCategoryPageLink}
-            category={categoryId}
+            category={category}
             tag={tag}
           />
         </div>
@@ -82,7 +82,7 @@ const PublishedMemoList: React.FC<Props> = ({ pageNumber, categoryId, tag }: Pro
             totalItems={Number(memos?.meta?.total)}
             currentPage={Number(memos?.meta?.current_page)}
             renderPagerLinkFunc={getMemosListByCategoryPageLink}
-            category={categoryId}
+            category={category}
             tag={tag}
           />
         </div>

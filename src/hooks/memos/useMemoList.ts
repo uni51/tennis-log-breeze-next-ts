@@ -3,13 +3,7 @@ import { toast } from 'react-toastify'
 import { getMemoListApiUrl } from '@/lib/pagination-helper'
 import { apiClient } from '@/lib/utils/apiClient'
 import { MemoListReturnType } from '@/types/memoList'
-
-type Props = {
-  preApiUrl: string
-  pageNumber?: number
-  categoryId?: number
-  tag?: string
-}
+import { UseMemoListProps } from '@/types/memo/MemosQueryParamas'
 
 const handleApiError = (err: any) => {
   if (err.response) {
@@ -29,8 +23,8 @@ const fetchMemoList = async (apiUrl: string) => {
   }
 }
 
-export const useMemoList = ({ preApiUrl, pageNumber, categoryId, tag }: Props) => {
-  const apiUrl = getMemoListApiUrl({ preApiUrl, pageNumber, categoryId, tag })
+export const useMemoList = ({ preApiUrl, page, category, tag }: UseMemoListProps) => {
+  const apiUrl = getMemoListApiUrl({ preApiUrl, page, category, tag })
 
   return useQuery<MemoListReturnType, Error>({
     queryKey: ['memoList', apiUrl], // データの重複取得を避けるためにqueryKeyに依存変数を含める

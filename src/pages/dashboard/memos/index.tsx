@@ -48,11 +48,11 @@ const DashboardMemoIndex: NextPage = () => {
         }
       >
         <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
-          <DashboardMemoList pageNumber={pageNumber} categoryId={categoryId} tag={tagText} />
+          <DashboardMemoList page={pageNumber} category={categoryId} tag={tagText} />
           {/* キャッシュ作成用に、次のページを事前にロードしておく */}
           {/* TODO: 最後のページの場合は、このロジックをくぐらないようにする */}
           <div style={{ display: 'none' }}>
-            <DashboardMemoList pageNumber={pageNumber + 1} categoryId={categoryId} tag={tagText} />
+            <DashboardMemoList page={pageNumber + 1} category={categoryId} tag={tagText} />
           </div>
         </ErrorBoundary>
       </AppLayout>
