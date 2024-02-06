@@ -7,13 +7,13 @@ import SingleMemoBlockForList from '@/features/memos/common/components/templates
 import AddMemoButton from '@/features/memos/dashboard/components/AddMemoButton'
 import { useMemoList } from '@/hooks/memos/useMemoList'
 import { Memo } from '@/types/Memo'
-import { UseMemoListHookProps } from '@/types/memo/MemosQueryParams'
+import { DashbaordMemoQueryParams } from '@/types/memo/MemosQueryParams'
 
-const DashboardMemoList: React.FC<UseMemoListHookProps> = ({
+const DashboardMemoList: React.FC<DashbaordMemoQueryParams> = ({
   page,
   category,
   tag,
-}: UseMemoListHookProps) => {
+}: DashbaordMemoQueryParams) => {
   const { showBoundary } = useErrorBoundary()
   const preApiUrl = '/api/dashboard/memos'
   const { data: memos, error, isLoading } = useMemoList({
