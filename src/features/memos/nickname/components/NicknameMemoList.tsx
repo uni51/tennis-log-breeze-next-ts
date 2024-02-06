@@ -12,7 +12,7 @@ import { Memo } from '@/types/Memo'
 type Props = {
   nickname: string
   pageNumber: number
-  categoryId: number | null
+  categoryId?: number
   tag?: string
 }
 
@@ -68,7 +68,7 @@ const NicknameMemoList: React.FC<Props> = ({ nickname, pageNumber, categoryId, t
         <div className='grid w-4/5 mx-auto gap-16 lg:grid-cols-2'>{renderMemoList()}</div>
         <div className='md:hidden'>
           <MemoListPaginationShort
-            baseUrl='/memos/'
+            baseUrl={`/${nickname}/memos/`}
             totalItems={Number(memos?.meta?.total)}
             currentPage={Number(memos?.meta?.current_page)}
             renderPagerLinkFunc={getMemosListByCategoryPageLink}
@@ -78,7 +78,7 @@ const NicknameMemoList: React.FC<Props> = ({ nickname, pageNumber, categoryId, t
         </div>
         <div className='hidden sm:hidden md:block lg:block xl:block'>
           <MemoListPaginationLong
-            baseUrl='/memos/'
+            baseUrl={`/${nickname}/memos/`}
             totalItems={Number(memos?.meta?.total)}
             currentPage={Number(memos?.meta?.current_page)}
             renderPagerLinkFunc={getMemosListByCategoryPageLink}

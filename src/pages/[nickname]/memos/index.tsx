@@ -1,6 +1,7 @@
 import { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
@@ -8,20 +9,54 @@ import NicknameMemoList from '@/features/memos/nickname/components/NicknameMemoL
 import { onError } from '@/lib/error-helper'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
 
+interface QueryParams {
+  nickname: string
+  page?: number
+  category?: number
+  tag?: string
+}
+
 /* ユーザー毎の公開メモ一覧ページ */
 const PublicMemoListByNickname: NextPage = () => {
   const router = useRouter()
-  const { nickname, page, category, tag } = router.query
 
-  const pageNumber = page === undefined ? 1 : Number(page)
-  const categoryId = category === undefined ? null : Number(category)
-  const tagText = tag === undefined ? undefined : Array.isArray(tag) ? tag.join('') : tag
+  const [isLoading, setIsLoading] = useState(true) // ローディング状態の管理
+  const [queryParams, setQueryParams] = useState<QueryParams>({
+    nickname: '',
+    page: 1,
+    category: undefined,
+    tag: undefined,
+  })
 
-  const headLine = `${nickname}さんのメモ一覧${getMemosListByCategoryHeadLineTitle(categoryId)}`
+  useEffect(() => {
+    if (router.isReady) {
+      // routerが準備完了したら
+      const { nickname, page, category, tag } = router.query
+      const pageNumber = page ? Number(page) : 1
+      const categoryId = category ? Number(category) : undefined
+      const tagText = tag ? (Array.isArray(tag) ? tag.join('') : tag) : undefined
+
+      setQueryParams({
+        nickname: nickname as string,
+        page: pageNumber,
+        category: categoryId,
+        tag: tagText,
+      })
+      setIsLoading(false) // ローディング状態を解除
+    }
+  }, [router.isReady, router.query])
+
+  if (isLoading) {
+    return <div>ローディング中...</div> // ローディング表示
+  }
+  const headLine = `${queryParams.nickname}さんのメモ一覧${getMemosListByCategoryHeadLineTitle(
+    queryParams.category,
+  )}`
 
   let categoryText = ''
-  if (categoryId) {
-    categoryText = getMemosListByCategoryHeadLineTitle(categoryId)
+  if (queryParams.category !== null) {
+    // categoryIdがnullでないことをチェック
+    categoryText = getMemosListByCategoryHeadLineTitle(queryParams.category)
   }
 
   return (
@@ -36,25 +71,25 @@ const PublicMemoListByNickname: NextPage = () => {
               {headLine}
             </h2>
             {categoryText && <span className='text-gray-800 font-bold mr-4'>{categoryText}</span>}
-            {tagText && <span className='text-gray-800 font-bold'>#{tagText}</span>}
+            {queryParams.tag && <span className='text-gray-800 font-bold'>#{queryParams.tag}</span>}
           </>
         }
       >
         <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
           <NicknameMemoList
-            nickname={nickname as string}
-            pageNumber={pageNumber}
-            categoryId={categoryId}
-            tag={tagText}
+            nickname={queryParams.nickname}
+            pageNumber={queryParams.page as number}
+            categoryId={queryParams.category}
+            tag={queryParams.tag}
           />
           {/* キャッシュ作成用に、次のページを事前にロードしておく */}
           {/* TODO: 最後のページの場合は、このロジックをくぐらないようにする */}
           <div style={{ display: 'none' }}>
             <NicknameMemoList
-              nickname={nickname as string}
-              pageNumber={pageNumber + 1}
-              categoryId={categoryId}
-              tag={tagText}
+              nickname={queryParams.nickname}
+              pageNumber={queryParams.page as number}
+              categoryId={queryParams.category}
+              tag={queryParams.tag}
             />
           </div>
         </ErrorBoundary>

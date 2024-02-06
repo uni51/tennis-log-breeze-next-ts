@@ -12,7 +12,7 @@ import { Memo } from '@/types/Memo'
 
 type Props = {
   pageNumber: number
-  categoryId: number | null
+  categoryId?: number
   tag?: string
 }
 

@@ -2,17 +2,17 @@ type PagerLink = { pathname: string; query: Record<string, string> }
 
 export type RenderPagerLinkFuncType = (
   baseUrl: string,
-  page: number,
-  category?: number | null,
-  tag?: string | null,
+  pageNumber?: number,
+  categoryId?: number,
+  tag?: string,
 ) => PagerLink
 
 export const getRenderPagerLinkUrl = (
   renderPagerLinkFunc: RenderPagerLinkFuncType,
   baseUrl: string,
-  pageNumber: number,
-  category?: number | null,
-  tag?: string | null,
+  pageNumber?: number,
+  category?: number,
+  tag?: string,
 ): PagerLink =>
   renderPagerLinkFunc(baseUrl, pageNumber, category, tag) || { pathname: '/memos/', query: {} }
 
@@ -32,8 +32,8 @@ export const getMemosListByCategoryPageLink: RenderPagerLinkFuncType = (
 
 export type MemoListsPaginationProps = {
   preApiUrl: string
-  pageNumber: number
-  categoryId: number | null
+  pageNumber?: number
+  categoryId?: number
   tag?: string
 }
 

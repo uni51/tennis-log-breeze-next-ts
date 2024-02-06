@@ -6,8 +6,8 @@ import { MemoListReturnType } from '@/types/memoList'
 
 type Props = {
   preApiUrl: string
-  pageNumber: number
-  categoryId: number | null
+  pageNumber?: number
+  categoryId?: number
   tag?: string
 }
 
