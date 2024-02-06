@@ -10,7 +10,7 @@ const AdminUsers: NextPage = () => {
   const { page, category } = router.query
 
   const pageNumber = page === undefined ? 1 : Number(page)
-  const categoryId = category === undefined ? null : Number(category)
+  const categoryId = category === undefined ? undefined : Number(category)
 
   console.log('pageNumber', pageNumber)
   console.log('categoryId', categoryId)
@@ -28,7 +28,7 @@ const AdminUsers: NextPage = () => {
           <title>Laravel - Dashboard</title>
         </Head>
 
-        <AdminMemoList pageIndex={pageNumber} categoryId={categoryId} />
+        <AdminMemoList page={pageNumber} category={categoryId} />
       </AdminAppLayout>
     </AdminAuthGuard>
   )
