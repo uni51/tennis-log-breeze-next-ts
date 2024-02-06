@@ -14,37 +14,25 @@ import { Memo } from '@/types/Memo'
 
 const DashboardMemoDetailIndex: NextPage<Memo> = () => {
   const router = useRouter()
-  const { id, category } = router.query
-  // const { user } = useAuth({ middleware: 'auth' })
   const { user, isAuthLoading } = useAuth({ middleware: 'auth' })
-  const [isUserReady, setIsUserReady] = useState(false)
   const [apiUrl, setApiUrl] = useState('')
   const [titleText, setTitleText] = useState('')
   const [isLoading, setIsLoading] = useState(true)
-
-  const loginUser = user?.data
-  const categoryId = category === undefined ? null : Number(category)
+  const categoryId = router.query.category ? Number(router.query.category) : null
 
   useEffect(() => {
-    // Fetch用URL組み立て
-    if (router.isReady) {
-      const apiUri = `api/dashboard/memos/${id}`
-      setApiUrl(apiUri)
+    if (!isAuthLoading && user === null) {
+      router.push('/login')
+      return
+    }
+
+    if (router.isReady && !isAuthLoading) {
+      setApiUrl(`api/dashboard/memos/${router.query.id}`)
       setIsLoading(false)
     }
-    if (!isAuthLoading) {
-      setIsUserReady(true)
-    }
-  }, [router, isAuthLoading])
+  }, [router, user, isAuthLoading])
 
   if (isLoading) return <Loading />
-  // ユーザーの状態が確定するまで待機
-  if (!isUserReady) {
-    return <Loading /> // または別のローディング表示
-  }
-  if (!user) {
-    router.push('/login')
-  }
 
   const headline = `${user?.data?.name}さんのメモ詳細`
 
@@ -59,7 +47,7 @@ const DashboardMemoDetailIndex: NextPage<Memo> = () => {
         <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
           <DashboardMemoDetail
             apiUrl={apiUrl}
-            loginUser={loginUser}
+            loginUser={user?.data}
             setTitleText={setTitleText}
             categoryId={categoryId}
           />
