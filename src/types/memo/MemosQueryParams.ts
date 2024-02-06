@@ -27,7 +27,7 @@ export type UseMemoListHookProps = BaseQueryParamsWithoutPage & {
 
 export type UseMemoListHookPropsWithoutPreApiUrl = Omit<UseMemoListHookProps, 'preApiUrl'>
 
-export type DashbaordMemoQueryParams = UseMemoListHookPropsWithoutPreApiUrl & {
+export type DashboardMemoQueryParams = UseMemoListHookPropsWithoutPreApiUrl & {
   preApiUrl?: string // preApiUrlをオプショナルとする
 }
 

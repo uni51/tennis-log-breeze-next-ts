@@ -9,27 +9,48 @@ import DashboardMemoList from '@/features/memos/dashboard/components/DashboardMe
 import { useAuth } from '@/hooks/auth'
 import { onError } from '@/lib/error-helper'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
+import { Loading } from '@/components/Loading'
+import { useEffect, useState } from 'react'
+import { DashboardMemoQueryParams } from '@/types/memo/MemosQueryParams'
 
-/* Dashboard（マイページ）のメモ一覧ページ */
 const DashboardMemoIndex: NextPage = () => {
   const router = useRouter()
-  const { page, category, tag } = router.query
-  const { user } = useAuth({ middleware: 'auth' })
+  const { user, isAuthLoading } = useAuth({ middleware: 'auth' })
+  const [isLoading, setIsLoading] = useState(true)
+  const [queryParams, setQueryParams] = useState<DashboardMemoQueryParams>({
+    page: 1,
+    category: undefined,
+    tag: undefined,
+  })
 
-  const pageNumber = page === undefined ? 1 : Number(page)
-  const categoryId = category === undefined ? undefined : Number(category)
-  const tagText = tag === undefined ? undefined : Array.isArray(tag) ? tag.join('') : tag
+  useEffect(() => {
+    if (!isAuthLoading) {
+      if (!user) {
+        router.push('/login')
+        return
+      }
+      setIsLoading(false)
+    }
 
-  let headLine = user?.data?.nickname
+    if (router.isReady) {
+      const { page, category, tag } = router.query
+      setQueryParams({
+        page: Number(page) || 1,
+        category: category ? Number(category) : undefined,
+        tag: typeof tag === 'string' ? tag : tag?.join(''),
+      })
+    }
+  }, [router.isReady, router.query, isAuthLoading, user])
+
+  if (isLoading) return <Loading />
+
+  const headLine = user?.data?.nickname
     ? `${user.data.nickname}さんのメモ一覧`
     : 'あなたが作成したメモ一覧'
 
-  let categoryText = ''
-  if (categoryId) {
-    categoryText = getMemosListByCategoryHeadLineTitle(categoryId)
-  }
-
-  if (!user) return null
+  const categoryText = queryParams.category
+    ? getMemosListByCategoryHeadLineTitle(queryParams.category)
+    : ''
 
   return (
     <AuthGuard>
@@ -43,16 +64,23 @@ const DashboardMemoIndex: NextPage = () => {
               {headLine}
             </h2>
             {categoryText && <span className='text-gray-800 font-bold mr-4'>{categoryText}</span>}
-            {tagText && <span className='text-gray-800 font-bold'>#{tagText}</span>}
+            {queryParams.tag && <span className='text-gray-800 font-bold'>#{queryParams.tag}</span>}
           </>
         }
       >
         <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
-          <DashboardMemoList page={pageNumber} category={categoryId} tag={tagText} />
-          {/* キャッシュ作成用に、次のページを事前にロードしておく */}
-          {/* TODO: 最後のページの場合は、このロジックをくぐらないようにする */}
+          <DashboardMemoList
+            page={queryParams.page}
+            category={queryParams.category}
+            tag={queryParams.tag}
+          />
+          {/* TODO: 最後のページの場合のロジックの実装を検討 */}
           <div style={{ display: 'none' }}>
-            <DashboardMemoList page={pageNumber + 1} category={categoryId} tag={tagText} />
+            <DashboardMemoList
+              page={queryParams.page + 1}
+              category={queryParams.category}
+              tag={queryParams.tag}
+            />
           </div>
         </ErrorBoundary>
       </AppLayout>

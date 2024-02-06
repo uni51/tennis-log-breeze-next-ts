@@ -14,8 +14,10 @@ import { Memo } from '@/types/Memo'
 
 const DashboardMemoDetailIndex: NextPage<Memo> = () => {
   const router = useRouter()
-  const { id, category, tag } = router.query
-  const { user } = useAuth({ middleware: 'auth' })
+  const { id, category } = router.query
+  // const { user } = useAuth({ middleware: 'auth' })
+  const { user, isAuthLoading } = useAuth({ middleware: 'auth' })
+  const [isUserReady, setIsUserReady] = useState(false)
   const [apiUrl, setApiUrl] = useState('')
   const [titleText, setTitleText] = useState('')
   const [isLoading, setIsLoading] = useState(true)
@@ -28,13 +30,21 @@ const DashboardMemoDetailIndex: NextPage<Memo> = () => {
     if (router.isReady) {
       const apiUri = `api/dashboard/memos/${id}`
       setApiUrl(apiUri)
+      setIsLoading(false)
     }
-
-    setIsLoading(false)
-  }, [router.isReady])
+    if (!isAuthLoading) {
+      setIsUserReady(true)
+    }
+  }, [router, isAuthLoading])
 
   if (isLoading) return <Loading />
-  if (!user) return null
+  // ユーザーの状態が確定するまで待機
+  if (!isUserReady) {
+    return <Loading /> // または別のローディング表示
+  }
+  if (!user) {
+    router.push('/login')
+  }
 
   const headline = `${user?.data?.name}さんのメモ詳細`
 

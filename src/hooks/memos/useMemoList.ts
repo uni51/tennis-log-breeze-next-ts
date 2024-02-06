@@ -1,25 +1,22 @@
 import { useQuery } from '@tanstack/react-query'
-import { toast } from 'react-toastify'
 import { getMemoListApiUrl } from '@/lib/pagination-helper'
 import { apiClient } from '@/lib/utils/apiClient'
 import { UseMemoListHookProps } from '@/types/memo/MemosQueryParams'
 import { MemoListReturnType } from '@/types/memoList'
-
-const handleApiError = (err: any) => {
-  if (err.response) {
-    const errorMessage = err.response.data.message || 'エラーメッセージがありません'
-    toast.error(`エラー: ${errorMessage}`)
-  } else {
-    toast.error('ネットワークエラーが発生しました')
-  }
-}
+import { AxiosError } from 'axios'
+import { handleAxiosError } from '@/lib/utils/errorHandling'
 
 const fetchMemoList = async (apiUrl: string) => {
   try {
-    const res = await apiClient.get(apiUrl)
-    return res.data
+    const { data } = await apiClient.get(apiUrl)
+    console.log(data)
+    return data
   } catch (error) {
-    handleApiError(error)
+    if ((error as AxiosError).isAxiosError) {
+      return handleAxiosError(error as AxiosError)
+    } else {
+      throw new Error(`Failed to fetch memo detail: ${String(error)}`)
+    }
   }
 }
 

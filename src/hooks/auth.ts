@@ -2,7 +2,6 @@ import { initializeApp } from '@firebase/app'
 import { getAuth } from '@firebase/auth'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
 import { firebaseConfig } from '@/lib/firebase-helpers'
 import { apiClient } from '@/lib/utils/apiClient'
 import { User } from '@/types/User'
@@ -43,6 +42,9 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
     },
     staleTime: Infinity,
   })
+
+  // isLoading フラグを isAuthLoading として扱う
+  const isAuthLoading = getUser.isLoading
 
   // useMutation for logging in
   const loginMutation = useMutation<void, Error, IApiRequest, unknown>({
@@ -109,6 +111,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
   // Return the necessary values and functions
   return {
     user,
+    isAuthLoading,
     getUser,
     renderLogin,
     firebaseLogin: handleLogin,
