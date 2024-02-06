@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
 import { getMemoListApiUrl } from '@/lib/pagination-helper'
 import { apiClient } from '@/lib/utils/apiClient'
+import { handleAxiosError } from '@/lib/utils/errorHandling'
 import { UseMemoListHookProps } from '@/types/memo/MemosQueryParams'
 import { MemoListReturnType } from '@/types/memoList'
-import { AxiosError } from 'axios'
-import { handleAxiosError } from '@/lib/utils/errorHandling'
 
 const fetchMemoList = async (apiUrl: string) => {
   try {

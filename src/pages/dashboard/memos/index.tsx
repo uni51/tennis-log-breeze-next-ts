@@ -1,16 +1,16 @@
 import { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import AppLayout from '@/components/Layouts/AppLayout'
+import { Loading } from '@/components/Loading'
 import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
 import { AuthGuard } from '@/features/auth/components/AuthGuard'
 import DashboardMemoList from '@/features/memos/dashboard/components/DashboardMemoList'
 import { useAuth } from '@/hooks/auth'
 import { onError } from '@/lib/error-helper'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
-import { Loading } from '@/components/Loading'
-import { useEffect, useState } from 'react'
 import { DashboardMemoQueryParams } from '@/types/memo/MemosQueryParams'
 
 const DashboardMemoIndex: NextPage = () => {
