@@ -8,7 +8,7 @@ import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBac
 import NicknameMemoList from '@/features/memos/nickname/components/NicknameMemoList'
 import { onError } from '@/lib/error-helper'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
-import { NicknameMemosQueryParams } from '@/types/memo/MemosQueryParamas'
+import { NicknameMemosQueryParams } from '@/types/memo/MemosQueryParams'
 import { Loading } from '@/components/Loading'
 
 /* ユーザー毎の公開メモ一覧ページ */

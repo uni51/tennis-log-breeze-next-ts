@@ -7,7 +7,7 @@ import MemoListPaginationShort from '@/components/Pagination/MemoListPaginationS
 import SingleMemoBlockForList from '@/features/memos/common/components/templates/SingleMemoBlockForList'
 import { useMemoList } from '@/hooks/memos/useMemoList'
 import { Memo } from '@/types/Memo'
-import { NicknameMemosQueryParams } from '@/types/memo/MemosQueryParamas'
+import { NicknameMemosQueryParams } from '@/types/memo/MemosQueryParams'
 
 const NicknameMemoList: React.FC<NicknameMemosQueryParams> = ({
   nickname,

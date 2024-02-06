@@ -7,7 +7,7 @@ import SingleMemoBlockForList from '@/features/memos/common/components/templates
 import AddMemoButton from '@/features/memos/dashboard/components/AddMemoButton'
 import { useMemoList } from '@/hooks/memos/useMemoList'
 import { Memo } from '@/types/Memo'
-import { UseMemoListHookProps } from '@/types/memo/MemosQueryParamas'
+import { UseMemoListHookProps } from '@/types/memo/MemosQueryParams'
 
 const DashboardMemoList: React.FC<UseMemoListHookProps> = ({
   page,

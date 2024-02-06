@@ -7,7 +7,7 @@ import MemoListPaginationShort from '@/components/Pagination/MemoListPaginationS
 import SingleMemoBlockForList from '@/features/memos/common/components/templates/SingleMemoBlockForList'
 import { useMemoList } from '@/hooks/memos/useMemoList'
 import { Memo } from '@/types/Memo'
-import { MemoQueryParams } from '@/types/memo/MemosQueryParamas'
+import { MemoQueryParams } from '@/types/memo/MemosQueryParams'
 
 const PublishedMemoList: React.FC<MemoQueryParams> = ({ page, category, tag }: MemoQueryParams) => {
   const { showBoundary } = useErrorBoundary()

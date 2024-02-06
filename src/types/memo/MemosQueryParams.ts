@@ -22,7 +22,11 @@ export type MemoQueryParams = BaseQueryParamsWithoutPage & {
 // UseMemoListHookPropsでpageを必須とする
 export type UseMemoListHookProps = BaseQueryParamsWithoutPage & {
   page: number // pageを必須とする
-  preApiUrl: string
+  preApiUrl?: string
 }
 
-export type MemoListsPaginationProps = UseMemoListHookProps
+export type UseMemoListHookPropsWithoutPreApiUrl = Omit<UseMemoListHookProps, 'preApiUrl'>
+
+export type MemoListsPaginationProps = UseMemoListHookPropsWithoutPreApiUrl & {
+  preApiUrl: string // preApiUrlを必須とする
+}

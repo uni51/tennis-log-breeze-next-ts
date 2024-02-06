@@ -1,3 +1,5 @@
+import { MemoListsPaginationProps } from '@/types/memo/MemosQueryParams'
+
 // 共通の型定義ファイルなどに移動
 export type PagerLink = { pathname: string; query: Record<string, string> }
 
@@ -28,13 +30,6 @@ export const createPagerLink: RenderPagerLinkFuncType = (
   pathname: baseUrl,
   query: createQueryParams(page, category, tag),
 })
-
-export type MemoListsPaginationProps = {
-  preApiUrl: string
-  page: number
-  category?: number
-  tag?: string
-}
 
 export const getMemoListApiUrl = ({
   preApiUrl,
