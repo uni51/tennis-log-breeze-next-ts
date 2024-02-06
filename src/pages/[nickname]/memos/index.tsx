@@ -4,12 +4,12 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import AppLayout from '@/components/Layouts/AppLayout'
+import { Loading } from '@/components/Loading'
 import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
 import NicknameMemoList from '@/features/memos/nickname/components/NicknameMemoList'
 import { onError } from '@/lib/error-helper'
 import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
 import { NicknameMemosQueryParams } from '@/types/memo/MemosQueryParams'
-import { Loading } from '@/components/Loading'
 
 /* ユーザー毎の公開メモ一覧ページ */
 const PublicMemoListByNickname: NextPage = () => {
