@@ -24,6 +24,7 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
   const defaultValues = {
     category_id: '1',
     status_id: '0',
+    tags: [],
   }
   const [tags, setTags] = useState<Tag[]>([])
 

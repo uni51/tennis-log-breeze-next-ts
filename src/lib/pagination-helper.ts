@@ -1,45 +1,50 @@
-type PagerLink = { pathname: string; query: Record<string, string> }
+import { MemoListsPaginationProps } from '@/types/memo/MemosQueryParams'
+
+// 共通の型定義ファイルなどに移動
+export type PagerLink = { pathname: string; query: Record<string, string> }
+
+// 共通のクエリパラメータ生成関数
+const createQueryParams = (
+  page: number,
+  category?: number,
+  tag?: string,
+): Record<string, string> => ({
+  ...(category && { category: `${category}` }),
+  ...(tag && { tag }),
+  page: `${page}`,
+})
 
 export type RenderPagerLinkFuncType = (
   baseUrl: string,
   page: number,
-  category?: number | null,
+  category?: number,
+  tag?: string,
 ) => PagerLink
 
-export const getRenderPagerLinkUrl = (
-  renderPagerLinkFunc: RenderPagerLinkFuncType,
-  baseUrl: string,
-  pageNumber: number,
-  category?: number | null,
-): PagerLink => {
-  return renderPagerLinkFunc(baseUrl, pageNumber, category) || { pathname: '/memos/', query: {} }
-}
-
-export const getMemosListByCategoryPageLink: RenderPagerLinkFuncType = (
+export const createPagerLink: RenderPagerLinkFuncType = (
   baseUrl,
   page,
   category,
-): PagerLink => {
-  return {
-    pathname: baseUrl,
-    query: category ? { category: `${category}`, page: `${page}` } : { page: `${page}` },
-  }
-}
-
-export type MemoListsPaginationProps = {
-  preApiUrl: string
-  pageIndex: number
-  categoryNumber: number | null
-}
+  tag,
+): PagerLink => ({
+  pathname: baseUrl,
+  query: createQueryParams(page, category, tag),
+})
 
 export const getMemoListApiUrl = ({
   preApiUrl,
-  pageIndex,
-  categoryNumber,
+  page,
+  category,
+  tag,
 }: MemoListsPaginationProps): string => {
-  const apiUrl = categoryNumber
-    ? `${preApiUrl}/category/${categoryNumber}?page=${pageIndex}`
-    : `${preApiUrl}?page=${pageIndex}`
+  const queryParams = createQueryParams(page, category, tag)
+  let apiUrl = `${preApiUrl}?${new URLSearchParams(queryParams).toString()}`
+
+  if (category) {
+    apiUrl = `${preApiUrl}/category/${category}${tag ? `/tag/${tag}` : ''}?page=${page}`
+  } else if (tag) {
+    apiUrl = `${preApiUrl}/tag/${tag}?page=${page}`
+  }
 
   return apiUrl
 }

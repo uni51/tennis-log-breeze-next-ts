@@ -1,17 +1,17 @@
-import { useQuery, UseQueryOptions } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
 import { apiClient } from '@/lib/utils/apiClient'
+import { handleAxiosError } from '@/lib/utils/errorHandling'
 import { Memo } from '@/types/Memo'
 
 const fetchMemoDetail = async (apiUrl: string): Promise<Memo> => {
   try {
-    const { data } = await apiClient.get(apiUrl)
+    const { data } = await apiClient.get<{ data: Memo }>(apiUrl)
     return data.data
   } catch (error) {
-    if (error instanceof Error) {
-      // エラーハンドリング: エラーが発生した場合は適切に処理する
-      throw new Error(`Failed to fetch memo detail: ${error.message}`)
+    if ((error as AxiosError).isAxiosError) {
+      return handleAxiosError(error as AxiosError)
     } else {
-      // error is not an instance of Error
       throw new Error(`Failed to fetch memo detail: ${String(error)}`)
     }
   }

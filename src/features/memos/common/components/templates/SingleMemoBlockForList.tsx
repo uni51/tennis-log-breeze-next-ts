@@ -7,6 +7,7 @@ type SingleMemoBlockForListProps = {
   renderMemoDetailLink: string
   renderMemoListByCategoryLink: string
   renderMemoListByNickNameLink: string
+  renderMemoListByTagLink?: string
 }
 
 const SingleMemoBlockForList: FC<SingleMemoBlockForListProps> = ({
@@ -14,6 +15,7 @@ const SingleMemoBlockForList: FC<SingleMemoBlockForListProps> = ({
   renderMemoDetailLink,
   renderMemoListByCategoryLink,
   renderMemoListByNickNameLink,
+  renderMemoListByTagLink,
 }) => {
   return (
     <div className='bg-gray-100 shadow-lg mb-5 p-4'>
@@ -26,17 +28,17 @@ const SingleMemoBlockForList: FC<SingleMemoBlockForListProps> = ({
         <Link href={renderMemoListByCategoryLink}>{memo.category_name}</Link>
       </p>
       <p className='mt-1'>
-        {memo.tag_list.tags.map((tag, index) => (
-          <Link href={`/tags/${memo.tag_list.normalized[index]}`} key={index} className='pr-1'>
-            <span className='text-xs font-semibold py-1 px-2 uppercase rounded-lg text-green-600 bg-green-200 last:mr-0 mr-1'>
-              {tag}
+        {memo.tag_list.normalized.map((normalizedTag, index) => (
+          <Link href={`${renderMemoListByTagLink}${normalizedTag}`} key={index} className='pr-1'>
+            <span className='inline-block text-xs font-semibold py-1 px-2 uppercase rounded-lg text-blue-600 bg-blue-200 last:mr-0 mt-1 mr-1'>
+              {normalizedTag}
             </span>
           </Link>
         ))}
       </p>
       <p className='mt-1'>
         <Link href={renderMemoListByNickNameLink}>
-          <span className='text-xs font-semibold py-1 px-2 uppercase rounded-lg text-blue-600 bg-blue-200 last:mr-0 mr-1'>
+          <span className='text-xs font-semibold py-1 px-2 uppercase rounded-lg text-green-600 bg-green-200 last:mr-0 mt-1 mr-1'>
             {memo.user_nickname}
           </span>
         </Link>

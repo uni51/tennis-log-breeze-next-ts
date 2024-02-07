@@ -1,7 +1,9 @@
+import { AxiosError } from 'axios'
 import { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import { AuthGuard } from '@/features/auth/components/AuthGuard'
@@ -33,8 +35,19 @@ const DashboardMemoDetailEdit: NextPage = () => {
 
       setMemo(memoData)
     } catch (error) {
-      console.error('Error fetching memo data:', error)
-      router.push('/dashboard/memos')
+      if ((error as AxiosError).isAxiosError) {
+        const axiosError = error as AxiosError
+        if (axiosError.response?.status === 422) {
+          const errors = axiosError.response?.data.errors
+          Object.keys(errors).map((key: string) => {
+            toast.error(errors[key][0])
+          })
+        }
+        if (axiosError.response?.status === 500) {
+          alert('システムエラーです！！')
+        }
+        router.push('/dashboard/memos')
+      }
     } finally {
       setIsLoading(false)
     }

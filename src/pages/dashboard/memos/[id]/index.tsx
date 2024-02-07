@@ -13,26 +13,26 @@ import { onError } from '@/lib/error-helper'
 import { Memo } from '@/types/Memo'
 
 const DashboardMemoDetailIndex: NextPage<Memo> = () => {
-  const { user } = useAuth({ middleware: 'auth' })
+  const router = useRouter()
+  const { user, isAuthLoading } = useAuth({ middleware: 'auth' })
   const [apiUrl, setApiUrl] = useState('')
   const [titleText, setTitleText] = useState('')
   const [isLoading, setIsLoading] = useState(true)
-
-  const router = useRouter()
-  const loginUser = user?.data
+  const categoryId = router.query.category ? Number(router.query.category) : null
 
   useEffect(() => {
-    // Fetch用URL組み立て
-    if (router.isReady) {
-      const apiUri = `api/dashboard/memos/${router.query.id}`
-      setApiUrl(apiUri)
+    if (!isAuthLoading && user === null) {
+      router.push('/login')
+      return
     }
 
-    setIsLoading(false)
-  }, [router.isReady])
+    if (router.isReady && !isAuthLoading) {
+      setApiUrl(`api/dashboard/memos/${router.query.id}`)
+      setIsLoading(false)
+    }
+  }, [router, user, isAuthLoading])
 
   if (isLoading) return <Loading />
-  if (!user) return null
 
   const headline = `${user?.data?.name}さんのメモ詳細`
 
@@ -45,7 +45,12 @@ const DashboardMemoDetailIndex: NextPage<Memo> = () => {
         header={<h2 className='font-semibold text-xl text-gray-800 leading-tight'>{headline}</h2>}
       >
         <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
-          <DashboardMemoDetail apiUrl={apiUrl} loginUser={loginUser} setTitleText={setTitleText} />
+          <DashboardMemoDetail
+            apiUrl={apiUrl}
+            loginUser={user?.data}
+            setTitleText={setTitleText}
+            categoryId={categoryId}
+          />
         </ErrorBoundary>
       </AppLayout>
     </AuthGuard>

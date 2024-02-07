@@ -12,31 +12,30 @@ import {
   CATEGORY_OTHER,
 } from '@/constants/CategoryNameConst'
 
-export const getMemosListByCategoryHeadLineTitle = (categoryNumber: number | undefined | null) => {
-  const separator = ' : '
-  switch (categoryNumber) {
+export const getMemosListByCategoryHeadLineTitle = (categoryId: number | undefined | null) => {
+  switch (categoryId) {
     case 1:
-      return separator + CATEGORY_FOREHAND
+      return CATEGORY_FOREHAND
     case 2:
-      return separator + CATEGORY_DOUBLE_BACKHAND
+      return CATEGORY_DOUBLE_BACKHAND
     case 3:
-      return separator + CATEGORY_SINGLE_BACKHAND
+      return CATEGORY_SINGLE_BACKHAND
     case 4:
-      return separator + CATEGORY_SERVE
+      return CATEGORY_SERVE
     case 5:
-      return separator + CATEGORY_RETURN
+      return CATEGORY_RETURN
     case 6:
-      return separator + CATEGORY_VOLLEY
+      return CATEGORY_VOLLEY
     case 7:
-      return separator + CATEGORY_SMASH
+      return CATEGORY_SMASH
     case 8:
-      return separator + CATEGORY_SINGLES
+      return CATEGORY_SINGLES
     case 9:
-      return separator + CATEGORY_DOUBLES
+      return CATEGORY_DOUBLES
     case 10:
-      return separator + CATEGORY_GEAR
+      return CATEGORY_GEAR
     case 99:
-      return separator + CATEGORY_OTHER
+      return CATEGORY_OTHER
     default:
       return ''
   }

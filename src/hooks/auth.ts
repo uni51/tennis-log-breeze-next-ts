@@ -1,38 +1,21 @@
-import { initializeApp } from '@firebase/app'
-import { getAuth } from '@firebase/auth'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
-import { firebaseConfig } from '@/lib/firebase-helpers'
 import { apiClient } from '@/lib/utils/apiClient'
 import { User } from '@/types/User'
 
 // Type for authentication middleware
 type AuthMiddleware = 'auth' | 'guest'
 
-// Interface for useAuth hook
-interface IUseAuth {
+// Custom hook for authentication queries
+export const useAuth = ({
+  middleware,
+  redirectIfAuthenticated,
+}: {
   middleware: AuthMiddleware
   redirectIfAuthenticated?: string
-}
-
-// Interface for API request parameters
-interface IApiRequest {
-  setErrors: (errors: string[]) => void
-  setStatus: React.Dispatch<React.SetStateAction<any | null>>
-  [key: string]: any
-}
-
-// Initialize Firebase auth
-const auth = getAuth(initializeApp(firebaseConfig))
-
-// Custom hook for authentication queries
-export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
+}) => {
   const router = useRouter()
   const queryClient = useQueryClient()
-
-  // Function to get CSRF cookie
-  const csrf = () => apiClient.get('/auth/sanctum/csrf-cookie')
 
   // Query to get user data
   const getUser = useQuery<User, Error>({
@@ -44,30 +27,22 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
     staleTime: Infinity,
   })
 
+  const isAuthLoading = getUser.isLoading
+
   // useMutation for logging in
-  const loginMutation = useMutation<void, Error, IApiRequest, unknown>({
-    mutationFn: async ({ idToken, setErrors, setStatus }: IApiRequest) => {
-      await csrf()
-      setErrors([])
-      setStatus(null)
-      try {
-        console.log(idToken)
-        await apiClient.post('/auth/login', { idToken })
-      } catch (error: any) {
-        if (error.response.status !== 422) throw error
-        setErrors(error.response.data.errors)
-      }
+  const loginMutation = useMutation<void, Error, { idToken: string }, unknown>({
+    mutationFn: async ({ idToken }) => {
+      await apiClient.get('/auth/sanctum/csrf-cookie')
+      await apiClient.post('/auth/login', { idToken })
     },
-    onSuccess: async () => {
+    onSuccess: () => {
       router.push('/dashboard')
     },
     onError: (error) => {
-      // Handle error
-      // do something on error
-    },
-    onSettled: () => {
-      // Handle settled
-      // do something on settled
+      // Improved error handling
+      if (error instanceof Error) {
+        console.error('Login error:', error.message)
+      }
     },
     mutationKey: ['login'],
   })
@@ -77,25 +52,17 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
     mutationFn: async () => {
       await apiClient.post('/auth/logout')
     },
-    onSuccess: async () => {
+    onSuccess: () => {
       sessionStorage.removeItem('token')
       router.push('/login')
     },
-    onError: () => {},
-    onSettled: () => {},
     mutationKey: ['logout'],
   })
 
-  // Get user data from the query client
   const user = queryClient.getQueryData<User>(['user'])
 
-  // Function to handle login
   const handleLogin = async (idToken: string) => {
-    const setErrors = (errors: string[]) => {}
-    const setStatus = (status: string | null) => {}
-
-    // Call the login mutation
-    await loginMutation.mutateAsync({ idToken, setErrors, setStatus })
+    await loginMutation.mutateAsync({ idToken })
   }
 
   const handleLogout = async () => {
@@ -106,9 +73,9 @@ export const useAuth = ({ middleware, redirectIfAuthenticated }: IUseAuth) => {
     window.location.pathname = '/login'
   }
 
-  // Return the necessary values and functions
   return {
     user,
+    isAuthLoading,
     getUser,
     renderLogin,
     firebaseLogin: handleLogin,

@@ -7,20 +7,22 @@ import MemoListPaginationShort from '@/components/Pagination/MemoListPaginationS
 import SingleMemoBlockForList from '@/features/memos/common/components/templates/SingleMemoBlockForList'
 import { useMemoList } from '@/hooks/memos/useMemoList'
 import { Memo } from '@/types/Memo'
-import { MemoQueryParams } from '@/types/memo/MemosQueryParams'
+import { NicknameMemosQueryParams } from '@/types/memo/MemosQueryParams'
 
-const PublishedMemoList: React.FC<MemoQueryParams> = ({ page, category, tag }: MemoQueryParams) => {
+const NicknameMemoList: React.FC<NicknameMemosQueryParams> = ({
+  nickname,
+  page,
+  category,
+  tag,
+}: NicknameMemosQueryParams) => {
   const { showBoundary } = useErrorBoundary()
-
-  const preApiUrl = '/api/public/memos'
+  const preApiUrl = `/api/public/${nickname}/memos`
   const { data: memos, error, isLoading } = useMemoList({
     preApiUrl,
     page,
     category,
     tag,
   })
-
-  console.log('memos', memos)
 
   if (error) {
     showBoundary(error)
@@ -45,10 +47,12 @@ const PublishedMemoList: React.FC<MemoQueryParams> = ({ page, category, tag }: M
       <SingleMemoBlockForList
         memo={memo}
         renderMemoDetailLink={`/${memo.user_nickname}/memos/${memo.id}`}
-        renderMemoListByCategoryLink={`/memos?category=${memo.category_id}`}
+        renderMemoListByCategoryLink={`/${memo.user_nickname}/memos?category=${memo.category_id}`}
         renderMemoListByNickNameLink={`/${memo.user_nickname}/memos/`}
         renderMemoListByTagLink={
-          category ? `/memos?category=${memo.category_id}&tag=` : `/memos?tag=`
+          category
+            ? `/${memo.user_nickname}/memos?category=${memo.category_id}&tag=`
+            : `/${memo.user_nickname}/memos?tag=`
         }
         key={index}
       />
@@ -62,7 +66,7 @@ const PublishedMemoList: React.FC<MemoQueryParams> = ({ page, category, tag }: M
         <div className='grid w-4/5 mx-auto gap-16 lg:grid-cols-2'>{renderMemoList()}</div>
         <div className='md:hidden'>
           <MemoListPaginationShort
-            baseUrl='/memos/'
+            baseUrl={`/${nickname}/memos/`}
             totalItems={Number(memos?.meta?.total)}
             currentPage={Number(memos?.meta?.current_page)}
             category={category}
@@ -71,7 +75,7 @@ const PublishedMemoList: React.FC<MemoQueryParams> = ({ page, category, tag }: M
         </div>
         <div className='hidden sm:hidden md:block lg:block xl:block'>
           <MemoListPaginationLong
-            baseUrl='/memos/'
+            baseUrl={`/${nickname}/memos/`}
             totalItems={Number(memos?.meta?.total)}
             currentPage={Number(memos?.meta?.current_page)}
             category={category}
@@ -83,4 +87,4 @@ const PublishedMemoList: React.FC<MemoQueryParams> = ({ page, category, tag }: M
   )
 }
 
-export default PublishedMemoList
+export default NicknameMemoList
