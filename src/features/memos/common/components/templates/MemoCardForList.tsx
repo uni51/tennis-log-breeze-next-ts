@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { FC } from 'react'
 import { Memo } from '@/types/Memo'
 
-type SingleMemoBlockForListProps = {
+type MemoCardForListProps = {
   memo: Memo
   renderMemoDetailLink: string
   renderMemoListByCategoryLink: string
@@ -10,7 +10,7 @@ type SingleMemoBlockForListProps = {
   renderMemoListByTagLink?: string
 }
 
-const SingleMemoBlockForList: FC<SingleMemoBlockForListProps> = ({
+const MemoCardForList: FC<MemoCardForListProps> = ({
   memo,
   renderMemoDetailLink,
   renderMemoListByCategoryLink,
@@ -74,4 +74,4 @@ const SingleMemoBlockForList: FC<SingleMemoBlockForListProps> = ({
   )
 }
 
-export default SingleMemoBlockForList
+export default MemoCardForList

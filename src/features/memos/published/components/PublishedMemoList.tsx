@@ -4,7 +4,7 @@ import ClipLoader from 'react-spinners/ClipLoader'
 import { Loading } from '@/components/Loading'
 import MemoListPaginationLong from '@/components/Pagination/MemoListPaginationLong'
 import MemoListPaginationShort from '@/components/Pagination/MemoListPaginationShort'
-import SingleMemoBlockForList from '@/features/memos/common/components/templates/SingleMemoBlockForList'
+import MemoCardForList from '@/features/memos/common/components/templates/MemoCardForList'
 import { useMemoList } from '@/hooks/memos/useMemoList'
 import { Memo } from '@/types/Memo'
 import { MemoQueryParams } from '@/types/memo/MemosQueryParams'
@@ -42,7 +42,7 @@ const PublishedMemoList: React.FC<MemoQueryParams> = ({ page, category, tag }: M
 
   const renderMemoList = () => {
     return memos?.data?.map((memo: Memo, index: number) => (
-      <SingleMemoBlockForList
+      <MemoCardForList
         memo={memo}
         renderMemoDetailLink={`/${memo.user_nickname}/memos/${memo.id}`}
         renderMemoListByCategoryLink={`/memos?category=${memo.category_id}`}
