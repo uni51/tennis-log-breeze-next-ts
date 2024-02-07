@@ -1,15 +1,15 @@
 import { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import AppLayout from '@/components/Layouts/AppLayout'
+import { Loading } from '@/components/Loading'
 import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
 import PublishedMemoList from '@/features/memos/published/components/PublishedMemoList'
 import { onError } from '@/lib/error-helper'
 import { getCategoryText } from '@/lib/headline-helper'
-import { useEffect, useState } from 'react'
 import { MemoQueryParams } from '@/types/memo/MemosQueryParams'
-import { Loading } from '@/components/Loading'
 
 /* みんなの公開中のメモ一覧ページ */
 const PublishedMemoIndex: NextPage = () => {
