@@ -8,7 +8,7 @@ import { Loading } from '@/components/Loading'
 import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
 import NicknameMemoList from '@/features/memos/nickname/components/NicknameMemoList'
 import { onError } from '@/lib/error-helper'
-import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
+import { getCategoryText } from '@/lib/headline-helper'
 import { NicknameMemosQueryParams } from '@/types/memo/MemosQueryParams'
 
 /* ユーザー毎の公開メモ一覧ページ */
@@ -45,14 +45,12 @@ const PublicMemoListByNickname: NextPage = () => {
     return <Loading />
   }
 
-  const headLine = `${queryParams.nickname}さんのメモ一覧${getMemosListByCategoryHeadLineTitle(
-    queryParams.category,
-  )}`
+  const headLine = `${queryParams.nickname}さんのメモ一覧`
 
   let categoryText = ''
   if (queryParams.category !== null) {
     // categoryIdがnullでないことをチェック
-    categoryText = getMemosListByCategoryHeadLineTitle(queryParams.category)
+    categoryText = getCategoryText(queryParams.category)
   }
 
   return (

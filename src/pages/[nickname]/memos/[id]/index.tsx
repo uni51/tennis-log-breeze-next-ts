@@ -31,7 +31,7 @@ const MemoByNickNameDetail: NextPage<Memo> = () => {
 
   if (isLoading) return <Loading />
 
-  const headline = `${nickname}さんの公開メモ詳細`
+  const headline = `${nickname}さんの公開メモ 詳細`
 
   return (
     <>

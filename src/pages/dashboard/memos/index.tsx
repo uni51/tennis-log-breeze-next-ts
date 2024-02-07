@@ -10,7 +10,7 @@ import { AuthGuard } from '@/features/auth/components/AuthGuard'
 import DashboardMemoList from '@/features/memos/dashboard/components/DashboardMemoList'
 import { useAuth } from '@/hooks/auth'
 import { onError } from '@/lib/error-helper'
-import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
+import { getCategoryText } from '@/lib/headline-helper'
 import { DashboardMemoQueryParams } from '@/types/memo/MemosQueryParams'
 
 const DashboardMemoIndex: NextPage = () => {
@@ -48,9 +48,7 @@ const DashboardMemoIndex: NextPage = () => {
     ? `${user.data.nickname}さんのメモ一覧`
     : 'あなたが作成したメモ一覧'
 
-  const categoryText = queryParams.category
-    ? getMemosListByCategoryHeadLineTitle(queryParams.category)
-    : ''
+  const categoryText = queryParams.category ? getCategoryText(queryParams.category) : ''
 
   return (
     <AuthGuard>
