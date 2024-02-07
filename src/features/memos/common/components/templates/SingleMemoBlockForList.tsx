@@ -20,10 +20,23 @@ const SingleMemoBlockForList: FC<SingleMemoBlockForListProps> = ({
   return (
     <div className='bg-gray-100 shadow-lg mb-5 p-4'>
       <p className='text-lg font-bold pt-2 pb-1'>
-        <Link href={renderMemoDetailLink}>{memo.title}</Link>
+        <Link href={renderMemoDetailLink}>
+          {memo.title.length > 50 ? memo.title.substring(0, 50) + '...' : memo.title}
+        </Link>
       </p>
       <div className='border-b-2 border-gray-300 mb-4'></div>
-      <p className='mb-3 whitespace-pre-wrap'>{memo.body}</p>
+      <p className='mb-3 whitespace-pre-wrap'>
+        <Link href={renderMemoDetailLink} className='pb-6 text-slate-900'>
+          {memo.body.length > 70 ? memo.body.substring(0, 70) + '...' : memo.body}
+        </Link>
+        {memo.body.length > 70 && (
+          <span className='text-xs font-semibold pl-2'>
+            <Link href={renderMemoDetailLink} className='text-blue-600 hover:text-blue-800'>
+              続きを読む<i className='fas fa-arrow-right'></i>
+            </Link>
+          </span>
+        )}
+      </p>
       <p className='text-xs font-semibold inline-block py-1 px-2 uppercase rounded-lg text-pink-600 bg-pink-200 last:mr-0 mr-1'>
         <Link href={renderMemoListByCategoryLink}>{memo.category_name}</Link>
       </p>

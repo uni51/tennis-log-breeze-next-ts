@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useEffect } from 'react'
 import LoadingIndicator from '@/components/LoadingIndicator'
+import MemoDetailCard from '@/features/memos/common/components/templates/MemoDetailCard'
 import MemoDetailNoContent from '@/features/memos/common/components/templates/MemoDetailNoContent'
-import SingleMemoDetail from '@/features/memos/common/components/templates/SingleMemoDetail'
 import { useHandleError } from '@/hooks/error/useHandleError'
 import { useMemoDetail } from '@/hooks/memos/useMemoDetail'
 import { LoginUser } from '@/types/loginUser'
@@ -34,7 +34,7 @@ const DashboardMemoDetail = ({ apiUrl, loginUser, setTitleText, categoryId }: Pr
   return (
     <>
       {memo && loginUser && memo.user_id === loginUser.id && (
-        <SingleMemoDetail
+        <MemoDetailCard
           memo={memo}
           loginUser={loginUser}
           renderMemoListByCategoryLink={`/dashboard/memos?category=${memo.category_id}`}

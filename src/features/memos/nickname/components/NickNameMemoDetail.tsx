@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useEffect } from 'react'
 import LoadingIndicator from '@/components/LoadingIndicator'
-import SingleMemoDetail from '@/features/memos/common/components/templates/SingleMemoDetail'
+import MemoDetailCard from '@/features/memos/common/components/templates/MemoDetailCard'
 import { useHandleError } from '@/hooks/error/useHandleError'
 import { useMemoDetail } from '@/hooks/memos/useMemoDetail'
 
@@ -31,7 +31,7 @@ const NickNameMemoDetail = ({ apiUrl, nickname, setTitleText, categoryId }: Prop
 
   return (
     <>
-      <SingleMemoDetail
+      <MemoDetailCard
         memo={memo}
         renderMemoListByCategoryLink={`/${nickname}/memos?category=${memo.category_id}`}
         renderMemoListByNickNameLink={`/${nickname}/memos/`}
