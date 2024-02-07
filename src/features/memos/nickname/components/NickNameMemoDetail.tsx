@@ -1,33 +1,46 @@
-import { Dispatch, SetStateAction } from 'react'
-import { useErrorBoundary } from 'react-error-boundary'
-import ClipLoader from 'react-spinners/ClipLoader'
+import { Dispatch, SetStateAction, useEffect } from 'react'
+import LoadingIndicator from '@/components/LoadingIndicator'
 import SingleMemoDetail from '@/features/memos/common/components/templates/SingleMemoDetail'
+import { useHandleError } from '@/hooks/error/useHandleError'
 import { useMemoDetail } from '@/hooks/memos/useMemoDetail'
 
 type Props = {
   apiUrl: string
-  // setTitleText: Dispatch<SetStateAction<string>>
+  nickname: string
+  setTitleText: Dispatch<SetStateAction<string>>
+  categoryId: number | null
 }
 
-const NickNameMemoDetail = ({ apiUrl }: Props) => {
-  const { showBoundary } = useErrorBoundary()
-
+const NickNameMemoDetail = ({ apiUrl, nickname, setTitleText, categoryId }: Props) => {
+  const handleError = useHandleError()
   const { data: memo, error } = useMemoDetail(apiUrl)
-  if (error) showBoundary(error)
-  if (!memo)
-    return (
-      <div className='mx-auto mt-20'>
-        <div className='w-1/2 mx-auto text-center'>
-          <ClipLoader />
-        </div>
-      </div>
-    )
 
-  // setTitleText(memo.title)
+  useEffect(() => {
+    if (error) {
+      handleError(error, '/dashboard/memos')
+    }
+
+    if (memo) {
+      setTitleText(memo.title)
+    }
+  }, [error, memo, setTitleText])
+
+  if (!memo) {
+    return <LoadingIndicator />
+  }
 
   return (
     <>
-      <SingleMemoDetail memo={memo} />
+      <SingleMemoDetail
+        memo={memo}
+        renderMemoListByCategoryLink={`/${nickname}/memos?category=${memo.category_id}`}
+        renderMemoListByNickNameLink={`/${nickname}/memos/`}
+        renderMemoListByTagLink={
+          categoryId
+            ? `/${nickname}/memos?category=${memo.category_id}&tag=`
+            : `/${nickname}/memos?tag=`
+        }
+      />
     </>
   )
 }

@@ -28,6 +28,7 @@ const MemoEdit: React.FC<Props> = ({ memo, statuses, categories }) => {
     body: memo.body,
     category_id: String(memo.category_id),
     status_id: String(memo.status),
+    tags: memo.tag_list.tags ?? [],
   }
 
   // React-Hook-Form

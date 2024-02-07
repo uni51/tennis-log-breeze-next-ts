@@ -1,36 +1,32 @@
 import { useQuery } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
 import { getMemoListApiUrl } from '@/lib/pagination-helper'
 import { apiClient } from '@/lib/utils/apiClient'
+import { handleAxiosError } from '@/lib/utils/errorHandling'
+import { UseMemoListHookProps } from '@/types/memo/MemosQueryParams'
 import { MemoListReturnType } from '@/types/memoList'
 
-type Props = {
-  preApiUrl: string
-  pageIndex: number
-  categoryNumber: number | null
-}
-
-const fetchMemoList = async (apiUrl: string): Promise<MemoListReturnType> => {
+const fetchMemoList = async (apiUrl: string) => {
   try {
-    const res = await apiClient.get(apiUrl)
-    return res.data
+    const { data } = await apiClient.get(apiUrl)
+    console.log(data)
+    return data
   } catch (error) {
-    if (error instanceof Error) {
-      // エラーハンドリング: エラーが発生した場合は適切に処理する
-      throw new Error(`Failed to fetch memo list: ${error.message}`)
+    if ((error as AxiosError).isAxiosError) {
+      return handleAxiosError(error as AxiosError)
     } else {
-      // error is not an instance of Error
-      throw new Error(`Failed to fetch memo list: ${String(error)}`)
+      throw new Error(`Failed to fetch memo detail: ${String(error)}`)
     }
   }
 }
 
-export const useMemoList = ({ preApiUrl, pageIndex, categoryNumber }: Props) => {
-  const apiUrl = getMemoListApiUrl({ preApiUrl, pageIndex, categoryNumber })
+export const useMemoList = ({ preApiUrl, page, category, tag }: UseMemoListHookProps) => {
+  const apiUrl = getMemoListApiUrl({ preApiUrl, page, category, tag })
 
   return useQuery<MemoListReturnType, Error>({
     queryKey: ['memoList', apiUrl], // データの重複取得を避けるためにqueryKeyに依存変数を含める
     queryFn: () => fetchMemoList(apiUrl),
-    staleTime: Infinity,
+    staleTime: 0,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     // 非同期操作が完了する前にコンポーネントがアンマウントされた場合のキャンセル

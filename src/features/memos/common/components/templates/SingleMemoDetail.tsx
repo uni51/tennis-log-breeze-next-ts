@@ -2,52 +2,52 @@ import { AxiosError, AxiosResponse } from 'axios'
 import { NextPage } from 'next'
 import Link from 'next/link'
 import router from 'next/router'
-import { Dispatch, SetStateAction, useState } from 'react'
 import { toast } from 'react-toastify'
 import { showAlertModal } from '@/components/AlertModalManager'
+import { apiClient } from '@/lib/utils/apiClient'
+import { handleAxiosError } from '@/lib/utils/errorHandling'
 import { Memo } from '@/types/Memo'
 import { LoginUser } from '@/types/loginUser'
 
 type Props = {
   memo: Memo
   loginUser?: LoginUser
-  setTitleText?: Dispatch<SetStateAction<string>>
+  renderMemoListByCategoryLink: string
+  renderMemoListByNickNameLink: string
+  renderMemoListByTagLink?: string
 }
-const SingleMemoDetail: NextPage<Props> = ({ memo, loginUser }) => {
+
+const SingleMemoDetail: NextPage<Props> = ({
+  memo,
+  loginUser,
+  renderMemoListByCategoryLink,
+  renderMemoListByNickNameLink,
+  renderMemoListByTagLink,
+}) => {
   const showAlert = () => {
     showAlertModal({
       message: '本当にこの記事を削除しますか？',
-      onOk: () => {
-        memoDelete()
-      },
+      onOk: memoDelete,
     })
   }
 
-  const memoDelete = () => {
-    toast.success('記事を削除しました')
-    router.push('/dashboard/memos')
-    // apiClient
-    //   // CSRF保護の初期化
-    //   .get('/auth/sanctum/csrf-cookie')
-    //   .then((res) => {
-    //     // APIへのリクエスト
-    //     apiClient
-    //       .post(`/api/dashboard/memos/${memo?.id}/delete`)
-    //       .then((response: AxiosResponse) => {
-    //         router.push({
-    //           pathname: '/dashboard/memos',
-    //           query: { page: 1 },
-    //         })
-    //       })
-    //       .catch((err: AxiosError) => {
-    //         // バリデーションエラー
-    //         if (err.response?.status === 422) {
-    //         }
-    //         if (err.response?.status === 500) {
-    //           alert('システムエラーです！！')
-    //         }
-    //       })
-    // })
+  const memoDelete = async () => {
+    try {
+      const response: AxiosResponse = await apiClient.post(
+        `/api/dashboard/memos/${memo?.id}/delete`,
+      )
+      toast.success('記事を削除しました')
+      router.push({
+        pathname: '/dashboard/memos',
+        query: { page: 1 },
+      })
+    } catch (error) {
+      if ((error as AxiosError).isAxiosError) {
+        return handleAxiosError(error as AxiosError)
+      } else {
+        throw new Error(`Failed to fetch memo detail: ${String(error)}`)
+      }
+    }
   }
 
   return (
@@ -58,20 +58,24 @@ const SingleMemoDetail: NextPage<Props> = ({ memo, loginUser }) => {
           <div className='border-b-2 border-gray-300 mb-4'></div>
           <p className='mb-3 whitespace-pre-wrap'>{memo.body}</p>
           <p className='text-xs font-semibold inline-block py-1 px-2 uppercase rounded-lg text-pink-600 bg-pink-200 last:mr-0 mr-1'>
-            {memo.category_name}
+            <Link href={renderMemoListByCategoryLink}>{memo.category_name}</Link>
           </p>
           <p className='mt-1'>
-            {memo.tag_list.tags.map((tag, index) => (
-              <Link href={`/tags/${memo.tag_list.normalized[index]}`} key={index} className='pr-1'>
-                <span className='text-xs font-semibold py-1 px-2 uppercase rounded-lg text-green-600 bg-green-200 last:mr-0 mr-1'>
-                  {tag}
+            {memo.tag_list.normalized.map((normalizedTag, index) => (
+              <Link
+                href={`${renderMemoListByTagLink}${normalizedTag}`}
+                key={index}
+                className='pr-1'
+              >
+                <span className='text-xs font-semibold py-1 px-2 uppercase rounded-lg text-blue-600 bg-blue-200 last:mr-0 mr-1'>
+                  {normalizedTag}
                 </span>
               </Link>
             ))}
           </p>
           <p className='mt-1'>
-            <Link href={`/${memo.user_nickname}/memos/page/1`}>
-              <span className='text-xs font-semibold py-1 px-2 uppercase rounded-lg text-blue-600 bg-blue-200 last:mr-0 mr-1'>
+            <Link href={renderMemoListByNickNameLink}>
+              <span className='text-xs font-semibold py-1 px-2 uppercase rounded-lg text-green-600 bg-green-200 last:mr-0 mr-1'>
                 {memo.user_nickname}
               </span>
             </Link>

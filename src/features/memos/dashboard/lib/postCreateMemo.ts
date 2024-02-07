@@ -6,6 +6,8 @@ import { MemoForm } from '@/types/MemoForm'
 
 // メモの登録
 export const postCreateMemo = (postData: MemoForm, setError: UseFormSetError<MemoForm>) => {
+  // console.log(postData)
+
   apiClient
     // CSRF保護の初期化
     .get('/auth/sanctum/csrf-cookie')

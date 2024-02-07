@@ -1,30 +1,27 @@
 import React from 'react'
 import { useErrorBoundary } from 'react-error-boundary'
-import ClipLoader from 'react-spinners/ClipLoader'
 import { Loading } from '@/components/Loading'
 import MemoListPaginationLong from '@/components/Pagination/MemoListPaginationLong'
 import MemoListPaginationShort from '@/components/Pagination/MemoListPaginationShort'
 import SingleMemoBlockForList from '@/features/memos/common/components/templates/SingleMemoBlockForList'
 import AddMemoButton from '@/features/memos/dashboard/components/AddMemoButton'
 import { useMemoList } from '@/hooks/memos/useMemoList'
-import { getMemosListByCategoryPageLink } from '@/lib/pagination-helper'
 import { Memo } from '@/types/Memo'
+import { DashboardMemoQueryParams } from '@/types/memo/MemosQueryParams'
 
-type Props = {
-  pageIndex: number
-  categoryNumber: number | null
-}
-
-const DashboardMemoList: React.FC<Props> = ({ pageIndex, categoryNumber }: Props) => {
+const DashboardMemoList: React.FC<DashboardMemoQueryParams> = ({
+  page,
+  category,
+  tag,
+}: DashboardMemoQueryParams) => {
   const { showBoundary } = useErrorBoundary()
   const preApiUrl = '/api/dashboard/memos'
   const { data: memos, error, isLoading } = useMemoList({
     preApiUrl,
-    pageIndex,
-    categoryNumber,
+    page,
+    category,
+    tag,
   })
-
-  console.log('memos', memos)
 
   if (error) {
     showBoundary(error)
@@ -37,20 +34,21 @@ const DashboardMemoList: React.FC<Props> = ({ pageIndex, categoryNumber }: Props
   if (!memos) {
     return (
       <div className='mx-auto mt-20'>
-        <div className='w-1/2 mx-auto text-center'>
-          <ClipLoader />
-        </div>
+        <div className='w-1/2 mx-auto text-center'>メモがありません</div>
       </div>
     )
   }
 
   const renderMemoList = () => {
-    return memos.data.map((memo: Memo, index: number) => (
+    return memos?.data?.map((memo: Memo, index: number) => (
       <SingleMemoBlockForList
         memo={memo}
         renderMemoDetailLink={`/dashboard/memos/${memo.id}`}
         renderMemoListByCategoryLink={`/dashboard/memos?category=${memo.category_id}`}
         renderMemoListByNickNameLink='/dashboard/memos/'
+        renderMemoListByTagLink={
+          category ? `/dashboard/memos?category=${memo.category_id}&tag=` : `/dashboard/memos?tag=`
+        }
         key={index}
       />
     ))
@@ -64,19 +62,19 @@ const DashboardMemoList: React.FC<Props> = ({ pageIndex, categoryNumber }: Props
         <div className='md:hidden'>
           <MemoListPaginationShort
             baseUrl='/dashboard/memos/'
-            totalItems={Number(memos.meta.total)}
-            currentPage={Number(memos.meta.current_page)}
-            renderPagerLinkFunc={getMemosListByCategoryPageLink}
-            category={categoryNumber}
+            totalItems={Number(memos?.meta?.total)}
+            currentPage={Number(memos?.meta?.current_page)}
+            category={category}
+            tag={tag}
           />
         </div>
         <div className='hidden sm:hidden md:block lg:block xl:block'>
           <MemoListPaginationLong
             baseUrl='/dashboard/memos/'
-            totalItems={Number(memos.meta.total)}
-            currentPage={Number(memos.meta.current_page)}
-            renderPagerLinkFunc={getMemosListByCategoryPageLink}
-            category={categoryNumber}
+            totalItems={Number(memos?.meta?.total)}
+            currentPage={Number(memos?.meta?.current_page)}
+            category={category}
+            tag={tag}
           />
         </div>
       </div>

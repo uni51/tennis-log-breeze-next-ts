@@ -3,20 +3,20 @@ import { useErrorBoundary } from 'react-error-boundary'
 import ClipLoader from 'react-spinners/ClipLoader'
 import AdminMemoListPaginationLong from '@/components/admin/Pagination/AdminMemoListPaginationLong'
 import { useAdminMemoList } from '@/hooks/admin/memos/useAdminMemoList'
-import { getMemosListByCategoryPageLink } from '@/lib/pagination-helper'
+import { createPagerLink } from '@/lib/pagination-helper'
 
 type Props = {
-  pageIndex: number
-  categoryNumber: number | null
+  page: number
+  category?: number
 }
 
-const AdminMemoList: React.FC<Props> = ({ pageIndex, categoryNumber }: Props) => {
+const AdminMemoList: React.FC<Props> = ({ page, category }: Props) => {
   const { showBoundary } = useErrorBoundary()
   const preApiUrl = '/api/admin/memos'
   const { data: memos, error, isLoading } = useAdminMemoList({
     preApiUrl,
-    pageIndex,
-    categoryNumber,
+    page,
+    category,
   })
 
   console.log('memos', memos)
@@ -147,8 +147,7 @@ const AdminMemoList: React.FC<Props> = ({ pageIndex, categoryNumber }: Props) =>
               baseUrl='/admin/memos/'
               totalItems={Number(memos.meta.total)}
               currentPage={Number(memos.meta.current_page)}
-              renderPagerLinkFunc={getMemosListByCategoryPageLink}
-              category={categoryNumber}
+              category={category}
             />
           </div>
         </div>
