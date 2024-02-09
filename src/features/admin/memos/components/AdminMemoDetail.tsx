@@ -1,15 +1,16 @@
 import { Dispatch, SetStateAction, useEffect } from 'react'
 import { useErrorBoundary } from 'react-error-boundary'
 import ClipLoader from 'react-spinners/ClipLoader'
-import AdminSingleMemoDetail from './AdminSingleMemoDetail'
 import { useMemoDetail } from '@/hooks/memos/useMemoDetail'
+import AdminMemoDetailCard from './AdminMemoDetailCard'
 
 type Props = {
   apiUrl: string
   setHeadLine: Dispatch<SetStateAction<string>>
+  category?: number
 }
 
-const AdminMemoDetail = ({ apiUrl, setHeadLine }: Props) => {
+const AdminMemoDetail = ({ apiUrl, setHeadLine, category }: Props) => {
   const { showBoundary } = useErrorBoundary()
 
   const { data: memo, error } = useMemoDetail(apiUrl)
@@ -36,7 +37,18 @@ const AdminMemoDetail = ({ apiUrl, setHeadLine }: Props) => {
 
   return (
     <>
-      <AdminSingleMemoDetail memo={memo} />
+      {memo && (
+        <AdminMemoDetailCard
+          memo={memo}
+          renderMemoListByCategoryLink={`/admin/memos/${memo.user_nickname}?category=${memo.category_id}`}
+          renderMemoListByNickNameLink={`/admin/memos/${memo.user_nickname}`}
+          renderMemoListByTagLink={
+            category
+              ? `/admin/memos/${memo.user_nickname}?category=${memo.category_id}&tag=`
+              : `/admin/memos?tag=`
+          }
+        />
+      )}
     </>
   )
 }

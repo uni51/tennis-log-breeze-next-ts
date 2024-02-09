@@ -12,11 +12,11 @@ import { onError } from '@/lib/error-helper'
 import { Memo } from '@/types/Memo'
 
 const AdminMemoDetailIndex: NextPage<Memo> = () => {
+  const router = useRouter()
   const [apiUrl, setApiUrl] = useState('')
   const [headLine, setHeadLine] = useState('')
   const [isLoading, setIsLoading] = useState(true)
-
-  const router = useRouter()
+  const category = router.query.category ? Number(router.query.category) : undefined
 
   useEffect(() => {
     // Fetch用URL組み立て
@@ -38,15 +38,15 @@ const AdminMemoDetailIndex: NextPage<Memo> = () => {
       <AdminAppLayout
         header={
           <>
-            <h2 className='font-semibold text-xl text-gray-800 leading-tight'>
+            <h2 className='font-semibold text-xl text-gray-800 leading-tight mb-7'>
               管理者画面 Dashboard
             </h2>
-            <h3 className='font-semibold text-xl text-gray-800 leading-tight mt-10'>{headLine}</h3>
+            <h3 className='font-semibold text-xl text-gray-800 leading-tight'>{headLine}</h3>
           </>
         }
       >
         <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
-          <AdminMemoDetail apiUrl={apiUrl} setHeadLine={setHeadLine} />
+          <AdminMemoDetail apiUrl={apiUrl} setHeadLine={setHeadLine} category={category} />
         </ErrorBoundary>
       </AdminAppLayout>
     </AdminAuthGuard>

@@ -39,11 +39,13 @@ const AdminMemoList: React.FC<Props> = ({ page, category }: Props) => {
     return memos?.data?.map((memo: Memo, index: number) => (
       <MemoCardForList
         memo={memo}
-        renderMemoDetailLink={`/admin/memos/${memo.id}`}
-        renderMemoListByCategoryLink={`/admin/memos?category=${memo.category_id}`}
-        renderMemoListByNickNameLink='/admin/memos/'
+        renderMemoDetailLink={`/admin/memos/${memo.user_nickname}/${memo.id}`}
+        renderMemoListByCategoryLink={`/admin/memos/${memo.user_nickname}?category=${memo.category_id}`}
+        renderMemoListByNickNameLink={`/admin/memos/${memo.user_nickname}`}
         renderMemoListByTagLink={
-          category ? `/admin/memos?category=${memo.category_id}&tag=` : `/dashboard/memos?tag=`
+          category
+            ? `/admin/memos/${memo.user_nickname}?category=${memo.category_id}&tag=`
+            : `/dashboard/memos?tag=`
         }
         key={index}
       />

@@ -10,6 +10,7 @@ import { Loading } from '@/components/Loading'
 import { ErrorBoundary } from 'react-error-boundary'
 import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
 import { onError } from '@/lib/error-helper'
+import { getCategoryText } from '@/lib/headline-helper'
 
 const AdminUsers: NextPage = () => {
   const router = useRouter()
@@ -36,6 +37,10 @@ const AdminUsers: NextPage = () => {
 
   if (isLoading) return <Loading />
 
+  const headLine = 'ユーザーが作成したメモ一覧'
+
+  const categoryText = queryParams.category ? getCategoryText(queryParams.category) : ''
+
   return (
     <AdminAuthGuard>
       <Head>
@@ -43,9 +48,15 @@ const AdminUsers: NextPage = () => {
       </Head>
       <AdminAppLayout
         header={
-          <h2 className='font-semibold text-xl text-gray-800 leading-tight'>
-            管理者画面 Dashboard
-          </h2>
+          <>
+            <h2 className='font-semibold text-xl text-gray-800 leading-tight mb-7'>
+              管理者画面 Dashboard
+            </h2>
+            <h3 className='font-semibold text-xl text-gray-800 leading-tight inline-block mr-4'>
+              {headLine}
+            </h3>
+            {categoryText && <span className='text-gray-800 font-bold mr-4'>{categoryText}</span>}
+          </>
         }
       >
         <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>

@@ -18,7 +18,7 @@ const DashboardMemoDetailIndex: NextPage<Memo> = () => {
   const [apiUrl, setApiUrl] = useState('')
   const [titleText, setTitleText] = useState('')
   const [isLoading, setIsLoading] = useState(true)
-  const categoryId = router.query.category ? Number(router.query.category) : null
+  const category = router.query.category ? Number(router.query.category) : undefined
 
   useEffect(() => {
     if (!isAuthLoading && user === null) {
@@ -49,7 +49,7 @@ const DashboardMemoDetailIndex: NextPage<Memo> = () => {
             apiUrl={apiUrl}
             loginUser={user?.data}
             setTitleText={setTitleText}
-            categoryId={categoryId}
+            category={category}
           />
         </ErrorBoundary>
       </AppLayout>
