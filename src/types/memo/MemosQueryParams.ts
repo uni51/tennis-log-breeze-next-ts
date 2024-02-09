@@ -5,30 +5,36 @@ export type BaseQueryParams = {
   tag?: string
 }
 
-// BaseQueryParamsからpageプロパティを除外
-type BaseQueryParamsWithoutPage = Omit<BaseQueryParams, 'page'>
-
 // NicknameMemosQueryParamsはBaseQueryParamsにnicknameを追加
-export type NicknameMemosQueryParams = BaseQueryParamsWithoutPage & {
+export type NicknameMemosQueryParams = {
   page: number // pageを必須とする
   nickname: string
+  category?: number
+  tag?: string
 }
 
 // MemoQueryParamsはBaseQueryParamsをそのまま使用
-export type MemoQueryParams = BaseQueryParamsWithoutPage & {
+export type MemoQueryParams = {
   page: number // pageを必須とする
+  category?: number
+  tag?: string
 }
 
 // UseMemoListHookPropsでpageを必須とする
-export type UseMemoListHookProps = BaseQueryParamsWithoutPage & {
+export type UseMemoListHookProps = {
   page: number // pageを必須とする
   preApiUrl: string
+  category?: number
+  tag?: string
 }
 
 export type UseMemoListHookPropsWithoutPreApiUrl = Omit<UseMemoListHookProps, 'preApiUrl'>
 
-export type DashboardMemoQueryParams = UseMemoListHookPropsWithoutPreApiUrl & {
-  preApiUrl?: string // preApiUrlをオプショナルとする
+export type DashboardMemoQueryParams = {
+  page: number // pageを必須とする
+  preApiUrl?: string // preApiUrlを任意とする
+  category?: number
+  tag?: string
 }
 
 export type MemoListsPaginationProps = UseMemoListHookProps

@@ -4,19 +4,43 @@ import { useRouter } from 'next/router'
 import AdminAppLayout from '@/components/Layouts/Admin/AdminAppLayout'
 import { AdminAuthGuard } from '@/features/admin/auth/components/AdminAuthGuard'
 import AdminMemoList from '@/features/admin/memos/components/AdminMemoList'
+import { MemoQueryParams } from '@/types/memo/MemosQueryParams'
+import { useEffect, useState } from 'react'
+import { Loading } from '@/components/Loading'
+import { ErrorBoundary } from 'react-error-boundary'
+import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
+import { onError } from '@/lib/error-helper'
 
 const AdminUsers: NextPage = () => {
   const router = useRouter()
   const { page, category } = router.query
 
-  const pageNumber = page === undefined ? 1 : Number(page)
-  const categoryId = category === undefined ? undefined : Number(category)
+  const [isLoading, setIsLoading] = useState(true)
+  const [queryParams, setQueryParams] = useState<MemoQueryParams>({
+    page: 1,
+    category: undefined,
+    tag: undefined,
+  })
 
-  console.log('pageNumber', pageNumber)
-  console.log('categoryId', categoryId)
+  useEffect(() => {
+    if (router.isReady) {
+      const { page, category, tag } = router.query
+      setQueryParams({
+        page: Number(page) || 1,
+        category: category ? Number(category) : undefined,
+        tag: typeof tag === 'string' ? tag : tag?.join(''),
+      })
+    }
+    setIsLoading(false)
+  }, [router.isReady, router.query])
+
+  if (isLoading) return <Loading />
 
   return (
     <AdminAuthGuard>
+      <Head>
+        <title>Laravel - Dashboard</title>
+      </Head>
       <AdminAppLayout
         header={
           <h2 className='font-semibold text-xl text-gray-800 leading-tight'>
@@ -24,11 +48,9 @@ const AdminUsers: NextPage = () => {
           </h2>
         }
       >
-        <Head>
-          <title>Laravel - Dashboard</title>
-        </Head>
-
-        <AdminMemoList page={pageNumber} category={categoryId} />
+        <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
+          <AdminMemoList page={queryParams.page} category={queryParams.category} />
+        </ErrorBoundary>
       </AdminAppLayout>
     </AdminAuthGuard>
   )
