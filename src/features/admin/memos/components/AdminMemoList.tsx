@@ -7,15 +7,17 @@ import MemoCardForList from '@/features/memos/common/components/templates/MemoCa
 type Props = {
   page: number
   category?: number
+  tag?: string
 }
 
-const AdminMemoList: React.FC<Props> = ({ page, category }: Props) => {
+const AdminMemoList: React.FC<Props> = ({ page, category, tag }: Props) => {
   const { showBoundary } = useErrorBoundary()
   const preApiUrl = '/api/admin/memos'
   const { data: memos, error, isLoading } = useAdminMemoList({
     preApiUrl,
     page,
     category,
+    tag,
   })
 
   if (error) {
@@ -42,7 +44,7 @@ const AdminMemoList: React.FC<Props> = ({ page, category }: Props) => {
         renderMemoListByTagLink={
           category
             ? `/admin/memos/${memo.user_nickname}?category=${memo.category_id}&tag=`
-            : `/dashboard/memos?tag=`
+            : `/admin/memos?tag=`
         }
         key={index}
       />
@@ -60,6 +62,7 @@ const AdminMemoList: React.FC<Props> = ({ page, category }: Props) => {
               totalItems={Number(memos.meta.total)}
               currentPage={Number(memos.meta.current_page)}
               category={category}
+              tag={tag}
             />
           </div>
         </div>

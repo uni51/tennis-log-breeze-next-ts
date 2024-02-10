@@ -53,12 +53,21 @@ const AdminUsers: NextPage = () => {
             <h3 className='font-semibold text-xl text-gray-800 leading-tight inline-block mr-4'>
               {headLine}
             </h3>
-            {categoryText && <span className='text-gray-800 font-bold mr-4'>{categoryText}</span>}
+            {queryParams.category && (
+              <span className='text-gray-800 font-bold mr-4'>
+                {getCategoryText(queryParams.category)}
+              </span>
+            )}
+            {queryParams.tag && <span className='text-gray-800 font-bold'>#{queryParams.tag}</span>}
           </>
         }
       >
         <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
-          <AdminMemoList page={queryParams.page} category={queryParams.category} />
+          <AdminMemoList
+            page={queryParams.page}
+            category={queryParams.category}
+            tag={queryParams.tag}
+          />
         </ErrorBoundary>
       </AdminAppLayout>
     </AdminAuthGuard>
