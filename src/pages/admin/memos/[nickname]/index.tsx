@@ -6,10 +6,10 @@ import { ErrorBoundary } from 'react-error-boundary'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
-import NicknameMemoList from '@/features/memos/nickname/components/NicknameMemoList'
 import { onError } from '@/lib/error-helper'
 import { getCategoryText } from '@/lib/headline-helper'
 import { NicknameMemosQueryParams } from '@/types/memo/MemosQueryParams'
+import AdminNicknameMemoList from '@/features/admin/memos/components/AdminNickNameMemoList'
 
 /* ユーザー毎の公開メモ一覧ページ */
 const AdminMemoListByNickname: NextPage = () => {
@@ -61,16 +61,19 @@ const AdminMemoListByNickname: NextPage = () => {
       <AppLayout
         header={
           <>
-            <h2 className='font-semibold text-xl text-gray-800 leading-tight inline-block mr-4'>
-              {headLine}
+            <h2 className='font-semibold text-xl text-gray-800 leading-tight mb-7'>
+              管理者画面 Dashboard
             </h2>
+            <h3 className='font-semibold text-xl text-gray-800 leading-tight inline-block mr-4'>
+              {headLine}
+            </h3>
             {categoryText && <span className='text-gray-800 font-bold mr-4'>{categoryText}</span>}
             {queryParams.tag && <span className='text-gray-800 font-bold'>#{queryParams.tag}</span>}
           </>
         }
       >
         <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
-          <NicknameMemoList
+          <AdminNicknameMemoList
             nickname={queryParams.nickname}
             page={queryParams.page as number}
             category={queryParams.category}
@@ -79,7 +82,7 @@ const AdminMemoListByNickname: NextPage = () => {
           {/* キャッシュ作成用に、次のページを事前にロードしておく */}
           {/* TODO: 最後のページの場合は、このロジックをくぐらないようにする */}
           <div style={{ display: 'none' }}>
-            <NicknameMemoList
+            <AdminNicknameMemoList
               nickname={queryParams.nickname}
               page={queryParams.page as number}
               category={queryParams.category}

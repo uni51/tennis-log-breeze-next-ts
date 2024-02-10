@@ -14,8 +14,6 @@ import { getCategoryText } from '@/lib/headline-helper'
 
 const AdminUsers: NextPage = () => {
   const router = useRouter()
-  const { page, category } = router.query
-
   const [isLoading, setIsLoading] = useState(true)
   const [queryParams, setQueryParams] = useState<MemoQueryParams>({
     page: 1,
