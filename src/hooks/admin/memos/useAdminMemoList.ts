@@ -2,6 +2,8 @@ import { useQuery } from '@tanstack/react-query'
 import { getMemoListApiUrl } from '@/lib/pagination-helper'
 import { apiClient } from '@/lib/utils/apiClient'
 import { MemoListReturnType } from '@/types/memoList'
+import { AxiosError } from 'axios'
+import { handleAxiosError } from '@/lib/utils/errorHandling'
 
 type Props = {
   preApiUrl: string
@@ -15,12 +17,10 @@ const fetchAdminMemoList = async (apiUrl: string): Promise<MemoListReturnType> =
     const res = await apiClient.get(apiUrl)
     return res.data
   } catch (error) {
-    if (error instanceof Error) {
-      // エラーハンドリング: エラーが発生した場合は適切に処理する
-      throw new Error(`Failed to fetch admin memo list: ${error.message}`)
+    if ((error as AxiosError).isAxiosError) {
+      return handleAxiosError(error as AxiosError)
     } else {
-      // error is not an instance of Error
-      throw new Error(`Failed to fetch admin memo list: ${String(error)}`)
+      throw new Error(`Failed to fetch memo detail: ${String(error)}`)
     }
   }
 }
