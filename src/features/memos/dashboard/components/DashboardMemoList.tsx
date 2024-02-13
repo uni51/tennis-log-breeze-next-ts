@@ -3,7 +3,7 @@ import { useErrorBoundary } from 'react-error-boundary'
 import { Loading } from '@/components/Loading'
 import MemoListPaginationLong from '@/components/Pagination/MemoListPaginationLong'
 import MemoListPaginationShort from '@/components/Pagination/MemoListPaginationShort'
-import SingleMemoBlockForList from '@/features/memos/common/components/templates/SingleMemoBlockForList'
+import MemoCardForList from '@/features/memos/common/components/templates/MemoCardForList'
 import AddMemoButton from '@/features/memos/dashboard/components/AddMemoButton'
 import { useMemoList } from '@/hooks/memos/useMemoList'
 import { Memo } from '@/types/Memo'
@@ -41,7 +41,7 @@ const DashboardMemoList: React.FC<DashboardMemoQueryParams> = ({
 
   const renderMemoList = () => {
     return memos?.data?.map((memo: Memo, index: number) => (
-      <SingleMemoBlockForList
+      <MemoCardForList
         memo={memo}
         renderMemoDetailLink={`/dashboard/memos/${memo.id}`}
         renderMemoListByCategoryLink={`/dashboard/memos?category=${memo.category_id}`}
