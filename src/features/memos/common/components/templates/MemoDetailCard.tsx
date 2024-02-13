@@ -17,7 +17,7 @@ type Props = {
   renderMemoListByTagLink?: string
 }
 
-const SingleMemoDetail: NextPage<Props> = ({
+const MemoDetailCard: NextPage<Props> = ({
   memo,
   loginUser,
   renderMemoListByCategoryLink,
@@ -110,4 +110,4 @@ const SingleMemoDetail: NextPage<Props> = ({
   )
 }
 
-export default SingleMemoDetail
+export default MemoDetailCard

@@ -1,28 +1,41 @@
 import { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import AppLayout from '@/components/Layouts/AppLayout'
+import { Loading } from '@/components/Loading'
 import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
 import PublishedMemoList from '@/features/memos/published/components/PublishedMemoList'
 import { onError } from '@/lib/error-helper'
-import { getMemosListByCategoryHeadLineTitle } from '@/lib/headline-helper'
+import { getCategoryText } from '@/lib/headline-helper'
+import { MemoQueryParams } from '@/types/memo/MemosQueryParams'
 
 /* みんなの公開中のメモ一覧ページ */
 const PublishedMemoIndex: NextPage = () => {
   const router = useRouter()
-  const { page, category, tag } = router.query
+  const [isLoading, setIsLoading] = useState(true)
+  const [queryParams, setQueryParams] = useState<MemoQueryParams>({
+    page: 1,
+    category: undefined,
+    tag: undefined,
+  })
 
-  const pageNumber = page === undefined ? 1 : Number(page)
-  const categoryId = category === undefined ? undefined : Number(category)
-  const tagText = tag === undefined ? undefined : Array.isArray(tag) ? tag.join('') : tag
+  useEffect(() => {
+    if (router.isReady) {
+      const { page, category, tag } = router.query
+      setQueryParams({
+        page: Number(page) || 1,
+        category: category ? Number(category) : undefined,
+        tag: typeof tag === 'string' ? tag : tag?.join(''),
+      })
+      setIsLoading(false)
+    }
+  }, [router.isReady, router.query])
 
-  const headLine = `みんなの公開中のメモ一覧${getMemosListByCategoryHeadLineTitle(categoryId)}`
+  if (isLoading) return <Loading />
 
-  let categoryText = ''
-  if (categoryId) {
-    categoryText = getMemosListByCategoryHeadLineTitle(categoryId)
-  }
+  const headLine = `みんなの公開中のメモ一覧`
 
   return (
     <>
@@ -35,18 +48,22 @@ const PublishedMemoIndex: NextPage = () => {
             <h2 className='font-semibold text-xl text-gray-800 leading-tight inline-block mr-4'>
               {headLine}
             </h2>
-            {categoryText && <span className='text-gray-800 font-bold mr-4'>{categoryText}</span>}
-            {tagText && <span className='text-gray-800 font-bold'>#{tagText}</span>}
+            {queryParams.category && (
+              <span className='text-gray-800 font-bold mr-4'>
+                {getCategoryText(queryParams.category)}
+              </span>
+            )}
+            {queryParams.tag && <span className='text-gray-800 font-bold'>#{queryParams.tag}</span>}
           </>
         }
       >
         <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
-          <PublishedMemoList page={pageNumber} category={categoryId} tag={tagText} />
-          {/* キャッシュ作成用に、次のページを事前にロードしておく */}
-          {/* TODO: 最後のページの場合は、このロジックをくぐらないようにする */}
-          <div style={{ display: 'none' }}>
-            <PublishedMemoList page={pageNumber + 1} category={categoryId} tag={tagText} />
-          </div>
+          <PublishedMemoList
+            page={queryParams.page}
+            category={queryParams.category}
+            tag={queryParams.tag}
+          />
+          {/* 事前ロードのロジックについては、別の方法を検討 */}
         </ErrorBoundary>
       </AppLayout>
     </>

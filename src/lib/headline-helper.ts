@@ -12,8 +12,8 @@ import {
   CATEGORY_OTHER,
 } from '@/constants/CategoryNameConst'
 
-export const getMemosListByCategoryHeadLineTitle = (categoryId: number | undefined | null) => {
-  switch (categoryId) {
+export const getCategoryText = (category: number | undefined | null) => {
+  switch (category) {
     case 1:
       return CATEGORY_FOREHAND
     case 2:
