@@ -72,7 +72,7 @@ const PublicMemoListByNickname: NextPage = () => {
         <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
           <NicknameMemoList
             nickname={queryParams.nickname}
-            page={queryParams.page as number}
+            page={queryParams.page}
             category={queryParams.category}
             tag={queryParams.tag}
           />
@@ -81,7 +81,7 @@ const PublicMemoListByNickname: NextPage = () => {
           <div style={{ display: 'none' }}>
             <NicknameMemoList
               nickname={queryParams.nickname}
-              page={queryParams.page as number}
+              page={queryParams.page + 1}
               category={queryParams.category}
               tag={queryParams.tag}
             />
