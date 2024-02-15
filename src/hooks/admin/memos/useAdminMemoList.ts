@@ -1,13 +1,15 @@
 import { useQuery } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
 import { getMemoListApiUrl } from '@/lib/pagination-helper'
 import { apiClient } from '@/lib/utils/apiClient'
-import { Memo } from '@/types/Memo'
+import { handleAxiosError } from '@/lib/utils/errorHandling'
 import { MemoListReturnType } from '@/types/memoList'
 
 type Props = {
   preApiUrl: string
   page: number
   category?: number
+  tag?: string
 }
 
 const fetchAdminMemoList = async (apiUrl: string): Promise<MemoListReturnType> => {
@@ -15,18 +17,16 @@ const fetchAdminMemoList = async (apiUrl: string): Promise<MemoListReturnType> =
     const res = await apiClient.get(apiUrl)
     return res.data
   } catch (error) {
-    if (error instanceof Error) {
-      // エラーハンドリング: エラーが発生した場合は適切に処理する
-      throw new Error(`Failed to fetch admin memo list: ${error.message}`)
+    if ((error as AxiosError).isAxiosError) {
+      return handleAxiosError(error as AxiosError)
     } else {
-      // error is not an instance of Error
-      throw new Error(`Failed to fetch admin memo list: ${String(error)}`)
+      throw new Error(`Failed to fetch memo detail: ${String(error)}`)
     }
   }
 }
 
-export const useAdminMemoList = ({ preApiUrl, page, category }: Props) => {
-  const apiUrl = getMemoListApiUrl({ preApiUrl, page, category })
+export const useAdminMemoList = ({ preApiUrl, page, category, tag }: Props) => {
+  const apiUrl = getMemoListApiUrl({ preApiUrl, page, category, tag })
 
   return useQuery<MemoListReturnType, Error>({
     queryKey: ['adminMemoList', apiUrl], // データの重複取得を避けるためにqueryKeyに依存変数を含める

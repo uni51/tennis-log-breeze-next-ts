@@ -63,7 +63,15 @@ const PublishedMemoIndex: NextPage = () => {
             category={queryParams.category}
             tag={queryParams.tag}
           />
-          {/* 事前ロードのロジックについては、別の方法を検討 */}
+          {/* キャッシュ作成用に、次のページを事前にロードしておく */}
+          {/* TODO: 最後のページの場合のロジックの実装を検討 */}
+          <div style={{ display: 'none' }}>
+            <PublishedMemoList
+              page={queryParams.page + 1}
+              category={queryParams.category}
+              tag={queryParams.tag}
+            />
+          </div>
         </ErrorBoundary>
       </AppLayout>
     </>

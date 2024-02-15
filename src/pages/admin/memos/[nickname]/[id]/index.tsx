@@ -8,17 +8,15 @@ import { Loading } from '@/components/Loading'
 import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
 import { AdminAuthGuard } from '@/features/admin/auth/components/AdminAuthGuard'
 import AdminMemoDetail from '@/features/admin/memos/components/AdminMemoDetail'
-import { useAuth } from '@/hooks/auth'
-import { useMemoDetail } from '@/hooks/memos/useMemoDetail'
 import { onError } from '@/lib/error-helper'
 import { Memo } from '@/types/Memo'
 
 const AdminMemoDetailIndex: NextPage<Memo> = () => {
+  const router = useRouter()
   const [apiUrl, setApiUrl] = useState('')
   const [headLine, setHeadLine] = useState('')
   const [isLoading, setIsLoading] = useState(true)
-
-  const router = useRouter()
+  const category = router.query.category ? Number(router.query.category) : undefined
 
   useEffect(() => {
     // Fetch用URL組み立て
@@ -38,10 +36,17 @@ const AdminMemoDetailIndex: NextPage<Memo> = () => {
         <title>管理者ページ：メモ詳細</title>
       </Head>
       <AdminAppLayout
-        header={<h2 className='font-semibold text-xl text-gray-800 leading-tight'>{headLine}</h2>}
+        header={
+          <>
+            <h2 className='font-semibold text-xl text-gray-800 leading-tight mb-7'>
+              管理者画面 Dashboard
+            </h2>
+            <h3 className='font-semibold text-xl text-gray-800 leading-tight'>{headLine}</h3>
+          </>
+        }
       >
         <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
-          <AdminMemoDetail apiUrl={apiUrl} setHeadLine={setHeadLine} />
+          <AdminMemoDetail apiUrl={apiUrl} setHeadLine={setHeadLine} category={category} />
         </ErrorBoundary>
       </AdminAppLayout>
     </AdminAuthGuard>
