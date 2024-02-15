@@ -10,6 +10,7 @@ export type PaginationProps = {
   currentPage: number
   itemsPerPage?: number
   category?: number
+  tag?: string
 }
 
 const AdminMemoListPaginationLong = ({
@@ -18,12 +19,13 @@ const AdminMemoListPaginationLong = ({
   currentPage,
   itemsPerPage = ITEMS_PER_PAGE,
   category,
+  tag,
 }: PaginationProps) => {
   const pages = usePagination(totalItems, currentPage, itemsPerPage)
   const totalPage = Math.ceil(totalItems / itemsPerPage)
 
   const createLink = (page: number) => {
-    const pagerLink = createPagerLink(baseUrl, page, category)
+    const pagerLink = createPagerLink(baseUrl, page, category, tag)
     return `${pagerLink.pathname}?${new URLSearchParams(pagerLink.query).toString()}`
   }
 

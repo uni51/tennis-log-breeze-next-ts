@@ -10,10 +10,10 @@ type Props = {
   apiUrl: string
   loginUser: LoginUser
   setTitleText: Dispatch<SetStateAction<string>>
-  categoryId: number | null
+  category?: number
 }
 
-const DashboardMemoDetail = ({ apiUrl, loginUser, setTitleText, categoryId }: Props) => {
+const DashboardMemoDetail = ({ apiUrl, loginUser, setTitleText, category }: Props) => {
   const handleError = useHandleError()
   const { data: memo, error } = useMemoDetail(apiUrl)
 
@@ -40,7 +40,7 @@ const DashboardMemoDetail = ({ apiUrl, loginUser, setTitleText, categoryId }: Pr
           renderMemoListByCategoryLink={`/dashboard/memos?category=${memo.category_id}`}
           renderMemoListByNickNameLink='/dashboard/memos/'
           renderMemoListByTagLink={
-            categoryId
+            category
               ? `/dashboard/memos?category=${memo.category_id}&tag=`
               : `/dashboard/memos?tag=`
           }

@@ -72,6 +72,7 @@ const DashboardMemoIndex: NextPage = () => {
             category={queryParams.category}
             tag={queryParams.tag}
           />
+          {/* キャッシュ作成用に、次のページを事前にロードしておく */}
           {/* TODO: 最後のページの場合のロジックの実装を検討 */}
           <div style={{ display: 'none' }}>
             <DashboardMemoList
