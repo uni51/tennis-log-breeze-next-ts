@@ -1,8 +1,8 @@
 import { useErrorBoundary } from 'react-error-boundary'
 import AdminMemoListPaginationLong from '@/components/admin/Pagination/AdminMemoListPaginationLong'
+import MemoCardForList from '@/features/memos/common/components/templates/MemoCardForList'
 import { useAdminMemoList } from '@/hooks/admin/memos/useAdminMemoList'
 import { Memo } from '@/types/Memo'
-import MemoCardForList from '@/features/memos/common/components/templates/MemoCardForList'
 
 type Props = {
   page: number

@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction, useEffect } from 'react'
 import { useErrorBoundary } from 'react-error-boundary'
 import ClipLoader from 'react-spinners/ClipLoader'
-import { useMemoDetail } from '@/hooks/memos/useMemoDetail'
 import AdminMemoDetailCard from './AdminMemoDetailCard'
+import { useMemoDetail } from '@/hooks/memos/useMemoDetail'
 
 type Props = {
   apiUrl: string

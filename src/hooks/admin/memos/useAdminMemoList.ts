@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
 import { getMemoListApiUrl } from '@/lib/pagination-helper'
 import { apiClient } from '@/lib/utils/apiClient'
-import { MemoListReturnType } from '@/types/memoList'
-import { AxiosError } from 'axios'
 import { handleAxiosError } from '@/lib/utils/errorHandling'
+import { MemoListReturnType } from '@/types/memoList'
 
 type Props = {
   preApiUrl: string

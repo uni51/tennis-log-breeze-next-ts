@@ -6,10 +6,10 @@ import { ErrorBoundary } from 'react-error-boundary'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
+import AdminNicknameMemoList from '@/features/admin/memos/components/AdminNickNameMemoList'
 import { onError } from '@/lib/error-helper'
 import { getCategoryText } from '@/lib/headline-helper'
 import { NicknameMemosQueryParams } from '@/types/memo/MemosQueryParams'
-import AdminNicknameMemoList from '@/features/admin/memos/components/AdminNickNameMemoList'
 
 /* ユーザー毎の公開メモ一覧ページ */
 const AdminMemoListByNickname: NextPage = () => {
