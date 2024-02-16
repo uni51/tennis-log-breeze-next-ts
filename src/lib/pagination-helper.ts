@@ -8,9 +8,11 @@ const createQueryParams = (
   page: number,
   category?: number,
   tag?: string,
+  q?: string,
 ): Record<string, string> => ({
   ...(category && { category: `${category}` }),
   ...(tag && { tag }),
+  ...(q && { q }),
   page: `${page}`,
 })
 
@@ -36,14 +38,17 @@ export const getMemoListApiUrl = ({
   page,
   category,
   tag,
+  keyword,
 }: MemoListsPaginationProps): string => {
-  const queryParams = createQueryParams(page, category, tag)
+  const queryParams = createQueryParams(page, category, tag, keyword)
   let apiUrl = `${preApiUrl}?${new URLSearchParams(queryParams).toString()}`
 
   if (category) {
     apiUrl = `${preApiUrl}/category/${category}${tag ? `/tag/${tag}` : ''}?page=${page}`
   } else if (tag) {
     apiUrl = `${preApiUrl}/tag/${tag}?page=${page}`
+  } else if (keyword) {
+    apiUrl = `${preApiUrl}/search?q=${keyword}&page=${page}`
   }
 
   return apiUrl

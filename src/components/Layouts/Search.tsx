@@ -1,50 +1,31 @@
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/router'
-import { SetStateAction, useState } from 'react'
-import { toast } from 'react-toastify'
-import { apiClient } from '@/lib/utils/apiClient'
-import { convertFullSpaceToHalfSpace } from '@/lib/utils/utils'
+import { SetStateAction, useEffect, useState } from 'react'
 import useSearchStore from '@/stores/searchStore'
 
 export const Search = () => {
   const router = useRouter()
   const [searchQuery, setSearchQuery] = useState('')
-  const setResponseData = useSearchStore((state) => state.setSearchData)
+  const setKeywordData = useSearchStore((state) => state.setKeywordData)
 
-  const handleApiError = (err: any) => {
-    if (err.response) {
-      const errorMessage = err.response.data.message || 'エラーメッセージがありません'
-      toast.error(`エラー: ${errorMessage}`)
-    } else {
-      toast.error('ネットワークエラーが発生しました')
-    }
-  }
+  // useEffect(() => {
+  //   if (router.isReady) {
+  //     const { q } = router.query
+  //     setSearchQuery(q as string)
+  //   }
+  // })
 
   const handleSearch = async () => {
-    try {
-      const convertedSearchQuery = convertFullSpaceToHalfSpace(searchQuery.trim())
-      const apiUrl = router.pathname.includes('dashboard')
-        ? `/api/dashboard/memos/search?q=${convertedSearchQuery}`
-        : `/api/public/memos/search?q=${convertedSearchQuery}`
+    setKeywordData(searchQuery)
 
-      const response = await apiClient.get(apiUrl)
+    const searchPath = router.pathname.includes('dashboard')
+      ? '/dashboard/memos/search'
+      : '/memos/search'
 
-      if (response.data) {
-        const responseData = JSON.stringify(response.data)
-        setResponseData(responseData)
-      }
-
-      const searchPath = router.pathname.includes('dashboard')
-        ? '/dashboard/memos/search'
-        : '/memos/search'
-
-      router.push({
-        pathname: searchPath,
-        query: { q: searchQuery },
-      })
-    } catch (error) {
-      handleApiError(error)
-    }
+    router.push({
+      pathname: searchPath,
+      query: { q: searchQuery },
+    })
   }
 
   const handleKeyPress = (event: { key: string; preventDefault: () => void }) => {

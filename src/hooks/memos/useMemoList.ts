@@ -20,8 +20,8 @@ const fetchMemoList = async (apiUrl: string) => {
   }
 }
 
-export const useMemoList = ({ preApiUrl, page, category, tag }: UseMemoListHookProps) => {
-  const apiUrl = getMemoListApiUrl({ preApiUrl, page, category, tag })
+export const useMemoList = ({ preApiUrl, page, category, tag, keyword }: UseMemoListHookProps) => {
+  const apiUrl = getMemoListApiUrl({ preApiUrl, page, category, tag, keyword })
 
   return useQuery<MemoListReturnType, Error>({
     queryKey: ['memoList', apiUrl], // データの重複取得を避けるためにqueryKeyに依存変数を含める

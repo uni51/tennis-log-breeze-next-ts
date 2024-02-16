@@ -1,30 +1,67 @@
-// pages/dashboard/memos/search.tsx
-
+// 必要なインポートのみを保持
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
+import Head from 'next/head'
+import { NextPage } from 'next'
 import useSearchStore from '@/stores/searchStore'
+import AppLayout from '@/components/Layouts/AppLayout'
+import { useAuth } from '@/hooks/auth'
+import { Loading } from '@/components/Loading'
+import { AuthGuard } from '@/features/auth/components/AuthGuard'
+import DashboardSearchMemoList from '@/features/memos/dashboard/components/DashboardSearchMemoList'
+import { SearchMemoListParams } from '@/types/memo/MemosQueryParams'
 
-const DashboardMemoSearchResult = () => {
+const DashboardSearchResult: NextPage = () => {
   const router = useRouter()
-  const responseData = useSearchStore((state) => state.responseData) // Use responseData instead of searchData
+  const { user, isAuthLoading } = useAuth({ middleware: 'auth' })
+  const [isLoading, setIsLoading] = useState(true)
+  const keyword = useSearchStore((state) => state.keyword)
+
+  const [queryParams, setQueryParams] = useState<SearchMemoListParams>({
+    page: 1,
+    keyword: undefined,
+  })
 
   useEffect(() => {
-    // Fetch data if necessary (you can use responseData to check if data is available)
-    // Example: fetchData(router.query.q);
-
-    // Cleanup: Clear responseData in Zustand store when component unmounts
-    return () => {
-      useSearchStore.getState().clearSearchData()
+    if (!isAuthLoading) {
+      if (!user) {
+        router.push('/login')
+        return
+      }
+      setIsLoading(false)
     }
-  }, [router.query.q])
+
+    if (router.isReady) {
+      const { page } = router.query
+      setQueryParams({
+        page: Number(page) || 1,
+        keyword: keyword,
+      })
+    }
+  }, [isAuthLoading, user, router])
+
+  // useEffect(() => {
+  //   return () => useSearchStore.getState().clearKeyword()
+  // }, [])
+
+  if (isLoading) return <Loading />
 
   return (
-    <div>
-      <h1>Dashboard Search Results</h1>
-      <div>Dashboard Search query: {router.query.q}</div>
-      <div>Dashboard Search data: {JSON.stringify(responseData)}</div>
-    </div>
+    <AuthGuard>
+      <Head>
+        <title>Dashboard - メモの検索結果</title>
+      </Head>
+      <AppLayout
+        header={
+          <h2 className='font-semibold text-xl text-gray-800 leading-tight'>
+            Dashboard - メモの検索結果
+          </h2>
+        }
+      >
+        <DashboardSearchMemoList page={queryParams.page} keyword={queryParams.keyword} />
+      </AppLayout>
+    </AuthGuard>
   )
 }
 
-export default DashboardMemoSearchResult
+export default DashboardSearchResult
