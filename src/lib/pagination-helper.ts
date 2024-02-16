@@ -8,11 +8,11 @@ const createQueryParams = (
   page: number,
   category?: number,
   tag?: string,
-  q?: string,
+  keyword?: string,
 ): Record<string, string> => ({
   ...(category && { category: `${category}` }),
   ...(tag && { tag }),
-  ...(q && { q }),
+  ...(keyword && { q: `${keyword}` }),
   page: `${page}`,
 })
 
