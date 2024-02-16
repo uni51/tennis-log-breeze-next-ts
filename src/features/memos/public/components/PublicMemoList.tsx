@@ -9,7 +9,7 @@ import { useMemoList } from '@/hooks/memos/useMemoList'
 import { Memo } from '@/types/Memo'
 import { MemoQueryParams } from '@/types/memo/MemosQueryParams'
 
-const PublishedMemoList: React.FC<MemoQueryParams> = ({ page, category, tag }: MemoQueryParams) => {
+const PublicMemoList: React.FC<MemoQueryParams> = ({ page, category, tag }: MemoQueryParams) => {
   const { showBoundary } = useErrorBoundary()
 
   const preApiUrl = '/api/public/memos'
@@ -83,4 +83,4 @@ const PublishedMemoList: React.FC<MemoQueryParams> = ({ page, category, tag }: M
   )
 }
 
-export default PublishedMemoList
+export default PublicMemoList

@@ -1,13 +1,13 @@
 import React from 'react'
 import { useErrorBoundary } from 'react-error-boundary'
 import { Loading } from '@/components/Loading'
+import SearchMemoListPaginationLong from '@/components/Pagination/SearchMemoListPaginationLong'
 import MemoCardForList from '@/features/memos/common/components/templates/MemoCardForList'
 import AddMemoButton from '@/features/memos/dashboard/components/AddMemoButton'
 import { useMemoList } from '@/hooks/memos/useMemoList'
+import { convertFullSpaceToHalfSpace } from '@/lib/utils/utils'
 import { Memo } from '@/types/Memo'
 import { SearchMemoListParams } from '@/types/memo/MemosQueryParams'
-import SearchMemoListPaginationLong from '@/components/Pagination/SearchMemoListPaginationLong'
-import { convertFullSpaceToHalfSpace } from '@/lib/utils/utils'
 
 const DashboardSearchMemoList: React.FC<SearchMemoListParams> = ({
   page,

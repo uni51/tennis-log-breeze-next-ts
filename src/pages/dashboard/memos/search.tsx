@@ -1,17 +1,17 @@
 // 必要なインポートのみを保持
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
-import Head from 'next/head'
 import { NextPage } from 'next'
-import useSearchStore from '@/stores/searchStore'
+import Head from 'next/head'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
-import { useAuth } from '@/hooks/auth'
 import { Loading } from '@/components/Loading'
 import { AuthGuard } from '@/features/auth/components/AuthGuard'
 import DashboardSearchMemoList from '@/features/memos/dashboard/components/DashboardSearchMemoList'
+import { useAuth } from '@/hooks/auth'
+import useSearchStore from '@/stores/searchStore'
 import { SearchMemoListParams } from '@/types/memo/MemosQueryParams'
 
-const DashboardSearchResult: NextPage = () => {
+const SearchDashboardMemoIndex: NextPage = () => {
   const router = useRouter()
   const { user, isAuthLoading } = useAuth({ middleware: 'auth' })
   const [isLoading, setIsLoading] = useState(true)
@@ -64,4 +64,4 @@ const DashboardSearchResult: NextPage = () => {
   )
 }
 
-export default DashboardSearchResult
+export default SearchDashboardMemoIndex
