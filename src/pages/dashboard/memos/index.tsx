@@ -24,11 +24,14 @@ const DashboardMemoIndex: NextPage = () => {
   })
 
   useEffect(() => {
+    // 認証のローディングが終了した場合のみ実行
     if (!isAuthLoading) {
+      // ユーザーが存在しない場合はログインページへリダイレクト
       if (!user) {
         router.push('/login')
         return
       }
+      // ローディング状態を解除
       setIsLoading(false)
     }
 
