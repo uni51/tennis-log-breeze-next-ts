@@ -40,9 +40,9 @@ const DashboardSearchResult: NextPage = () => {
     }
   }, [isAuthLoading, user, router])
 
-  // useEffect(() => {
-  //   return () => useSearchStore.getState().clearKeyword()
-  // }, [])
+  useEffect(() => {
+    return () => useSearchStore.getState().clearKeyword()
+  }, [])
 
   if (isLoading) return <Loading />
 

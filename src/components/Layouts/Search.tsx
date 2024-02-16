@@ -11,9 +11,11 @@ export const Search = () => {
   useEffect(() => {
     if (router.isReady) {
       const { q } = router.query
-      setSearchQuery(q as string)
+      if (q !== '') {
+        setSearchQuery(q as string)
+      }
     }
-  })
+  }, [router.query.q])
 
   const handleSearch = async () => {
     setKeywordData(searchQuery)
