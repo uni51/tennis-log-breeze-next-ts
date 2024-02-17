@@ -34,7 +34,7 @@ const DashboardMemoDetailIndex: NextPage<Memo> = () => {
 
   if (isLoading) return <Loading />
 
-  const headline = `${user?.data?.name}さんのメモ詳細`
+  const headline = `${user?.data?.nickname}さんのメモ詳細`
 
   return (
     <AuthGuard>

@@ -6,13 +6,13 @@ import { ErrorBoundary } from 'react-error-boundary'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
-import PublishedMemoList from '@/features/memos/published/components/PublishedMemoList'
+import PublicMemoList from '@/features/memos/public/components/PublicMemoList'
 import { onError } from '@/lib/error-helper'
 import { getCategoryText } from '@/lib/headline-helper'
 import { MemoQueryParams } from '@/types/memo/MemosQueryParams'
 
 /* みんなの公開中のメモ一覧ページ */
-const PublishedMemoIndex: NextPage = () => {
+const PublicMemoIndex: NextPage = () => {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(true)
   const [queryParams, setQueryParams] = useState<MemoQueryParams>({
@@ -58,7 +58,7 @@ const PublishedMemoIndex: NextPage = () => {
         }
       >
         <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
-          <PublishedMemoList
+          <PublicMemoList
             page={queryParams.page}
             category={queryParams.category}
             tag={queryParams.tag}
@@ -66,7 +66,7 @@ const PublishedMemoIndex: NextPage = () => {
           {/* キャッシュ作成用に、次のページを事前にロードしておく */}
           {/* TODO: 最後のページの場合のロジックの実装を検討 */}
           <div style={{ display: 'none' }}>
-            <PublishedMemoList
+            <PublicMemoList
               page={queryParams.page + 1}
               category={queryParams.category}
               tag={queryParams.tag}
@@ -78,4 +78,4 @@ const PublishedMemoIndex: NextPage = () => {
   )
 }
 
-export default PublishedMemoIndex
+export default PublicMemoIndex

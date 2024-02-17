@@ -9,7 +9,6 @@ import { MemoListReturnType } from '@/types/memoList'
 const fetchMemoList = async (apiUrl: string) => {
   try {
     const { data } = await apiClient.get(apiUrl)
-    console.log(data)
     return data
   } catch (error) {
     if ((error as AxiosError).isAxiosError) {
@@ -20,8 +19,8 @@ const fetchMemoList = async (apiUrl: string) => {
   }
 }
 
-export const useMemoList = ({ preApiUrl, page, category, tag }: UseMemoListHookProps) => {
-  const apiUrl = getMemoListApiUrl({ preApiUrl, page, category, tag })
+export const useMemoList = ({ preApiUrl, page, category, tag, keyword }: UseMemoListHookProps) => {
+  const apiUrl = getMemoListApiUrl({ preApiUrl, page, category, tag, keyword })
 
   return useQuery<MemoListReturnType, Error>({
     queryKey: ['memoList', apiUrl], // データの重複取得を避けるためにqueryKeyに依存変数を含める

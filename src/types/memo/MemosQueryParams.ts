@@ -26,6 +26,7 @@ export type UseMemoListHookProps = {
   preApiUrl: string
   category?: number
   tag?: string
+  keyword?: string
 }
 
 export type UseMemoListHookPropsWithoutPreApiUrl = Omit<UseMemoListHookProps, 'preApiUrl'>
@@ -38,3 +39,10 @@ export type DashboardMemoQueryParams = {
 }
 
 export type MemoListsPaginationProps = UseMemoListHookProps
+
+export type SearchMemoListParams = {
+  page: number
+  keyword?: string
+  category?: number
+  tag?: string
+}
