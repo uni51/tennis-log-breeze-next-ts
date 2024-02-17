@@ -1,5 +1,3 @@
-import { MemoListReturnType } from '../memoList'
-
 // ベースとなるクエリパラメータの型定義
 export type BaseQueryParams = {
   page?: number
@@ -45,5 +43,6 @@ export type MemoListsPaginationProps = UseMemoListHookProps
 export type SearchMemoListParams = {
   page: number
   keyword?: string
-  resultData?: MemoListReturnType | null
+  category?: number
+  tag?: string
 }

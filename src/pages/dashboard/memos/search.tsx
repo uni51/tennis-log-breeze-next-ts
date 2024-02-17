@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import { AuthGuard } from '@/features/auth/components/AuthGuard'
-import DashboardSearchMemoList from '@/features/memos/dashboard/components/DashboardSearchMemoList'
+import SearchDashboardMemoList from '@/features/memos/dashboard/components/SearchDashboardMemoList'
 import { useAuth } from '@/hooks/auth'
 import useSearchStore from '@/stores/searchStore'
 import { SearchMemoListParams } from '@/types/memo/MemosQueryParams'
@@ -20,6 +20,7 @@ const SearchDashboardMemoIndex: NextPage = () => {
   const [queryParams, setQueryParams] = useState<SearchMemoListParams>({
     page: 1,
     keyword: undefined,
+    category: undefined,
   })
 
   useEffect(() => {
@@ -32,10 +33,11 @@ const SearchDashboardMemoIndex: NextPage = () => {
     }
 
     if (router.isReady) {
-      const { page } = router.query
+      const { page, category } = router.query
       setQueryParams({
         page: Number(page) || 1,
         keyword: keyword,
+        category: category ? Number(category) : undefined,
       })
     }
   }, [isAuthLoading, user, router])
@@ -58,7 +60,11 @@ const SearchDashboardMemoIndex: NextPage = () => {
           </h2>
         }
       >
-        <DashboardSearchMemoList page={queryParams.page} keyword={queryParams.keyword} />
+        <SearchDashboardMemoList
+          page={queryParams.page}
+          keyword={queryParams.keyword}
+          category={queryParams.category}
+        />
       </AppLayout>
     </AuthGuard>
   )

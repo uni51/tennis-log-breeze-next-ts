@@ -6,10 +6,10 @@ import { useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import { AuthGuard } from '@/features/auth/components/AuthGuard'
-import DashboardSearchMemoList from '@/features/memos/dashboard/components/DashboardSearchMemoList'
 import { useAuth } from '@/hooks/auth'
 import useSearchStore from '@/stores/searchStore'
 import { SearchMemoListParams } from '@/types/memo/MemosQueryParams'
+import SearchPublicMemoList from '@/features/memos/public/components/SearchPublicMemoList'
 
 const SearchPublicMemoIndex: NextPage = () => {
   const router = useRouter()
@@ -20,6 +20,7 @@ const SearchPublicMemoIndex: NextPage = () => {
   const [queryParams, setQueryParams] = useState<SearchMemoListParams>({
     page: 1,
     keyword: undefined,
+    category: undefined,
   })
 
   useEffect(() => {
@@ -32,10 +33,11 @@ const SearchPublicMemoIndex: NextPage = () => {
     }
 
     if (router.isReady) {
-      const { page } = router.query
+      const { page, category } = router.query
       setQueryParams({
         page: Number(page) || 1,
         keyword: keyword,
+        category: category ? Number(category) : undefined,
       })
     }
   }, [isAuthLoading, user, router])
@@ -49,16 +51,20 @@ const SearchPublicMemoIndex: NextPage = () => {
   return (
     <AuthGuard>
       <Head>
-        <title>Dashboard - メモの検索結果</title>
+        <title>みんなの公開中のメモ一覧 - メモの検索結果</title>
       </Head>
       <AppLayout
         header={
           <h2 className='font-semibold text-xl text-gray-800 leading-tight'>
-            Dashboard - メモの検索結果
+            みんなの公開中のメモ一覧 - メモの検索結果
           </h2>
         }
       >
-        <DashboardSearchMemoList page={queryParams.page} keyword={queryParams.keyword} />
+        <SearchPublicMemoList
+          page={queryParams.page}
+          keyword={queryParams.keyword}
+          category={queryParams.category}
+        />
       </AppLayout>
     </AuthGuard>
   )

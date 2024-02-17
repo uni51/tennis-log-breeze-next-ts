@@ -9,15 +9,14 @@ import { convertFullSpaceToHalfSpace } from '@/lib/utils/utils'
 import { Memo } from '@/types/Memo'
 import { SearchMemoListParams } from '@/types/memo/MemosQueryParams'
 
-const DashboardSearchMemoList: React.FC<SearchMemoListParams> = ({
+const SearchPublicMemoList: React.FC<SearchMemoListParams> = ({
   page,
   keyword,
+  category,
 }: SearchMemoListParams) => {
   const { showBoundary } = useErrorBoundary()
   const convertedSearchQuery = keyword ? convertFullSpaceToHalfSpace(keyword.trim()) : undefined
-  const preApiUrl = `/api/dashboard/memos`
-
-  console.log('page', page)
+  const preApiUrl = `/api/public/memos`
 
   const { data: memos, error, isLoading } = useMemoList({
     preApiUrl,
@@ -45,9 +44,12 @@ const DashboardSearchMemoList: React.FC<SearchMemoListParams> = ({
     return memos?.data?.map((memo: Memo, index: number) => (
       <MemoCardForList
         memo={memo}
-        renderMemoDetailLink={`/dashboard/memos/${memo.id}`}
-        renderMemoListByCategoryLink={`/dashboard/memos?category=${memo.category_id}`}
-        renderMemoListByNickNameLink='/dashboard/memos/'
+        renderMemoDetailLink={`/${memo.user_nickname}/memos/${memo.id}`}
+        renderMemoListByCategoryLink={`/memos?category=${memo.category_id}`}
+        renderMemoListByNickNameLink={`/${memo.user_nickname}/memos/`}
+        renderMemoListByTagLink={
+          category ? `/memos?category=${memo.category_id}&tag=` : `/memos?tag=`
+        }
         key={index}
       />
     ))
@@ -60,7 +62,7 @@ const DashboardSearchMemoList: React.FC<SearchMemoListParams> = ({
         <div className='grid w-4/5 mx-auto gap-16 lg:grid-cols-2'>{renderMemoList()}</div>
         <div className='hidden sm:hidden md:block lg:block xl:block'>
           <SearchMemoListPaginationLong
-            baseUrl={`/dashboard/memos/search?q=${keyword}`}
+            baseUrl={`/memos/search?q=${keyword}`}
             totalItems={Number(memos?.meta?.total)}
             currentPage={Number(memos?.meta?.current_page)}
           />
@@ -70,4 +72,4 @@ const DashboardSearchMemoList: React.FC<SearchMemoListParams> = ({
   )
 }
 
-export default DashboardSearchMemoList
+export default SearchPublicMemoList
