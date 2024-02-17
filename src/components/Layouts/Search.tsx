@@ -37,8 +37,10 @@ export const Search = () => {
     }
   }
 
-  const handleChange = (event: { target: { value: SetStateAction<string> } }) => {
-    setSearchQuery(event.target.value)
+  const handleChange = (event: { target: { value: string } }) => {
+    // 全角スペースを半角スペースに変換
+    const convertedValue = event.target.value.replace(/\u3000/g, ' ')
+    setSearchQuery(convertedValue)
   }
 
   return (
