@@ -6,10 +6,10 @@ import { useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import { AuthGuard } from '@/features/auth/components/AuthGuard'
+import SearchPublicMemoList from '@/features/memos/public/components/SearchPublicMemoList'
 import { useAuth } from '@/hooks/auth'
 import useSearchStore from '@/stores/searchStore'
 import { SearchMemoListParams } from '@/types/memo/MemosQueryParams'
-import SearchPublicMemoList from '@/features/memos/public/components/SearchPublicMemoList'
 
 const SearchPublicMemoIndex: NextPage = () => {
   const router = useRouter()
