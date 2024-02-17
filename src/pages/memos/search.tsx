@@ -1,30 +1,73 @@
-// pages/memos/search.tsx
-
+// 必要なインポートのみを保持
+import { NextPage } from 'next'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import AppLayout from '@/components/Layouts/AppLayout'
+import { Loading } from '@/components/Loading'
+import { AuthGuard } from '@/features/auth/components/AuthGuard'
+import PublicSearchMemoList from '@/features/memos/public/components/PublicSearchMemoList'
+import { useAuth } from '@/hooks/auth'
 import useSearchStore from '@/stores/searchStore'
+import { SearchMemoListParams } from '@/types/memo/MemosQueryParams'
 
-const MemoSearchResult = () => {
+const PublicSearchMemoIndex: NextPage = () => {
   const router = useRouter()
-  const responseData = useSearchStore((state) => state.responseData) // Use responseData instead of searchData
+  const { user, isAuthLoading } = useAuth({ middleware: 'auth' })
+  const [isLoading, setIsLoading] = useState(true)
+  const keyword = useSearchStore((state) => state.keyword)
+
+  const [queryParams, setQueryParams] = useState<SearchMemoListParams>({
+    page: 1,
+    keyword: undefined,
+    category: undefined,
+  })
 
   useEffect(() => {
-    // Fetch data if necessary (you can use responseData to check if data is available)
-    // Example: fetchData(router.query.q);
-
-    // Cleanup: Clear responseData in Zustand store when component unmounts
-    return () => {
-      useSearchStore.getState().clearSearchData()
+    if (!isAuthLoading) {
+      if (!user) {
+        router.push('/login')
+        return
+      }
+      setIsLoading(false)
     }
-  }, [router.query.q])
+
+    if (router.isReady) {
+      const { page, category } = router.query
+      setQueryParams({
+        page: Number(page) || 1,
+        keyword: keyword,
+        category: category ? Number(category) : undefined,
+      })
+    }
+  }, [isAuthLoading, user, router])
+
+  // useEffect(() => {
+  //   return () => useSearchStore.getState().clearKeyword()
+  // }, [])
+
+  if (isLoading) return <Loading />
 
   return (
-    <div>
-      <h1>Public Memos Search Results</h1>
-      <div>Public Memos Search query: {router.query.q}</div>
-      <div>Public Memos Search data: {JSON.stringify(responseData)}</div>
-    </div>
+    <AuthGuard>
+      <Head>
+        <title>みんなの公開中のメモ一覧 - メモの検索結果</title>
+      </Head>
+      <AppLayout
+        header={
+          <h2 className='font-semibold text-xl text-gray-800 leading-tight'>
+            みんなの公開中のメモ一覧 - メモの検索結果
+          </h2>
+        }
+      >
+        <PublicSearchMemoList
+          page={queryParams.page}
+          keyword={queryParams.keyword}
+          category={queryParams.category}
+        />
+      </AppLayout>
+    </AuthGuard>
   )
 }
 
-export default MemoSearchResult
+export default PublicSearchMemoIndex

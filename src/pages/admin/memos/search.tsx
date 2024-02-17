@@ -3,17 +3,15 @@ import { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import AppLayout from '@/components/Layouts/AppLayout'
+import AdminAppLayout from '@/components/Layouts/Admin/AdminAppLayout'
 import { Loading } from '@/components/Loading'
-import { AuthGuard } from '@/features/auth/components/AuthGuard'
-import DashboardSearchMemoList from '@/features/memos/dashboard/components/DashboardSearchMemoList'
-import { useAuth } from '@/hooks/auth'
+import { AdminAuthGuard } from '@/features/admin/auth/components/AdminAuthGuard'
 import useSearchStore from '@/stores/searchStore'
 import { SearchMemoListParams } from '@/types/memo/MemosQueryParams'
+import AdminSearchMemoList from '@/features/admin/memos/components/AdminSearchMemoList'
 
 const DashboardSearchMemoIndex: NextPage = () => {
   const router = useRouter()
-  const { user, isAuthLoading } = useAuth({ middleware: 'auth' })
   const [isLoading, setIsLoading] = useState(true)
   const keyword = useSearchStore((state) => state.keyword)
 
@@ -24,14 +22,6 @@ const DashboardSearchMemoIndex: NextPage = () => {
   })
 
   useEffect(() => {
-    if (!isAuthLoading) {
-      if (!user) {
-        router.push('/login')
-        return
-      }
-      setIsLoading(false)
-    }
-
     if (router.isReady) {
       const { page, category } = router.query
       setQueryParams({
@@ -40,33 +30,30 @@ const DashboardSearchMemoIndex: NextPage = () => {
         category: category ? Number(category) : undefined,
       })
     }
-  }, [isAuthLoading, user, router])
-
-  // useEffect(() => {
-  //   return () => useSearchStore.getState().clearKeyword()
-  // }, [])
+    setIsLoading(false)
+  }, [router.isReady, router.query])
 
   if (isLoading) return <Loading />
 
   return (
-    <AuthGuard>
+    <AdminAuthGuard>
       <Head>
         <title>Dashboard - メモの検索結果</title>
       </Head>
-      <AppLayout
+      <AdminAppLayout
         header={
           <h2 className='font-semibold text-xl text-gray-800 leading-tight'>
             Dashboard - メモの検索結果
           </h2>
         }
       >
-        <DashboardSearchMemoList
+        <AdminSearchMemoList
           page={queryParams.page}
           keyword={queryParams.keyword}
           category={queryParams.category}
         />
-      </AppLayout>
-    </AuthGuard>
+      </AdminAppLayout>
+    </AdminAuthGuard>
   )
 }
 
