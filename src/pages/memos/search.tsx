@@ -6,12 +6,12 @@ import { useEffect, useState } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import { AuthGuard } from '@/features/auth/components/AuthGuard'
-import SearchPublicMemoList from '@/features/memos/public/components/SearchPublicMemoList'
+import PublicSearchMemoList from '@/features/memos/public/components/PublicSearchMemoList'
 import { useAuth } from '@/hooks/auth'
 import useSearchStore from '@/stores/searchStore'
 import { SearchMemoListParams } from '@/types/memo/MemosQueryParams'
 
-const SearchPublicMemoIndex: NextPage = () => {
+const PublicSearchMemoIndex: NextPage = () => {
   const router = useRouter()
   const { user, isAuthLoading } = useAuth({ middleware: 'auth' })
   const [isLoading, setIsLoading] = useState(true)
@@ -60,7 +60,7 @@ const SearchPublicMemoIndex: NextPage = () => {
           </h2>
         }
       >
-        <SearchPublicMemoList
+        <PublicSearchMemoList
           page={queryParams.page}
           keyword={queryParams.keyword}
           category={queryParams.category}
@@ -70,4 +70,4 @@ const SearchPublicMemoIndex: NextPage = () => {
   )
 }
 
-export default SearchPublicMemoIndex
+export default PublicSearchMemoIndex

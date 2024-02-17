@@ -9,7 +9,6 @@ import { MemoListReturnType } from '@/types/memoList'
 const fetchMemoList = async (apiUrl: string) => {
   try {
     const { data } = await apiClient.get(apiUrl)
-    console.log(data)
     return data
   } catch (error) {
     if ((error as AxiosError).isAxiosError) {

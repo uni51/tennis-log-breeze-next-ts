@@ -20,9 +20,16 @@ export const Search = () => {
   const handleSearch = async () => {
     setKeywordData(searchQuery)
 
-    const searchPath = router.pathname.includes('dashboard')
-      ? '/dashboard/memos/search'
-      : '/memos/search'
+    let searchPath = ''
+    // 管理画面配下の場合
+    if (router.pathname.includes('admin')) {
+      searchPath = '/admin/memos/search'
+      // ダッシュボード（マイページ）配下の場合
+    } else if (router.pathname.includes('dashboard')) {
+      searchPath = '/dashboard/memos/search'
+    } else {
+      searchPath = '/memos/search'
+    }
 
     router.push({
       pathname: searchPath,

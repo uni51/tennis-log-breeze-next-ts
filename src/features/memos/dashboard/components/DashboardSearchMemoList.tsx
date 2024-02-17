@@ -9,7 +9,7 @@ import { convertFullSpaceToHalfSpace } from '@/lib/utils/utils'
 import { Memo } from '@/types/Memo'
 import { SearchMemoListParams } from '@/types/memo/MemosQueryParams'
 
-const SearchDashboardMemoList: React.FC<SearchMemoListParams> = ({
+const DashboardSearchMemoList: React.FC<SearchMemoListParams> = ({
   page,
   keyword,
   category,
@@ -72,4 +72,4 @@ const SearchDashboardMemoList: React.FC<SearchMemoListParams> = ({
   )
 }
 
-export default SearchDashboardMemoList
+export default DashboardSearchMemoList
