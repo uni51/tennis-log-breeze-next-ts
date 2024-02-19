@@ -13,15 +13,13 @@ import { Category } from '@/types/Category'
 import { MemoForm } from '@/types/MemoForm'
 import { Status } from '@/types/Status'
 import { Tag } from '@/types/memo/Tag'
-import ReactQuill from 'react-quill'
-import Editor from '@/components/QuillEditor/Editor'
 
 type Props = {
   statuses: Status[]
   categories: Category[]
 }
 
-const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
+const MemoPost_240217bak: React.FC<Props> = ({ statuses, categories }) => {
   // Add the onChange parameter
   const defaultValues = {
     category_id: '1',
@@ -29,7 +27,6 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
     tags: [],
   }
   const [tags, setTags] = useState<Tag[]>([])
-  const [body, setBody] = useState('')
 
   const useFormMethods = useForm<MemoForm>({
     defaultValues,
@@ -51,7 +48,7 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
     })
   }
 
-  const handleTagAddition = (tag: Tag) => {
+  const handleAddition = (tag: Tag) => {
     setTags([...tags, tag])
 
     // 直接フォームの値を更新
@@ -61,12 +58,6 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
     )
   }
 
-  const handleBodyAddition = (body: string) => {
-    setBody(body)
-    // 直接フォームの値を更新
-    setValue('body', body)
-  }
-
   return (
     <FormProvider {...useFormMethods}>
       <div className='mx-auto w-4/5 mt-4 sm:mt-4 py-4 rounded-2xl'>
@@ -74,15 +65,7 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
           {/* タイトル */}
           <TextInput target={'title'} required={true} label={'タイトル'} />
           {/* 内容 */}
-          {/* <TextArea target={'body'} required={true} label={'内容'} size={{ rows: 12 }} /> */}
-          {/* <ReactQuill
-            theme='snow'
-            value={body}
-            onChange={handleBodyAddition}
-            className='form-control'
-            placeholder='Write something...'
-          /> */}
-          <Editor value={body} onBodyChange={handleBodyAddition} />
+          <TextArea target={'body'} required={true} label={'内容'} size={{ rows: 12 }} />
           {/* カテゴリー */}
           <Select
             target={categories}
@@ -97,7 +80,7 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
             // suggestions={suggestions}
             delimiters={delimiters}
             handleDelete={handleDelete}
-            handleAddition={handleTagAddition}
+            handleAddition={handleAddition}
             // handleDrag={handleDrag}
             // handleTagClick={handleTagClick}
             inputFieldPosition='inline'
@@ -120,4 +103,4 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
   )
 }
 
-export default MemoPost
+export default MemoPost_240217bak

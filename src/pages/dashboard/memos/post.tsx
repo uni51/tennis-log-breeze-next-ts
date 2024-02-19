@@ -9,6 +9,7 @@ import { useAuth } from '@/hooks/auth'
 import useCheckLoggedIn from '@/hooks/checkLoggedIn'
 import { useMemoCategories } from '@/hooks/memos/useMemoCategories'
 import { useMemoStatuses } from '@/hooks/memos/useMemoStatuses'
+import 'react-quill/dist/quill.snow.css'
 
 const DashboardMemoPost: NextPage = () => {
   const router = useRouter()
