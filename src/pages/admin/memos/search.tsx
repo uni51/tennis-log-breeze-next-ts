@@ -6,9 +6,9 @@ import { useEffect, useState } from 'react'
 import AdminAppLayout from '@/components/Layouts/Admin/AdminAppLayout'
 import { Loading } from '@/components/Loading'
 import { AdminAuthGuard } from '@/features/admin/auth/components/AdminAuthGuard'
+import AdminSearchMemoList from '@/features/admin/memos/components/AdminSearchMemoList'
 import useSearchStore from '@/stores/searchStore'
 import { SearchMemoListParams } from '@/types/memo/MemosQueryParams'
-import AdminSearchMemoList from '@/features/admin/memos/components/AdminSearchMemoList'
 
 const DashboardSearchMemoIndex: NextPage = () => {
   const router = useRouter()
