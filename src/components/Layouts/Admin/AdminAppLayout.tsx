@@ -11,6 +11,7 @@ import {
   UsersIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
+import Image from 'next/image'
 import Link from 'next/link'
 import React, { PropsWithChildren, Fragment, ReactNode, useState } from 'react'
 import AdminNavigation from './AdminNavigation'
@@ -158,10 +159,12 @@ const AdminAppLayout = ({ header, children }: PropsWithChildren<Props>) => {
                     </div>
                   </Transition.Child>
                   <div className='flex flex-shrink-0 items-center px-4'>
-                    <img
+                    <Image
                       className='h-8 w-auto'
                       src='https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600'
                       alt='Your Company'
+                      width={32}
+                      height={32}
                     />
                   </div>
                   <div className='mt-5 h-0 flex-1 overflow-y-auto'>
@@ -205,10 +208,12 @@ const AdminAppLayout = ({ header, children }: PropsWithChildren<Props>) => {
           {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className='flex flex-grow flex-col overflow-y-auto border-r border-gray-200 bg-white pt-5 pb-4'>
             <div className='flex flex-shrink-0 items-center px-4'>
-              <img
+              <Image
                 className='h-8 w-auto'
                 src='https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600'
                 alt='Your Company'
+                width={32}
+                height={32}
               />
             </div>
             <div className='mt-5 flex flex-grow flex-col'>

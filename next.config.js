@@ -4,6 +4,9 @@ const nextConfig = {
   experimental: {
     appDir: false,
   },
+  images: {
+    domains: ['tailwindui.com'], // 読み込みを許可する外部ホスト名を追加
+  },
   async redirects() {
     return [
       // {

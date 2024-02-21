@@ -1,10 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
+import dynamic from 'next/dynamic'
+import React, { useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { WithContext as ReactTags } from 'react-tag-input'
 import { LargeSubmitButton } from '@/components/Form/LargeSubmitButton'
 import { Select } from '@/components/Form/Select'
-import { TextArea } from '@/components/Form/TextArea'
 import { TextInput } from '@/components/Form/TextInput'
 import { postCreateMemo } from '@/features/memos/dashboard/lib/postCreateMemo'
 import { MemoPostSchema } from '@/features/memos/dashboard/lib/schema/MemoPostSchema'
@@ -13,8 +13,10 @@ import { Category } from '@/types/Category'
 import { MemoForm } from '@/types/MemoForm'
 import { Status } from '@/types/Status'
 import { Tag } from '@/types/memo/Tag'
-import ReactQuill from 'react-quill'
-import Editor from '@/components/QuillEditor/Editor'
+
+const QuillEditor = dynamic(() => import('@/components/QuillEditor/Editor'), {
+  ssr: false, // サーバーサイドレンダリングを無効にする
+})
 
 type Props = {
   statuses: Status[]
@@ -82,7 +84,7 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
             className='form-control'
             placeholder='Write something...'
           /> */}
-          <Editor value={body} onBodyChange={handleBodyAddition} />
+          <QuillEditor value={body} onBodyChange={handleBodyAddition} />
           {/* カテゴリー */}
           <Select
             target={categories}
