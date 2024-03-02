@@ -62,14 +62,10 @@ const MemoDetailCard: NextPage<Props> = ({
             <Link href={renderMemoListByCategoryLink}>{memo.category_name}</Link>
           </p>
           <p className='mt-1'>
-            {memo.tag_list.normalized.map((normalizedTag, index) => (
-              <Link
-                href={`${renderMemoListByTagLink}${normalizedTag}`}
-                key={index}
-                className='pr-1'
-              >
+            {memo.tag_list.tags.map((tag, index) => (
+              <Link href={`${renderMemoListByTagLink}${tag}`} key={index} className='pr-1'>
                 <span className='text-xs font-semibold py-1 px-2 uppercase rounded-lg text-blue-600 bg-blue-200 last:mr-0 mr-1'>
-                  {normalizedTag}
+                  {tag}
                 </span>
               </Link>
             ))}

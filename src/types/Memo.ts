@@ -9,7 +9,7 @@ export type Memo = {
   category_name: string
   tag_list: {
     tags: string[]
-    normalized: string[]
+    // normalized: string[]
   }
   status: number
   created_at: string
