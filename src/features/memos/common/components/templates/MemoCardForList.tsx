@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { FC } from 'react'
 import { Memo } from '@/types/Memo'
+import parse from 'html-react-parser'
 
 type MemoCardForListProps = {
   memo: Memo
@@ -27,7 +28,7 @@ const MemoCardForList: FC<MemoCardForListProps> = ({
       <div className='border-b-2 border-gray-300 mb-4'></div>
       <p className='mb-3 whitespace-pre-wrap'>
         <Link href={renderMemoDetailLink} className='pb-6 text-slate-900'>
-          {memo.body.length > 70 ? memo.body.substring(0, 70) + '...' : memo.body}
+          {memo.body.length > 70 ? parse(memo.body).substring(0, 70) + '...' : parse(memo.body)}
         </Link>
         {memo.body.length > 70 && (
           <span className='text-xs font-semibold pl-2'>
