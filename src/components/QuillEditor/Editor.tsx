@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import ReactDOMServer from 'react-dom/server'
-import ReactQuill, { Quill } from 'react-quill'
-// import ImageResize  from 'quill-image-resize-module';
+import React, { useEffect, useRef } from 'react'
+import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import CustomToolbar from './CustomToolbar'
 
@@ -10,21 +8,30 @@ interface EditorProps {
   onBodyChange?: (body: string) => void
 }
 
-// Quill.register('modules/ImageResize',ImageResize);
 const Editor: React.FC<EditorProps> = ({ value, onBodyChange }) => {
-  const [text, setText] = useState('')
+  const quillRef = useRef<ReactQuill>(null)
 
-  const handleChange = (html: string) => {
-    setText(html)
+  // プロパティで受け取ったvalueをエディタに反映する
+  useEffect(() => {
+    if (quillRef.current) {
+      const editor = quillRef.current.getEditor()
+      editor.clipboard.dangerouslyPasteHTML(value)
+    }
+  }, [value])
+
+  const handleChange = (content: string) => {
+    // onBodyChangeが提供されている場合は、変更された内容を渡す
     if (onBodyChange) {
-      onBodyChange(html)
+      onBodyChange(content)
     }
   }
+
   const modules = {
     toolbar: {
       container: '#toolbar',
     },
   }
+
   const formats = [
     'font',
     'size',
@@ -51,7 +58,12 @@ const Editor: React.FC<EditorProps> = ({ value, onBodyChange }) => {
   return (
     <>
       <CustomToolbar />
-      <ReactQuill value={value} onChange={handleChange} modules={modules} formats={formats} />
+      <ReactQuill
+        ref={quillRef}
+        onChange={(content, delta, source, editor) => handleChange(editor.getHTML())}
+        modules={modules}
+        formats={formats}
+      />
     </>
   )
 }

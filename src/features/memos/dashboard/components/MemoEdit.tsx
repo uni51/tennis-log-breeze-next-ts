@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import dynamic from 'next/dynamic'
 import { useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -15,6 +16,10 @@ import { Memo } from '@/types/Memo'
 import { MemoForm } from '@/types/MemoForm'
 import { Status } from '@/types/Status'
 import { Tag } from '@/types/memo/Tag'
+
+const QuillEditor = dynamic(() => import('@/components/QuillEditor/Editor'), {
+  ssr: false, // サーバーサイドレンダリングを無効にする
+})
 
 type Props = {
   memo: Memo
@@ -45,6 +50,7 @@ const MemoEdit: React.FC<Props> = ({ memo, statuses, categories }) => {
   })
 
   const [tags, setTags] = useState<Tag[]>(defaultTags)
+  const [body, setBody] = useState('')
 
   const { handleSubmit, setError, setValue } = useFormMethods
   const queryClient = useQueryClient()
@@ -73,6 +79,12 @@ const MemoEdit: React.FC<Props> = ({ memo, statuses, categories }) => {
     )
   }
 
+  const handleBodyAddition = (body: string) => {
+    setBody(body)
+    // 直接フォームの値を更新
+    setValue('body', body)
+  }
+
   return (
     <FormProvider {...useFormMethods}>
       <div className='mx-auto w-4/5 mt-4 sm:mt-4 py-4 rounded-2xl'>
@@ -80,7 +92,8 @@ const MemoEdit: React.FC<Props> = ({ memo, statuses, categories }) => {
           {/* タイトル */}
           <TextInput target={'title'} required={true} label={'タイトル'} />
           {/* 内容 */}
-          <TextArea target={'body'} required={true} label={'内容'} size={{ rows: 12 }} />
+          {/* <TextArea target={'body'} required={true} label={'内容'} size={{ rows: 12 }} /> */}
+          <QuillEditor value={memo.body} onBodyChange={handleBodyAddition} />
           {/* カテゴリー */}
           <Select
             target={categories}
