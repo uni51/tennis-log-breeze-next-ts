@@ -77,13 +77,6 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
           <TextInput target={'title'} required={true} label={'タイトル'} />
           {/* 内容 */}
           {/* <TextArea target={'body'} required={true} label={'内容'} size={{ rows: 12 }} /> */}
-          {/* <ReactQuill
-            theme='snow'
-            value={body}
-            onChange={handleBodyAddition}
-            className='form-control'
-            placeholder='Write something...'
-          /> */}
           <QuillEditor value={body} onBodyChange={handleBodyAddition} />
           {/* カテゴリー */}
           <Select
