@@ -13,6 +13,7 @@ import { useMemoCategories } from '@/hooks/memos/useMemoCategories'
 import { useMemoStatuses } from '@/hooks/memos/useMemoStatuses'
 import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
+import MemoModifyEdit from '@/features/memos/dashboard/components/MemoModifyEdit'
 
 const DashboardMemoDetailEdit: NextPage = () => {
   const router = useRouter()
@@ -22,6 +23,7 @@ const DashboardMemoDetailEdit: NextPage = () => {
 
   const { status: queryMemoCategoriesStatus, data: categories } = useMemoCategories()
   const { status: queryMemoStatusesStatus, data: statuses } = useMemoStatuses()
+  const [filteredStatuses, setFilteredStatuses] = useState(statuses)
 
   const fetchMemoData = async () => {
     try {
@@ -59,6 +61,17 @@ const DashboardMemoDetailEdit: NextPage = () => {
     }
   }, [router.isReady, router.query.id])
 
+  useEffect(() => {
+    if (memo && statuses && memo.status >= 0 && memo.status <= 3) {
+      // memo.statusが0から3の場合、statusesから4番目以降の要素を削除
+      const newStatuses = statuses.slice(0, 4)
+      setFilteredStatuses(newStatuses)
+    } else if (memo && statuses && memo.status === 4) {
+      const newStatuses = statuses.slice(4, 5)
+      setFilteredStatuses(newStatuses)
+    }
+  }, [memo, statuses])
+
   if (
     isLoading ||
     !memo ||
@@ -84,7 +97,12 @@ const DashboardMemoDetailEdit: NextPage = () => {
         <Head>
           <title>Dashboard - メモの編集</title>
         </Head>
-        <MemoEdit memo={memo} statuses={statuses!} categories={categories!} />
+        {memo && memo.status >= 0 && memo.status <= 3 && (
+          <MemoEdit memo={memo} statuses={filteredStatuses!} categories={categories!} />
+        )}
+        {memo && memo.status === 4 && (
+          <MemoModifyEdit memo={memo} statuses={filteredStatuses!} categories={categories!} />
+        )}
       </AppLayout>
     </AuthGuard>
   )

@@ -22,10 +22,17 @@ const AdminMemoDetailCard: NextPage<Props> = ({
   renderMemoListByNickNameLink,
   renderMemoListByTagLink,
 }) => {
-  const showAlert = () => {
+  const showAlertForDelete = () => {
     showAlertModal({
       message: '本当にこの記事を削除しますか？',
       onOk: memoDelete,
+    })
+  }
+
+  const showAlertForEdit = () => {
+    showAlertModal({
+      message: 'この記事の修正を依頼しますか？',
+      onOk: memoEditRequest,
     })
   }
 
@@ -42,6 +49,22 @@ const AdminMemoDetailCard: NextPage<Props> = ({
         return handleAxiosError(error as AxiosError)
       } else {
         throw new Error(`Failed to fetch memo detail: ${String(error)}`)
+      }
+    }
+  }
+
+  const memoEditRequest = async () => {
+    try {
+      const response: AxiosResponse = await apiClient.post(
+        `/api/admin/memos/${memo?.id}/request-edit`,
+      )
+      toast.success(response.data.message)
+      // 必要に応じて適切なリダイレクトを行う
+    } catch (error) {
+      if ((error as AxiosError).isAxiosError) {
+        return handleAxiosError(error as AxiosError)
+      } else {
+        throw new Error(`Failed to request memo edit: ${String(error)}`)
       }
     }
   }
@@ -73,12 +96,19 @@ const AdminMemoDetailCard: NextPage<Props> = ({
             </Link>
           </p>
           <p className='pt-1'>
-            <span className='text-xs font-semibold py-1 px-2 uppercase rounded-lg text-white bg-black last:mr-0 mr-1'>
-              {memo.status === 0 && '下書き'}
-              {memo.status === 1 && '公開中'}
-              {memo.status === 2 && 'シェア'}
-              {memo.status === 3 && '非公開'}
-            </span>
+            {memo.status !== 4 && (
+              <span className='text-xs font-semibold py-1 px-2 uppercase rounded-lg text-white bg-black last:mr-0 mr-1'>
+                {memo.status === 0 && '下書き'}
+                {memo.status === 1 && '公開中'}
+                {memo.status === 2 && 'シェア'}
+                {memo.status === 3 && '非公開'}
+              </span>
+            )}
+            {memo.status === 4 && (
+              <span className='text-xs font-semibold py-1 px-2 uppercase rounded-lg text-white bg-red-500 last:mr-0 mr-1'>
+                修正待ち
+              </span>
+            )}
           </p>
           <p className='text-sm leading-6 text-gray-500 mt-2 inline-block'>
             作成日時：{memo.created_at}
@@ -86,11 +116,14 @@ const AdminMemoDetailCard: NextPage<Props> = ({
           <p className='text-sm leading-6 text-gray-500 mt-2 inline-block'>
             更新日時：{memo.updated_at}
           </p>
-          <Link href={`/admin/memos/${memo.id}/edit`}>
-            <p className='text-sm leading-6 font-bold text-blue-700 mt-2'>編集する</p>
-          </Link>
-          <p className='text-sm leading-6 font-bold text-blue-700 mt-2' onClick={showAlert}>
-            この記事を削除
+          <p className='text-sm leading-6 font-bold text-blue-700 mt-2' onClick={showAlertForEdit}>
+            記事の修正を依頼する（記事の掲載は一時停止されます）
+          </p>
+          <p
+            className='text-sm leading-6 font-bold text-blue-700 mt-2'
+            onClick={showAlertForDelete}
+          >
+            記事を完全に削除する
           </p>
         </div>
       </div>
