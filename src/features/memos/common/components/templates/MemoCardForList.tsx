@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import { FC } from 'react'
 import { Memo } from '@/types/Memo'
+import parse from 'html-react-parser'
+import { extractContent } from '@/lib/memo-helper'
 
 type MemoCardForListProps = {
   memo: Memo
@@ -17,6 +19,8 @@ const MemoCardForList: FC<MemoCardForListProps> = ({
   renderMemoListByNickNameLink,
   renderMemoListByTagLink,
 }) => {
+  const { extractedText, extractedYouTube } = extractContent(memo.body)
+
   return (
     <div className='bg-gray-100 shadow-lg mb-5 p-4'>
       <p className='text-lg font-bold pt-2 pb-1'>
@@ -27,7 +31,7 @@ const MemoCardForList: FC<MemoCardForListProps> = ({
       <div className='border-b-2 border-gray-300 mb-4'></div>
       <p className='mb-3 whitespace-pre-wrap'>
         <Link href={renderMemoDetailLink} className='pb-6 text-slate-900'>
-          {memo.body.length > 70 ? memo.body.substring(0, 70) + '...' : memo.body}
+          {extractedYouTube ? parse(extractedYouTube) : parse(extractedText)}
         </Link>
         {memo.body.length > 70 && (
           <span className='text-xs font-semibold pl-2'>

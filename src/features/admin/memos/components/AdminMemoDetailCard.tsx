@@ -7,6 +7,7 @@ import { showAlertModal } from '@/components/AlertModalManager'
 import { apiClient } from '@/lib/utils/apiClient'
 import { handleAxiosError } from '@/lib/utils/errorHandling'
 import { Memo } from '@/types/Memo'
+import parse from 'html-react-parser'
 
 type Props = {
   memo: Memo
@@ -51,7 +52,7 @@ const AdminMemoDetailCard: NextPage<Props> = ({
         <div className='bg-gray-100 shadow-lg mb-5 p-4 rounded-xl'>
           <p className='text-lg font-bold pt-2 pb-1'>{memo.title}</p>
           <div className='border-b-2 border-gray-300 mb-4'></div>
-          <p className='mb-3 whitespace-pre-wrap'>{memo.body}</p>
+          <p className='mb-3 whitespace-pre-wrap'>{parse(memo.body)}</p>
           <p className='text-xs font-semibold inline-block py-1 px-2 uppercase rounded-lg text-pink-600 bg-pink-200 last:mr-0 mr-1'>
             <Link href={renderMemoListByCategoryLink}>{memo.category_name}</Link>
           </p>
