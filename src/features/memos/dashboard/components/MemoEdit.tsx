@@ -106,7 +106,11 @@ const MemoEdit: React.FC<Props> = ({ memo, statuses, categories }) => {
             required={true}
             label={'カテゴリー'}
             defaultValue={defaultValues?.category_id}
+            style='mt-5'
           />
+          <div className='flex justify-start my-1 sm:my-2'>
+            <p>タグ</p>
+          </div>
           <ReactTags
             tags={tags}
             delimiters={Delimiters}
@@ -121,6 +125,7 @@ const MemoEdit: React.FC<Props> = ({ memo, statuses, categories }) => {
             required={true}
             label={'ステータス'}
             defaultValue={defaultValues?.status_id}
+            style='mt-5'
           />
           <LargeSubmitButton>登録する</LargeSubmitButton>
         </form>
