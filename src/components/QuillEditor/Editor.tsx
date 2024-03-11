@@ -55,8 +55,11 @@ const Editor: React.FC<EditorProps> = ({ value, onBodyChange }) => {
   }, [value])
 
   const handleChange = (content: string) => {
+    // 空の入力を判断するためには、contentが`<p><br></p>`かどうかをチェックする
+    const isEmpty = content === '<p><br></p>'
     if (onBodyChange) {
-      onBodyChange(content)
+      // 空の場合、空の文字列を渡す
+      onBodyChange(isEmpty ? '' : content)
     }
   }
 

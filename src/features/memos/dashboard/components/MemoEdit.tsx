@@ -1,8 +1,7 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import dynamic from 'next/dynamic'
 import { useQueryClient } from '@tanstack/react-query'
-import { useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { WithContext as ReactTags } from 'react-tag-input'
 import { LargeSubmitButton } from '@/components/Form/LargeSubmitButton'
@@ -41,17 +40,16 @@ const MemoEdit: React.FC<Props> = ({ memo, statuses, categories }) => {
   const useFormMethods = useForm<MemoForm>({
     defaultValues,
     resolver: zodResolver(MemoPostSchema),
+    mode: 'onChange',
   })
 
-  const defaultTags = memo.tag_list.tags.map((tag) => {
-    return {
-      id: tag,
-      text: tag,
-    }
-  })
+  const defaultTags = memo.tag_list.tags.map((tag) => ({
+    id: tag,
+    text: tag,
+  }))
 
   const [tags, setTags] = useState<Tag[]>(defaultTags)
-  const [body, setBody] = useState('')
+  const [body, setBody] = useState(memo.body)
 
   const {
     handleSubmit,
@@ -59,9 +57,12 @@ const MemoEdit: React.FC<Props> = ({ memo, statuses, categories }) => {
     setValue,
     formState: { errors },
   } = useFormMethods
+
   const queryClient = useQueryClient()
 
-  const delimiters = Delimiters
+  useEffect(() => {
+    setValue('body', memo.body)
+  }, [memo.body, setValue])
 
   const handleDelete = (i: number) => {
     setTags((prevTags) => {
@@ -82,9 +83,9 @@ const MemoEdit: React.FC<Props> = ({ memo, statuses, categories }) => {
     )
   }
 
-  const handleBodyAddition = (body: string) => {
-    setBody(body)
-    setValue('body', body)
+  const handleBodyChange = (content: string) => {
+    setBody(content)
+    setValue('body', content, { shouldValidate: true })
   }
 
   return (
@@ -97,7 +98,8 @@ const MemoEdit: React.FC<Props> = ({ memo, statuses, categories }) => {
           )}
         >
           <TextInput target={'title'} required={true} label={'タイトル'} />
-          <QuillEditor value={memo.body} onBodyChange={handleBodyAddition} />
+          <QuillEditor value={body} onBodyChange={handleBodyChange} />
+          {errors.body && <div className='text-red-500'>{errors.body.message}</div>}
           <Select
             target={categories}
             target_id={'category_id'}
@@ -107,7 +109,7 @@ const MemoEdit: React.FC<Props> = ({ memo, statuses, categories }) => {
           />
           <ReactTags
             tags={tags}
-            delimiters={delimiters}
+            delimiters={Delimiters}
             handleDelete={handleDelete}
             handleAddition={handleAddition}
             inputFieldPosition='inline'
@@ -120,13 +122,6 @@ const MemoEdit: React.FC<Props> = ({ memo, statuses, categories }) => {
             label={'ステータス'}
             defaultValue={defaultValues?.status_id}
           />
-          {Object.keys(errors).length > 0 && (
-            <span>
-              {Object.values(errors)
-                .map((error) => error.message)
-                .join(', ')}
-            </span>
-          )}
           <LargeSubmitButton>登録する</LargeSubmitButton>
         </form>
       </div>
