@@ -13,7 +13,6 @@ import { useMemoCategories } from '@/hooks/memos/useMemoCategories'
 import { useMemoStatuses } from '@/hooks/memos/useMemoStatuses'
 import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
-import MemoModifyEdit from '@/features/memos/dashboard/components/MemoModifyEdit'
 
 const DashboardMemoDetailEdit: NextPage = () => {
   const router = useRouter()
@@ -66,8 +65,9 @@ const DashboardMemoDetailEdit: NextPage = () => {
       // memo.statusが0から3の場合、statusesから4番目以降の要素を削除
       const newStatuses = statuses.slice(0, 4)
       setFilteredStatuses(newStatuses)
-    } else if (memo && statuses && memo.status === 4) {
-      const newStatuses = statuses.slice(4, 5)
+    } else if (memo && statuses && memo.status === 5) {
+      // memo.statusが5の場合、statusesから6番目の「修正待ち」の要素のみを抽出
+      const newStatuses = statuses.slice(5, 6)
       setFilteredStatuses(newStatuses)
     }
   }, [memo, statuses])
@@ -97,12 +97,7 @@ const DashboardMemoDetailEdit: NextPage = () => {
         <Head>
           <title>Dashboard - メモの編集</title>
         </Head>
-        {memo && memo.status >= 0 && memo.status <= 3 && (
-          <MemoEdit memo={memo} statuses={filteredStatuses!} categories={categories!} />
-        )}
-        {memo && memo.status === 4 && (
-          <MemoModifyEdit memo={memo} statuses={filteredStatuses!} categories={categories!} />
-        )}
+        <MemoEdit memo={memo} statuses={filteredStatuses!} categories={categories!} />
       </AppLayout>
     </AuthGuard>
   )

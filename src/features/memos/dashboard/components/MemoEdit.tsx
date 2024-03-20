@@ -15,6 +15,7 @@ import { Memo } from '@/types/Memo'
 import { MemoForm } from '@/types/MemoForm'
 import { Status } from '@/types/Status'
 import { Tag } from '@/types/memo/Tag'
+import { postEditMemoForModify } from '../lib/postEditMemoForModify'
 
 const QuillEditor = dynamic(() => import('@/components/QuillEditor/Editor'), {
   ssr: false,
@@ -88,15 +89,26 @@ const MemoEdit: React.FC<Props> = ({ memo, statuses, categories }) => {
     setValue('body', content, { shouldValidate: true })
   }
 
+  const onSubmit = (data: MemoForm) => {
+    if (data.status_id === '5') {
+      // status_id が '5' の場合の処理
+      postEditMemoForModify(data, setError, memo.id, queryClient)
+    } else {
+      // それ以外の場合の処理
+      postEditMemo(data, setError, memo.id, queryClient)
+    }
+  }
+
   return (
     <FormProvider {...useFormMethods}>
       <div className='mx-auto w-4/5 mt-4 sm:mt-4 py-4 rounded-2xl'>
         {errorMessage && <div className='text-red-600'>{errorMessage}</div>}
-        <form
+        {/* <form
           onSubmit={handleSubmit((data) =>
             postEditMemo(data, setError, memo.id, queryClient, setErrorMessage),
           )}
-        >
+        > */}
+        <form onSubmit={handleSubmit(onSubmit)}>
           <TextInput target={'title'} required={true} label={'タイトル'} />
           <QuillEditor value={body} onBodyChange={handleBodyChange} />
           {errors.body && <div className='text-red-500'>{errors.body.message}</div>}
