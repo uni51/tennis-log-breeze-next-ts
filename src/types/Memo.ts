@@ -12,6 +12,7 @@ export type Memo = {
     // normalized: string[]
   }
   status: number
+  is_waiting_for_admin_review: boolean
   created_at: string
   updated_at: string
 }

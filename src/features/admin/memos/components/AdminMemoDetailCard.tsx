@@ -110,6 +110,13 @@ const AdminMemoDetailCard: NextPage<Props> = ({
               </span>
             )}
           </p>
+          {memo.is_waiting_for_admin_review && (
+            <p className='pt-1'>
+              <span className='text-xs font-semibold py-1 px-2 uppercase rounded-lg text-white bg-red-500 last:mr-0 mr-1'>
+                管理者レビュー待ち
+              </span>
+            </p>
+          )}
           <p className='text-sm leading-6 text-gray-500 mt-2 inline-block'>
             作成日時：{memo.created_at}
           </p>

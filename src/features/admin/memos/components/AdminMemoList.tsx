@@ -1,6 +1,6 @@
 import { useErrorBoundary } from 'react-error-boundary'
 import AdminMemoListPaginationLong from '@/components/admin/Pagination/AdminMemoListPaginationLong'
-import MemoCardForList from '@/features/memos/common/components/templates/MemoCardForList'
+import AdminMemoCardForList from './templates/AdminMemoCardForList'
 import { useAdminMemoList } from '@/hooks/admin/memos/useAdminMemoList'
 import { Memo } from '@/types/Memo'
 
@@ -36,7 +36,7 @@ const AdminMemoList: React.FC<Props> = ({ page, category, tag }: Props) => {
 
   const renderMemoList = () => {
     return memos?.data?.map((memo: Memo, index: number) => (
-      <MemoCardForList
+      <AdminMemoCardForList
         memo={memo}
         renderMemoDetailLink={`/admin/memos/${memo.user_nickname}/${memo.id}`}
         renderMemoListByCategoryLink={`/admin/memos?category=${memo.category_id}`}
