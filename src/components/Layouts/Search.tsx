@@ -8,14 +8,20 @@ export const Search = () => {
   const [searchQuery, setSearchQuery] = useState('')
   const setKeywordData = useSearchStore((state) => state.setKeywordData)
 
+  // useEffect(() => {
+  //   if (router.isReady) {
+  //     const { q } = router.query
+  //     if (q !== '') {
+  //       setSearchQuery(q as string)
+  //     }
+  //   }
+  // }, [router.query.q])
   useEffect(() => {
     if (router.isReady) {
-      const { q } = router.query
-      if (q !== '') {
-        setSearchQuery(q as string)
-      }
+      const q = router.query.q ?? ''
+      setSearchQuery(q as string)
     }
-  }, [router.query.q])
+  }, [router.isReady, router.query.q])
 
   const handleSearch = async () => {
     setKeywordData(searchQuery)
