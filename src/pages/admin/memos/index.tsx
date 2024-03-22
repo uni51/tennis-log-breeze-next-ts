@@ -37,8 +37,6 @@ const AdminMemos: NextPage = () => {
 
   const headLine = 'ユーザーが作成したメモ一覧'
 
-  const categoryText = queryParams.category ? getCategoryText(queryParams.category) : ''
-
   return (
     <AdminAuthGuard>
       <Head>
