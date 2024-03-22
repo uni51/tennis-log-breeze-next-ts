@@ -7,13 +7,11 @@ import AdminAppLayout from '@/components/Layouts/Admin/AdminAppLayout'
 import { Loading } from '@/components/Loading'
 import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
 import { AdminAuthGuard } from '@/features/admin/auth/components/AdminAuthGuard'
-import AdminMemoList from '@/features/admin/memos/components/AdminMemoList'
 import { onError } from '@/lib/error-helper'
-import { getCategoryText } from '@/lib/headline-helper'
 import { MemoQueryParams } from '@/types/memo/MemosQueryParams'
 import AdminMemoReviewList from '@/features/admin/memos/components/AdminMemoReviewList'
 
-const AdminMemosRequestReview: NextPage = () => {
+const AdminMemosRequestReviewList: NextPage = () => {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(true)
   const [queryParams, setQueryParams] = useState<MemoQueryParams>({
@@ -52,12 +50,6 @@ const AdminMemosRequestReview: NextPage = () => {
             <h3 className='font-semibold text-xl text-gray-800 leading-tight inline-block mr-4'>
               {headLine}
             </h3>
-            {queryParams.category && (
-              <span className='text-gray-800 font-bold mr-4'>
-                {getCategoryText(queryParams.category)}
-              </span>
-            )}
-            {queryParams.tag && <span className='text-gray-800 font-bold'>#{queryParams.tag}</span>}
           </>
         }
       >
@@ -73,4 +65,4 @@ const AdminMemosRequestReview: NextPage = () => {
   )
 }
 
-export default AdminMemosRequestReview
+export default AdminMemosRequestReviewList

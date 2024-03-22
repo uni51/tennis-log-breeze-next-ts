@@ -1,10 +1,8 @@
-import { useEffect, useState } from 'react'
-import { toast } from 'react-toastify'
-import { apiClient } from '@/lib/utils/apiClient'
 import { Memo } from '@/types/Memo'
-import { useAdminMemoReviewList } from '@/hooks/admin/memos/useAdmiMemoReviewList'
-import AdminMemoListPaginationLong from '@/components/admin/Pagination/AdminMemoListPaginationLong'
 import AdminMemoCardForList from './templates/AdminMemoCardForList'
+import SimplePaginationLong from '@/components/Pagination/SimplePaginationLong'
+import { useAdminMemoList } from '@/hooks/admin/memos/useAdminMemoList'
+import { useErrorBoundary } from 'react-error-boundary'
 
 type Props = {
   page: number
@@ -12,24 +10,17 @@ type Props = {
   tag?: string
 }
 
-const AdminMemoReviewList: React.FC<Props> = ({ page, category, tag }: Props) => {
-  const { data: memos, isLoading } = useAdminMemoReviewList()
+const AdminMemoReviewList: React.FC<Props> = ({ page, category }: Props) => {
+  const { showBoundary } = useErrorBoundary()
+  const preApiUrl = '/api/admin/memos/review'
+  const { data: memos, error, isLoading } = useAdminMemoList({
+    preApiUrl,
+    page,
+  })
 
-  const handleDisable = (userId?: number) => async (event: React.MouseEvent<HTMLButtonElement>) => {
-    // event.preventDefault()
-    // // 非同期処理を行う
-    // const response = await apiClient.post('/api/admin/users/disable', { userId })
-    // console.log(`response: ${response}`)
-    // if (response.status === 200 && response.data === 1) {
-    //   // ユーザーを削除しましたの後、ユーザー一覧から該当のユーザーを除外
-    //   const updatedUsers = users.filter((user) => user.id !== userId)
-    //   // 更新後のユーザー一覧をセットする
-    //   setUsers(updatedUsers)
-    //   toast.success('ユーザーを削除しました')
-    // }
+  if (error) {
+    showBoundary(error)
   }
-
-  console.log(memos)
 
   if (isLoading) return <div>Loading...</div>
 
@@ -46,7 +37,6 @@ const AdminMemoReviewList: React.FC<Props> = ({ page, category, tag }: Props) =>
       <AdminMemoCardForList
         memo={memo}
         renderMemoDetailLink={`/admin/memos/${memo.user_nickname}/${memo.id}`}
-        renderMemoListByCategoryLink={`/admin/memos?category=${memo.category_id}`}
         renderMemoListByNickNameLink={`/admin/memos/${memo.user_nickname}`}
         renderMemoListByTagLink={
           category ? `/admin/memos?category=${memo.category_id}&tag=` : `/admin/memos?tag=`
@@ -62,12 +52,10 @@ const AdminMemoReviewList: React.FC<Props> = ({ page, category, tag }: Props) =>
         <div className='-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8'>
           <div className='grid w-4/5 mx-auto gap-16 lg:grid-cols-2'>{renderMemoList()}</div>
           <div className='hidden sm:hidden md:block lg:block xl:block'>
-            <AdminMemoListPaginationLong
-              baseUrl='/admin/memos/review'
-              totalItems={Number(memos.meta.total)}
-              currentPage={Number(memos.meta.current_page)}
-              category={category}
-              tag={tag}
+            <SimplePaginationLong
+              baseUrl={`/admin/memos/review`}
+              totalItems={Number(memos?.meta?.total)}
+              currentPage={Number(memos?.meta?.current_page)}
             />
           </div>
         </div>

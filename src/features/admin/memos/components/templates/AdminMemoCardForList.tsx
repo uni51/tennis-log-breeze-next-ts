@@ -7,8 +7,8 @@ import { extractContent } from '@/lib/memo-helper'
 type MemoCardForListProps = {
   memo: Memo
   renderMemoDetailLink: string
-  renderMemoListByCategoryLink: string
   renderMemoListByNickNameLink: string
+  renderMemoListByCategoryLink?: string
   renderMemoListByTagLink?: string
 }
 
@@ -42,7 +42,11 @@ const AdminMemoCardForList: FC<MemoCardForListProps> = ({
         )}
       </p>
       <p className='text-xs font-semibold inline-block py-1 px-2 uppercase rounded-lg text-pink-600 bg-pink-200 last:mr-0 mr-1'>
-        <Link href={renderMemoListByCategoryLink}>{memo.category_name}</Link>
+        {renderMemoListByCategoryLink ? (
+          <Link href={renderMemoListByCategoryLink}>{memo.category_name}</Link>
+        ) : (
+          memo.category_name
+        )}
       </p>
       <p className='mt-1'>
         {memo.tag_list.tags.map((tag, index) => (
@@ -75,7 +79,7 @@ const AdminMemoCardForList: FC<MemoCardForListProps> = ({
           </span>
         )}
       </p>
-      {memo.is_waiting_for_admin_review && (
+      {Boolean(memo.is_waiting_for_admin_review) === true && (
         <p className='pt-1'>
           <span className='text-xs font-semibold py-1 px-2 uppercase rounded-lg text-white bg-red-500 last:mr-0 mr-1'>
             管理者レビュー待ち
