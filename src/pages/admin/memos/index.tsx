@@ -12,7 +12,7 @@ import { onError } from '@/lib/error-helper'
 import { getCategoryText } from '@/lib/headline-helper'
 import { MemoQueryParams } from '@/types/memo/MemosQueryParams'
 
-const AdminUsers: NextPage = () => {
+const AdminMemos: NextPage = () => {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(true)
   const [queryParams, setQueryParams] = useState<MemoQueryParams>({
@@ -74,4 +74,4 @@ const AdminUsers: NextPage = () => {
   )
 }
 
-export default AdminUsers
+export default AdminMemos
