@@ -35,7 +35,7 @@ const MemoDetailCard: NextPage<Props> = ({
   const memoDelete = async () => {
     try {
       const response: AxiosResponse = await apiClient.post(
-        `/api/dashboard/memos/${memo?.id}/delete`,
+        `/api/dashboard/memos/delete/${memo?.id}`,
       )
       toast.success('記事を削除しました')
       router.push({
