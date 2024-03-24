@@ -65,9 +65,9 @@ const DashboardMemoDetailEdit: NextPage = () => {
       // memo.statusが0から3の場合、statusesから4番目以降の要素を削除
       const newStatuses = statuses.slice(0, 4)
       setFilteredStatuses(newStatuses)
-    } else if (memo && statuses && memo.status === 5) {
-      // memo.statusが5の場合、statusesから6番目の「修正待ち」の要素のみを抽出
-      const newStatuses = statuses.slice(5, 6)
+    } else if (memo && statuses && memo.status === 4) {
+      // memo.statusが5の場合、statusesから5番目の「修正待ち」の要素のみを抽出
+      const newStatuses = statuses.slice(4, 5)
       setFilteredStatuses(newStatuses)
     }
   }, [memo, statuses])
