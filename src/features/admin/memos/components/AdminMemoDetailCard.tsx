@@ -38,7 +38,7 @@ const AdminMemoDetailCard: NextPage<Props> = ({
 
   const memoDelete = async () => {
     try {
-      const response: AxiosResponse = await apiClient.post(`/api/admin/memos/${memo?.id}/delete`)
+      const response: AxiosResponse = await apiClient.post(`/api/admin/memos/delete/${memo?.id}`)
       toast.success('記事を削除しました')
       router.push({
         pathname: '/admin/memos',
@@ -106,11 +106,18 @@ const AdminMemoDetailCard: NextPage<Props> = ({
               </span>
             )}
             {memo.status === 4 && (
-              <span className='text-xs font-semibold py-1 px-2 uppercase rounded-lg text-white bg-red-500 last:mr-0 mr-1'>
+              <span className='text-xs font-semibold py-1 px-2 uppercase rounded-lg text-white bg-gray-500 last:mr-0 mr-1'>
                 修正待ち（掲載一時停止中）
               </span>
             )}
           </p>
+          {memo.admin_review_status === 1 && (
+            <p className='pt-1'>
+              <span className='text-xs font-semibold py-1 px-2 uppercase rounded-lg text-white bg-red-500 last:mr-0 mr-1'>
+                管理者レビュー待ち
+              </span>
+            </p>
+          )}
           <p className='text-sm leading-6 text-gray-500 mt-2 inline-block'>
             作成日時：{memo.created_at}
           </p>
@@ -130,7 +137,7 @@ const AdminMemoDetailCard: NextPage<Props> = ({
             className='text-sm leading-6 font-bold text-blue-700 mt-2'
             onClick={showAlertForDelete}
           >
-            記事を完全に削除する
+            記事を強制的に削除する
           </p>
         </div>
       </div>
