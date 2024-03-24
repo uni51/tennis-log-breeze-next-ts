@@ -24,10 +24,12 @@ const AdminMemoReviewList: React.FC<Props> = ({ page, category }: Props) => {
 
   if (isLoading) return <div>Loading...</div>
 
-  if (!memos) {
+  console.log('memos', memos)
+
+  if (memos?.data.length === 0) {
     return (
       <div className='mx-auto mt-20'>
-        <div className='w-1/2 mx-auto text-center'>メモがありません</div>
+        <div className='w-1/2 mx-auto text-center'>管理者レビュー待ちのメモはありません</div>
       </div>
     )
   }

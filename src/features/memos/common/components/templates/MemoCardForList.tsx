@@ -61,7 +61,7 @@ const MemoCardForList: FC<MemoCardForListProps> = ({
         </Link>
       </p>
       <p className='pt-1'>
-        {memo.status !== 5 && (
+        {memo.status !== 4 && (
           <span className='text-xs font-semibold py-1 px-2 uppercase rounded-lg text-white bg-black last:mr-0 mr-1'>
             {memo.status === 0 && '下書き'}
             {memo.status === 1 && '公開中'}
@@ -69,7 +69,7 @@ const MemoCardForList: FC<MemoCardForListProps> = ({
             {memo.status === 3 && '非公開'}
           </span>
         )}
-        {memo.status === 5 && (
+        {memo.status === 4 && (
           <span className='text-xs font-semibold py-1 px-2 uppercase rounded-lg text-white bg-red-500 last:mr-0 mr-1'>
             修正待ち
           </span>

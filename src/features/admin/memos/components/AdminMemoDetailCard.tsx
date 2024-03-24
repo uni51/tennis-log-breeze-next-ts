@@ -59,6 +59,7 @@ const AdminMemoDetailCard: NextPage<Props> = ({
         `/api/admin/memos/${memo?.id}/request-modify`,
       )
       toast.success(response.data.message)
+      router.push('/admin/memos') // 画面遷移
       // 必要に応じて適切なリダイレクトを行う
     } catch (error) {
       if ((error as AxiosError).isAxiosError) {
@@ -96,21 +97,14 @@ const AdminMemoDetailCard: NextPage<Props> = ({
             </Link>
           </p>
           <p className='pt-1'>
-            {memo.status !== 5 && (
-              <span className='text-xs font-semibold py-1 px-2 uppercase rounded-lg text-white bg-black last:mr-0 mr-1'>
-                {memo.status === 0 && '下書き'}
-                {memo.status === 1 && '公開中'}
-                {memo.status === 2 && 'シェア'}
-                {memo.status === 3 && '非公開'}
-              </span>
-            )}
-            {memo.status === 5 && (
-              <span className='text-xs font-semibold py-1 px-2 uppercase rounded-lg text-white bg-red-500 last:mr-0 mr-1'>
-                修正待ち
-              </span>
-            )}
+            <span className='text-xs font-semibold py-1 px-2 uppercase rounded-lg text-white bg-black last:mr-0 mr-1'>
+              {memo.status === 0 && '下書き'}
+              {memo.status === 1 && '公開中'}
+              {memo.status === 2 && 'シェア'}
+              {memo.status === 3 && '非公開'}
+            </span>
           </p>
-          {Boolean(memo.is_waiting_for_admin_review) === true && (
+          {memo.admin_review_status === 1 && (
             <p className='pt-1'>
               <span className='text-xs font-semibold py-1 px-2 uppercase rounded-lg text-white bg-red-500 last:mr-0 mr-1'>
                 管理者レビュー待ち
@@ -122,6 +116,12 @@ const AdminMemoDetailCard: NextPage<Props> = ({
           </p>
           <p className='text-sm leading-6 text-gray-500 mt-2 inline-block'>
             更新日時：{memo.updated_at}
+          </p>
+          <p
+            className='text-sm leading-6 font-bold text-blue-700 mt-2'
+            onClick={showAlertForDelete}
+          >
+            記事を承認する
           </p>
           <p className='text-sm leading-6 font-bold text-blue-700 mt-2' onClick={showAlertForEdit}>
             記事の修正を依頼する（記事の掲載は一時停止されます）

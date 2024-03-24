@@ -90,8 +90,8 @@ const MemoEdit: React.FC<Props> = ({ memo, statuses, categories }) => {
   }
 
   const onSubmit = (data: MemoForm) => {
-    if (data.status_id === '5') {
-      // status_id が '5' の場合の処理
+    if (data.status_id === '4') {
+      // status_id が '4' の場合の処理
       postEditMemoForModify(data, setError, memo.id, queryClient)
     } else {
       // それ以外の場合の処理
