@@ -9,9 +9,9 @@ import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBac
 import { AdminAuthGuard } from '@/features/admin/auth/components/AdminAuthGuard'
 import { onError } from '@/lib/error-helper'
 import { MemoQueryParams } from '@/types/memo/MemosQueryParams'
-import AdminMemoReviewList from '@/features/admin/memos/components/AdminMemoReviewList'
+import AdminMemoFixList from '@/features/admin/memos/components/AdminMemoFixList'
 
-const AdminMemosWaitingReviewIndex: NextPage = () => {
+const AdminMemosWaitingFixIndex: NextPage = () => {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(true)
   const [queryParams, setQueryParams] = useState<MemoQueryParams>({
@@ -34,7 +34,7 @@ const AdminMemosWaitingReviewIndex: NextPage = () => {
 
   if (isLoading) return <Loading />
 
-  const headLine = '管理者レビュー待ちのメモ一覧'
+  const headLine = '修正待ち（管理者レビュー済み）のメモ一覧'
 
   return (
     <AdminAuthGuard>
@@ -54,7 +54,7 @@ const AdminMemosWaitingReviewIndex: NextPage = () => {
         }
       >
         <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
-          <AdminMemoReviewList
+          <AdminMemoFixList
             page={queryParams.page}
             category={queryParams.category}
             tag={queryParams.tag}
@@ -65,4 +65,4 @@ const AdminMemosWaitingReviewIndex: NextPage = () => {
   )
 }
 
-export default AdminMemosWaitingReviewIndex
+export default AdminMemosWaitingFixIndex
