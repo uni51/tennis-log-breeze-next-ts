@@ -56,7 +56,7 @@ const AdminMemoDetailCard: NextPage<Props> = ({
   const memoEditRequest = async () => {
     try {
       const response: AxiosResponse = await apiClient.post(
-        `/api/admin/memos/${memo?.id}/request-modify`,
+        `/api/admin/memos/request_fix/${memo?.id}`,
       )
       toast.success(response.data.message)
       router.push('/admin/memos') // 画面遷移

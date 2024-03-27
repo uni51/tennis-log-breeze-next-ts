@@ -12,7 +12,7 @@ type Props = {
 
 const AdminMemoReviewList: React.FC<Props> = ({ page, category }: Props) => {
   const { showBoundary } = useErrorBoundary()
-  const preApiUrl = '/api/admin/memos/review'
+  const preApiUrl = '/api/admin/memos/waiting_review'
   const { data: memos, error, isLoading } = useAdminMemoList({
     preApiUrl,
     page,
