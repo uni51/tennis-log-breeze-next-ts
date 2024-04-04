@@ -12,7 +12,7 @@ type Props = {
 
 const AdminMemoFixList: React.FC<Props> = ({ page, category }: Props) => {
   const { showBoundary } = useErrorBoundary()
-  const preApiUrl = '/api/admin/memos/waiting_fix'
+  const preApiUrl = '/api/admin/memos/waiting/fix'
   const { data: memos, error, isLoading } = useAdminMemoList({
     preApiUrl,
     page,
@@ -55,7 +55,7 @@ const AdminMemoFixList: React.FC<Props> = ({ page, category }: Props) => {
           <div className='grid w-4/5 mx-auto gap-16 lg:grid-cols-2'>{renderMemoList()}</div>
           <div className='hidden sm:hidden md:block lg:block xl:block'>
             <SimplePaginationLong
-              baseUrl={`/admin/memos/waiting_fix`}
+              baseUrl={`/admin/memos/waiting/fix`}
               totalItems={Number(memos?.meta?.total)}
               currentPage={Number(memos?.meta?.current_page)}
             />
