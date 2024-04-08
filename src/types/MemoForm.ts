@@ -4,5 +4,5 @@ export type MemoForm = {
   body: string
   category_id: string
   tags: string[]
-  status_id: string
+  status: string
 }

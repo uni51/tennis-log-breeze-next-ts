@@ -27,7 +27,7 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
   // Add the onChange parameter
   const defaultValues = {
     category_id: '1',
-    status_id: '0',
+    status: '0',
     tags: [],
   }
   const [tags, setTags] = useState<Tag[]>([])
@@ -102,10 +102,10 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
           {/* ステータス */}
           <Select
             target={statuses}
-            target_id={'status_id'}
+            target_id={'status'}
             required={true}
             label={'ステータス'}
-            defaultValue={defaultValues?.status_id}
+            defaultValue={defaultValues?.status}
           />
           {/* 登録するボタン */}
           <LargeSubmitButton>登録する</LargeSubmitButton>

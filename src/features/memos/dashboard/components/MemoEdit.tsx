@@ -32,7 +32,7 @@ const MemoEdit: React.FC<Props> = ({ memo, statuses, categories }) => {
     title: memo.title,
     body: memo.body,
     category_id: String(memo.category_id),
-    status_id: String(memo.status),
+    status: String(memo.status),
     tags: memo.tag_list.tags ?? [],
   }
 
@@ -90,8 +90,8 @@ const MemoEdit: React.FC<Props> = ({ memo, statuses, categories }) => {
   }
 
   const onSubmit = (data: MemoForm) => {
-    if (data.status_id === '4') {
-      // status_id が '4' の場合の処理
+    if (data.status === '4') {
+      // status が '4' の場合の処理
       postEditMemoForModify(data, setError, memo.id, queryClient)
     } else {
       // それ以外の場合の処理
@@ -133,10 +133,10 @@ const MemoEdit: React.FC<Props> = ({ memo, statuses, categories }) => {
           />
           <Select
             target={statuses}
-            target_id={'status_id'}
+            target_id={'status'}
             required={true}
             label={'ステータス'}
-            defaultValue={defaultValues?.status_id}
+            defaultValue={defaultValues?.status}
             style='mt-5'
           />
           <LargeSubmitButton>登録する</LargeSubmitButton>

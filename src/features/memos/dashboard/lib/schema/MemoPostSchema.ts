@@ -14,7 +14,7 @@ export const MemoPostSchema = z.object({
     .transform((val) => parseInt(val))
     .refine((val) => !isNaN(val), { message: '不正な値です' }),
   tags: z.array(z.string()).optional(), // タグは任意で、文字列の配列
-  status_id: z
+  status: z
     .string()
     .min(1, { message: 'Query parameter is required' })
     .transform((val) => parseInt(val))
