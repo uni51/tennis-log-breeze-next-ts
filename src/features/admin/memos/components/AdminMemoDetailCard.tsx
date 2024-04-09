@@ -22,6 +22,20 @@ const AdminMemoDetailCard: NextPage<Props> = ({
   renderMemoListByNickNameLink,
   renderMemoListByTagLink,
 }) => {
+  const showAlertForApprove = () => {
+    showAlertModal({
+      message: 'この記事の修正を依頼しますか？',
+      onOk: memoApproveRequest,
+    })
+  }
+
+  const showAlertForFix = () => {
+    showAlertModal({
+      message: 'この記事の修正を依頼しますか？',
+      onOk: memoFixRequest,
+    })
+  }
+
   const showAlertForDelete = () => {
     showAlertModal({
       message: '本当にこの記事を削除しますか？',
@@ -29,11 +43,36 @@ const AdminMemoDetailCard: NextPage<Props> = ({
     })
   }
 
-  const showAlertForEdit = () => {
-    showAlertModal({
-      message: 'この記事の修正を依頼しますか？',
-      onOk: memoEditRequest,
-    })
+  const memoApproveRequest = async () => {
+    try {
+      const response: AxiosResponse = await apiClient.post(`/api/admin/memos/approve/${memo?.id}`)
+      toast.success(response.data.message)
+      router.push('/admin/memos') // 画面遷移
+      // 必要に応じて適切なリダイレクトを行う
+    } catch (error) {
+      if ((error as AxiosError).isAxiosError) {
+        return handleAxiosError(error as AxiosError)
+      } else {
+        throw new Error(`Failed to request memo approve: ${String(error)}`)
+      }
+    }
+  }
+
+  const memoFixRequest = async () => {
+    try {
+      const response: AxiosResponse = await apiClient.post(
+        `/api/admin/memos/request/fix/${memo?.id}`,
+      )
+      toast.success(response.data.message)
+      router.push('/admin/memos') // 画面遷移
+      // 必要に応じて適切なリダイレクトを行う
+    } catch (error) {
+      if ((error as AxiosError).isAxiosError) {
+        return handleAxiosError(error as AxiosError)
+      } else {
+        throw new Error(`Failed to request memo fix: ${String(error)}`)
+      }
+    }
   }
 
   const memoDelete = async () => {
@@ -48,24 +87,7 @@ const AdminMemoDetailCard: NextPage<Props> = ({
       if ((error as AxiosError).isAxiosError) {
         return handleAxiosError(error as AxiosError)
       } else {
-        throw new Error(`Failed to fetch memo detail: ${String(error)}`)
-      }
-    }
-  }
-
-  const memoEditRequest = async () => {
-    try {
-      const response: AxiosResponse = await apiClient.post(
-        `/api/admin/memos/request/fix/${memo?.id}`,
-      )
-      toast.success(response.data.message)
-      router.push('/admin/memos') // 画面遷移
-      // 必要に応じて適切なリダイレクトを行う
-    } catch (error) {
-      if ((error as AxiosError).isAxiosError) {
-        return handleAxiosError(error as AxiosError)
-      } else {
-        throw new Error(`Failed to request memo edit: ${String(error)}`)
+        throw new Error(`Failed to request memo delete: ${String(error)}`)
       }
     }
   }
@@ -126,11 +148,11 @@ const AdminMemoDetailCard: NextPage<Props> = ({
           </p>
           <p
             className='text-sm leading-6 font-bold text-blue-700 mt-2'
-            onClick={showAlertForDelete}
+            onClick={showAlertForApprove}
           >
             記事を承認する
           </p>
-          <p className='text-sm leading-6 font-bold text-blue-700 mt-2' onClick={showAlertForEdit}>
+          <p className='text-sm leading-6 font-bold text-blue-700 mt-2' onClick={showAlertForFix}>
             記事の修正を依頼する（記事の掲載は一時停止されます）
           </p>
           <p
