@@ -22,16 +22,62 @@ const AdminMemoDetailCard: NextPage<Props> = ({
   renderMemoListByNickNameLink,
   renderMemoListByTagLink,
 }) => {
-  const showAlert = () => {
+  const showAlertForApprove = () => {
+    showAlertModal({
+      message: 'この記事の修正を依頼しますか？',
+      onOk: memoApproveRequest,
+    })
+  }
+
+  const showAlertForFix = () => {
+    showAlertModal({
+      message: 'この記事の修正を依頼しますか？',
+      onOk: memoFixRequest,
+    })
+  }
+
+  const showAlertForDelete = () => {
     showAlertModal({
       message: '本当にこの記事を削除しますか？',
       onOk: memoDelete,
     })
   }
 
+  const memoApproveRequest = async () => {
+    try {
+      const response: AxiosResponse = await apiClient.post(`/api/admin/memos/approve/${memo?.id}`)
+      toast.success(response.data.message)
+      router.push('/admin/memos') // 画面遷移
+      // 必要に応じて適切なリダイレクトを行う
+    } catch (error) {
+      if ((error as AxiosError).isAxiosError) {
+        return handleAxiosError(error as AxiosError)
+      } else {
+        throw new Error(`Failed to request memo approve: ${String(error)}`)
+      }
+    }
+  }
+
+  const memoFixRequest = async () => {
+    try {
+      const response: AxiosResponse = await apiClient.post(
+        `/api/admin/memos/request/fix/${memo?.id}`,
+      )
+      toast.success(response.data.message)
+      router.push('/admin/memos') // 画面遷移
+      // 必要に応じて適切なリダイレクトを行う
+    } catch (error) {
+      if ((error as AxiosError).isAxiosError) {
+        return handleAxiosError(error as AxiosError)
+      } else {
+        throw new Error(`Failed to request memo fix: ${String(error)}`)
+      }
+    }
+  }
+
   const memoDelete = async () => {
     try {
-      const response: AxiosResponse = await apiClient.post(`/api/admin/memos/${memo?.id}/delete`)
+      const response: AxiosResponse = await apiClient.post(`/api/admin/memos/delete/${memo?.id}`)
       toast.success('記事を削除しました')
       router.push({
         pathname: '/admin/memos',
@@ -41,7 +87,7 @@ const AdminMemoDetailCard: NextPage<Props> = ({
       if ((error as AxiosError).isAxiosError) {
         return handleAxiosError(error as AxiosError)
       } else {
-        throw new Error(`Failed to fetch memo detail: ${String(error)}`)
+        throw new Error(`Failed to request memo delete: ${String(error)}`)
       }
     }
   }
@@ -73,24 +119,47 @@ const AdminMemoDetailCard: NextPage<Props> = ({
             </Link>
           </p>
           <p className='pt-1'>
-            <span className='text-xs font-semibold py-1 px-2 uppercase rounded-lg text-white bg-black last:mr-0 mr-1'>
-              {memo.status === 0 && '下書き'}
-              {memo.status === 1 && '公開中'}
-              {memo.status === 2 && 'シェア'}
-              {memo.status === 3 && '非公開'}
-            </span>
+            {memo.status !== 4 && (
+              <span className='text-xs font-semibold py-1 px-2 uppercase rounded-lg text-white bg-black last:mr-0 mr-1'>
+                {memo.status === 0 && '下書き'}
+                {memo.status === 1 && '公開中'}
+                {memo.status === 2 && 'シェア'}
+                {memo.status === 3 && '非公開'}
+              </span>
+            )}
+            {memo.status === 4 && (
+              <span className='text-xs font-semibold py-1 px-2 uppercase rounded-lg text-white bg-gray-500 last:mr-0 mr-1'>
+                修正待ち（掲載一時停止中）
+              </span>
+            )}
           </p>
+          {memo.admin_review_status === 1 && (
+            <p className='pt-1'>
+              <span className='text-xs font-semibold py-1 px-2 uppercase rounded-lg text-white bg-red-500 last:mr-0 mr-1'>
+                管理者レビュー待ち
+              </span>
+            </p>
+          )}
           <p className='text-sm leading-6 text-gray-500 mt-2 inline-block'>
             作成日時：{memo.created_at}
           </p>
           <p className='text-sm leading-6 text-gray-500 mt-2 inline-block'>
             更新日時：{memo.updated_at}
           </p>
-          <Link href={`/admin/memos/${memo.id}/edit`}>
-            <p className='text-sm leading-6 font-bold text-blue-700 mt-2'>編集する</p>
-          </Link>
-          <p className='text-sm leading-6 font-bold text-blue-700 mt-2' onClick={showAlert}>
-            この記事を削除
+          <p
+            className='text-sm leading-6 font-bold text-blue-700 mt-2'
+            onClick={showAlertForApprove}
+          >
+            記事を承認する
+          </p>
+          <p className='text-sm leading-6 font-bold text-blue-700 mt-2' onClick={showAlertForFix}>
+            記事の修正を依頼する（記事の掲載は一時停止されます）
+          </p>
+          <p
+            className='text-sm leading-6 font-bold text-blue-700 mt-2'
+            onClick={showAlertForDelete}
+          >
+            記事を強制的に削除する
           </p>
         </div>
       </div>

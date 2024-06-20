@@ -7,7 +7,7 @@ import { MemoForm } from '@/types/MemoForm'
 import { toast } from 'react-toastify'
 
 // メモの編集
-export const postEditMemo = (
+export const postEditMemoForModify = (
   postData: MemoForm,
   setError: UseFormSetError<MemoForm>,
   memoId: number,

@@ -12,6 +12,7 @@ export type Memo = {
     // normalized: string[]
   }
   status: number
+  admin_review_status?: number
   created_at: string
   updated_at: string
 }

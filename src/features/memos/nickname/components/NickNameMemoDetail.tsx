@@ -17,7 +17,7 @@ const NickNameMemoDetail = ({ apiUrl, nickname, setTitleText, categoryId }: Prop
 
   useEffect(() => {
     if (error) {
-      handleError(error, '/dashboard/memos')
+      handleError(error, `/${nickname}/memos`)
     }
 
     if (memo) {

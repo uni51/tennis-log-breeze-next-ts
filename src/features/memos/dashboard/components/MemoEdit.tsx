@@ -1,12 +1,11 @@
+import React, { useEffect, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import dynamic from 'next/dynamic'
 import { useQueryClient } from '@tanstack/react-query'
-import { useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { WithContext as ReactTags } from 'react-tag-input'
 import { LargeSubmitButton } from '@/components/Form/LargeSubmitButton'
 import { Select } from '@/components/Form/Select'
-import { TextArea } from '@/components/Form/TextArea'
 import { TextInput } from '@/components/Form/TextInput'
 import { postEditMemo } from '@/features/memos/dashboard/lib/postEditMemo'
 import { MemoPostSchema } from '@/features/memos/dashboard/lib/schema/MemoPostSchema'
@@ -16,9 +15,10 @@ import { Memo } from '@/types/Memo'
 import { MemoForm } from '@/types/MemoForm'
 import { Status } from '@/types/Status'
 import { Tag } from '@/types/memo/Tag'
+import { postEditMemoForModify } from '../lib/postEditMemoForModify'
 
 const QuillEditor = dynamic(() => import('@/components/QuillEditor/Editor'), {
-  ssr: false, // サーバーサイドレンダリングを無効にする
+  ssr: false,
 })
 
 type Props = {
@@ -32,30 +32,38 @@ const MemoEdit: React.FC<Props> = ({ memo, statuses, categories }) => {
     title: memo.title,
     body: memo.body,
     category_id: String(memo.category_id),
-    status_id: String(memo.status),
+    status: String(memo.status),
     tags: memo.tag_list.tags ?? [],
   }
 
-  // React-Hook-Form
+  const [errorMessage, setErrorMessage] = useState<string>('')
+
   const useFormMethods = useForm<MemoForm>({
     defaultValues,
     resolver: zodResolver(MemoPostSchema),
+    mode: 'onChange',
   })
 
-  const defaultTags = memo.tag_list.tags.map((tag) => {
-    return {
-      id: tag,
-      text: tag,
-    }
-  })
+  const defaultTags = memo.tag_list.tags.map((tag) => ({
+    id: tag,
+    text: tag,
+  }))
 
   const [tags, setTags] = useState<Tag[]>(defaultTags)
-  const [body, setBody] = useState('')
+  const [body, setBody] = useState(memo.body)
 
-  const { handleSubmit, setError, setValue } = useFormMethods
+  const {
+    handleSubmit,
+    setError,
+    setValue,
+    formState: { errors },
+  } = useFormMethods
+
   const queryClient = useQueryClient()
 
-  const delimiters = Delimiters
+  useEffect(() => {
+    setValue('body', memo.body)
+  }, [memo.body, setValue])
 
   const handleDelete = (i: number) => {
     setTags((prevTags) => {
@@ -70,56 +78,67 @@ const MemoEdit: React.FC<Props> = ({ memo, statuses, categories }) => {
 
   const handleAddition = (tag: Tag) => {
     setTags([...tags, tag])
-    console.log([...tags, tag]) // 新しいタグが含まれた配列をログに出力
-
-    // 直接フォームの値を更新
     setValue(
       'tags',
       [...tags, tag].map((tag) => tag.text),
     )
   }
 
-  const handleBodyAddition = (body: string) => {
-    setBody(body)
-    // 直接フォームの値を更新
-    setValue('body', body)
+  const handleBodyChange = (content: string) => {
+    setBody(content)
+    setValue('body', content, { shouldValidate: true })
+  }
+
+  const onSubmit = (data: MemoForm) => {
+    if (data.status === '4') {
+      // status が '4' の場合の処理
+      postEditMemoForModify(data, setError, memo.id, queryClient)
+    } else {
+      // それ以外の場合の処理
+      postEditMemo(data, setError, memo.id, queryClient)
+    }
   }
 
   return (
     <FormProvider {...useFormMethods}>
       <div className='mx-auto w-4/5 mt-4 sm:mt-4 py-4 rounded-2xl'>
-        <form onSubmit={handleSubmit((data) => postEditMemo(data, setError, memo.id, queryClient))}>
-          {/* タイトル */}
+        {errorMessage && <div className='text-red-600'>{errorMessage}</div>}
+        {/* <form
+          onSubmit={handleSubmit((data) =>
+            postEditMemo(data, setError, memo.id, queryClient, setErrorMessage),
+          )}
+        > */}
+        <form onSubmit={handleSubmit(onSubmit)}>
           <TextInput target={'title'} required={true} label={'タイトル'} />
-          {/* 内容 */}
-          {/* <TextArea target={'body'} required={true} label={'内容'} size={{ rows: 12 }} /> */}
-          <QuillEditor value={memo.body} onBodyChange={handleBodyAddition} />
-          {/* カテゴリー */}
+          <QuillEditor value={body} onBodyChange={handleBodyChange} />
+          {errors.body && <div className='text-red-500'>{errors.body.message}</div>}
           <Select
             target={categories}
             target_id={'category_id'}
             required={true}
             label={'カテゴリー'}
             defaultValue={defaultValues?.category_id}
+            style='mt-5'
           />
-          {/* タグ */}
+          <div className='flex justify-start my-1 sm:my-2'>
+            <p>タグ</p>
+          </div>
           <ReactTags
             tags={tags}
-            delimiters={delimiters}
+            delimiters={Delimiters}
             handleDelete={handleDelete}
             handleAddition={handleAddition}
             inputFieldPosition='inline'
             autocomplete
           />
-          {/* ステータス */}
           <Select
             target={statuses}
-            target_id={'status_id'}
+            target_id={'status'}
             required={true}
             label={'ステータス'}
-            defaultValue={defaultValues?.status_id}
+            defaultValue={defaultValues?.status}
+            style='mt-5'
           />
-          {/* 登録するボタン */}
           <LargeSubmitButton>登録する</LargeSubmitButton>
         </form>
       </div>

@@ -12,12 +12,10 @@ interface EditorProps {
 const Editor: React.FC<EditorProps> = ({ value, onBodyChange }) => {
   const quillRef = useRef<ReactQuill>(null)
 
+  // 画像ハンドラーの設定は useEffect 内で保持しますが、value の更新に基づく dangerouslyPasteHTML の呼び出しは削除します。
   useEffect(() => {
-    if (quillRef.current) {
-      const editor = quillRef.current.getEditor()
-      editor.clipboard.dangerouslyPasteHTML(value)
-
-      // 画像ハンドラーの設定
+    const editor = quillRef.current?.getEditor()
+    if (editor) {
       const toolbar = editor.getModule('toolbar')
       toolbar.addHandler('image', () => {
         const input = document.createElement('input')
@@ -32,12 +30,9 @@ const Editor: React.FC<EditorProps> = ({ value, onBodyChange }) => {
             formData.append('image', file)
 
             try {
-              // apiClient（axiosのインスタンス）を使って、FormDataを送信
               const response = await apiClient.post('/api/dashboard/memos/upload-image', formData)
-
               if (response.status === 200) {
-                const data = response.data
-                const imageUrl = data.imageUrl
+                const imageUrl = response.data.imageUrl
                 const range = editor.getSelection()
                 if (range) {
                   editor.insertEmbed(range.index, 'image', imageUrl)
@@ -52,12 +47,11 @@ const Editor: React.FC<EditorProps> = ({ value, onBodyChange }) => {
         }
       })
     }
-  }, [value])
+  }, [])
 
   const handleChange = (content: string) => {
-    if (onBodyChange) {
-      onBodyChange(content)
-    }
+    const isEmpty = content === '<p><br></p>'
+    onBodyChange?.(isEmpty ? '' : content)
   }
 
   return (
@@ -65,6 +59,7 @@ const Editor: React.FC<EditorProps> = ({ value, onBodyChange }) => {
       <CustomToolbar />
       <ReactQuill
         ref={quillRef}
+        value={value}
         onChange={(content, delta, source, editor) => handleChange(editor.getHTML())}
         modules={{
           toolbar: {

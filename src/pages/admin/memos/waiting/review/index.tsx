@@ -7,12 +7,11 @@ import AdminAppLayout from '@/components/Layouts/Admin/AdminAppLayout'
 import { Loading } from '@/components/Loading'
 import { CsrErrorFallback } from '@/components/functional/error/csr/errorFallBack/CsrErrorFallBack'
 import { AdminAuthGuard } from '@/features/admin/auth/components/AdminAuthGuard'
-import AdminMemoList from '@/features/admin/memos/components/AdminMemoList'
 import { onError } from '@/lib/error-helper'
-import { getCategoryText } from '@/lib/headline-helper'
 import { MemoQueryParams } from '@/types/memo/MemosQueryParams'
+import AdminMemoReviewList from '@/features/admin/memos/components/AdminMemoReviewList'
 
-const AdminMemos: NextPage = () => {
+const AdminMemosWaitingReviewIndex: NextPage = () => {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(true)
   const [queryParams, setQueryParams] = useState<MemoQueryParams>({
@@ -35,7 +34,7 @@ const AdminMemos: NextPage = () => {
 
   if (isLoading) return <Loading />
 
-  const headLine = 'ユーザーが作成したメモ一覧'
+  const headLine = '管理者レビュー待ちのメモ一覧'
 
   return (
     <AdminAuthGuard>
@@ -51,17 +50,11 @@ const AdminMemos: NextPage = () => {
             <h3 className='font-semibold text-xl text-gray-800 leading-tight inline-block mr-4'>
               {headLine}
             </h3>
-            {queryParams.category && (
-              <span className='text-gray-800 font-bold mr-4'>
-                {getCategoryText(queryParams.category)}
-              </span>
-            )}
-            {queryParams.tag && <span className='text-gray-800 font-bold'>#{queryParams.tag}</span>}
           </>
         }
       >
         <ErrorBoundary FallbackComponent={CsrErrorFallback} onError={onError}>
-          <AdminMemoList
+          <AdminMemoReviewList
             page={queryParams.page}
             category={queryParams.category}
             tag={queryParams.tag}
@@ -72,4 +65,4 @@ const AdminMemos: NextPage = () => {
   )
 }
 
-export default AdminMemos
+export default AdminMemosWaitingReviewIndex

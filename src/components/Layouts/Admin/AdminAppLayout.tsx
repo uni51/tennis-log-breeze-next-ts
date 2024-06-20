@@ -31,6 +31,8 @@ const navigation = [
     current: false,
     children: [
       { name: 'メモ一覧', href: '/admin/memos' },
+      { name: 'レビュー待ちメモ一覧', href: '/admin/memos/waiting/review' },
+      { name: '修正待ちメモ一覧', href: '/admin/memos/waiting/fix' },
       { name: 'フォアハンド', href: '#' },
       { name: 'バックハンド', href: '#' },
       { name: 'サーブ', href: '#' },
