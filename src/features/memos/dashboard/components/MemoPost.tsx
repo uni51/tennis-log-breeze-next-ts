@@ -88,6 +88,9 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
             style='mt-10 mb-10'
           />
           {/* タグ */}
+          <div className='flex justify-start my-1 sm:my-2'>
+            <p>タグ</p>
+          </div>
           <ReactTags
             tags={tags}
             // suggestions={suggestions}
