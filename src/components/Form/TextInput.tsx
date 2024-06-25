@@ -15,7 +15,7 @@ export const TextInput: React.FC<Props> = ({ target, label, required, subText })
   } = useFormContext()
 
   return (
-    <div className='mb-5'>
+    <div className='mb-10'>
       <div className='flex justify-start my-1 sm:my-2'>
         <p>{label}</p>
         {required && <RequiredMark />}

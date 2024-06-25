@@ -68,4 +68,14 @@
   color: white;
 }
 
+.ql-editor {
+  min-height: 200px; /* 例えば、1行が20pxの高さと仮定した場合、5行で100px */
+}
+
+.ReactTags__tagInputField {
+  width: 50%;
+  border: 1px solid #ddd;
+  min-height: 30px;
+}
+
 /* eslint-disable */
