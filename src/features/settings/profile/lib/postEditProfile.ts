@@ -13,6 +13,9 @@ export type ProfileForm = {
   dominantHand_id: string
   playFrequency_id: string
   tennisLevel_id: string
+  year: string // 生年月日の年
+  month: string // 生年月日の月
+  day: string // 生年月日の日
 }
 
 // プロフィールの編集
