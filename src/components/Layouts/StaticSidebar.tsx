@@ -10,7 +10,7 @@ const StaticSidebar: React.FC = () => {
   const router = useRouter()
 
   // ナビゲーション項目が現在のパスに一致するかどうかをチェック
-  const isActive = (href: string | undefined) => router.pathname === href
+  const isActive = (href: string | undefined) => router.asPath === href
 
   // 任意のナビゲーション項目の子がアクティブかどうかをチェック
   const isChildrenActive = (children: any[]) => {

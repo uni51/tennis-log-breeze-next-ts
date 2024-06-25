@@ -1,3 +1,4 @@
+import { Memo } from './../../types/Memo'
 // navigationData.ts
 import {
   HomeIcon,
@@ -6,13 +7,14 @@ import {
   CalendarIcon,
   InboxIcon,
   ChartBarIcon,
+  DocumentTextIcon,
 } from '@heroicons/react/24/outline'
 
 export const navigation = [
   { name: 'Dashboard', icon: HomeIcon, current: false, href: '/dashboard' },
   {
     name: 'Memos',
-    icon: UsersIcon,
+    icon: DocumentTextIcon,
     current: false,
     children: [
       { name: 'メモ一覧', href: '/memos' },
@@ -30,7 +32,7 @@ export const navigation = [
     ],
   },
   {
-    name: 'Projects',
+    name: 'Tags',
     icon: FolderIcon,
     current: false,
     children: [
@@ -40,29 +42,29 @@ export const navigation = [
       { name: 'Settings', href: '#' },
     ],
   },
-  {
-    name: 'Calendar',
-    icon: CalendarIcon,
-    current: false,
-    children: [
-      { name: 'Overview', href: '#' },
-      { name: 'Members', href: '#' },
-      { name: 'Calendar', href: '#' },
-      { name: 'Settings', href: '#' },
-    ],
-  },
-  {
-    name: 'Documents',
-    icon: InboxIcon,
-    current: false,
-    href: '/settings/profile',
-    children: [
-      { name: 'Overview', href: '#' },
-      { name: 'テニススタイル', href: '/settings/play-style' },
-      { name: 'Calendar', href: '#' },
-      { name: 'Settings', href: '#' },
-    ],
-  },
+  // {
+  //   name: 'Todos',
+  //   icon: InboxIcon,
+  //   current: false,
+  //   href: '/settings/profile',
+  //   children: [
+  //     { name: 'Overview', href: '#' },
+  //     { name: 'テニススタイル', href: '/settings/play-style' },
+  //     { name: 'Calendar', href: '#' },
+  //     { name: 'Settings', href: '#' },
+  //   ],
+  // },
+  // {
+  //   name: 'Calendar',
+  //   icon: CalendarIcon,
+  //   current: false,
+  //   children: [
+  //     { name: 'Overview', href: '#' },
+  //     { name: 'Members', href: '#' },
+  //     { name: 'Calendar', href: '#' },
+  //     { name: 'Settings', href: '#' },
+  //   ],
+  // },
   {
     name: 'Reports',
     icon: ChartBarIcon,
