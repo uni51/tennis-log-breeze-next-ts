@@ -85,8 +85,12 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
             required={true}
             label={'カテゴリー'}
             defaultValue={defaultValues?.category_id}
+            style='mt-10 mb-10'
           />
           {/* タグ */}
+          <div className='flex justify-start my-1 sm:my-2'>
+            <p>タグ</p>
+          </div>
           <ReactTags
             tags={tags}
             // suggestions={suggestions}
@@ -97,6 +101,9 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
             // handleTagClick={handleTagClick}
             inputFieldPosition='inline'
             autocomplete
+            classNames={{
+              tagInput: 'custom-tag-input',
+            }}
           />
 
           {/* ステータス */}
@@ -106,6 +113,7 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
             required={true}
             label={'ステータス'}
             defaultValue={defaultValues?.status}
+            style='mt-10'
           />
           {/* 登録するボタン */}
           <LargeSubmitButton>登録する</LargeSubmitButton>

@@ -34,7 +34,7 @@ const AdminMemosWaitingFixIndex: NextPage = () => {
 
   if (isLoading) return <Loading />
 
-  const headLine = '修正待ち（管理者レビュー済み）のメモ一覧'
+  const headLine = '修正依頼中（管理者レビュー済み）のメモ一覧'
 
   return (
     <AdminAuthGuard>

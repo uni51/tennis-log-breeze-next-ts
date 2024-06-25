@@ -24,14 +24,14 @@ const AdminMemoDetailCard: NextPage<Props> = ({
 }) => {
   const showAlertForApprove = () => {
     showAlertModal({
-      message: 'この記事の修正を依頼しますか？',
+      message: 'この記事を承認しますか？',
       onOk: memoApproveRequest,
     })
   }
 
   const showAlertForFix = () => {
     showAlertModal({
-      message: 'この記事の修正を依頼しますか？',
+      message: 'この記事の修正を依頼しますか？（記事の掲載は一時停止されます）',
       onOk: memoFixRequest,
     })
   }

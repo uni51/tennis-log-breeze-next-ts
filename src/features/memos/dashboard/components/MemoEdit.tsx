@@ -118,7 +118,7 @@ const MemoEdit: React.FC<Props> = ({ memo, statuses, categories }) => {
             required={true}
             label={'カテゴリー'}
             defaultValue={defaultValues?.category_id}
-            style='mt-5'
+            style='mt-10 mb-10'
           />
           <div className='flex justify-start my-1 sm:my-2'>
             <p>タグ</p>
@@ -130,6 +130,9 @@ const MemoEdit: React.FC<Props> = ({ memo, statuses, categories }) => {
             handleAddition={handleAddition}
             inputFieldPosition='inline'
             autocomplete
+            classNames={{
+              tagInput: 'custom-tag-input',
+            }}
           />
           <Select
             target={statuses}
@@ -137,7 +140,7 @@ const MemoEdit: React.FC<Props> = ({ memo, statuses, categories }) => {
             required={true}
             label={'ステータス'}
             defaultValue={defaultValues?.status}
-            style='mt-5'
+            style='mt-10'
           />
           <LargeSubmitButton>登録する</LargeSubmitButton>
         </form>
