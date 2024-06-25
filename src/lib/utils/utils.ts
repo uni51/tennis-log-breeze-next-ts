@@ -3,3 +3,7 @@ export const convertFullSpaceToHalfSpace = (inputString: string): string => {
   var resultString = inputString.replace(/　/g, ' ')
   return resultString
 }
+
+export function classNames(...classes: string[]) {
+  return classes.filter(Boolean).join(' ')
+}
