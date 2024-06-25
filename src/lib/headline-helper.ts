@@ -8,7 +8,7 @@ import {
   CATEGORY_SMASH,
   CATEGORY_SINGLES,
   CATEGORY_DOUBLES,
-  CATEGORY_GEAR,
+  CATEGORY_GOODS,
   CATEGORY_OTHER,
 } from '@/constants/CategoryNameConst'
 
@@ -33,7 +33,7 @@ export const getCategoryText = (category: number | undefined | null) => {
     case 9:
       return CATEGORY_DOUBLES
     case 10:
-      return CATEGORY_GEAR
+      return CATEGORY_GOODS
     case 99:
       return CATEGORY_OTHER
     default:

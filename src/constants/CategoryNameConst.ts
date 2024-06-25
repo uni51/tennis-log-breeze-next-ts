@@ -7,5 +7,5 @@ export const CATEGORY_VOLLEY = 'ボレー' // 6
 export const CATEGORY_SMASH = 'スマッシュ' // 7
 export const CATEGORY_SINGLES = 'シングルス' // 8
 export const CATEGORY_DOUBLES = 'ダブルス' // 9
-export const CATEGORY_GEAR = 'ギア' // 10
+export const CATEGORY_GOODS = 'グッズ' // 10
 export const CATEGORY_OTHER = 'その他' // 99

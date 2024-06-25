@@ -9,21 +9,24 @@ import {
 } from '@heroicons/react/24/outline'
 
 export const navigation = [
-  { name: 'Dashboard', icon: HomeIcon, current: true, href: '/dashboard' },
+  { name: 'Dashboard', icon: HomeIcon, current: false, href: '/dashboard' },
   {
     name: 'Memos',
     icon: UsersIcon,
     current: false,
     children: [
       { name: 'メモ一覧', href: '/memos' },
-      { name: 'フォアハンド', href: '#' },
-      { name: 'バックハンド', href: '#' },
-      { name: 'サーブ', href: '#' },
-      { name: 'リターン', href: '#' },
-      { name: 'ボレー', href: '#' },
-      { name: 'スマッシュ', href: '#' },
-      { name: 'ゲーム', href: '#' },
-      { name: 'その他', href: '#' },
+      { name: 'フォアハンド', href: '/memos?category=1' },
+      { name: '両手バックハンド', href: '/memos?category=2' },
+      { name: '片手バックハンド', href: '/memos?category=3' },
+      { name: 'サーブ', href: '/memos?category=4' },
+      { name: 'リターン', href: '/memos?category=5' },
+      { name: 'ボレー', href: '/memos?category=6' },
+      { name: 'スマッシュ', href: '/memos?category=7' },
+      { name: 'シングルス', href: '/memos?category=8' },
+      { name: 'ダブルス', href: '/memos?category=9' },
+      { name: 'グッズ', href: '/memos?category=10' },
+      { name: 'その他', href: '/memos?category=99' },
     ],
   },
   {
