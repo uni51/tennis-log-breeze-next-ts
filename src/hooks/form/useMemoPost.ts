@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { MemoPostSchema } from '@//lib/schema/MemoPostSchema'
+import { memoPostSchema } from '@//lib/schema/memoPostSchema'
 import { Delimiters } from '@/lib/tags-helper'
 import { MemoForm } from '@/types/MemoForm'
 import { Tag } from '@/types/memo/Tag'
@@ -13,7 +13,7 @@ export const useMemoPost = (defaultValues: MemoForm) => {
 
   const useFormMethods = useForm<MemoForm>({
     defaultValues,
-    resolver: zodResolver(MemoPostSchema),
+    resolver: zodResolver(memoPostSchema),
   })
 
   const { setValue } = useFormMethods

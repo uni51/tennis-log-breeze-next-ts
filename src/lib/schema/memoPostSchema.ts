@@ -5,7 +5,7 @@ const bodyValidation = z.string().refine((val) => val.trim() !== '' && val !== '
   message: '内容を入力してください。', // エラーメッセージ
 })
 
-export const MemoPostSchema = z.object({
+export const memoPostSchema = z.object({
   title: z.string().min(1, { message: '必須入力です。' }),
   body: bodyValidation,
   category_id: z

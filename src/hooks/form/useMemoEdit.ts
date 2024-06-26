@@ -3,12 +3,12 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useQueryClient } from '@tanstack/react-query'
-import { MemoPostSchema } from '@/lib/schema/MemoPostSchema'
-import { Memo } from '@/types/Memo'
 import { MemoForm } from '@/types/MemoForm'
 import { Tag } from '@/types/memo/Tag'
 import { postEditMemo } from '@/features/memos/dashboard/lib/postEditMemo'
 import { postEditMemoForModify } from '@/features/memos/dashboard/lib/postEditMemoForModify'
+import { Memo } from '@/types/Memo'
+import { memoPostSchema } from '@/lib/schema/memoPostSchema'
 
 export const useMemoEdit = (memo: Memo) => {
   const defaultValues = {
@@ -23,7 +23,7 @@ export const useMemoEdit = (memo: Memo) => {
 
   const useFormMethods = useForm<MemoForm>({
     defaultValues,
-    resolver: zodResolver(MemoPostSchema),
+    resolver: zodResolver(memoPostSchema),
     mode: 'onChange',
   })
 
