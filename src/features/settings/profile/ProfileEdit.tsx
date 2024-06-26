@@ -38,13 +38,16 @@ const ProfileEdit: React.FC<Props> = ({
     <FormProvider {...formMethods}>
       <div className='mx-auto w-4/5 mt-4 sm:mt-4 py-4 rounded-2xl'>
         <form onSubmit={handleSubmit((data: ProfileForm) => postEditProfile(data, setError))}>
+          {/* 名前 */}
           <TextInput
             target={'name'}
             required={true}
             label={'名前'}
             subText={'表示されることはありません'}
           />
+          {/* ニックネーム */}
           <TextInput target={'nickname'} required={true} label={'ニックネーム'} />
+          {/* テニス歴 */}
           <Select
             target={careers}
             target_id={'career_id'}
@@ -52,6 +55,7 @@ const ProfileEdit: React.FC<Props> = ({
             label={'テニス歴'}
             defaultValue={formMethods.getValues('career_id')}
           />
+          {/* 性別 */}
           <Select
             target={genders}
             target_id={'gender_id'}
@@ -59,27 +63,36 @@ const ProfileEdit: React.FC<Props> = ({
             label={'性別'}
             defaultValue={formMethods.getValues('gender_id')}
           />
-          <Select
-            target={years}
-            target_id={'year'}
-            required={true}
-            label={'生年月日（年）'}
-            defaultValue={formMethods.getValues('year')}
-          />
-          <Select
-            target={months}
-            target_id={'month'}
-            required={true}
-            label={'生年月日（月）'}
-            defaultValue={formMethods.getValues('month')}
-          />
-          <Select
-            target={days}
-            target_id={'day'}
-            required={true}
-            label={'生年月日（日）'}
-            defaultValue={formMethods.getValues('day')}
-          />
+          {/* 生年月日 */}
+          <div className='flex flex-row justify-start items-center mb-4'>
+            <label>生年月日</label>
+            <p className='text-lg text-red-500 ml-1'>*</p>
+            <Select
+              target={years}
+              target_id={'year'}
+              required={false}
+              label={'（年）'}
+              defaultValue={formMethods.getValues('year')}
+              style={'mr-6'}
+            />
+            <Select
+              target={months}
+              target_id={'month'}
+              required={false}
+              label={'（月）'}
+              defaultValue={formMethods.getValues('month')}
+              style={'mr-6'}
+            />
+            <Select
+              target={days}
+              target_id={'day'}
+              required={false}
+              label={'（日）'}
+              defaultValue={formMethods.getValues('day')}
+            />
+          </div>
+
+          {/* 利き手 */}
           <Select
             target={dominantHands}
             target_id={'dominantHand_id'}
@@ -87,6 +100,7 @@ const ProfileEdit: React.FC<Props> = ({
             label={'利き手'}
             defaultValue={formMethods.getValues('dominantHand_id')}
           />
+          {/* プレー頻度 */}
           <Select
             target={playFrequencies}
             target_id={'playFrequency_id'}
@@ -94,6 +108,7 @@ const ProfileEdit: React.FC<Props> = ({
             label={'プレー頻度'}
             defaultValue={formMethods.getValues('playFrequency_id')}
           />
+          {/* レベル */}
           <Select
             target={tennisLevels}
             target_id={'tennisLevel_id'}
