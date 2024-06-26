@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ProfileForm } from '@/features/settings/profile/lib/postEditProfile'
-import { ProfileSchema } from '@/lib/form/schema/profileSchema'
+import { ProfileSchema } from '@/lib/schema/profileSchema'
 import { User } from '@/types/User'
 
 // フォームの初期値を設定するためのデフォルト値
