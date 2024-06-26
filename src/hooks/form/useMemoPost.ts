@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { memoPostSchema } from '@//lib/schema/memoPostSchema'
+import { memoPostSchema } from '@/lib/schema/memoPostSchema'
 import { Delimiters } from '@/lib/tags-helper'
 import { MemoForm } from '@/types/MemoForm'
 import { Tag } from '@/types/memo/Tag'
@@ -10,13 +10,18 @@ import { Tag } from '@/types/memo/Tag'
 export const useMemoPost = (defaultValues: MemoForm) => {
   const [tags, setTags] = useState<Tag[]>([])
   const [body, setBody] = useState('')
+  const [errorMessage, setErrorMessage] = useState<string>('')
 
   const useFormMethods = useForm<MemoForm>({
     defaultValues,
     resolver: zodResolver(memoPostSchema),
+    mode: 'onChange',
   })
 
-  const { setValue } = useFormMethods
+  const {
+    setValue,
+    formState: { errors },
+  } = useFormMethods
 
   const delimiters = Delimiters
 
@@ -33,8 +38,6 @@ export const useMemoPost = (defaultValues: MemoForm) => {
 
   const handleTagAddition = (tag: Tag) => {
     setTags([...tags, tag])
-
-    // 直接フォームの値を更新
     setValue(
       'tags',
       [...tags, tag].map((tag) => tag.text),
@@ -43,14 +46,15 @@ export const useMemoPost = (defaultValues: MemoForm) => {
 
   const handleBodyAddition = (body: string) => {
     setBody(body)
-    // 直接フォームの値を更新
-    setValue('body', body)
+    setValue('body', body, { shouldValidate: true })
   }
 
   return {
     useFormMethods,
     tags,
     body,
+    errorMessage,
+    errors,
     delimiters,
     handleDelete,
     handleTagAddition,

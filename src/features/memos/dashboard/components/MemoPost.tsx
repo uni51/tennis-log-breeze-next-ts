@@ -34,6 +34,8 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
     tags,
     body,
     delimiters,
+    errorMessage,
+    errors,
     handleDelete,
     handleTagAddition,
     handleBodyAddition,
@@ -44,12 +46,17 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
   return (
     <FormProvider {...useFormMethods}>
       <div className='mx-auto w-4/5 mt-4 sm:mt-4 py-4 rounded-2xl'>
+        {errorMessage && <div className='text-red-600'>{errorMessage}</div>}
         <form onSubmit={handleSubmit((data) => postCreateMemo(data, setError))}>
           {/* タイトル */}
           <TextInput target={'title'} required={true} label={'タイトル'} />
-          {/* 内容 */}
+          {/* 本文 */}
+          <div className='flex justify-start my-1 sm:my-2'>
+            <p>本文</p>
+          </div>
           {/* <TextArea target={'body'} required={true} label={'内容'} size={{ rows: 12 }} /> */}
           <QuillEditor value={body} onBodyChange={handleBodyAddition} />
+          {errors.body && <div className='text-red-500'>{errors.body.message}</div>}
           {/* カテゴリー */}
           <Select
             target={categories}
@@ -74,7 +81,6 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
               tagInput: 'custom-tag-input',
             }}
           />
-
           {/* ステータス */}
           <Select
             target={statuses}
