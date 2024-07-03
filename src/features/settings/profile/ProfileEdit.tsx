@@ -46,7 +46,7 @@ const ProfileEdit: React.FC<Props> = ({
             subText={'表示されることはありません'}
           />
           {/* ニックネーム */}
-          <TextInput target={'nickname'} required={true} label={'ニックネーム'} />
+          <TextInput target={'nickname'} required={false} label={'ニックネーム'} disabled={true} />
           {/* テニス歴 */}
           <Select
             target={careers}
@@ -69,26 +69,26 @@ const ProfileEdit: React.FC<Props> = ({
             <p className='text-lg text-red-500 ml-1'>*</p>
             <Select
               target={years}
-              target_id={'year'}
+              target_id={'birthYear'}
               required={false}
               label={'（年）'}
-              defaultValue={formMethods.getValues('year')}
+              defaultValue={formMethods.getValues('birthYear')}
               style={'mr-6'}
             />
             <Select
               target={months}
-              target_id={'month'}
+              target_id={'birthMonth'}
               required={false}
               label={'（月）'}
-              defaultValue={formMethods.getValues('month')}
+              defaultValue={formMethods.getValues('birthMonth')}
               style={'mr-6'}
             />
             <Select
               target={days}
-              target_id={'day'}
+              target_id={'birthDay'}
               required={false}
               label={'（日）'}
-              defaultValue={formMethods.getValues('day')}
+              defaultValue={formMethods.getValues('birthDay')}
             />
           </div>
 

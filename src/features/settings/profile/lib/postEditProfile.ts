@@ -13,9 +13,9 @@ export type ProfileForm = {
   dominantHand_id: string
   playFrequency_id: string
   tennisLevel_id: string
-  year: string // 生年月日の年
-  month: string // 生年月日の月
-  day: string // 生年月日の日
+  birthYear: string // 生年月日の年
+  birthMonth: string // 生年月日の月
+  birthDay: string // 生年月日の日
 }
 
 // プロフィールの編集
@@ -26,7 +26,7 @@ export const postEditProfile = (postData: ProfileForm, setError: UseFormSetError
     .then((res) => {
       // APIへのリクエスト
       apiClient
-        .post('/api/dashboard/memos', postData)
+        .post('/api/profile/create', postData)
         .then((response: AxiosResponse) => {
           console.log(response.data)
           router.push('/dashboard/memos')

@@ -13,9 +13,9 @@ const defaultValues = {
   dominantHand_id: '0', // 利き手
   playFrequency_id: '0', // プレー頻度
   tennisLevel_id: '0', // テニスのレベル
-  year: '2000', // 生年月日の年
-  month: '1', // 生年月日の月
-  day: '1', // 生年月日の日
+  birthYear: '2000', // 生年月日の年
+  birthMonth: '1', // 生年月日の月
+  birthDay: '1', // 生年月日の日
 }
 
 // ProfileForm のカスタムフック
