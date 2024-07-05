@@ -2,6 +2,7 @@ import { AxiosError, AxiosResponse } from 'axios'
 import router from 'next/router'
 import { UseFormSetError } from 'react-hook-form'
 import { apiClient } from '@/lib/utils/apiClient'
+import { toast } from 'react-toastify'
 
 // POSTデータの型
 export type ProfileForm = {
@@ -19,7 +20,10 @@ export type ProfileForm = {
 }
 
 // プロフィールの編集
-export const postEditProfile = (postData: ProfileForm, setError: UseFormSetError<ProfileForm>) => {
+export const postCreateProfile = (
+  postData: ProfileForm,
+  setError: UseFormSetError<ProfileForm>,
+) => {
   apiClient
     // CSRF保護の初期化
     .get('/auth/sanctum/csrf-cookie')
@@ -29,7 +33,8 @@ export const postEditProfile = (postData: ProfileForm, setError: UseFormSetError
         .post('/api/profile/create', postData)
         .then((response: AxiosResponse) => {
           console.log(response.data)
-          router.push('/dashboard/memos')
+          router.push('/dashboard')
+          toast.success(response.data.message)
         })
         .catch((err: AxiosError) => {
           // バリデーションエラー

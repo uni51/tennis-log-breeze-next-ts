@@ -24,7 +24,7 @@ export const postEditMemo = (
         .then((response: AxiosResponse) => {
           if (response.status === 201) {
             router.push('/dashboard/memos') // 画面遷移
-            toast.success('メモを更新しました') // 画面遷移前にトーストメッセージを表示
+            toast.success('メモを更新しました')
             // Refetch memoList after successful update
             queryClient.invalidateQueries({ queryKey: ['memoList'] })
           }

@@ -3,7 +3,7 @@ import Head from 'next/head'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import { AuthGuard } from '@/features/auth/components/AuthGuard'
-import ProfileEdit from '@/features/settings/profile/ProfileEdit'
+import ProfileCreate from '@/features/settings/profile/ProfileCreate'
 import { useAuth } from '@/hooks/auth'
 import { useCareers } from '@/hooks/profile/useCareers'
 import { useDominantHands } from '@/hooks/profile/useDominantHands'
@@ -57,7 +57,7 @@ const Profile: NextPage = () => {
         <Head>
           <title>プロフィールの編集</title>
         </Head>
-        <ProfileEdit
+        <ProfileCreate
           user={user}
           careers={fetchCareers.data!}
           genders={fetchGenders.data!}

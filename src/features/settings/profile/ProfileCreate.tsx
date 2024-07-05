@@ -2,7 +2,7 @@ import { FormProvider } from 'react-hook-form'
 import { LargeSubmitButton } from '@/components/Form/LargeSubmitButton'
 import { Select } from '@/components/Form/Select'
 import { TextInput } from '@/components/Form/TextInput'
-import { ProfileForm, postEditProfile } from '@/features/settings/profile/lib/postEditProfile'
+import { ProfileForm, postCreateProfile } from '@/features/settings/profile/lib/postCreateProfile'
 import { User } from '@/types/User'
 
 import { SimpleSelect } from '@/types/form/SimpleSelect'
@@ -18,7 +18,7 @@ type Props = {
   tennisLevels: SimpleSelect[]
 }
 
-const ProfileEdit: React.FC<Props> = ({
+const ProfileCreate: React.FC<Props> = ({
   user,
   careers,
   genders,
@@ -37,7 +37,7 @@ const ProfileEdit: React.FC<Props> = ({
   return (
     <FormProvider {...formMethods}>
       <div className='mx-auto w-4/5 mt-4 sm:mt-4 py-4 rounded-2xl'>
-        <form onSubmit={handleSubmit((data: ProfileForm) => postEditProfile(data, setError))}>
+        <form onSubmit={handleSubmit((data: ProfileForm) => postCreateProfile(data, setError))}>
           {/* 名前 */}
           <TextInput
             target={'name'}
@@ -123,4 +123,4 @@ const ProfileEdit: React.FC<Props> = ({
   )
 }
 
-export default ProfileEdit
+export default ProfileCreate

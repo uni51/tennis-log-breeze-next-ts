@@ -3,6 +3,7 @@ import router from 'next/router'
 import { UseFormSetError } from 'react-hook-form'
 import { apiClient } from '@/lib/utils/apiClient'
 import { MemoForm } from '@/types/MemoForm'
+import { toast } from 'react-toastify'
 
 // メモの登録
 export const postCreateMemo = (postData: MemoForm, setError: UseFormSetError<MemoForm>) => {
@@ -16,8 +17,9 @@ export const postCreateMemo = (postData: MemoForm, setError: UseFormSetError<Mem
       apiClient
         .post('/api/dashboard/memos', postData)
         .then((response: AxiosResponse) => {
-          // console.log(response.data)
+          console.log(response.data)
           router.push('/dashboard/memos')
+          toast.success(response.data.message)
         })
         .catch((err: AxiosError) => {
           // バリデーションエラー
