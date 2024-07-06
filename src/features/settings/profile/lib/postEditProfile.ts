@@ -6,19 +6,15 @@ import { toast } from 'react-toastify'
 import { ProfileForm } from '@/types/form/profile/ProfileForm'
 
 // プロフィールの編集
-export const postCreateProfile = (
-  postData: ProfileForm,
-  setError: UseFormSetError<ProfileForm>,
-) => {
+export const postEditProfile = (postData: ProfileForm, setError: UseFormSetError<ProfileForm>) => {
   apiClient
     // CSRF保護の初期化
     .get('/auth/sanctum/csrf-cookie')
     .then((res) => {
       // APIへのリクエスト
       apiClient
-        .post('/api/profile/create', postData)
+        .post('/api/profile/edit', postData)
         .then((response: AxiosResponse) => {
-          // console.log(response.data)
           router.push('/settings/profile')
           toast.success(response.data.message)
         })

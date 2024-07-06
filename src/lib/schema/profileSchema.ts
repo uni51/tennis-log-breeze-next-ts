@@ -33,16 +33,16 @@ export const ProfileSchema = z.object({
     .max(1, { message: 'レベルを選択してください' })
     .transform((val) => parseInt(val))
     .refine((val) => !isNaN(val) && val !== 0, { message: 'レベルを選択してください' }),
-  birthYear: z
-    .string()
-    .min(4, '年を選択してください')
-    .refine((val) => val !== '0000', { message: '年を選択してください' }),
-  birthMonth: z
-    .string()
-    .min(1, '月を選択してください')
-    .refine((val) => val !== '0', { message: '月を選択してください' }),
-  birthDay: z
-    .string()
-    .min(1, '日を選択してください')
-    .refine((val) => val !== '0', { message: '日を選択してください' }),
+  // birthYear: z
+  //   .string()
+  //   .min(4, '年を選択してください')
+  //   .refine((val) => val !== '0000', { message: '年を選択してください' }),
+  // birthMonth: z
+  //   .string()
+  //   .min(1, '月を選択してください')
+  //   .refine((val) => val !== '0', { message: '月を選択してください' }),
+  // birthDay: z
+  //   .string()
+  //   .min(1, '日を選択してください')
+  //   .refine((val) => val !== '0', { message: '日を選択してください' }),
 })

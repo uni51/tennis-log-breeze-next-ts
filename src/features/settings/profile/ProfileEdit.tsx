@@ -2,13 +2,13 @@ import { FormProvider } from 'react-hook-form'
 import { LargeSubmitButton } from '@/components/Form/LargeSubmitButton'
 import { Select } from '@/components/Form/Select'
 import { TextInput } from '@/components/Form/TextInput'
-import { postCreateProfile } from '@/features/settings/profile/lib/postCreateProfile'
+import { postEditProfile } from '@/features/settings/profile/lib/postEditProfile'
 import { ProfileForm } from '@/types/form/profile/ProfileForm'
 import { User } from '@/types/User'
-
 import { SimpleSelect } from '@/types/form/SimpleSelect'
 import { generateDays, generateMonths, generateYears } from '@/lib/utils/selectBirthdayUtils'
 import useProfileEdit from '@/hooks/form/useProfileEdit' // カスタムフックのインポート
+import { Profile } from '@/types/Profile'
 
 type Props = {
   user: User
@@ -17,6 +17,7 @@ type Props = {
   dominantHands: SimpleSelect[]
   playFrequencies: SimpleSelect[]
   tennisLevels: SimpleSelect[]
+  profile: Profile
 }
 
 const ProfileEdit: React.FC<Props> = ({
@@ -26,19 +27,16 @@ const ProfileEdit: React.FC<Props> = ({
   dominantHands,
   playFrequencies,
   tennisLevels,
+  profile,
 }) => {
   // カスタムフックの使用
-  const formMethods = useProfileEdit(user)
+  const formMethods = useProfileEdit(user, profile)
   const { handleSubmit, setError } = formMethods
-
-  const years = generateYears(1900, 2020)
-  const months = generateMonths()
-  const days = generateDays()
 
   return (
     <FormProvider {...formMethods}>
       <div className='mx-auto w-4/5 mt-4 sm:mt-4 py-4 rounded-2xl'>
-        <form onSubmit={handleSubmit((data: ProfileForm) => postCreateProfile(data, setError))}>
+        <form onSubmit={handleSubmit((data: ProfileForm) => postEditProfile(data, setError))}>
           {/* 名前 */}
           <TextInput
             target={'name'}
@@ -65,7 +63,7 @@ const ProfileEdit: React.FC<Props> = ({
             defaultValue={formMethods.getValues('gender_id')}
           />
           {/* 生年月日 */}
-          <div className='flex flex-row justify-start items-center mb-4'>
+          {/* <div className='flex flex-row justify-start items-center mb-4'>
             <label>生年月日</label>
             <p className='text-lg text-red-500 ml-1'>*</p>
             <Select
@@ -91,7 +89,7 @@ const ProfileEdit: React.FC<Props> = ({
               label={'（日）'}
               defaultValue={formMethods.getValues('birthDay')}
             />
-          </div>
+          </div> */}
 
           {/* 利き手 */}
           <Select

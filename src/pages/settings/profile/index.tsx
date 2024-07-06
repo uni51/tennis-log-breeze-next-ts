@@ -11,6 +11,7 @@ import { useGenders } from '@/hooks/profile/useGenders'
 import { usePlayFrequencies } from '@/hooks/profile/usePlayFrequencies'
 import { useTennisLevels } from '@/hooks/profile/useTennisLevels'
 import { useProfile } from '@/hooks/profile/useProfile'
+import ProfileEdit from '@/features/settings/profile/ProfileEdit'
 
 const ProfileIndex: NextPage = () => {
   const { user } = useAuth({ middleware: 'auth' })
@@ -71,7 +72,15 @@ const ProfileIndex: NextPage = () => {
             tennisLevels={fetchTennisLevels.data!}
           />
         ) : (
-          <div>プロフィールの編集</div>
+          <ProfileEdit
+            user={user}
+            careers={fetchCareers.data!}
+            genders={fetchGenders.data!}
+            dominantHands={fetchDomainHands.data!}
+            playFrequencies={fetchPlayFrequencies.data!}
+            tennisLevels={fetchTennisLevels.data!}
+            profile={fetchProfile.data!}
+          />
         )}
       </AppLayout>
     </AuthGuard>

@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ProfileForm } from '@/features/settings/profile/lib/postCreateProfile'
+import { ProfileForm } from '@/types/form/profile/ProfileForm'
 import { ProfileSchema } from '@/lib/schema/profileSchema'
 import { User } from '@/types/User'
 

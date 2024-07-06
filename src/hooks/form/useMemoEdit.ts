@@ -10,7 +10,9 @@ import { postEditMemoForModify } from '@/features/memos/dashboard/lib/postEditMe
 import { Memo } from '@/types/Memo'
 import { memoPostSchema } from '@/lib/schema/memoPostSchema'
 
+// 編集中のメモデータを管理するカスタムフック
 export const useMemoEdit = (memo: Memo) => {
+  // フォームの初期値を設定
   const defaultValues = {
     title: memo.title,
     body: memo.body,
@@ -19,20 +21,25 @@ export const useMemoEdit = (memo: Memo) => {
     tags: memo.tag_list.tags ?? [],
   }
 
+  // エラーメッセージを管理するステート
   const [errorMessage, setErrorMessage] = useState<string>('')
 
+  // useFormフックを用いてフォーム処理を行う
   const useFormMethods = useForm<MemoForm>({
     defaultValues,
     resolver: zodResolver(memoPostSchema),
     mode: 'onChange',
   })
 
+  // タグのデフォルト値を設定
   const defaultTags = memo.tag_list.tags.map((tag) => ({
     id: tag,
     text: tag,
   }))
 
+  // タグを管理するステート
   const [tags, setTags] = useState<Tag[]>(defaultTags)
+  // 本文を管理するステート
   const [body, setBody] = useState(memo.body)
 
   const {
@@ -42,10 +49,12 @@ export const useMemoEdit = (memo: Memo) => {
 
   const queryClient = useQueryClient()
 
+  // メモの本文が更新されたときに反映させる
   useEffect(() => {
     setValue('body', memo.body)
   }, [memo.body, setValue])
 
+  // タグの削除処理
   const handleDelete = (i: number) => {
     setTags((prevTags) => {
       const newTags = prevTags.filter((tag, index) => index !== i)
@@ -57,6 +66,7 @@ export const useMemoEdit = (memo: Memo) => {
     })
   }
 
+  // タグの追加処理
   const handleAddition = (tag: Tag) => {
     setTags([...tags, tag])
     setValue(
@@ -65,11 +75,13 @@ export const useMemoEdit = (memo: Memo) => {
     )
   }
 
+  // 本文の変更処理
   const handleBodyChange = (content: string) => {
     setBody(content)
     setValue('body', content, { shouldValidate: true })
   }
 
+  // フォームの送信処理
   const onSubmit = (data: MemoForm) => {
     if (data.status === '4') {
       postEditMemoForModify(data, useFormMethods.setError, memo.id, queryClient)
@@ -78,6 +90,7 @@ export const useMemoEdit = (memo: Memo) => {
     }
   }
 
+  // フックから返される各種メソッドとステートをエクスポート
   return {
     useFormMethods,
     tags,
