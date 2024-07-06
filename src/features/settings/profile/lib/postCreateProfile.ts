@@ -3,21 +3,7 @@ import router from 'next/router'
 import { UseFormSetError } from 'react-hook-form'
 import { apiClient } from '@/lib/utils/apiClient'
 import { toast } from 'react-toastify'
-
-// POSTデータの型
-export type ProfileForm = {
-  name: string
-  nickname: string
-  career_id: string
-  gender_id: string
-  ageRange_id: string
-  dominantHand_id: string
-  playFrequency_id: string
-  tennisLevel_id: string
-  birthYear: string // 生年月日の年
-  birthMonth: string // 生年月日の月
-  birthDay: string // 生年月日の日
-}
+import { ProfileForm } from '@/types/form/profile/ProfileForm'
 
 // プロフィールの編集
 export const postCreateProfile = (

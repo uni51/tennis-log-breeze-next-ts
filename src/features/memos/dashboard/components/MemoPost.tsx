@@ -9,7 +9,7 @@ import { TextInput } from '@/components/Form/TextInput'
 import { postCreateMemo } from '@/features/memos/dashboard/lib/postCreateMemo'
 import { Category } from '@/types/Category'
 import { Status } from '@/types/Status'
-import { useMemoPost } from '@/hooks/form/useMemoPost'
+import { useMemoCreate } from '@/hooks/form/useMemoCreate'
 
 const QuillEditor = dynamic(() => import('@/components/QuillEditor/Editor'), {
   ssr: false, // サーバーサイドレンダリングを無効にする
@@ -39,7 +39,7 @@ const MemoPost: React.FC<Props> = ({ statuses, categories }) => {
     handleDelete,
     handleTagAddition,
     handleBodyAddition,
-  } = useMemoPost(defaultValues)
+  } = useMemoCreate(defaultValues)
 
   const { handleSubmit, setError } = useFormMethods
 

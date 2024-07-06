@@ -8,7 +8,7 @@ import { User } from '@/types/User'
 
 import { SimpleSelect } from '@/types/form/SimpleSelect'
 import { generateDays, generateMonths, generateYears } from '@/lib/utils/selectBirthdayUtils'
-import useProfileCreate from '@/hooks/form/useProfileCreate' // カスタムフックのインポート
+import useProfileEdit from '@/hooks/form/useProfileEdit' // カスタムフックのインポート
 
 type Props = {
   user: User
@@ -19,7 +19,7 @@ type Props = {
   tennisLevels: SimpleSelect[]
 }
 
-const ProfileCreate: React.FC<Props> = ({
+const ProfileEdit: React.FC<Props> = ({
   user,
   careers,
   genders,
@@ -28,7 +28,7 @@ const ProfileCreate: React.FC<Props> = ({
   tennisLevels,
 }) => {
   // カスタムフックの使用
-  const formMethods = useProfileCreate(user)
+  const formMethods = useProfileEdit(user)
   const { handleSubmit, setError } = formMethods
 
   const years = generateYears(1900, 2020)
@@ -124,4 +124,4 @@ const ProfileCreate: React.FC<Props> = ({
   )
 }
 
-export default ProfileCreate
+export default ProfileEdit

@@ -7,7 +7,7 @@ import { Delimiters } from '@/lib/tags-helper'
 import { MemoForm } from '@/types/MemoForm'
 import { Tag } from '@/types/memo/Tag'
 
-export const useMemoPost = (defaultValues: MemoForm) => {
+export const useMemoCreate = (defaultValues: MemoForm) => {
   const [tags, setTags] = useState<Tag[]>([])
   const [body, setBody] = useState('')
   const [errorMessage, setErrorMessage] = useState<string>('')

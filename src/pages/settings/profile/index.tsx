@@ -10,8 +10,9 @@ import { useDominantHands } from '@/hooks/profile/useDominantHands'
 import { useGenders } from '@/hooks/profile/useGenders'
 import { usePlayFrequencies } from '@/hooks/profile/usePlayFrequencies'
 import { useTennisLevels } from '@/hooks/profile/useTennisLevels'
+import { useProfile } from '@/hooks/profile/useProfile'
 
-const Profile: NextPage = () => {
+const ProfileIndex: NextPage = () => {
   const { user } = useAuth({ middleware: 'auth' })
 
   // Custom Hooksを使用してローディングステータスを管理
@@ -20,6 +21,9 @@ const Profile: NextPage = () => {
   const fetchDomainHands = useDominantHands()
   const fetchPlayFrequencies = usePlayFrequencies()
   const fetchTennisLevels = useTennisLevels()
+  const fetchProfile = useProfile()
+
+  console.log(fetchProfile)
 
   // ローディングステータスを配列にまとめ、someでいずれかがpendingかどうかを判定
   const anyPending = [
@@ -57,17 +61,21 @@ const Profile: NextPage = () => {
         <Head>
           <title>プロフィールの編集</title>
         </Head>
-        <ProfileCreate
-          user={user}
-          careers={fetchCareers.data!}
-          genders={fetchGenders.data!}
-          dominantHands={fetchDomainHands.data!}
-          playFrequencies={fetchPlayFrequencies.data!}
-          tennisLevels={fetchTennisLevels.data!}
-        />
+        {!fetchProfile.data?.id ? (
+          <ProfileCreate
+            user={user}
+            careers={fetchCareers.data!}
+            genders={fetchGenders.data!}
+            dominantHands={fetchDomainHands.data!}
+            playFrequencies={fetchPlayFrequencies.data!}
+            tennisLevels={fetchTennisLevels.data!}
+          />
+        ) : (
+          <div>プロフィールの編集</div>
+        )}
       </AppLayout>
     </AuthGuard>
   )
 }
 
-export default Profile
+export default ProfileIndex

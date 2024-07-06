@@ -19,7 +19,7 @@ const defaultValues = {
 }
 
 // ProfileForm のカスタムフック
-function useProfileForm(user: User) {
+function useProfileCreateForm(user: User) {
   // useForm フックを使ってフォームのメソッドと状態を管理
   const methods = useForm<ProfileForm>({
     defaultValues: {
@@ -34,4 +34,4 @@ function useProfileForm(user: User) {
   return methods
 }
 
-export default useProfileForm
+export default useProfileCreateForm
