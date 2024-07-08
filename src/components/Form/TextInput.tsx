@@ -6,9 +6,16 @@ type Props = {
   label: string
   required: boolean
   subText?: string
+  disabled?: boolean // disabled プロパティを追加
 }
 
-export const TextInput: React.FC<Props> = ({ target, label, required, subText }) => {
+export const TextInput: React.FC<Props> = ({
+  target,
+  label,
+  required,
+  subText,
+  disabled = false,
+}) => {
   const {
     register,
     formState: { errors },
@@ -24,6 +31,7 @@ export const TextInput: React.FC<Props> = ({ target, label, required, subText })
       <input
         className='p-2 border rounded-md w-full outline-none'
         {...register(target, { required: required })}
+        disabled={disabled} // disabled 属性を追加
       />
       {errors[`${target}`]?.message !== undefined && (
         <p className='py-3 text-red-500'>{errors[`${target}`]?.message!.toString()}</p>

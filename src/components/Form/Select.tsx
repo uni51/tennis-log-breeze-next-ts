@@ -28,8 +28,8 @@ export const Select: React.FC<Props> = ({
 
   return (
     <div className={style ? `${style} mb-5` : 'mb-5'}>
-      <div className='flex justify-start my-1 sm:my-2'>
-        <p>{label}</p>
+      <div className='flex flex-row items-center my-1 sm:my-2'>
+        <label className='text-base'>{label}</label>
         {required && <RequiredMark />}
       </div>
       <select
