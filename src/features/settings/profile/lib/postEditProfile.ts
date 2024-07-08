@@ -2,18 +2,8 @@ import { AxiosError, AxiosResponse } from 'axios'
 import router from 'next/router'
 import { UseFormSetError } from 'react-hook-form'
 import { apiClient } from '@/lib/utils/apiClient'
-
-// POSTデータの型
-export type ProfileForm = {
-  name: string
-  nickname: string
-  career_id: string
-  gender_id: string
-  ageRange_id: string
-  dominantHand_id: string
-  playFrequency_id: string
-  tennisLevel_id: string
-}
+import { toast } from 'react-toastify'
+import { ProfileForm } from '@/types/form/profile/ProfileForm'
 
 // プロフィールの編集
 export const postEditProfile = (postData: ProfileForm, setError: UseFormSetError<ProfileForm>) => {
@@ -23,10 +13,10 @@ export const postEditProfile = (postData: ProfileForm, setError: UseFormSetError
     .then((res) => {
       // APIへのリクエスト
       apiClient
-        .post('/api/dashboard/memos', postData)
+        .post('/api/profile/edit', postData)
         .then((response: AxiosResponse) => {
-          console.log(response.data)
-          router.push('/dashboard/memos')
+          router.push('/settings/profile')
+          toast.success(response.data.message)
         })
         .catch((err: AxiosError) => {
           // バリデーションエラー

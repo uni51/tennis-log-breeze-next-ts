@@ -3,31 +3,33 @@ import Head from 'next/head'
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Loading } from '@/components/Loading'
 import { AuthGuard } from '@/features/auth/components/AuthGuard'
-import ProfileEdit from '@/features/settings/profile/ProfileEdit'
+import ProfileCreate from '@/features/settings/profile/ProfileCreate'
 import { useAuth } from '@/hooks/auth'
-import { useAgeRanges } from '@/hooks/profile/useAgeRanges'
 import { useCareers } from '@/hooks/profile/useCareers'
 import { useDominantHands } from '@/hooks/profile/useDominantHands'
 import { useGenders } from '@/hooks/profile/useGenders'
 import { usePlayFrequencies } from '@/hooks/profile/usePlayFrequencies'
 import { useTennisLevels } from '@/hooks/profile/useTennisLevels'
+import { useProfile } from '@/hooks/profile/useProfile'
+import ProfileEdit from '@/features/settings/profile/ProfileEdit'
 
-const Profile: NextPage = () => {
+const ProfileIndex: NextPage = () => {
   const { user } = useAuth({ middleware: 'auth' })
 
   // Custom Hooksを使用してローディングステータスを管理
   const fetchCareers = useCareers()
   const fetchGenders = useGenders()
-  const fetchAgeRanges = useAgeRanges()
   const fetchDomainHands = useDominantHands()
   const fetchPlayFrequencies = usePlayFrequencies()
   const fetchTennisLevels = useTennisLevels()
+  const fetchProfile = useProfile()
+
+  console.log(fetchProfile)
 
   // ローディングステータスを配列にまとめ、someでいずれかがpendingかどうかを判定
   const anyPending = [
     fetchCareers,
     fetchGenders,
-    fetchAgeRanges,
     fetchDomainHands,
     fetchPlayFrequencies,
     fetchTennisLevels,
@@ -45,7 +47,6 @@ const Profile: NextPage = () => {
   // エラーがあれば該当する関数を呼び出してエラーメッセージを表示
   if (fetchCareers.error) return renderError(fetchCareers.error, 'careers')
   if (fetchGenders.error) return renderError(fetchGenders.error, 'genders')
-  if (fetchAgeRanges.error) return renderError(fetchAgeRanges.error, 'ageRanges')
   if (fetchDomainHands.error) return renderError(fetchDomainHands.error, 'dominantHands')
   if (fetchPlayFrequencies.error) return renderError(fetchPlayFrequencies.error, 'playFrequencies')
   if (fetchTennisLevels.error) return renderError(fetchTennisLevels.error, 'tennisLevels')
@@ -61,18 +62,29 @@ const Profile: NextPage = () => {
         <Head>
           <title>プロフィールの編集</title>
         </Head>
-        <ProfileEdit
-          user={user}
-          careers={fetchCareers.data!}
-          genders={fetchGenders.data!}
-          ageRanges={fetchAgeRanges.data!}
-          dominantHands={fetchDomainHands.data!}
-          playFrequencies={fetchPlayFrequencies.data!}
-          tennisLevels={fetchTennisLevels.data!}
-        />
+        {!fetchProfile.data?.id ? (
+          <ProfileCreate
+            user={user}
+            careers={fetchCareers.data!}
+            genders={fetchGenders.data!}
+            dominantHands={fetchDomainHands.data!}
+            playFrequencies={fetchPlayFrequencies.data!}
+            tennisLevels={fetchTennisLevels.data!}
+          />
+        ) : (
+          <ProfileEdit
+            user={user}
+            careers={fetchCareers.data!}
+            genders={fetchGenders.data!}
+            dominantHands={fetchDomainHands.data!}
+            playFrequencies={fetchPlayFrequencies.data!}
+            tennisLevels={fetchTennisLevels.data!}
+            profile={fetchProfile.data!}
+          />
+        )}
       </AppLayout>
     </AuthGuard>
   )
 }
 
-export default Profile
+export default ProfileIndex
